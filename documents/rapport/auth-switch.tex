@@ -1,0 +1,45 @@
+\section{Authentification sur le port Console et les VTY}
+
+\subsection{Identifiants Radius}
+
+Pour permettre à quelqu'un de configurer le switch grâce à ses identifiants Radius, il faut procéder comme ceci :
+
+\begin{verbatim}
+Swicth>enable
+Switch#configure terminal
+Switch(config)#aaa authentication login default group radius
+Switch(config)#aaa authentication enable default group radius
+Switch(config)#line console 0
+Switch(config-line)#login authentication default
+Switch(config-line)#line vty 0 15
+Switch(config-line)#login authentication default
+\end{verbatim}
+
+Les identifiants utilisés pour la connexion au port console sont lus dans la base de donnée, il suffit d'ajouter un utilisateur. Cependant, l'accès au mode \textit{enable} requiert une action supplémentaire sur le serveur Radius.
+
+En effet, il faut ajouter une ligne au fichier \textit{sql.conf} :
+
+\begin{verbatim}
+safe-characters = "@0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_: /$"
+\end{verbatim}
+
+Et ajouter un utilisateur particulier :
+
+\begin{verbatim}
+insert into radcheck (username,attribute,value) values ('$enab15$','Cleartext-Password','plop');
+\end{verbatim}
+
+\subsection{Identifiants de secours}
+
+Si jamais le serveur Radius n'est pas joignable, personne ne pourra se connecter au switch pour le configurer. Or, lorsqu'un réseau tombe en panne, il est probable qu'il faille configurer le switch alors que le serveur Radius n'est plus accessible. C'est pourquoi on va installer des identifiants de secours qui ne seront utilisés uniquement dans le cas où le server Radius ne répond pas. Pour ce faire, il faut suivre la procédure suivante :
+
+\begin{verbatim}
+Swicth>enable
+Switch#configure terminal
+Switch(config)#aaa authentication login default group radius local
+Switch(config)#aaa authentication enable default group radius enable
+Switch(config)#enable password plop
+Switch(config)#username bla password plop
+\end{verbatim}
+
+Dans notre cas, si le serveur ne répond pas, il faudra utiliser les identifants (bla, plop) pour se connecter sur le port console et le mot de passe (plop) pour accéder au mode \textit{enable}.
