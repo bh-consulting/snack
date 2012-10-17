@@ -1,86 +1,9 @@
-\documentclass[10pt]{article}
-\usepackage[utf8]{inputenc}
-\usepackage[francais]{babel}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern, marvosym, geometry, graphicx, multicol, lastpage}
-\usepackage[hyperindex=true, colorlinks=true, breaklinks=true, linkcolor=blue]{hyperref}
-\usepackage{fancyhdr, verbatim}
+\newcommand{\titreA}{Rapport}
+\newcommand{\titreB}{Documentation}
 
-\geometry{hmargin=1.5cm, vmargin=2cm}
-\addtolength{\parskip}{10pt}
-\pagestyle{fancy}
-
-\renewcommand{\headrulewidth}{1pt}
-\lhead{\textbf{Rapport}}
-\rhead{\emph{BOUGET / GUÉPIN / PINHÈDE / VAUBOURG}}
-\lfoot{TELECOM Nancy - PI}
-\cfoot{\thepage{} / \pageref{LastPage}}
-\rfoot{2012-2013}
-
-\begin{document}
-\thispagestyle{empty}
-
-\begin{multicols}{2}
-{\large
-	\begin{flushleft}
-		\noindent{}\textbf{Nicolas BOUGET}\\
-		\Letter~nicolas.bouget@esial.net\\
-		3A TRS1\\~
-
-		\noindent{}\textbf{Julien GUÉPIN}\\
-		\Letter~julien.guepin@esial.net\\
-		3A IL\\
-	\end{flushleft}
-
-	\begin{flushright}
-		\noindent{}\textbf{Marc PINHÈDE}\\
-		\Letter~marc.pinhede@esial.net\\
-		3A LE\\~
-
-		\noindent{}\textbf{Julien VAUBOURG}\\
-		\Letter~julien@vaubourg.com\\
-		3A TRS2\\
-	\end{flushright}
-}
-\end{multicols}
-
-\vspace{1cm}
-
-\begin{center}
-	{\Huge\textbf{Rapport}}
-
-	\vspace{1cm}
-
-	{\huge\emph{Documentation}}
-
-	\vspace{1cm}
-
-	{\large\textbf{Projet industriel\\ encadré par Guillaume ROCHE\\ pour la société B.H. Consulting}}
-
-	\vspace{1cm}
-	{\large Le \today}
-
-	\vspace{1.5cm}
-
-	\includegraphics[width=140pt]{img/BHConsulting.jpg}
-
-	\vspace{1.5cm}
-
-	\includegraphics[width=190pt]{img/ul.png}
-	\hspace{3.5cm}
-	\includegraphics[width=140pt]{img/telecom-nancy.jpg}
-\end{center}
-\newpage
-
-\thispagestyle{empty}
-\tableofcontents
-\newpage
-
+\input{entetes.tex}
 \input{rapport/dot1x.tex}
-
 \input{rapport/auth-switch.tex}
-
 \input{rapport/interface.tex}
 
-\newpage
 \end{document}
