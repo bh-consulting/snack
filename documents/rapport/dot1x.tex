@@ -1,4 +1,6 @@
-ection{Généralités}
+\section{Protocole 802.1x}
+\label{dot1x}
+\subsection{Généralités}
 
 Le standard 802.1X permet le contrôle d'accès à un réseau port par port grâce à un serveur RADIUS.
 
@@ -24,8 +26,7 @@ Un port 802.1X a deux rôles logiques :
 \item authorized - Toute les trames sont transmises normalement.
 \end{enumerate}
 
-\newpage
-\section{Protocol d'authentification}
+\subsection{Protocole d'authentification}
 
 Les échanges sont illustrés sur le schéma suivant :\\
 \begin{center}
@@ -45,10 +46,8 @@ Les échanges sont décris ci-dessous :\\
 \item Pour se déconnecter, le supplicant envoie un message EAPOL-logoff ce qui a pour conséquence de mettre le port en mode unauthorized.
 \end{enumerate}
 
-\newpage
-\section{Configuration Cisco}
-
-\subsection{Activer le 802.1X sur le switch}
+\subsection{Configuration Cisco}
+\subsubsection{Activer le 802.1X sur le switch}
 
 \begin{verbatim}
 Switch(config)# aaa new-model
@@ -56,7 +55,7 @@ Switch(config)# aaa authentication dot1x default group radius
 Switch(config)# dot1x system-auth-control
 \end{verbatim}
 
-\subsection{Reset et paramètres par défaut}
+\subsubsection{Reset et paramètres par défaut}
 
 Pour réinitialiser la configuration du 802.1X sur le switch :
 
@@ -80,14 +79,14 @@ Disabled.
 \item Multiple host support <-> Disabled
 \end{itemize}
 
-\subsection{Configurer une interface}
+\subsubsection{Configurer une interface}
 
 \begin{verbatim}
 Switch(config)# interface fastethernet0/1
 Switch(config-if)# dot1x port-control {auto | force-authorized | force-unauthorized}
 \end{verbatim}
 
-\subsection{Incompatibilités}
+\subsubsection{Incompatibilités}
 
 La fonctionnalité 802.1X ne peut être activée sur les ports :
 \begin{enumerate}
@@ -99,32 +98,32 @@ La fonctionnalité 802.1X ne peut être activée sur les ports :
 \item Switch Port Analyzer (SPAN)
 \end{enumerate}
 
-\subsection{Authentification périodique}
+\subsubsection{Authentification périodique}
 
 \begin{verbatim}
 Switch(config)# dot1x re-authentication
 Switch(config)# dot1x timeout re-authperiod 4000
 \end{verbatim}
 
-\subsection{Période entre 2 tentatives de connexions}
+\subsubsection{Période entre 2 tentatives de connexions}
 
 \begin{verbatim}
 Switch(config)# dot1x timeout quiet-period 30
 \end{verbatim}
 
-\subsection{Période entre 2 paquets EAP Request/Identity}
+\subsubsection{Période entre 2 paquets EAP Request/Identity}
 
 \begin{verbatim}
 Switch(config)# dot1x timeout tx-period 60
 \end{verbatim}
 
-\subsection{Nombre maximum de paquets EAP Request/Identity}
+\subsubsection{Nombre maximum de paquets EAP Request/Identity}
 
 \begin{verbatim}
 Switch(config)# dot1x max-req 5
 \end{verbatim}
 
-\subsection{Plusieurs 'Host' sur une seule interface}
+\subsubsection{Plusieurs 'Host' sur une seule interface}
 
 \begin{verbatim}
 Switch(config-if)# dot1x multiple-hosts
@@ -132,7 +131,7 @@ Switch(config-if)# dot1x multiple-hosts
 
 Note : Un host identifié donne accès au réseau à tous les autres. Un host qui se déconnecte bloque l'accès à tous les autres.
 
-\subsection{Débuguer}
+\subsubsection{Débuguer}
 
 \begin{verbatim}
 Switch(config)# show dot1x
@@ -140,17 +139,17 @@ Switch(config)# show dot1x statistics
 Switch# debug dot1x all
 \end{verbatim}
 
-\subsection{VLAN invité}
+\subsubsection{VLAN invité}
 
 \begin{verbatim}
 Switch(config-if)# dot1x guest-vlan { vlan-id }
 \end{verbatim}
 
-\section{Failles}
+\subsection{Failles}
 
-\subsection{Attaque de la méthode d'authentification}
+\subsubsection{Attaque de la méthode d'authentification}
 
-\subsubsection{Dictionnaire hors-ligne avec EAP MD5}
+\textbf{Dictionnaire hors-ligne avec EAP MD5}
 
 Une attaque par dictionnaire hors-ligne, cette attaque peut se pratiquer contre EAP-MD5 dans le cas ou la communication entre le client et le contrôleur d'accès est non-filaire. 
 
@@ -162,13 +161,13 @@ C'est pourquoi il est proscrit d'utiliser EAP-MD5 pour du non-filaire. En cas de
 
 Cette attaque n'est pas dangereuse si celui-ci refuse, au bout de 3 tentatives en échec, toute nouvelle tentative provenant du même utilisateur pour une durée de 10 minute par exemple. 
 
-\subsubsection{Dictionnaire en ligne avec EAP PEAP/TTLS}
+\textbf{Dictionnaire en ligne avec EAP PEAP/TTLS}
 
 Le fait de protéger la communication entre le client est le point d'accès par un tunnel crypté est une bonne chose dans le cas ou l'on veut effectuer les authentifications sur du non-filaire.
 Cela permet de se prémunir contre les attaques par dictionnaire "hors-ligne", et force les usurpateurs à soumettre leurs requêtes aux serveurs. 
 Ces serveurs qui sont comme cité précédemment prévu pour refuser un nombre trop grand de tentative pour un même utilisateur. 
 
-\subsection{Attaque de session après connexion}
+\subsubsection{Attaque de session après connexion}
 
 Le protocole EAP seul ne protège pas la session, le contrôleur d’accès se contente de vérifier que l’adresse MAC à déjà été validé. Une fois l’authentification établie, le trafic entre le contrôleur d'accès et le client n’est pas chiffré. 
 
@@ -176,7 +175,7 @@ Dans le cas d’une communication wifi, il est très facile d'écouter ce qui tr
 
 Sinon il serait très facile pour un pirate d'écouter la communication, et de récupérer l'adresse MAC du client. Une fois cette adresse MAC trouvée, il pourra se faire passer pour ce client, technique dite du "Spoofing d'adresse MAC". 
 
-\subsection{Attaque 'Man in the middle'}
+\subsubsection{Attaque 'Man in the middle'}
 
 Cette attaque est facile à réaliser dans le cas d’une communication wifi. 
 
@@ -184,7 +183,7 @@ Le pirate peut procéder en créant un point d'accès wifi pirate, qui aurait le
 
 Une fois qu'un client vient pour s'y connecter, il suffit de procéder à l'authentification avec le vrai point d'accès, en utilisant les valeurs que le client nous envoie. 
 
-\subsection{Solutions}
+\subsubsection{Solutions}
 
 Pour pallier à toutes ces failles on peut effectuer les actions suivantes : 
 \begin{itemize}
