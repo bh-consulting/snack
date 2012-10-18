@@ -35,13 +35,13 @@
 			<span class="icon-bar">
 			</span>
 		    </a>
-		    <a class="brand active" href="index.html">b. h. consulting</a>
+		    <a class="brand" href="index.html">b. h. consulting</a>
 		    <div class="nav-collapse">
 			<ul class="nav">
 			    <li>
 			    <a href="radius.html">Radius</a>
 			    </li>
-			    <li>
+			    <li class="active">
 			    <a href="config.html">Configurations</a>
 			    </li>
 			    <li>
@@ -52,38 +52,55 @@
 		</div>
 	    </div>
 	</div>
-	<div class="container">
-	    <div class="hero-unit">
-		<h1>Hello World!</h1>
-		<p>Interface de gestion d'un serveur Radius, de gestion des configurations, terminal émulé...</p>
-	    </div>
-	    <div>
+	<div class="container-fluid">
+	    <div class="row-fluid">
+		<div class="span3">
+		    <div class="well sidebar-nav">
+			<ul class="nav nav-list">
+			    <li class="active">
+			    <a href="#"><i class="icon-wrench"></i> Configurations</a>
+			    </li>
+			</ul>
+		    </div>
+		</div>
+		<div class="span9">
 
-		<form class="form-horizontal">
-		    <div class="control-group">
-			<label class="control-label" for="inputLogin">Identifiant : </label>
-			<div class="controls">
-			    <input name="textinput1" id="inputLogin" type="text" placeholder="Identifiant" class="span2">
-			</div>
-		    </div>
-		    <div class="control-group">
-			<label class="control-label" for="inputPassword">Mot de passe : </label>
-			<div class="controls">
-			    <input name="textinput2" id="inputPassword" type="password" placeholder="Mot de passe" class="span2">
-			</div>
-		    </div>
-		    <div class="control-group">
-			<div class="controls">
-			    <button class="btn">Connexion</button>
-			</div>
-		    </div>
-		</form>
-	    </div>
+		    <div class="content">
 
-	    <hr>
-	    <footer>
-	    <p><a href="http://bh-consulting.net">© b. h. consulting 2012</a></p>
-	    </footer>
+			<table class="table table-hover table-bordered">
+
+			    <thead>
+				<tr>
+				    <th>#</th>
+				    <th>Nom</th>
+				    <th>Modifier</th>
+				    <th>Versions précédentes</th>
+				    <th>Exporter</th>
+				</tr>
+			    </thead>
+			    <tbody>
+				<tr>
+				    <td>0</td>
+				    <td>Cisco truc</td>
+				    <td><a href="#"><i class="icon-edit"></i></a></td>
+				    <td><a href="#"><i class="icon-list-alt"></i></a></td>
+				    <td><a href="#"><i class="icon-arrow-down"></i></a></td>
+				</tr>
+				<tr>
+				    <td>1</td>
+				    <td>Cisco bidule</td>
+				    <td><a href="#"><i class="icon-edit"></i></a></td>
+				    <td><a href="#"><i class="icon-list-alt"></i></a></td>
+				    <td><a href="#"><i class="icon-arrow-down"></i></a></td>
+				</tr>
+		    </div>
+
+		    <hr>
+		    <div>
+			<a href="http://bh-consulting.net">© b. h. consulting 2012</a>
+		    </div>
+		</div>
+	    </div>
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
 	</script>

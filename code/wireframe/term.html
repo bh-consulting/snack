@@ -35,7 +35,7 @@
 			<span class="icon-bar">
 			</span>
 		    </a>
-		    <a class="brand active" href="index.html">b. h. consulting</a>
+		    <a class="brand" href="index.html">b. h. consulting</a>
 		    <div class="nav-collapse">
 			<ul class="nav">
 			    <li>
@@ -44,7 +44,7 @@
 			    <li>
 			    <a href="config.html">Configurations</a>
 			    </li>
-			    <li>
+			    <li class="active">
 			    <a href="term.html">Terminal</a>
 			    </li>
 			</ul>
@@ -52,38 +52,26 @@
 		</div>
 	    </div>
 	</div>
-	<div class="container">
-	    <div class="hero-unit">
-		<h1>Hello World!</h1>
-		<p>Interface de gestion d'un serveur Radius, de gestion des configurations, terminal émulé...</p>
-	    </div>
-	    <div>
+	<div class="container-fluid">
+	    <div class="row-fluid">
+		<div class="span12">
 
-		<form class="form-horizontal">
-		    <div class="control-group">
-			<label class="control-label" for="inputLogin">Identifiant : </label>
-			<div class="controls">
-			    <input name="textinput1" id="inputLogin" type="text" placeholder="Identifiant" class="span2">
+		    <div class="content">
+			<h1>Émulateur de terminal</h1>
+			<div class="term">
+			    <pre>
+			pi@charles&gt; ls
+			...
+			</pre>
 			</div>
 		    </div>
-		    <div class="control-group">
-			<label class="control-label" for="inputPassword">Mot de passe : </label>
-			<div class="controls">
-			    <input name="textinput2" id="inputPassword" type="password" placeholder="Mot de passe" class="span2">
-			</div>
-		    </div>
-		    <div class="control-group">
-			<div class="controls">
-			    <button class="btn">Connexion</button>
-			</div>
-		    </div>
-		</form>
-	    </div>
 
-	    <hr>
-	    <footer>
-	    <p><a href="http://bh-consulting.net">© b. h. consulting 2012</a></p>
-	    </footer>
+		    <hr>
+		    <div>
+			<a href="http://bh-consulting.net">© b. h. consulting 2012</a>
+		    </div>
+		</div>
+	    </div>
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
 	</script>

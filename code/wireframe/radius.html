@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+	<meta charset="utf-8">
+	<title>Outil de gestion Radius - b.h. consulting</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<!-- Le styles -->
+	<link href="assets/css/bootstrap.css" rel="stylesheet">
+	<style>
+	    body { padding-top: 60px; /* 60px to make the container go all the way
+		to the bottom of the topbar */ }
+	</style>
+	<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+	</script>
+	<![endif]-->
+	<!-- Le fav and touch icons -->
+	<link rel="shortcut icon" href="assets/img/favicon.png">
+    </head>
+
+    <body>
+	<div class="navbar navbar-fixed-top navbar-inverse">
+	    <div class="navbar-inner">
+		<div class="container-fluid">
+		    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<span class="icon-bar">
+			</span>
+			<span class="icon-bar">
+			</span>
+			<span class="icon-bar">
+			</span>
+		    </a>
+		    <a class="brand" href="index.html">b. h. consulting</a>
+		    <div class="nav-collapse">
+			<ul class="nav">
+			    <li class="active">
+			    <a href="radius.html">Radius</a>
+			    </li>
+			    <li>
+			    <a href="config.html">Configurations</a>
+			    </li>
+			    <li>
+			    <a href="term.html">Terminal</a>
+			    </li>
+			</ul>
+		    </div>
+		</div>
+	    </div>
+	</div>
+
+	<div class="container-fluid">
+	    <div class="row-fluid">
+		<div class="span3">
+		    <div class="well sidebar-nav">
+			<ul class="nav nav-list">
+			    <li class="">
+			    <a href="#"><i class="icon-hdd"></i> NAS</a>
+			    </li>
+			    <li class="active">
+			    <a href="#"><i class="icon-user"></i> Utilisateurs</a>
+			    </li>
+			    <li class="">
+			    <a href="#"><i class="icon-ok"></i> Monitoring</a>
+			    </li>
+			    <li class="">
+			    <a href="#"><i class="icon-list-alt"></i> Logs</a>
+			    </li>
+			    <li class="">
+			    <a href="#"><i class="icon-th-large"></i> Tableau de bord serveur</a>
+			    </li>
+			    <li class="">
+			    <a href="#"><i class="icon-wrench"></i> Paramètres serveur</a>
+			    </li>
+			</ul>
+		    </div>
+		</div>
+		<div class="span9">
+
+		    <div class="content">
+			<div class="alert alert-error">
+			    <button type="button" class="close" data-dismiss="alert">×</button>
+			    <strong>Erreur !</strong> Erreur machin sur le serveur Radius !
+			</div>
+			<div class="alert alert-info">
+			    <button type="button" class="close" data-dismiss="alert">×</button>
+			    <strong>Attention !</strong> Vous n'avez pas sauvegardé les derniers changements effectués.
+			    <a href="#" class="btn btn-info btn-mini">writemem</a>
+			</div>
+			<p><a href="#" class="btn"><i class="icon-plus-sign"></i> Ajouter utilisateur</a><p>
+			<table class="table table-hover table-bordered">
+
+			    <thead>
+				<tr>
+				    <th>#</th>
+				    <th>Login</th>
+				    <th>IP</th>
+				    <th>Adresse MAC</th>
+				    <th>Certificat</th>
+				    <th>Modifier</th>
+				    <th>Supprimer</th>
+				</tr>
+			    </thead>
+			    <tbody>
+				<tr>
+				    <td>0</td>
+				    <td>Julien</td>
+				    <td>127.0.0.1</td>
+				    <td>-</td>
+				    <td>-</td>
+				    <td><a href="#"><i class="icon-edit"></i></a></td>
+				    <td><a href="#"><i class="icon-remove"></i></a></td>
+				</tr>
+				<tr>
+				    <td>1</td>
+				    <td>Marc</td>
+				    <td>127.0.0.2</td>
+				    <td>74:F0:5D:8E:BA:A9</td>
+				    <td>-</td>
+				    <td><a href="#"><i class="icon-edit"></i></a></td>
+				    <td><a href="#"><i class="icon-remove"></i></a></td>
+				</tr>
+				<tr>
+				    <td>2</td>
+				    <td>Nicolas</td>
+				    <td>127.0.0.3</td>
+				    <td>-</td>
+				    <td><a href="#">Voir</a></td>
+				    <td><a href="#"><i class="icon-edit"></i></a></td>
+				    <td><a href="#"><i class="icon-remove"></i></a></td>
+				</tr>
+			    </tbody>
+			</table>
+		    </div>
+
+		    <hr>
+		    <div>
+			<a href="http://bh-consulting.net">© b. h. consulting 2012</a>
+		    </div>
+		</div>
+	    </div>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
+	</script>
+	<script src="assets/js/bootstrap.js">
+	</script>
+    </body>
+
+</html>
