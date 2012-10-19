@@ -116,7 +116,7 @@ class ExtractTaskTest extends CakeTestCase {
 		$pattern = '/msgid "Your database configuration file is NOT present."\nmsgstr ""\n/';
 		$this->assertRegExp($pattern, $result);
 
-		$pattern = '/msgid "Rename config\/database.php.default to ';
+		$pattern = '/msgid "Rename config\/database.php to ';
 		$pattern .= 'config\/database.php"\nmsgstr ""\n/';
 		$this->assertRegExp($pattern, $result);
 

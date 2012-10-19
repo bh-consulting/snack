@@ -63,9 +63,9 @@ class DATABASE_CONFIG {
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'user',
-		'password' => 'password',
-		'database' => 'database_name',
+		'login' => 'radius',
+		'password' => 'radiusroxx',
+		'database' => 'raddb',
 		'prefix' => '',
 		//'encoding' => 'utf8',
 	);
