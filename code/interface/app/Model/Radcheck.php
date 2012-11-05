@@ -1,5 +1,6 @@
 <?php
 
+App::uses('AuthComponent', 'Controller/Component');
 class Radcheck extends AppModel
 {
     var $useTable = 'radcheck';
