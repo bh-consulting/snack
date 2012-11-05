@@ -1,5 +1,4 @@
 <h1>Add user</h1>
-    <div class="flash_success">Hello</div>
 <?php
 echo $this->Form->create('Radcheck');
 echo $this->Form->input('username');

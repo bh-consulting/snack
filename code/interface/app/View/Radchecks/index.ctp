@@ -1,7 +1,9 @@
 <h1>Radchecks</h1>
-<?php echo $this->Html->link('Add user',
+<p>
+    <?php echo $this->Html->link('Add user',
     array('controller' => 'radchecks', 'action' => 'add'),
     array('class' => 'btn')); ?>
+</p>
 <table class="table">
     <thead>
     <tr>
@@ -33,7 +35,7 @@
             array('confirm' => 'Are you sure?')); ?>
         </td>
     </tr>
-    <?php endforeach; ?>
+        <?php endforeach; ?>
     <?php unset($rad); ?>
     </tbody>
 </table>
