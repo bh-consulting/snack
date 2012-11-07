@@ -16,8 +16,10 @@ var Boostrapify = {
         // FORMS
         $('form').addClass('form-horizontal');
         $('div.input').wrap('<div class="control-group"></div>');
-        $('label').addClass('control-label');
+        $('div.select').wrap('<div class="control-group"></div>');
         $('input').wrap('<div class="controls"></div>');
+        $('select').wrap('<div class="controls"></div>');
+        $('label').addClass('control-label');
         //All submit forms converted to primary button
         $('input[type="submit"]').addClass('btn btn-primary');
 

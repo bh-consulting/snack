@@ -1,7 +1,7 @@
-<h1>Radchecks</h1>
+<h1>Users</h1>
 <p>
     <?php echo $this->Html->link('Add user',
-    array('controller' => 'radchecks', 'action' => 'add'),
+    array('controller' => 'radchecks', 'action' => 'add_choice'),
     array('class' => 'btn')); ?>
 </p>
 <table class="table">
@@ -14,8 +14,6 @@
         <th>Delete</th>
     </tr>
     </thead>
-
-    <!-- Here is where we loop through our $radchecks array, printing out radcheck info -->
 
     <tbody>
     <?php foreach ($radchecks as $rad): ?>

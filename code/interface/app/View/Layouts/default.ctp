@@ -76,7 +76,32 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
 <div class="container-fluid">
     <div class="row-fluid">
 
-        <div class="span12">
+        <div class="span3">
+
+		    <div class="well sidebar-nav">
+			<ul class="nav nav-list">
+			    <li class="">
+			    <a href="/interface/nass/"><i class="icon-hdd"></i> NAS</a>
+			    </li>
+			    <li class="active">
+			    <a href="/interface/radchecks/"><i class="icon-user"></i> Utilisateurs</a>
+			    </li>
+			    <li class="">
+			    <a href="#"><i class="icon-ok"></i> Monitoring</a>
+			    </li>
+			    <li class="">
+			    <a href="#"><i class="icon-list-alt"></i> Logs</a>
+			    </li>
+			    <li class="">
+			    <a href="#"><i class="icon-th-large"></i> Tableau de bord serveur</a>
+			    </li>
+			    <li class="">
+			    <a href="#"><i class="icon-wrench"></i> Paramètres serveur</a>
+			    </li>
+			</ul>
+		    </div>
+        </div>
+        <div class="span9">
             <div id="content" class="content">
 
                 <?php echo $this->Session->flash(); ?>

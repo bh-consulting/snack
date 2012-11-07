@@ -18,3 +18,4 @@ class Radcheck extends AppModel
     );
 
 }
+?>

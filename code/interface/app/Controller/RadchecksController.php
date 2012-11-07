@@ -15,6 +15,20 @@ class RadchecksController extends AppController
         $this->set('radcheck', $this->Radcheck->read());
     }
 
+    public function add_choice()
+    {
+    /*    if ($this->request->is('post')) {
+            $this->Radcheck->create();
+            if ($this->Radcheck->save($this->request->data)) {
+                $this->Session->setFlash('New user added.');
+                $this->redirect(array('action' => 'index'));
+            } else {
+                $this->Session->setFlash('Unable to add user.');
+            }
+        }
+     */
+    }
+
     public function add()
     {
         if ($this->request->is('post')) {
