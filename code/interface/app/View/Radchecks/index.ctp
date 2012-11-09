@@ -2,7 +2,7 @@
 <p>
     <div class="btn-group">
         <button class="btn dropdown-toggle" data-toggle="dropdown">
-        Add user
+        Add check
         <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
@@ -18,7 +18,6 @@
 <table class="table">
     <thead>
     <tr>
-        <th>Id</th>
         <th>Username</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -28,18 +27,17 @@
     <tbody>
     <?php foreach ($radchecks as $rad): ?>
     <tr>
-        <td><?php echo $rad['Radcheck']['id']; ?></td>
         <td>
             <?php echo $this->Html->link($rad['Radcheck']['username'],
-            array('controller' => 'radchecks', 'action' => 'view', $rad['Radcheck']['id'])); ?>
+            array('controller' => 'radchecks', 'action' => 'view', $rad['Radcheck']['username'])); ?>
         </td>
         <td>
             <i class="icon-edit"></i>
-            <?php echo $this->Html->link('Edit', array('action' => 'edit', $rad['Radcheck']['id'])); ?>
+            <?php echo $this->Html->link('Edit', array('action' => 'edit', $rad['Radcheck']['username'])); ?>
 
         </td>
         <td>
-            <?php echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Radcheck']['id']),
+            <?php echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Radcheck']['username']),
             array('confirm' => 'Are you sure?')); ?>
         </td>
     </tr>

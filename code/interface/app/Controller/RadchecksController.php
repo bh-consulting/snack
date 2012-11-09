@@ -15,30 +15,35 @@ class RadchecksController extends AppController
         $this->set('radcheck', $this->Radcheck->read());
     }
 
-    public function add()
-    {
-        if ($this->request->is('post')) {
-            $this->Radcheck->create();
-            if ($this->Radcheck->save($this->request->data)) {
-                $this->Session->setFlash('New user added.');
-                $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash('Unable to add user.');
-            }
-        }
-    }
-
     public function add_cisco()
     {
         if ($this->request->is('post')) {
+            $success = true;
             // add a cisco user with $this->request->data['username'] / $this->request->data['password']
+
+            // save password
             $this->Radcheck->create();
-            $this->request->data['attribute'] = 'Cleartext-Password';
+            $this->request->data['Radcheck']['attribute'] = 'Cleartext-Password';
             $this->request->data['op'] = ':=';
-            print_r($this->request->data);
-            if ($this->Radcheck->save($this->request->data)) {
+            $success = $success && $this->Radcheck->save($this->request->data);
+
+            // save type
+            $this->Radcheck->create();
+            $this->request->data['Radcheck']['attribute'] = 'EAP-TYPE';
+            $this->request->data['op'] = ':=';
+            $this->request->data['Radcheck']['value'] = 'MD5-CHALLENGE';
+            $success = $success && $this->Radcheck->save($this->request->data);
+
+            // save cisco access
+            $this->Radcheck->create();
+            $this->request->data['Radcheck']['attribute'] = 'NAS-ACCESS';
+            $this->request->data['op'] = ':=';
+            $this->request->data['Radcheck']['value'] = '0';
+            $success = $success && $this->Radcheck->save($this->request->data);
+
+            if($success){
                 $this->Session->setFlash('New user added.');
-                //$this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash('Unable to add user.');
             }

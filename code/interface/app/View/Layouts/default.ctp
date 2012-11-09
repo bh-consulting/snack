@@ -80,11 +80,11 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
 
 		    <div class="well sidebar-nav">
 			<ul class="nav nav-list">
+			    <li class="active">
+			    <a href="/interface/radchecks/"><i class="icon-check"></i> Utilisateurs</a>
+			    </li>
 			    <li class="">
 			    <a href="/interface/nas/"><i class="icon-hdd"></i> NAS</a>
-			    </li>
-			    <li class="active">
-			    <a href="/interface/radchecks/"><i class="icon-user"></i> Utilisateurs</a>
 			    </li>
 			    <li class="">
 			    <a href="#"><i class="icon-ok"></i> Monitoring</a>
