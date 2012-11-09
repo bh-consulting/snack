@@ -81,7 +81,7 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
 		    <div class="well sidebar-nav">
 			<ul class="nav nav-list">
 			    <li class="">
-			    <a href="/interface/nass/"><i class="icon-hdd"></i> NAS</a>
+			    <a href="/interface/nas/"><i class="icon-hdd"></i> NAS</a>
 			    </li>
 			    <li class="active">
 			    <a href="/interface/radchecks/"><i class="icon-user"></i> Utilisateurs</a>

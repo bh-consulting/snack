@@ -15,20 +15,6 @@ class RadchecksController extends AppController
         $this->set('radcheck', $this->Radcheck->read());
     }
 
-    public function add_choice()
-    {
-    /*    if ($this->request->is('post')) {
-            $this->Radcheck->create();
-            if ($this->Radcheck->save($this->request->data)) {
-                $this->Session->setFlash('New user added.');
-                $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash('Unable to add user.');
-            }
-        }
-     */
-    }
-
     public function add()
     {
         if ($this->request->is('post')) {
@@ -39,6 +25,54 @@ class RadchecksController extends AppController
             } else {
                 $this->Session->setFlash('Unable to add user.');
             }
+        }
+    }
+
+    public function add_cisco()
+    {
+        if ($this->request->is('post')) {
+            // add a cisco user with $this->request->data['username'] / $this->request->data['password']
+            $this->Radcheck->create();
+            $this->request->data['attribute'] = 'Cleartext-Password';
+            $this->request->data['op'] = ':=';
+            print_r($this->request->data);
+            if ($this->Radcheck->save($this->request->data)) {
+                $this->Session->setFlash('New user added.');
+                //$this->redirect(array('action' => 'index'));
+            } else {
+                $this->Session->setFlash('Unable to add user.');
+            }
+        }
+    }
+
+    public function add_loginpass()
+    {
+        if ($this->request->is('post')) {
+            $this->Radcheck->create();
+            $this->request->data['attribute'] = 'Cleartext-Password';
+            $this->request->data['op'] = ':=';
+            if ($this->Radcheck->save($this->request->data)) {
+                $this->Session->setFlash('New user added.');
+                $this->redirect(array('action' => 'index'));
+            } else {
+                $this->Session->setFlash('Unable to add user.');
+            }
+        }
+    }
+
+    public function add_cert()
+    {
+        if ($this->request->is('post')) {
+            $this->Radcheck->create();
+            $this->request->data['attribute'] = 'Cleartext-Password';
+            $this->request->data['op'] = ':=';
+            /* if ($this->Radcheck->save($this->request->data)) {
+                $this->Session->setFlash('New user added.');
+                $this->redirect(array('action' => 'index'));
+            } else {
+                $this->Session->setFlash('Unable to add user.');
+            }
+             */
         }
     }
 
@@ -85,3 +119,5 @@ class RadchecksController extends AppController
     }
 
 }
+
+?>
