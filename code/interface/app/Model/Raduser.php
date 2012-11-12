@@ -2,13 +2,22 @@
 
 class Raduser extends AppModel
 {
-    var $useTable = 'raduser';
-    var $primaryKey = 'username';
-    var $displayField = 'username';
-    var $name = 'Raduser';
+    public $useTable = 'raduser';
+    public $primaryKey = 'username';
+    public $displayField = 'username';
+    public $name = 'Raduser';
+
+    // association to Radcheck
+    public $hasMany = array(
+        'Radcheck' => array(
+            'className' => 'Radcheck',
+            'dependent' => true,
+            'foreignKey' => 'username'
+        )
+    );
 
     // validation rules
-    var $validate = array(
+    public $validate = array(
         'username' => array(
             'rule' => 'alphaNumeric',
             'message' => 'Usernames can only contains letters and numbers, not empty username.',

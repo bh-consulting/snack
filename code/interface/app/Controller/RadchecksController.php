@@ -25,6 +25,7 @@ class RadchecksController extends AppController
             $this->Radcheck->create();
             $this->request->data['Radcheck']['attribute'] = 'Cleartext-Password';
             $this->request->data['op'] = ':=';
+            $this->request->data['Radcheck']['value'] = $this->request->data['Radcheck']['password'];
             $success = $success && $this->Radcheck->save($this->request->data);
 
             // save type
@@ -36,9 +37,9 @@ class RadchecksController extends AppController
 
             // save cisco access
             $this->Radcheck->create();
-            $this->request->data['Radcheck']['attribute'] = 'NAS-ACCESS';
-            $this->request->data['op'] = ':=';
-            $this->request->data['Radcheck']['value'] = '0';
+            $this->request->data['Radcheck']['attribute'] = 'NAS-Port-Type';
+            $this->request->data['op'] = '==';
+            $this->request->data['Radcheck']['value'] = $this->request->data['Radcheck']['nas-port-type'];
             $success = $success && $this->Radcheck->save($this->request->data);
 
             if($success){

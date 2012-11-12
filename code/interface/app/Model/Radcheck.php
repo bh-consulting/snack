@@ -3,13 +3,22 @@
 App::uses('AuthComponent', 'Controller/Component');
 class Radcheck extends AppModel
 {
-    var $useTable = 'radcheck';
-    var $primaryKey = 'id';
-    var $displayField = 'username';
-    var $name = 'Radcheck';
+    public $useTable = 'radcheck';
+    public $primaryKey = 'id';
+    public $displayField = 'username';
+    public $name = 'Radcheck';
+
+    // association to Raduser
+    public $belongsTo = array(
+        'Raduser' => array(
+            'className' => 'Raduser',
+            'dependent' => true,
+            'foreignKey' => 'username'
+        )
+    );
 
     // validation rules
-    var $validate = array(
+    public $validate = array(
         'username' => array(
             'rule' => 'alphaNumeric',
             'message' => 'Usernames can only contains letters and numbers, not empty username.',
