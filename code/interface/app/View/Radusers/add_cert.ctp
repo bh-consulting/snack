@@ -3,6 +3,7 @@
 echo $this->Form->create('Radcheck', array('enctype' => 'multipart/form-data'));
 echo $this->Form->input('username');
 echo $this->Form->file('file');
+echo $this->Form->input('comment');
 echo $this->Form->end('Create');
 ?>
 

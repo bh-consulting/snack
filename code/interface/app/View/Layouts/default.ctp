@@ -64,7 +64,7 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li class="active"><a href="/interface/radchecks/">Radius</a></li>
+                    <li class="active"><a href="/interface/radusers/">Radius</a></li>
                     <li><a href="/interface/config/">Configuration</a></li>
                     <li><a href="/interface/term/">Terminal</a></li>
                 </ul>
@@ -81,7 +81,7 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
 		    <div class="well sidebar-nav">
 			<ul class="nav nav-list">
 			    <li class="active">
-			    <a href="/interface/radchecks/"><i class="icon-check"></i> Utilisateurs</a>
+			    <a href="/interface/radusers/"><i class="icon-check"></i> Utilisateurs</a>
 			    </li>
 			    <li class="">
 			    <a href="/interface/nas/"><i class="icon-hdd"></i> NAS</a>

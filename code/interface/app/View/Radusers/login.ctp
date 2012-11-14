@@ -1,6 +1,6 @@
-<div class="radchecks form">
+<div class="radusers form">
     <? echo $this->Session->flash('auth'); ?>
-    <? echo $this->Form->create('Radcheck'); ?>
+    <? echo $this->Form->create('Raduser'); ?>
     <fieldset>
         <legend><? echo __('Please enter your username and password'); ?></legend>
         <?

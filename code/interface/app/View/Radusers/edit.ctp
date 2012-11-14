@@ -1,6 +1,6 @@
 <h1>Edit User</h1>
 <?php
-echo $this->Form->create('Radcheck', array('action' => 'edit'));
+echo $this->Form->create('Raduser', array('action' => 'edit'));
 echo $this->Form->input('username');
 echo $this->Form->input('attribute');
 echo $this->Form->input('op');

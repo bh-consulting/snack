@@ -33,27 +33,23 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller
 {
-
+    /*
     public $components = array(
         'Session',
         'Auth' => array(
             'loginAction' => array(
-                'controller' => 'radchecks',
+                'controller' => 'radusers',
                 'action' => 'login'
             ),
-            'loginRedirect' => array('controller' => 'radchecks', 'action' => 'index'),
+            'loginRedirect' => array('controller' => 'radusers', 'action' => 'index'),
             'logoutRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
             'authenticate' => array(
                 'Form' => array(
                     'fields' => array('username' => 'username', 'password' => 'value'),
-                    'userModel' => 'Radcheck'
+                    'userModel' => 'Raduser'
                 )
             )
         )
     );
-
-    public function beforeFilter()
-    {
-
-    }
+     */
 }

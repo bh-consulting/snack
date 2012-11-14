@@ -18,6 +18,7 @@ var Boostrapify = {
         $('div.input').wrap('<div class="control-group"></div>');
         $('div.select').wrap('<div class="control-group"></div>');
         $('input').wrap('<div class="controls"></div>');
+        $('textarea').wrap('<div class="controls"></div>');
         $('select').wrap('<div class="controls"></div>');
         $('label').addClass('control-label');
         //All submit forms converted to primary button

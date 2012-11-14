@@ -1,6 +1,5 @@
 <?php
 
-App::uses('AuthComponent', 'Controller/Component');
 class Radcheck extends AppModel
 {
     public $useTable = 'radcheck';
@@ -9,22 +8,15 @@ class Radcheck extends AppModel
     public $name = 'Radcheck';
 
     // association to Raduser
+    /*
     public $belongsTo = array(
         'Raduser' => array(
             'className' => 'Raduser',
             'dependent' => true,
-            'foreignKey' => 'username'
+            'foreignKey' => false,
+            'conditions' => array('Radcheck.username = Raduser.username')
         )
     );
-
-    // validation rules
-    public $validate = array(
-        'username' => array(
-            'rule' => 'alphaNumeric',
-            'message' => 'Usernames can only contains letters and numbers, not empty username.',
-            'allowEmpty' => false
-        )
-    );
-
+     */
 }
 ?>
