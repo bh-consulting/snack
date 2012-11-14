@@ -162,6 +162,14 @@ class RadusersController extends AppController
         if ($this->request->is('get')) {
             throw new MethodNotAllowedException();
         }
+
+        // delete matching radchecks
+        $raduser = $this->Raduser->findById($id);
+        $Radcheck = new Radcheck;
+        $radchecks = $Radcheck->findAllByUsername($raduser['Raduser']['username']);
+        foreach($radchecks as $r)
+            $Radcheck->delete($r['Radcheck']['id']);
+
         if ($this->Raduser->delete($id)) {
             $this->Session->setFlash('The user with id:' . $id . ' has been deleted.');
             $this->redirect(array('action' => 'index'));

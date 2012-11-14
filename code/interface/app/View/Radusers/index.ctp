@@ -30,18 +30,18 @@
     <tr>
         <td>
             <?php echo $this->Html->link($rad['Raduser']['username'],
-            array('controller' => 'Radusers', 'action' => 'view', $rad['Raduser']['username'])); ?>
+            array('controller' => 'Radusers', 'action' => 'view', $rad['Raduser']['id'])); ?>
         </td>
         <td>
             <?php echo $rad['Raduser']['comment']; ?>
         </td>
         <td>
             <i class="icon-edit"></i>
-            <?php echo $this->Html->link('Edit', array('action' => 'edit', $rad['Raduser']['username'])); ?>
+            <?php echo $this->Html->link('Edit', array('action' => 'edit', $rad['Raduser']['id'])); ?>
 
         </td>
         <td>
-            <?php echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Raduser']['username']),
+            <?php echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Raduser']['id']),
             array('confirm' => 'Are you sure?')); ?>
         </td>
     </tr>
