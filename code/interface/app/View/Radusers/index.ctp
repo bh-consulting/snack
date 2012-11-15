@@ -20,32 +20,37 @@
     <tr>
         <th>Username</th>
         <th>Comment</th>
+        <th>Type</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
     </thead>
 
     <tbody>
-    <?php foreach ($radusers as $rad): ?>
+    <? foreach ($radusers as $rad): ?>
     <tr>
         <td>
-            <?php echo $this->Html->link($rad['Raduser']['username'],
+            <? echo $this->Html->link($rad['Raduser']['username'],
             array('controller' => 'Radusers', 'action' => 'view', $rad['Raduser']['id'])); ?>
         </td>
         <td>
-            <?php echo $rad['Raduser']['comment']; ?>
+            <? echo $rad['Raduser']['comment']; ?>
+        </td>
+        <td>
+            <? echo $rad['Raduser']['type']; ?>
         </td>
         <td>
             <i class="icon-edit"></i>
-            <?php echo $this->Html->link('Edit', array('action' => 'edit', $rad['Raduser']['id'])); ?>
+            <? echo $this->Html->link('Edit', array('action' => 'edit', $rad['Raduser']['id'])); ?>
 
         </td>
         <td>
-            <?php echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Raduser']['id']),
+            <i class="icon-remove"></i>
+            <? echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Raduser']['id']),
             array('confirm' => 'Are you sure?')); ?>
         </td>
     </tr>
-        <?php endforeach; ?>
-    <?php unset($rad); ?>
+        <? endforeach; ?>
+    <? unset($rad); ?>
     </tbody>
 </table>

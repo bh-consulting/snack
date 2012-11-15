@@ -13,21 +13,88 @@ class RadusersController extends AppController
     }
 
     public function getType($id) {
-        $radchecks = $this->getRadchecks($id);
-        foreach ($radchecks as $r) {
-            if ($r['Radcheck']['attribute'] == '') {
-                
-            }
-        }
+        if($this->isCisco($id))
+            return "Cisco";
+        if($this->isLoginPass($id))
+            return "Login / Password";
+        if($this->isMAC($id))
+            return "MAC";
+        if($this->isCert($id))
+            return "Certificate";
     }
 
-    public final function isMACAddress($string) {
+    public function isCisco($id){
+        $radchecks = $this->getRadchecks($id);
+        foreach ($radchecks as $r) {
+            if ($r['Radcheck']['attribute'] == 'NAS-Port-Type') {
+                if($r['Radcheck']['value'] == '0' || $r['Radcheck']['value'] == '5'){
+                    return true;
+                } 
+            }
+        }
+        return false;        
+    }
+
+    public function isLoginPass($id) {
+        $md5challenge = false;
+        $nasporttype = false;
+
+        $radchecks = $this->getRadchecks($id);
+        foreach ($radchecks as $r) {
+            if ($r['Radcheck']['attribute'] == 'NAS-Port-Type') {
+                if($r['Radcheck']['value'] == '15')
+                   $nasporttype = true; 
+            } else if ($r['Radcheck']['attribute'] == 'EAP-Type') {
+                if($r['Radcheck']['attribute'] == 'MD5-CHALLENGE')
+                    $md5challenge = true;
+            }
+            $username = $r['Radcheck']['username'];
+        }
+
+        return $md5challenge && $nasporttype && ! $this->isMACAddress($username);
+    }
+
+    public function isMAC($id) {
+        $md5challenge = false;
+        $nasporttype = false;
+
+        $radchecks = $this->getRadchecks($id);
+        foreach ($radchecks as $r) {
+            if ($r['Radcheck']['attribute'] == 'NAS-Port-Type') {
+                if($r['Radcheck']['value'] == '15')
+                   $nasporttype = true; 
+            } else if ($r['Radcheck']['attribute'] == 'EAP-Type') {
+                if($r['Radcheck']['attribute'] == 'MD5-CHALLENGE')
+                    $md5challenge = true;
+            }
+            $username = $r['Radcheck']['username'];
+        }
+
+        return $md5challenge && $nasporttype && $this->isMACAddress($username);
+    }
+
+    public function isCert($id) {
+        $radchecks = $this->getRadchecks($id);
+        foreach ($radchecks as $r) {
+            if ($r['Radcheck']['attribute'] == 'EAP-Type') {
+                if($r['Radcheck']['value'] == 'EAP-TTLS' || $r['Radcheck']['value'] == 'EAP-TLS')
+                   return true; 
+            }
+        }
+        return false;        
+    }
+
+    public function isMACAddress($string) {
         return preg_match('/^(?:[[:xdigit:]]{2}([-:]))(?:[[:xdigit:]]{2}\1){4}[[:xdigit:]]{2}$/', $string);
     }
 
     public function index()
     {
-        $this->set('radusers', $this->Raduser->find('all'));
+        $radusers = $this->Raduser->find('all');
+        foreach ($radusers as $r) {
+            $r['Raduser']['type'] = 'lol';//$this->getType($r['Raduser']['id']);
+        }
+        $this->set('radusers', $radusers);
     }
 
     public function view($id = null)
