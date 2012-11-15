@@ -249,13 +249,46 @@ Switch(config)# radius-server host 192.168.1.1 auth-port 1812 key poil
 
 Ajouter une règle d'authentification via le Radius pour le login en telnet~:
 \begin{verbatim}
-Switch(config)# aaa authentication login poil group radius
+Switch(config)# aaa authentication login poil group radius local
 \end{verbatim}
 
 Activer l'authentification en telnet~:
 \begin{verbatim}
 Switch(config)# line vty 0 15
 Switch(config-line)# login authentication poil
+\end{verbatim}
+
+Créer un utilisateur local au cas où le serveur Radius ne soit pas accessible~:
+\begin{verbatim}
+Switch(config)# username user1 password pass1
+\end{verbatim}
+
+Ajouter une règle d'authentification via le Radius pour le login en console~:
+\begin{verbatim}
+Switch(config)# aaa authentication enable poil group radius enable
+\end{verbatim}
+
+Activer l'authentification en console~:
+\begin{verbatim}
+Switch(config)# line console 0
+Switch(config-line)# login authentication poil
+\end{verbatim}
+
+Créer un mot de passe local au cas où le serveur Radius ne soit pas accessible~:
+\begin{verbatim}
+Switch(config)# enable password pass1
+\end{verbatim}
+
+\subsubsection{Configuration du serveur Radius}
+
+Pour le mode enable, il faut autoriser des caractères spéciaux dans le fichier \textit{sql.conf} :
+\begin{verbatim}
+safe-characters = "@0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_: /$"
+\end{verbatim}
+
+Pour le mode enable, il faut ajouter un utilisateur particulier dans la base de donnée :
+\begin{verbatim}
+insert into radcheck (username,attribute,value) values ('$enab15$','Cleartext-Password','pass1');
 \end{verbatim}
 
 \subsubsection{Test d'authentification sur le commutateur}
@@ -267,5 +300,5 @@ $ telnet user1@192.168.1.20
 
 Saisir \emph{motdepasse} en guise de mot de passe.
 
-TODO: Comment autoriser le mode enabled ?
-TODO: Mode console
+(TODO: test en console)
+
