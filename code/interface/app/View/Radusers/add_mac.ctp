@@ -6,4 +6,3 @@ echo $this->Form->input('comment');
 echo $this->Form->end('Create');
 ?>
 
-

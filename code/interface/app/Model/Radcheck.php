@@ -7,16 +7,12 @@ class Radcheck extends AppModel
     public $displayField = 'username';
     public $name = 'Radcheck';
 
-    // association to Raduser
-    /*
-    public $belongsTo = array(
-        'Raduser' => array(
-            'className' => 'Raduser',
-            'dependent' => true,
-            'foreignKey' => false,
-            'conditions' => array('Radcheck.username = Raduser.username')
+    public $validate = array(
+        'username' => array(
+            'rule' => 'notEmpty',
+            'message' => 'Username cannot be empty',
+            'allowEmpty' => false
         )
     );
-     */
 }
 ?>

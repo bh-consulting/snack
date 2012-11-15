@@ -5,6 +5,26 @@ class RadusersController extends AppController
 {
     public $helpers = array('Html', 'Form');
 
+    public function getRadchecks($id){
+        $this->Raduser->id = $id;
+
+        $Radcheck = new Radcheck;
+        return $Radcheck->findAllByUsername($this->Raduser->field('username'));
+    }
+
+    public function getType($id) {
+        $radchecks = $this->getRadchecks($id);
+        foreach ($radchecks as $r) {
+            if ($r['Radcheck']['attribute'] == '') {
+                
+            }
+        }
+    }
+
+    public final function isMACAddress($string) {
+        return preg_match('/^(?:[[:xdigit:]]{2}([-:]))(?:[[:xdigit:]]{2}\1){4}[[:xdigit:]]{2}$/', $string);
+    }
+
     public function index()
     {
         $this->set('radusers', $this->Raduser->find('all'));
@@ -25,27 +45,31 @@ class RadusersController extends AppController
         );
         $rad = new Radcheck;
         $rad->create();
-        $rad->save($data);
+        return $rad->save($data);
     }
 
     public function add($radchecks){
         if($this->request->is('post')){
                     
-            $success = true;
-            foreach($radchecks as $rc)
-                $this->create_radcheck($rc[0], $rc[1], $rc[2], $rc[3]);
-
             $this->Raduser->create();
-            $success = $success && $this->Raduser->save($this->request->data);
+            $success = $this->Raduser->save($this->request->data);
+
+            foreach($radchecks as $rc)
+                $success = $success && $this->create_radcheck($rc[0], $rc[1], $rc[2], $rc[3]);
 
             if($success){
-                $this->Session->setFlash('New user added.');
+                if(array_key_exists('cert_path', $this->request->data['Raduser']))
+                    $this->Session->setFlash('New user added. Certificate in ' . $this->request->data['Raduser']['cert_path']);
+                else
+                    $this->Session->setFlash('New user added.');
+
                 $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash('Unable to add user.');
             }
         }
     }
+
     public function add_cisco()
     {
         if ($this->request->is('post')) {
@@ -70,7 +94,7 @@ class RadusersController extends AppController
 
             $this->add($radchecks);
 
-            // add a cisco user with $this->request->data['username'] / $this->request->data['password']
+            // TODO: add a cisco user with $this->request->data['Raduser']['username'] / $this->request->data['Raduser']['password']
         }
     }
 
@@ -101,10 +125,10 @@ class RadusersController extends AppController
     }
 
     public function add_mac(){
-        
         if ($this->request->is('post')) {
 
             $username = $this->request->data['Raduser']['mac'];
+            $this->request->data['Raduser']['username'] = $this->request->data['Raduser']['mac'];
             $radchecks = array(
                 array($username,
                     'NAS-Port-Type',
@@ -129,16 +153,24 @@ class RadusersController extends AppController
     public function add_cert()
     {
         if ($this->request->is('post')) {
-            $this->Raduser->create();
-            $this->request->data['attribute'] = 'Cleartext-Password';
-            $this->request->data['op'] = ':=';
-            /* if ($this->Raduser->save($this->request->data)) {
-                $this->Session->setFlash('New user added.');
-                $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash('Unable to add user.');
-            }
-             */
+
+            $username = $this->request->data['Raduser']['username'];
+            $this->request->data['Raduser']['cert_path'] = '/var/www/cert/newcerts/' . $username . '.pem';
+            $radchecks = array(
+                array($username,
+                    'NAS-Port-Type',
+                    '==',
+                    '15'
+                ),
+                array($username,
+                    'EAP-TYPE',
+                    ':=',
+                    'EAP-TTLS'
+                )
+            );
+            $this->add($radchecks);
+
+            // TODO: generate a certificate
         }
     }
 
@@ -164,9 +196,8 @@ class RadusersController extends AppController
         }
 
         // delete matching radchecks
-        $raduser = $this->Raduser->findById($id);
+        $radchecks = $this->getRadchecks($id);
         $Radcheck = new Radcheck;
-        $radchecks = $Radcheck->findAllByUsername($raduser['Raduser']['username']);
         foreach($radchecks as $r)
             $Radcheck->delete($r['Radcheck']['id']);
 
@@ -174,6 +205,9 @@ class RadusersController extends AppController
             $this->Session->setFlash('The user with id:' . $id . ' has been deleted.');
             $this->redirect(array('action' => 'index'));
         }
+
+        // TODO: delete certificate on filesystem if necessary
+        
     }
 
     public function login()

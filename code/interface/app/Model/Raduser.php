@@ -8,22 +8,15 @@ class Raduser extends AppModel
     public $displayField = 'username';
     public $name = 'Raduser';
 
-    // association to Radcheck
-    /* public $hasMany = array(
-        'Radcheck' => array(
-            'className' => 'Radcheck',
-            'dependent' => true,
-            'foreignKey' => false,
-            'conditions' => array('Radcheck.username' => '$this->username')
-        )
-    ); */
-
-    // validation rules
     public $validate = array(
         'username' => array(
             'isUnique' => array(
                 'rule' => 'isUnique',
-                'message' => 'Username already used',
+                'message' => 'Username already used'
+            ),
+            'notEmpty' => array(
+                'rule' => 'notEmpty',
+                'message' => 'Username cannot be empty',
                 'allowEmpty' => false
             )
         ),
