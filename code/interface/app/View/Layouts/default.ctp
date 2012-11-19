@@ -79,11 +79,11 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
 
     <? echo $this->fetch('content'); ?>
 
+    </div>
     <hr/>
     <footer>
         <p><a href="http://bh-consulting.net">b.h. consulting 2012</a></p>
     </footer>
-    </div>
 </div>
 <?php
 echo $this->element('sql_dump');

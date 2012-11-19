@@ -1,9 +1,10 @@
 <? 
 $this->extend('/Common/radius_sidebar');
+$this->assign('users_active', 'active');
 ?>
-<h1><?php echo h($radcheck['Raduser']['username']); ?></h1>
+<h1><?php echo h($raduser['Raduser']['username']); ?></h1>
 
-<p><?php echo h($radcheck['Raduser']['attribute']); ?></p>
-<p><?php echo h($radcheck['Raduser']['op']); ?></p>
-<p><?php echo h($radcheck['Raduser']['value']); ?></p>
+<p><?php echo h($raduser['Raduser']['attribute']); ?></p>
+<p><?php echo h($raduser['Raduser']['op']); ?></p>
+<p><?php echo h($raduser['Raduser']['value']); ?></p>
 

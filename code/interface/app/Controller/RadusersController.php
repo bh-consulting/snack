@@ -12,15 +12,23 @@ class RadusersController extends AppController
         return $Radcheck->findAllByUsername($this->Raduser->field('username'));
     }
 
-    public function getType($id) {
+    public function getType($id, $nice = false) {
+        $types = array(
+            array('cisco', 'Cisco'),
+            array('loginpass', 'Login / Password'),
+            array('mac', 'MAC'),
+            array('cert', 'Certificate')
+        );
+
         if($this->isCisco($id))
-            return "Cisco";
+            return $types[0][$nice];
         if($this->isLoginPass($id))
-            return "Login / Password";
+            return $types[1][$nice];
         if($this->isMAC($id))
-            return "MAC";
+            return $types[2][$nice];
         if($this->isCert($id))
-            return "Certificate";
+            return $types[3][$nice];
+        return "";
     }
 
     public function isCisco($id){
@@ -45,7 +53,7 @@ class RadusersController extends AppController
                 if($r['Radcheck']['value'] == '15')
                    $nasporttype = true; 
             } else if ($r['Radcheck']['attribute'] == 'EAP-Type') {
-                if($r['Radcheck']['attribute'] == 'MD5-CHALLENGE')
+                if($r['Radcheck']['value'] == 'MD5-CHALLENGE')
                     $md5challenge = true;
             }
             $username = $r['Radcheck']['username'];
@@ -64,12 +72,11 @@ class RadusersController extends AppController
                 if($r['Radcheck']['value'] == '15')
                    $nasporttype = true; 
             } else if ($r['Radcheck']['attribute'] == 'EAP-Type') {
-                if($r['Radcheck']['attribute'] == 'MD5-CHALLENGE')
+                if($r['Radcheck']['value'] == 'MD5-CHALLENGE')
                     $md5challenge = true;
             }
             $username = $r['Radcheck']['username'];
         }
-
         return $md5challenge && $nasporttype && $this->isMACAddress($username);
     }
 
@@ -91,16 +98,17 @@ class RadusersController extends AppController
     public function index()
     {
         $radusers = $this->Raduser->find('all');
-        foreach ($radusers as $r) {
-            $r['Raduser']['type'] = 'lol';//$this->getType($r['Raduser']['id']);
+        foreach ($radusers as &$r) {
+            $r['Raduser']['ntype'] = $this->getType($r['Raduser']['id'], true);
+            $r['Raduser']['type'] = $this->getType($r['Raduser']['id'], false);
         }
         $this->set('radusers', $radusers);
     }
 
-    public function view($id = null)
-    {
+    public function view_cisco($id = null) {
         $this->Raduser->id = $id;
         $this->set('raduser', $this->Raduser->read());
+        $this->set('radchecks', $this->getRadchecks($id));
     }
 
     public function create_radcheck($username, $attribute, $op, $value){
@@ -153,7 +161,7 @@ class RadusersController extends AppController
                     $this->request->data['Raduser']['password']
                 ),
                 array($username,
-                    'EAP-TYPE',
+                    'EAP-Type',
                     ':=',
                     'MD5-CHALLENGE'
                 )
@@ -182,7 +190,7 @@ class RadusersController extends AppController
                     $this->request->data['Raduser']['password']
                 ),
                 array($username,
-                    'EAP-TYPE',
+                    'EAP-Type',
                     ':=',
                     'MD5-CHALLENGE'
                 )
@@ -208,7 +216,7 @@ class RadusersController extends AppController
                     $this->request->data['Raduser']['mac']
                 ),
                 array($username,
-                    'EAP-TYPE',
+                    'EAP-Type',
                     ':=',
                     'MD5-CHALLENGE'
                 )
@@ -230,7 +238,7 @@ class RadusersController extends AppController
                     '15'
                 ),
                 array($username,
-                    'EAP-TYPE',
+                    'EAP-Type',
                     ':=',
                     'EAP-TTLS'
                 )
@@ -277,6 +285,7 @@ class RadusersController extends AppController
         
     }
 
+    // FIXME
     public function login()
     {
         if ($this->request->is('post')) {

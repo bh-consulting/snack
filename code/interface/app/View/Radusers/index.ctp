@@ -35,22 +35,22 @@ $this->assign('users_active', 'active');
     <tr>
         <td>
             <? echo $this->Html->link($rad['Raduser']['username'],
-            array('controller' => 'Radusers', 'action' => 'view', $rad['Raduser']['id'])); ?>
+            array('controller' => 'Radusers', 'action' => 'view_' . $rad['Raduser']['type'], $rad['Raduser']['id'])); ?>
         </td>
         <td>
             <? echo $rad['Raduser']['comment']; ?>
         </td>
         <td>
-            <? echo $rad['Raduser']['type']; ?>
+            <? echo $rad['Raduser']['ntype']; ?>
         </td>
         <td>
             <i class="icon-edit"></i>
-            <? echo $this->Html->link('Edit', array('action' => 'edit', $rad['Raduser']['id'])); ?>
+            <? echo $this->Html->link('Edit', array('action' => 'edit_' . $rad['Raduser']['type'], $rad['Raduser']['id'])); ?>
 
         </td>
         <td>
             <i class="icon-remove"></i>
-            <? echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Raduser']['id']),
+            <? echo $this->Form->postLink('Delete', array('action' => 'delete_' . $rad['Raduser']['type'], $rad['Raduser']['id']),
             array('confirm' => 'Are you sure?')); ?>
         </td>
     </tr>
