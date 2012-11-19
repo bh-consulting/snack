@@ -1,3 +1,8 @@
+<? 
+$this->extend('/Common/radius_sidebar'); 
+$this->assign('nas_active', 'active');
+?>
+
 <h1>NAS</h1>
 <p>
     <?php echo $this->Html->link('Add a NAS',

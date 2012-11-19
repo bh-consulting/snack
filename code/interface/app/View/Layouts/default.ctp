@@ -73,49 +73,17 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
     </div>
 </div>
 
+
 <div class="container-fluid">
     <div class="row-fluid">
 
-        <div class="span3">
-
-		    <div class="well sidebar-nav">
-			<ul class="nav nav-list">
-			    <li class="active">
-			    <a href="/interface/radusers/"><i class="icon-check"></i> Utilisateurs</a>
-			    </li>
-			    <li class="">
-			    <a href="/interface/nas/"><i class="icon-hdd"></i> NAS</a>
-			    </li>
-			    <li class="">
-			    <a href="#"><i class="icon-ok"></i> Monitoring</a>
-			    </li>
-			    <li class="">
-			    <a href="#"><i class="icon-list-alt"></i> Logs</a>
-			    </li>
-			    <li class="">
-			    <a href="#"><i class="icon-th-large"></i> Tableau de bord serveur</a>
-			    </li>
-			    <li class="">
-			    <a href="#"><i class="icon-wrench"></i> Paramètres serveur</a>
-			    </li>
-			</ul>
-		    </div>
-        </div>
-        <div class="span9">
-            <div id="content" class="content">
-
-                <?php echo $this->Session->flash(); ?>
-
-                <?php echo $this->fetch('content'); ?>
-            </div>
-        </div>
-
-    </div>
+    <? echo $this->fetch('content'); ?>
 
     <hr/>
     <footer>
         <p><a href="http://bh-consulting.net">b.h. consulting 2012</a></p>
     </footer>
+    </div>
 </div>
 <?php
 echo $this->element('sql_dump');

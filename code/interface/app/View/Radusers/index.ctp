@@ -1,3 +1,7 @@
+<? 
+$this->extend('/Common/radius_sidebar');
+$this->assign('users_active', 'active');
+?>
 <h1>Users</h1>
 <p>
     <div class="btn-group">

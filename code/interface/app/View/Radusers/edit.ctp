@@ -1,3 +1,6 @@
+<? 
+$this->extend('/Common/radius_sidebar');
+?>
 <h1>Edit User</h1>
 <?php
 echo $this->Form->create('Raduser', array('action' => 'edit'));

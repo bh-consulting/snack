@@ -1,3 +1,6 @@
+<? 
+$this->extend('/Common/radius_sidebar');
+?>
 <div class="radusers form">
     <? echo $this->Session->flash('auth'); ?>
     <? echo $this->Form->create('Raduser'); ?>

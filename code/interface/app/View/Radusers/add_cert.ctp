@@ -1,3 +1,7 @@
+<? 
+$this->extend('/Common/radius_sidebar');
+?>
+
 <h1>Add a user with a certificate</h1>
 <?php
 echo $this->Form->create('Raduser');
