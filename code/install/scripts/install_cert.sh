@@ -1,6 +1,10 @@
 #!/bin/sh
 
+
 #WARNING! THIS SCRIPT GENERATE A FILE IN THE CURRENT DIR!
+#Just kidding... not true anymore
+
+#use of the commandline 'hostname'. Is it dangerous?
 
 #CAplPATH=/usr/lib/ssl/misc
 CAplPATH=install/files/usr/lib/ssl/misc
@@ -16,11 +20,16 @@ CAKEY=cakey.pem
 CAREQ=careq.pem
 CACERT=cacert.pem
 
+RADIUSKEY=radius_key.pem
+RADIUSREQ=radius_req.pem
+RADIUSCERT=radius_cert.pem
+
+############################################
 #Get the name of the client firm
-read -p "Enter the name of the client (CA common name)." CLIENTNAME
+read -p "Enter the name of the client (CA common name): " CLIENTNAME
 
 
-
+############################################
 #Modification of the configuration openssl.cnf
 sed\
 	-e "s|./demoCA|$DESTPATH|"\
@@ -43,6 +52,7 @@ sed\
 #
 
 
+############################################
 #Creation of the needed repertories
 
 if test ! -d $DESTROOTPATH
@@ -55,9 +65,11 @@ mkdir "${DESTPATH}/certs" -m $DIRMODE;
 mkdir "${DESTPATH}/crl" -m $DIRMODE ;
 mkdir "${DESTPATH}/newcerts" -m $DIRMODE;
 mkdir "${DESTPATH}/private" -m $DIRMODE;
+mkdir "${DESTPATH}/users" -m $DIRMODE;
 touch $DESTPATH/index.txt
 echo "01" > $DESTPATH/crlnumber
 
+############################################
 #Creation of the Authority Certificate (CA)
 
 #openssl req -config /etc/ssl/openssl.cnf -new -keyout $DESTPATH/private/$CAKEY -out $DESTPATH/$CAREQ
@@ -70,7 +82,7 @@ openssl req -new -key $DESTPATH/private/$CAKEY \
 
 
 openssl ca -config /etc/ssl/openssl.cnf \
-	-create_serial -out $DESTPATH/private/$CACERT -days $CACERTVALIDITY -batch \
+	-create_serial -out $DESTPATH/$CACERT -days $CACERTVALIDITY -batch \
 	-keyfile $DESTPATH/private/$CAKEY -selfsign \
 	-extensions v3_ca \
 	-infiles $DESTPATH/$CAREQ
@@ -82,9 +94,30 @@ openssl ca -config /etc/ssl/openssl.cnf \
 
 
 
+############################################
 #Creation of the radius certificate
+openssl genrsa -out $DESTPATH/private/$RADIUSKEY 4096
 
-openssl req -config /etc/ssl/openssl.cnf -new -keyout $DESTPATH/private/radius_key.pem \
-	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=$HOSTNAME/ \
-	-out $DESTPATH/private/newreq.pem -days $RADCERTVALIDITY
-openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out $DESTPATH/private/radius_cert.pem -infiles $DESTPATH/private/newreq.pem
+openssl req -config /etc/ssl/openssl.cnf -new -key $DESTPATH/private/$RADIUSKEY \
+	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=`hostname`/ \
+	-out $DESTPATH/private/$RADIUSREQ -days $RADCERTVALIDITY
+openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out $DESTPATH/private/$RADIUSCERT -batch -infiles $DESTPATH/private/$RADIUSREQ
+
+
+############################################
+#First CRL Generation and link to permit revocation verifications
+
+openssl ca -config /etc/ssl/openssl.cnf -gencrl -out $DESTPATH/crl/crl.pem
+
+HASH=`openssl x509 -noout -hash -in $DESTPATH/$CACERT`
+ln -s $DESTPATH/$CACERT $DESTPATH/certs/$HASH.0
+ln -s $DESTPATH/crl/crl.pem $DESTPATH/certs/$HASH.r0
+
+############################################
+#Now, we configure the radius.
+
+#First, we must create those two file.
+dd if=/dev/urandom of=$DESTPATH/random count=2
+openssl dhparam -check -text -5 4096 -out $DESTPATH/dh
+
+#Then we change the eap.conf file

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+PATHTOCERTS=/var/www/cert
+CRLCERT=$PATHTOCERTS/certs
+PATHTOUSER=$PATHTOCERTS/users
+
+
+if [ ! $# -eq 1 ]
+then
+	if [ $# -gt 1 ]
+	then
+		echo "Usage: revocationCheck [name]"
+		echo "No more argument needed"
+		exit
+	else
+		read -p "Enter user name: " USERNAME
+	fi
+else
+	USERNAME=$1
+	
+fi
+
+openssl verify  -CApath $CRLCERT -crl_check $PATHTOUSER/${USERNAME}_cert.pem
