@@ -24,6 +24,8 @@ RADIUSKEY=radius_key.pem
 RADIUSREQ=radius_req.pem
 RADIUSCERT=radius_cert.pem
 
+EAPCONF=/etc/freeradius/eap.conf
+
 ############################################
 #Get the name of the client firm
 read -p "Enter the name of the client (CA common name): " CLIENTNAME
@@ -121,3 +123,7 @@ dd if=/dev/urandom of=$DESTPATH/random count=2
 openssl dhparam -check -text -5 4096 -out $DESTPATH/dh
 
 #Then we change the eap.conf file
+
+sed\
+	-e '/private_key_password/c private_key_password='\
+	-i $EAPCONF
