@@ -35,6 +35,7 @@ read -p "Enter the name of the client (CA common name): " CLIENTNAME
 #Modification of the configuration openssl.cnf
 sed\
 	-e "s|./demoCA|$DESTPATH|"\
+	-e "/\s*certificate\s*=/c certificate = \$dir/private/cacert.pem/"\
 #	-e '/countryName_default/c countryName_default		= FR'\
 #	-e '/stateOrProvinceName_default/c stateOrProvinceName_default	= France'\
 	-i $SSLCNF
@@ -84,7 +85,7 @@ openssl req -new -key $DESTPATH/private/$CAKEY \
 
 
 openssl ca -config /etc/ssl/openssl.cnf \
-	-create_serial -out $DESTPATH/$CACERT -days $CACERTVALIDITY -batch \
+	-create_serial -out $DESTPATH/private/$CACERT -days $CACERTVALIDITY -batch \
 	-keyfile $DESTPATH/private/$CAKEY -selfsign \
 	-extensions v3_ca \
 	-infiles $DESTPATH/$CAREQ
@@ -112,7 +113,7 @@ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out $DESTPATH/p
 openssl ca -config /etc/ssl/openssl.cnf -gencrl -out $DESTPATH/crl/crl.pem
 
 HASH=`openssl x509 -noout -hash -in $DESTPATH/$CACERT`
-ln -s $DESTPATH/$CACERT $DESTPATH/certs/$HASH.0
+ln -s $DESTPATH/private/$CACERT $DESTPATH/certs/$HASH.0
 ln -s $DESTPATH/crl/crl.pem $DESTPATH/certs/$HASH.r0
 
 ############################################
@@ -131,7 +132,7 @@ sed\
         -e "/cadir =/c \\\t\t\tcadir = \${confdir}/private"\
         -e "/private_key_password =/c \\\t\t\tprivate_key_password ="\
         -e "/private_key_file =/c \\\t\t\tprivate_key_file = \${cadir}/$RADIUSKEY"\
-        -e "/^\s*certificate_file =/c \\\t\t\tcertificate_file = \${cadir}/private/$RADIUSCERT"\
+        -e "/^\s*certificate_file =/c \\\t\t\tcertificate_file = \${cadir}/$RADIUSCERT"\
         -e "/^\s*CA_file =/c \\\t\t\tCA_file = \${cadir}/$CACERT"\
         -e "/dh_file =/c \\\t\t\tdh_file = \${certdir}/dh"\
         -e "/check_crl =/c \\\t\t\tcheck_crl = yes"\
