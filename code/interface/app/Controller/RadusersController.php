@@ -105,10 +105,26 @@ class RadusersController extends AppController
         $this->set('radusers', $radusers);
     }
 
-    public function view_cisco($id = null) {
+    public function view($id = null) {
         $this->Raduser->id = $id;
         $this->set('raduser', $this->Raduser->read());
         $this->set('radchecks', $this->getRadchecks($id));
+    }
+
+    public function view_cisco($id = null) {
+        $this->view($id);
+    }
+
+    public function view_cert($id = null) {
+        $this->view($id);
+    }
+
+    public function view_loginpass($id = null) {
+        $this->view($id);
+    }
+
+    public function view_mac($id = null) {
+        $this->view($id);
     }
 
     public function create_radcheck($username, $attribute, $op, $value){

@@ -50,7 +50,7 @@ $this->assign('users_active', 'active');
         </td>
         <td>
             <i class="icon-remove"></i>
-            <? echo $this->Form->postLink('Delete', array('action' => 'delete_' . $rad['Raduser']['type'], $rad['Raduser']['id']),
+            <? echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Raduser']['id']),
             array('confirm' => 'Are you sure?')); ?>
         </td>
     </tr>
