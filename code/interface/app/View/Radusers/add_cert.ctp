@@ -1,5 +1,6 @@
 <? 
 $this->extend('/Common/radius_sidebar');
+$this->assign('users_active', 'active');
 ?>
 
 <h1>Add a user with a certificate</h1>

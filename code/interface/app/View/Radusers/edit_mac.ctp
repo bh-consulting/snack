@@ -1,6 +1,5 @@
 <? 
 $this->extend('/Common/radius_sidebar');
-$this->assign('users_active', 'active');
 ?>
 <h1>Add a user with MAC address</h1>
 <?php
