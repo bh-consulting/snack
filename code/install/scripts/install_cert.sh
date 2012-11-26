@@ -14,7 +14,8 @@ DESTPATH=$DESTROOTPATH/$DESTFOLDER
 SSLCNF=/etc/ssl/openssl.cnf
 RADCERTVALIDITY=3650 #ten years
 CACERTVALIDITY=3650 #ten years
-DIRMODE=604
+PATHDIRMODE=0744
+DIRMODE=0500
 
 CAKEY=cakey.pem
 CAREQ=careq.pem
@@ -35,7 +36,7 @@ read -p "Enter the name of the client (CA common name): " CLIENTNAME
 #Modification of the configuration openssl.cnf
 sed\
 	-e "s|./demoCA|$DESTPATH|"\
-	-e "/\s*certificate\s*=/c certificate = \$dir/private/cacert.pem/"\
+	-e "/\s*certificate\s*=/c certificate = \$dir/private/cacert.pem\t"\
 #	-e '/countryName_default/c countryName_default		= FR'\
 #	-e '/stateOrProvinceName_default/c stateOrProvinceName_default	= France'\
 	-i $SSLCNF
@@ -60,15 +61,21 @@ sed\
 
 if test ! -d $DESTROOTPATH
 then
-	mkdir -p $DESTROOTPATH
+	mkdir -p $DESTROOTPATH -m $PATHDIRMODE
 fi
 
 mkdir $DESTPATH -m $DIRMODE;
+chown freerad $DESTPATH
 mkdir "${DESTPATH}/certs" -m $DIRMODE;
+chown freerad $DESTPATH/certs
 mkdir "${DESTPATH}/crl" -m $DIRMODE ;
+chown freerad $DESTPATH/crl
 mkdir "${DESTPATH}/newcerts" -m $DIRMODE;
+chown freerad $DESTPATH/newcerts
 mkdir "${DESTPATH}/private" -m $DIRMODE;
-mkdir "${DESTPATH}/users" -m $DIRMODE;
+chown freerad $DESTPATH/private
+mkdir "${DESTPATH}/users" -m $PATHDIRMODE;
+chown freerad $DESTPATH/users
 touch $DESTPATH/index.txt
 echo "01" > $DESTPATH/crlnumber
 
@@ -112,7 +119,7 @@ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out $DESTPATH/p
 
 openssl ca -config /etc/ssl/openssl.cnf -gencrl -out $DESTPATH/crl/crl.pem
 
-HASH=`openssl x509 -noout -hash -in $DESTPATH/$CACERT`
+HASH=`openssl x509 -noout -hash -in $DESTPATH/private/$CACERT`
 ln -s $DESTPATH/private/$CACERT $DESTPATH/certs/$HASH.0
 ln -s $DESTPATH/crl/crl.pem $DESTPATH/certs/$HASH.r0
 
