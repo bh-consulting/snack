@@ -120,10 +120,23 @@ ln -s $DESTPATH/crl/crl.pem $DESTPATH/certs/$HASH.r0
 
 #First, we must create those two file.
 dd if=/dev/urandom of=$DESTPATH/random count=2
-openssl dhparam -check -text -5 4096 -out $DESTPATH/dh
+openssl dhparam -check -text -5 1024 -out $DESTPATH/dh
 
 #Then we change the eap.conf file
 
+#changes for TLS section
 sed\
-	-e '/private_key_password/c private_key_password='\
-	-i $EAPCONF
+        -e "/certdir =/i \\\t\t\tconfdir = $DESTPATH"\
+        -e "/certdir =/c \\\t\t\tcertdir = \${confdir}"\
+        -e "/cadir =/c \\\t\t\tcadir = \${confdir}/private"\
+        -e "/private_key_password =/c \\\t\t\tprivate_key_password ="\
+        -e "/private_key_file =/c \\\t\t\tprivate_key_file = \${cadir}/$RADIUSKEY"\
+        -e "/^\s*certificate_file =/c \\\t\t\tcertificate_file = \${cadir}/private/$RADIUSCERT"\
+        -e "/^\s*CA_file =/c \\\t\t\tCA_file = \${cadir}/$CACERT"\
+        -e "/dh_file =/c \\\t\t\tdh_file = \${certdir}/dh"\
+        -e "/check_crl =/c \\\t\t\tcheck_crl = yes"\
+        -e "/^\s*#*CA_path =/c \\\t\t\tCA_path = \${certdir}/certs"\
+        -e "/^\s*#*\s*check_cert_cn =/c \\\t\t\tcheck_cert_cn = %{User-Name}"\
+        -i $EAPCONF
+
+
