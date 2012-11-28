@@ -156,6 +156,8 @@ class RadusersController extends AppController
     public function add_mac(){
         if ($this->request->is('post')) {
 
+            $this->request->data['Raduser']['mac'] = str_replace(':', '', $this->request->data['Raduser']['mac']);
+            $this->request->data['Raduser']['mac'] = str_replace('-', '', $this->request->data['Raduser']['mac']);
             $username = $this->request->data['Raduser']['mac'];
             $this->request->data['Raduser']['is_mac'] = 1;
             $this->request->data['Raduser']['username'] = $this->request->data['Raduser']['mac'];
@@ -205,21 +207,6 @@ class RadusersController extends AppController
         }
     }
 
-    public function edit($id = null)
-    {
-        $this->Raduser->id = $id;
-        if ($this->request->is('get')) {
-            $this->request->data = $this->Raduser->read();
-        } else {
-            if ($this->Raduser->save($this->request->data)) {
-                $this->Session->setFlash('User has been updated.');
-                $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash('Unable to update user.');
-            }
-        }
-    }
-
     public function edit_cisco($id = null) {
         $this->Raduser->id = $id;
         if ($this->request->is('get')) {
@@ -232,12 +219,106 @@ class RadusersController extends AppController
                 }
             }
         } else {
+
             if ($this->Raduser->save($this->request->data)) {
+
+                // update radchecks fields
+                $radcheckFields = array('NAS-Port-Type' => $this->request->data['Raduser']['nas-port-type']);
+                if(!empty($this->request->data['Raduser']['password']))
+                    $radcheckFields['Cleartext-Password'] = $this->request->data['Raduser']['password'];
+                $this->update_radcheck_fields($id, $radcheckFields);
+
                 $this->Session->setFlash('User has been updated.');
                 $this->redirect(array('action' => 'index'));
+
             } else {
                 $this->Session->setFlash('Unable to update user.');
             }
+        }
+    }
+
+    public function edit_loginpass($id = null) {
+        $this->Raduser->id = $id;
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Raduser->read();
+        } else {
+
+            if ($this->Raduser->save($this->request->data)) {
+
+                // update radchecks fields
+                $radcheckFields = array();
+                if(!empty($this->request->data['Raduser']['password']))
+                    $radcheckFields['Cleartext-Password'] = $this->request->data['Raduser']['password'];
+                $this->update_radcheck_fields($id, $radcheckFields);
+
+                $this->Session->setFlash('User has been updated.');
+                $this->redirect(array('action' => 'index'));
+
+            } else {
+                $this->Session->setFlash('Unable to update user.');
+            }
+        }
+    }
+    
+    public function edit_cert($id = null) {
+        $this->Raduser->id = $id;
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Raduser->read();
+        } else {
+
+            if ($this->Raduser->save($this->request->data)) {
+
+                $newCert = ($this->request->data['Raduser']['cert_gen'] == 1);
+
+                if($newCert){
+                    // TODO: generate a new cert
+                    $this->Session->setFlash('User has been updated. Certificate in ' . $this->Raduser->field('cert_path'));
+                }
+                else
+                    $this->Session->setFlash('User has been updated.');
+
+                $this->redirect(array('action' => 'index'));
+
+            } else {
+                $this->Session->setFlash('Unable to update user.');
+            }
+        }
+    }
+
+    public function edit_mac($id = null) {
+        $this->Raduser->id = $id;
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Raduser->read();
+        } else {
+
+            if ($this->Raduser->save($this->request->data)) {
+
+                $this->Session->setFlash('User has been updated.');
+                $this->redirect(array('action' => 'index'));
+
+            } else {
+                $this->Session->setFlash('Unable to update user.');
+            }
+        }
+    }
+
+    public function update_radcheck_fields($id, $fields = array()){
+        $radchecks = $this->getRadchecks($id);
+        $radchecksToSave = array();
+
+        foreach($fields as $key=>$value){
+            foreach($radchecks as &$r){
+                if($r['Radcheck']['attribute'] == $key){
+                    $r['Radcheck']['value'] = $value;
+                    $radchecksToSave[]= $r;
+                    break;
+                }
+            }
+        }
+
+        $Radcheck = new Radcheck;
+        foreach($radchecksToSave as $r){
+            $Radcheck->save($r);
         }
     }
 

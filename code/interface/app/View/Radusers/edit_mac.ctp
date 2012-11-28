@@ -1,11 +1,14 @@
 <? 
 $this->extend('/Common/radius_sidebar');
-?>
-<h1>Add a user with MAC address</h1>
-<?php
-echo $this->Form->create('Raduser');
-echo $this->Form->input('mac', array('label' => 'MAC address'));
+$this->assign('users_active', 'active');
+
+echo '<h1>Edit ' . $this->data['Raduser']['username'] . ' (MAC user)</h1>';
+
+echo $this->Form->create('Raduser', array('action' => 'edit_mac'));
 echo $this->Form->input('comment');
-echo $this->Form->end('Create');
+echo $this->Form->input('id', array('type' => 'hidden'));
+echo $this->Form->input('username', array('type' => 'hidden'));
+echo $this->Form->end('Update');
 ?>
+
 

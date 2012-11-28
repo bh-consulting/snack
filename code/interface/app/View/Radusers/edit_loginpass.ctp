@@ -1,13 +1,15 @@
 <? 
 $this->extend('/Common/radius_sidebar');
-?>
-<h1>Add a user with login / password</h1>
-<?php
-echo $this->Form->create('Raduser');
-echo $this->Form->input('username');
-echo $this->Form->input('password');
-echo $this->Form->input('comment');
-echo $this->Form->end('Create');
-?>
+$this->assign('users_active', 'active');
 
+echo '<h1>Edit ' . $this->data['Raduser']['username'] . ' (login / password user)</h1>';
+
+echo $this->Form->create('Raduser', array('action' => 'edit_loginpass'));
+echo $this->Form->input('password');
+echo $this->Form->input('confirm_password', array('type' => 'password', 'label' => 'Confirm password'));
+echo $this->Form->input('comment');
+echo $this->Form->input('id', array('type' => 'hidden'));
+echo $this->Form->input('username', array('type' => 'hidden'));
+echo $this->Form->end('Update');
+?>
 

@@ -64,6 +64,11 @@ class Raduser extends AppModel
         } 
         return true; 
     }
+
+    public function beforeValidate($options = array()){
+        if(empty($this->data['Raduser']['password']))
+            unset($this->data['Raduser']['password']);
+    }
 }
 
 ?>
