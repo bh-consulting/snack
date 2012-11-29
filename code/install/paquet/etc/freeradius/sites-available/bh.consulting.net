@@ -1,0 +1,49 @@
+authorize {
+	preprocess
+	suffix
+
+	eap {
+		ok = return
+	}
+	sql
+
+	expiration
+	logintime
+}
+
+authenticate {
+	eap
+}
+
+preacct {
+	preprocess
+	acct_unique
+	suffix
+}
+
+accounting {
+	detail
+	radutmp
+	sql
+}
+
+session {
+	radutmp
+	sql
+}
+
+post-auth {
+	sql
+
+	Post-Auth-Type REJECT {
+		attr_filter.access_reject
+	}
+}
+
+pre-proxy {
+}
+
+post-proxy {
+	eap
+}
+

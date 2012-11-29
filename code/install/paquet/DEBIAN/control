@@ -1,0 +1,9 @@
+Package: Radius-BH-Consulting
+Version: 1.0
+Section: base
+Priority: optional
+Architecture: all
+Depends: bash, openssl, freeradius, freeradius-utils, freeradius-mysql, mysql-server
+Maintainer: Nicolas BOUGET <nicolas.bouget@esial.net>
+Description: Configuration d'un serveur Radius. Ajout d'une interface.
+
