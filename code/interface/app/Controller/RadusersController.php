@@ -92,7 +92,7 @@ class RadusersController extends AppController
 
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash('Unable to add user.');
+                $this->Session->setFlash('Unable to add user.', 'flash_error');
             }
         }
     }
@@ -232,7 +232,7 @@ class RadusersController extends AppController
                 $this->redirect(array('action' => 'index'));
 
             } else {
-                $this->Session->setFlash('Unable to update user.');
+                $this->Session->setFlash('Unable to update user.', 'flash_error');
             }
         }
     }
@@ -255,7 +255,7 @@ class RadusersController extends AppController
                 $this->redirect(array('action' => 'index'));
 
             } else {
-                $this->Session->setFlash('Unable to update user.');
+                $this->Session->setFlash('Unable to update user.', 'flash_error');
             }
         }
     }
@@ -280,7 +280,7 @@ class RadusersController extends AppController
                 $this->redirect(array('action' => 'index'));
 
             } else {
-                $this->Session->setFlash('Unable to update user.');
+                $this->Session->setFlash('Unable to update user.', 'flash_error');
             }
         }
     }
@@ -297,7 +297,7 @@ class RadusersController extends AppController
                 $this->redirect(array('action' => 'index'));
 
             } else {
-                $this->Session->setFlash('Unable to update user.');
+                $this->Session->setFlash('Unable to update user.', 'flash_error');
             }
         }
     }

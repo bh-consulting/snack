@@ -24,12 +24,10 @@ var Boostrapify = {
         //All submit forms converted to primary button
         $('input[type="submit"]').addClass('btn btn-primary');
 
-        // MESSAGES
+        // FLASH MESSAGES
+        $('#flashMessage').prepend('<button type="button" class="close" data-dismiss="alert">×</button>');
         $('.message').addClass('alert alert-info');
-        $('.flash_success').addClass('alert alert-success');
-        $('.flash_warning').addClass('alert');
         $('.error-message').addClass('alert alert-error');
-        $('.form-error').addClass('error');
 
         // ELEMENTS
         $('table').addClass('table table-hover table-bordered');

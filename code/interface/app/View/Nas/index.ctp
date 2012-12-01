@@ -31,26 +31,26 @@ $this->assign('nas_active', 'active');
     <tr>
         <td><?php echo $n['Nas']['id']; ?></td>
         <td>
-            <?php echo $this->Html->link($rad['Nas']['nasname'],
-            array('controller' => 'nas', 'action' => 'view', $rad['Nas']['id'])); ?>
+            <?php echo $this->Html->link($n['Nas']['nasname'],
+            array('controller' => 'nas', 'action' => 'view', $n['Nas']['id'])); ?>
         </td>
-        <td><?php echo $rad['Nas']['shortname']; ?></td>
-        <td><?php echo $rad['Nas']['type']; ?></td>
-        <td><?php echo $rad['Nas']['ports']; ?></td>
-        <td><?php echo $rad['Nas']['secret']; ?></td>
-        <td><?php echo $rad['Nas']['server']; ?></td>
-        <td><?php echo $rad['Nas']['community']; ?></td>
-        <td><?php echo $rad['Nas']['description']; ?></td>
+        <td><?php echo $n['Nas']['shortname']; ?></td>
+        <td><?php echo $n['Nas']['type']; ?></td>
+        <td><?php echo $n['Nas']['ports']; ?></td>
+        <td><?php echo $n['Nas']['secret']; ?></td>
+        <td><?php echo $n['Nas']['server']; ?></td>
+        <td><?php echo $n['Nas']['community']; ?></td>
+        <td><?php echo $n['Nas']['description']; ?></td>
         <td>
             <i class="icon-edit"></i>
-            <?php echo $this->Html->link('Edit', array('action' => 'edit', $rad['nas']['id'])); ?>
+            <?php echo $this->Html->link('Edit', array('action' => 'edit', $n['Nas']['id'])); ?>
         </td>
         <td>
-            <?php echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Nas']['id']),
+            <?php echo $this->Form->postLink('Delete', array('action' => 'delete', $n['Nas']['id']),
             array('confirm' => 'Are you sure?')); ?>
         </td>
     </tr>
         <?php endforeach; ?>
-    <?php unset($rad); ?>
+    <?php unset($n); ?>
     </tbody>
 </table>
