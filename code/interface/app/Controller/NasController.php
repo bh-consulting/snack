@@ -39,6 +39,21 @@ class NasController extends AppController
         }
     }
 
+    public function edit($id = null)
+    {
+        $this->Nas->id = $id;
+        if($this->request->is('get')){
+            $this->request->data = $this->Nas->read();
+        } else {
+            if($this->Nas->save($this->request->data)){
+                $this->Session->setFlash('NAS has been updated.');
+                $this->redirect(array('action' => 'index'));
+            } else {
+                $this->Session->setFlash('Unable to update NAS', 'flash_error');
+            }
+        }
+    }
+
     public function delete($id)
     {
         if($this->request->is('get')){

@@ -10,5 +10,3 @@ echo $this->Form->input('id', array('type' => 'hidden'));
 echo $this->Form->input('username', array('type' => 'hidden'));
 echo $this->Form->end('Update');
 ?>
-
-

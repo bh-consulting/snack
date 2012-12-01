@@ -1,6 +1,8 @@
 <?
 
 App::uses('AuthComponent', 'Controller/Component');
+App::uses('Utils', 'Lib');
+
 class Raduser extends AppModel
 {
     public $useTable = 'raduser';
@@ -34,7 +36,7 @@ class Raduser extends AppModel
         'mac' => array(
             'macFormat' => array(
                 'rule' => array('isMACFormat'),
-                'message' => 'This is not a MAC address format'
+                'message' => 'This is not a MAC address format.'
             )
         )
     );
@@ -56,7 +58,7 @@ class Raduser extends AppModel
     public function isMACFormat($field=array()) {
         foreach( $field as $key => $value ){ 
             $v1 = $value; 
-            if(!preg_match('/^(?:[[:xdigit:]]{2}([-:]?))(?:[[:xdigit:]]{2}\1){4}[[:xdigit:]]{2}$/', $v1)) { 
+            if(!Utils::isMAC($v1)) { 
                 return false; 
             } else { 
                 continue; 

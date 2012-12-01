@@ -26,7 +26,7 @@ class RadusersController extends AppController
             return $types[1][$nice];
         if($raduser['is_mac'])
             return $types[2][$nice];
-        if($raduser['is_cert'])
+        if($raduser['is_cert']  )
             return $types[3][$nice];
         return "";
     }

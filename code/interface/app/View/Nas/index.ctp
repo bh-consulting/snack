@@ -9,6 +9,7 @@ $this->assign('nas_active', 'active');
     array('controller' => 'nas', 'action' => 'add'),
     array('class' => 'btn')); ?>
 </p>
+<? if(!empty($nas)){ ?>
 <table class="table">
     <thead>
     <tr>
@@ -54,3 +55,6 @@ $this->assign('nas_active', 'active');
     <?php unset($n); ?>
     </tbody>
 </table>
+<? } else { ?>
+<p>You don't have any NAS yet!</p>
+<? } ?>
