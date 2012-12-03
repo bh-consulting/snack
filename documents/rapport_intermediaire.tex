@@ -1,17 +1,35 @@
-\newcommand{\titreA}{Rapport intermédiaire}
+\newcommand{\titreA}{Rapport de projet}
 \newcommand{\titreB}{Projet industriel}
 \input{entetes.tex}
 
+\listoffigures
+\newpage
+
 \section{Introduction}
-\section{B.H. Consulting}
+\subsection{Préambule}
+
+La réalisation du travail décrit dans ce document s'incrit dans une démarche étudiante, visant à valider la dernière année de la formation ingénieure de l'école TELECOM Nancy. Elle s'effectue sur une durée de six mois, en partenariat avec l'entreprise B.H. Consulting ainsi qu'un intervenant universitaire.
+
+L'entreprise rémunère l'école pour le travail effectué en deux paiements, dont le second dépend de sa satisfaction à la vue du travail effectué. L'équipe du projet est constituée de quatre étudiants, qui s'engagent à travailler un millier d'heure par personne.
+
+Un rapport et une soutenance sont présentés à mi-parcours du projet, pour un rendu final en fin d'année scolaire.
+
+\subsection{TELECOM Nancy}
+
+TODO: blabla esial
+
+\subsection{B.H. Consulting}
+
+TODO: blabla bhconsulting
+
 \section{Projet}
 \subsection{Contexte}
 
 La sensibilisation croissante aux notions de sécurisation des réseaux des entreprises a conduit B.H. Consulting à devoir répondre à de nouveaux types d'exigences.
 
-Les réseaux d'une entreprise sont en effet devenus un point critique de toutes les nouvelles sociétés, qui sont régulièrement amenées à perdre des heures considérables de travail dès lors que ceux-ci ne sont plus accessibles. Au-delà de l'aspect fonctionnel, les réseaux sont une porte vers les serveurs les plus sensibles des administrations, qui y stockent les informations les plus confidentielles.
+Les réseaux d'une entreprise sont en effet devenus un point critique de toutes les nouvelles sociétés, qui sont régulièrement amenées à perdre des heures considérables de travail dès lors que ceux-ci ne sont plus accessibles. Au-delà de l'aspect fonctionnel, les réseaux sont la voie royale vers les serveurs les plus sensibles des administrations, qui y stockent les informations les plus confidentielles.
 
-Qu'ils soient filaires ou non, ces réseaux sont accessibles dès lors qu'on est dans les locaux des entreprises~: prises murales, émissions wifi, etc. N'importe quel individu ayant la possibilité de se relier physiquement aux réseaux, il faut mettre en place un mécanisme de contrôle logique pour restreindre ses accès. Pour autant, ce mécanisme ne doit pas être lourd à administrer, ce qui impliquerait rapidement un laxisme et une confusion dans les règles établies. Définir strictement les autorisations en fonction des points d'accès physiques, pour ensuite établir une carte des autorisations de l'ensemble des bâtiments n'est pas non plus la bonne solution, puisqu'il sera difficile de garantir les contrôles d'accès à ces prises. L'utilisation du réseau dépendra également de  l'emplacement géographique de l'utilisateur, à l'encontre de toute logique vis-à-vis de la tendance actuelle au nomadisme constaté dans les entreprises.
+Qu'ils soient filaires ou non, ces réseaux sont accessibles dès lors qu'on est dans les locaux des entreprises~: prises murales, émissions wifi, etc. N'importe quel individu ayant alors la possibilité de se relier physiquement aux réseaux, il faut mettre en place un mécanisme de contrôle logique pour restreindre ses accès. Pour autant, ce mécanisme ne doit pas être lourd à administrer, ce qui impliquerait rapidement un laxisme et une confusion dans les règles établies. Définir strictement les autorisations en fonction des points d'accès physiques, pour ensuite établir une carte des autorisations de l'ensemble des bâtiments n'est pas non plus la bonne solution, puisqu'il sera difficile de garantir les contrôles d'accès à ces prises. L'utilisation du réseau dépendra également de  l'emplacement géographique de l'utilisateur, à l'encontre de toute logique vis-à-vis de la tendance actuelle au nomadisme constaté dans les entreprises.
 
 Pour répondre à toutes ces exigences, critiques pour une entreprise qui souhaite garantir l'intégrité de son réseau et la confidentialité de ses données tout en sauvegardant la liberté de mouvement de ses employés, B.H. Consulting est régulièrement contraint d'exploiter les nouvelles technologies les plus adéquates. La première problématique de ce projet industriel sera donc de permettre à B.H. Consulting d'avoir à disposition la documentation nécessaire pour déployer l'une des solutions existantes, facilement et rapidement.
 
@@ -64,20 +82,7 @@ La note de cadrage rappelle la problématique et les bénéfices du projet pour 
 
 Un contexte est ensuite proposé, en rappelant le statut particulier du projet industriel et les enjeux qui sont propres aux membres de l'équipe. Le délai ainsi que l'absence de budget sont évoqués, avec le matériel qui est disposition au lancment du projet.
 
-Les objectifs sont complétés par un chapitre sur le niveau de qualité attendu, avec une priorisation claire des principales tâches à traiter. Une section risques rappelle les points sensibles du projet.
-
-La liste des livrables y est également définie~:
-\begin{description}
-\item[19 octobre 2012 :] Remise de la note de cadrage.
-\item[5 novembre 2012 :] Signature de la note de cadrage.
-\item[12 novembre 2012 :] Remise du cahier des charges.
-\item[19 novembre 2012 :] Signature du cahier des charges.
-\item[20 décembre 2012 :] Soutenance intermédiaire.
-\item[7/8 février 2013 :] Audit du projet.
-\item[14 mars 2013 :] Remise du projet avec les documentations.
-\item[20 mars 2013 :] Remise du rapport.
-\item[21 mars 2013 :] Soutenance finale.
-\end{description}
+Les objectifs sont complétés par un chapitre sur le niveau de qualité attendu, avec une priorisation claire des principales tâches à traiter. Une section risques rappelle les points sensibles du projet et une liste des livrables est proposée.
 
 Comme convenu, la note de cadrage a été signée par le chef de projet et l'intervenant industriel. C'est en partant de son contenu fiable que le cahier des charges a été établit.
 
@@ -90,7 +95,6 @@ Il rappelle brièvement le matériel qui est à notre disposition durant toute l
 Les différentes tâches, ainsi que la description des différents concepts techniques, sont expliqués dans la suite de ce document.
 
 \subsection{Organisation}
-\subsubsection{Planning}
 \subsubsection{Outils de gestion}
 
 Pour une organisation optimale du travail fourni, l'équipe a recouru à une solution logicielle de gestion de projet.
@@ -102,6 +106,26 @@ Toutes les grandes tâches qui pouvaient être parallélisées et qui débutaien
 L'outil de gestion permettant d'attribuer les tâches aux différents membres de l'équipe, aucune d'entre elles qui aurait pu mettre l'avancement du projet en péril n'a été laissée de côté. Enfin, les membres de' léquipe ont eu l'occasion d'ajouter des feuilles de temps chaque fois qu'ils ont travaillé sur l'une de leurs tâches en particulier, permettant ainsi de suivre progressivement le bon avancement de celles-ci.
 
 Chaque réunion a donné lieu à un rapport, transmis à l'ensemble des membres de l'équipe ainsi qu'à l'intervenant industriel et l'encadrant universitaire.
+
+\subsubsection{Planning}
+
+Un diagramme de Gantt des tâches prévues est disponible en annexe~\ref{annexe_gantt} page~\pageref{annexe_gantt}.
+
+On y retrouve les deux principales étapes du projet, découpés en tâches, elles-même détaillées par des sous-tâches. Les princpales tâches sont décrites dans la suite de ce document. La fin du travail sur les authentifications a eu lieu mi-novembre, et la fin de l'interface web liée aux fonction du Radius mi-décembre. La fin de cette tâche marque la fin de la première grande étape du projet, qui est suivie par la seconde dès le début de l'année civile qui suit.
+
+La liste des livrables proposée dans la note de cadrage est la suivante~:
+
+\begin{description}
+\item[19 octobre 2012 :] Remise de la note de cadrage.
+\item[5 novembre 2012 :] Signature de la note de cadrage.
+\item[12 novembre 2012 :] Remise du cahier des charges.
+\item[19 novembre 2012 :] Signature du cahier des charges.
+\item[20 décembre 2012 :] Soutenance intermédiaire.
+\item[7/8 février 2013 :] Audit du projet.
+\item[14 mars 2013 :] Remise du projet avec les documentations.
+\item[20 mars 2013 :] Remise du rapport.
+\item[21 mars 2013 :] Soutenance finale.
+\end{description}
 
 \subsubsection{Attributions et réunions}
 
@@ -157,7 +181,7 @@ Sur la base de ces trois critères, FreeRadius est ressorti du lot. Outre ses fo
 
 \subsection{Type de certificats}
 
-%% decrire les differents types en argumentant sur notre choix
+TODO: blabla certificats
 
 \subsection{Interface web}
 \subsubsection{Langages et environnements de développement}
@@ -196,6 +220,100 @@ PostgreSQL est beaucoup plus puissant que MySQL, mais il est aussi beaucoup plus
 
 Le choix de cette solution a été accueilli favorablement par l'intervenant industriel.
 
-\section{Implémentation}
+\section{Implémentations et méthodologies}
+\subsection{Radius}
+
+L'étude des différentes solutions radius aura occupé quelques jours du début du projet, comme en atteste la tâche issue du diagramme de Gantt disponible en figure~\ref{gantt_radius} page~\pageref{gantt_radius}.
+
+\begin{figure}[!h]
+	\label{gantt_radius}
+	\begin{center}
+		\includegraphics[width=350pt]{img/gantt_radius.png}
+	\end{center}
+	\caption{Tâche \textit{Radius}}
+\end{figure}
+
+Elle a commencé par une recherche documentaire généraliste sur le protocole Radius pour tous les membres de l'équipe, qui a aboutie sur l'écriture d'une courte documentation interne. S'en est suivi une recherche plus précise sur les différentes implémentations existantes. Une fois la liste établie, chaque membre a pu s'intéresser particulièrement à une solution précise.
+
+La liste des avantages et des inconvénients de chacun a été dressée en réunion, pour conclure sur l'implémentation la plus adaptée à proposer à l'intervenant industriel.
+
+\subsection{Bases de données SQL}
+
+Les recherches concernant le choix de la solution de gestion de bases de données est intimement liée à celui de l'implémentation radius. Ces deux tâches ont donc été exécutées en parallèle, pour trouver une solution globale qui sache interagir ensemble, tout en étant la plus performante possible.
+
+Le détail de cette tâche issu du diagramme de Gantt est donné en figure~\ref{gantt_sql} page~\pageref{gantt_sql}.
+
+\begin{figure}[!h]
+	\label{gantt_sql}
+	\begin{center}
+		\includegraphics[width=350pt]{img/gantt_sql.png}
+	\end{center}
+	\caption{Tâche \textit{Bases de données SQL}}
+\end{figure}
+
+Après avoir dressé une liste des solutions open-sources les plus populaires, une recherche documentaire a été effecutée sur chacune, pour prendre en compte ses avantages et ses inconvénients. La compatibilité avec les trois principales implémentations Radius retenues a aussi été un critère de choix.
+
+La solution retenue a été installée sur une machine de tests, au côté du Radius gagnant. Une dernière étape a consisté à réussir à lier les deux, pour que l'authentification Radius utilise la base de données SQL.
+
+\subsection{802.1x}
+
+Une dernière étape demeure dans le domaine de la base de données~: gérer les clients NAS, c'est à dire les commutateurs qui auront à utiliser le Radius (et donc indirectement la base de données).
+
+Cette étape s'est faite en parallèle de l'étude du protocole 802.1x, décrite dans la figure~\ref{gantt_sql} page~\pageref{gantt_sql}.
+
+\begin{figure}[!h]
+	\label{gantt_sql}
+	\begin{center}
+		\includegraphics[width=350pt]{img/gantt_sql.png}
+	\end{center}
+	\caption{Tâche \textit{Bases de données SQL}}
+\end{figure}
+
+
+Celle-ci a logiquement commencé par l'écriture d'une documentation sur le standard, qui a permis à l'équipe de s'auto-former sur la technologie. Après avoir réussi à appliquer nos connaissances sur un commutateur, l'affectation dynamique de réseau virtuel a été testée. Cette première étape valide le coeur-même de notre projet, qui consiste à permettre à une entreprise de graviter le plus simplement possible autour de cette possibilité.
+
+Diverses autres possibilités ont été testées à la main, pour comprendre ce que le protocole permet effectivement de faire, et qui peut nous être utile pour l'implémentation de l'interface web en vue de répondre aux exigences demandées. Ainsi, les tests sur la supervision des sessions ont permis de cerner les différentes possibilités pour identifier le début et la fin d'une session, qui pourra ensuite être affichée graphiquement dans l'interface web. D'autres études comme les limitations pour un utilisateur et les journaux systèmes préparent les futures fonctionnalités de l'interface.
+
+\subsection{Authentifications}
+
+Étape critique du projet, les authentifications au travers du Radius ont été essentielles pour présager du bon fonctionnement de l'ensemble du projet. Elle est décrite dans la figure~\ref{gantt_auth} page~\pageref{gantt_auth}.
+
+\begin{figure}[!h]
+	\label{gantt_auth}
+	\begin{center}
+		\includegraphics[width=350pt]{img/gantt_auth.png}
+	\end{center}
+	\caption{Tâche \textit{Authentifications}}
+\end{figure}
+
+les premiers tests ont concerné le Radius directement, et ont aboutis sur une authentification d'un client Radius sur un serveur Radius réussie. La suite aura concerné les commutateurs directement, sur lesquels un l'authentification peut se faire aussi directement en Radius. Les tests étant concluant, il est possible de contrôler les accès à la configuration d'un commutateur directement grâce à Radius. La suite logique a été de tester directement le protocole 802.1x. L'authentification d'un client sur le Radius au travers du commutateur fonctionnant, il ne reste plus qu'à décliner les solutions pour la certifier.
+
+Jusqu'à lors, les authentifications ont été faite en MD5, c'est à dire avec uniquement un couple utilisateur / mot de passe, simplement chiffré sur le réseau. Beaucoup de solutions existent, offrant des possibilités très diverses en terme de sécurité et de simplicité d'utilisation. Ces solutions ont été étudiées, documentées, testées et enfin élaguées.
+
+\subsection{Procédure d'installation}
+
+Une fois les différentes tâches concernant le Radius et le SQL terminées, une réinstallation totale du système a été effectuée. Il a ensuite été réinstallé pas-à-pas, grâce aux documentations réalisées durant les tests. Cette étape a été l'occasion de corriger la documentation, et de se confronter à d'autres problèmes mineurs.
+
+Un paquet Ubuntu a été réalisé au fur et à mesure de la réinstallation, pour permettre son automatisation. Une dernière réinstallation aura permis de tester son bon fonctionnement. Ce paquet permettra un gain de temps précieux pour l'entreprise, qui aura à le déployer sur toutes les machines d'authentification de ses clients. Différentes questions sont posées durant son installation, pour qu'il s'adapte le plus simplement possible au client.
+
+La réinstallation du système a posé plusieurs fois problèmes~: les machines mises à disposition ne sont pas parfaitement supportées par Ubuntu et Windows XP. Beaucoup de temps a été perdu pour résoudre les différents problèmes rencontrés.
+
+\subsection{Interface web}
+
+En parallèle de beaucoup des tâches décrites ci-dessus, la prise en main de l'environnement de travail CakePHP a été fait sans aucun lien avec le reste du projet. Ainsi, une seule personne a pris en charge cette étude, en prenant soin de s'auto-former en documentant ses recherches. Une fois les tâches parallèles terminées, le reste du groupe l'a rejoint, pour une rapide formation sur le sujet. Les sous-tâches sont détaillées dans la figure~\ref{gantt_interfaces} page~\pageref{gantt_interface}.
+
+\begin{figure}[!h]
+	\label{gantt_interface}
+	\begin{center}
+		\includegraphics[width=\textwidth]{img/gantt_interface.png}
+	\end{center}
+	\caption{Tâche \textit{Interface web}}
+\end{figure}
+
+L'environnement de travail Bootstrap Twitter étant une prérogative du projet, un temps important a dû être consacré à étudier et tester ses possibles interactions avec CakePHP. Une méthode propre et pratique a été trouvée, permettant au projet d'évoluer rapidement en respectant ses contraintes.
+
+Les premières vues ont été réalisées, permettant de commencer à rassembler l'ensemble des travaux de l'équipe, pour arriver à un premier résultat concret du projet.
+
+TODO: FIGURES VUES
 
 \end{document}
