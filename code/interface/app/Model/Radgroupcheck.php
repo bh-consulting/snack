@@ -3,9 +3,16 @@
 class Radgroupcheck extends AppModel
 {
 
-    var $useTable = 'radgroupcheck';
-    var $primaryKey = 'id';
-    var $displayField = 'groupname';
-    var $name = 'Radgroupcheck';
+    public $useTable = 'radgroupcheck';
+    public $primaryKey = 'id';
+    public $displayField = 'groupname';
+    public $name = 'Radgroupcheck';
 
+    public $validate = array(
+        'groupname' => array(
+            'rule' => 'notEmpty',
+            'message' => 'Group name cannot be empty',
+            'allowEmpty' => false
+        )
+    );
 }

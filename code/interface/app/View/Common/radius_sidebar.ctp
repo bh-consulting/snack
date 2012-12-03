@@ -3,7 +3,10 @@
             <div class="well sidebar-nav">
             <ul class="nav nav-list">
                 <li class="<? echo $this->fetch('users_active'); ?>">
-                <a href="/interface/radusers/"><i class="icon-check"></i> Users</a>
+                <a href="/interface/radusers/"><i class="icon-user"></i> Users</a>
+                </li>
+                <li class="<? echo $this->fetch('groups_active'); ?>">
+                <a href="/interface/radgroups/"><i class="icon-list"></i> Groups</a>
                 </li>
                 <li class="<? echo $this->fetch('nas_active'); ?>">
                 <a href="/interface/nas/"><i class="icon-hdd"></i> NAS</a>

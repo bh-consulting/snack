@@ -1,28 +1,19 @@
 <? 
 $this->extend('/Common/radius_sidebar');
-$this->assign('users_active', 'active');
+$this->assign('groups_active', 'active');
 ?>
-<h1>Users</h1>
+<h1>Groups</h1>
 <p>
-    <div class="btn-group">
-        <button class="btn dropdown-toggle" data-toggle="dropdown">
-        Add user
-        <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a href="/interface/radusers/add_cisco">Cisco</a></li>
-            <li><a href="/interface/radusers/add_loginpass">Login / Password</a></li>
-            <li><a href="/interface/radusers/add_cert">Certificate</a></li>
-            <li><a href="/interface/radusers/add_mac">MAC address</a></li>
-            <li><a href="/interface/radusers/add_csv">Upload CSV</a></li>
-        </ul>
-    </div>
+    <?php echo $this->Html->link('Add a group',
+    array('controller' => 'groups', 'action' => 'add'),
+    array('class' => 'btn')); ?>
 </p>
-<? if(!empty($radusers)){ ?>
+
+<? if(!empty($groups)){ ?>
 <table class="table">
     <thead>
     <tr>
-        <th>Username</th>
+        <th>Groupname</th>
         <th>Comment</th>
         <th>Type</th>
         <th>Edit</th>
@@ -31,7 +22,7 @@ $this->assign('users_active', 'active');
     </thead>
 
     <tbody>
-    <? foreach ($radusers as $rad): ?>
+    <? foreach ($groups as $g): ?>
     <tr>
         <td>
             <? echo $this->Html->link($rad['Raduser']['username'],

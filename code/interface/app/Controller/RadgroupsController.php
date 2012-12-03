@@ -1,25 +1,25 @@
 <?php
 
-App::import('Model', 'Radcheck');
-class RadusersController extends AppController
+App::import('Model', 'Radgroupcheck');
+class RadgroupsController extends AppController
 {
     public $helpers = array('Html', 'Form');
     public $components = array(
         'Checks' => array(
-            'displayName' => 'username',
-            'baseClass' => 'Raduser',
-            'checkClass' => 'Radcheck'
+            'displayName' => 'groupname',
+            'baseClass' => 'Radgroup',
+            'checkClass' => 'Radgroupcheck'
             ),
         'Session');
 
     public function index(){
-        $this->set('radusers', $this->Checks->index());
+        $this->set('radgroups', $this->Checks->index());
     }
 
     public function view($id = null){
         $views = $this->Checks->view($id);
-        $this->set('raduser', $views['base']);
-        $this->set('radchecks', $views['checks']);
+        $this->set('radgroup', $views['base']);
+        $this->set('radgroupchecks', $views['checks']);
     }
 
     public function view_cisco($id = null) {
