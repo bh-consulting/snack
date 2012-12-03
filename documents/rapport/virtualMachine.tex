@@ -57,3 +57,27 @@ On peut se connecter à la VM via rdestock :
 \begin{verbatim}
 rdesktop 193.50.40.114:3389
 \end{verbatim}
+
+\subsection{Duplication de VM}
+
+On clone une VM déjà installée :
+
+\begin{verbatim}
+VBoxManage clonevm BaseLinux --name Linux1 --register
+\end{verbatim}
+
+\subsection{Supprimer une VM}
+
+On doit la désincrire et supprimer les fichier :
+
+\begin{verbatim}
+VBoxManage unregistervm Linux1 --delete
+\end{verbatim}
+
+\subsection{Divers}
+
+Retirer un disque du lecteur dvd :
+
+\begin{verbatim}
+VBoxManage modifyvm BaseLinux --dvd none
+\end{verbatim}
