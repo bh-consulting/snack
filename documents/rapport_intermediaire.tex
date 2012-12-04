@@ -212,7 +212,7 @@ Après avoir éliminé les solutions trop anecdotiques, qui ne bénéficient ni 
 
 Ces trois solutions sont dominantes sur le marché des implémentations Radius open-source.
 
-L'étude destinée à les différencier pour n'en choisir qu'un seul a portée sur plusieurs critères~:
+L'étude destinée à les différencier pour n'en choisir qu'un seul a porté sur plusieurs critères~:
 
 \begin{itemize}
 \item Les fonctionnalités supportées.
@@ -222,9 +222,24 @@ L'étude destinée à les différencier pour n'en choisir qu'un seul a portée s
 
 Sur la base de ces trois critères, FreeRadius est ressorti du lot. Outre ses fonctionnalités très complètes, le principal critère différenciateur fut le suivi du projet, avec une dernière mise à jour en 2012, contre 2008 pour GnuRadius et 2007 pour OpenRadius. Le projet FreeRadius bénéficie également d'une communauté exemplaire, et d'une documentation très fournie. Il s'agit d'une référence dans le monde l'entreprise, et assure à B.H. Consulting un suivi du produit sérieux pour l'avenir. C'est également la seule solution qui dispose d'un paquet Debian/Ubuntu, facilitant d'autant plus son installation sur les serveurs.
 
-\subsection{Type de certificats}
+\subsection{Types de certificats}
 
-TODO: blabla certificats
+L'authentification des postes clients par certificats représente le moyen le plus simple et le plus sécurisé de se relier au réseau en utilisant la technologie 802.1x. Il existe plusieurs types de certificats, qui apportent un niveau plus ou moins élevé de sécurité. Ils utilisent tous le protocole EAP.
+
+Protocoles d'authentification envisageables~:
+
+\begin{description}
+\item[TLS :] Il s'agit d'un protocole qui fonctionne par authentifications réciproques. Le client comme le serveur disposent de leur propre certificat, qu'ils commencent par s'échanger dans leur version publique. Chacun vérifie le certificat de l'autre, et un tunnel sécurisé peut être établit pour faire transiter les données, en ayant l'assurance que les deux protagonistes sont bien ceux qu'ils annoncent être. Un nom d'utilisateur peut être proposé par le client, qui fera l'objet d'une vérification par le serveur en fonction du champ \textit{CommonName} du certificat envoyé.
+\item[TTLS ou PEAP :] Ces deux protocoles sont relativement équivalent, avec une préférence pour le TTLS qui se repose sur des algorithmes plus sécurisés. La principale différence avec le TLS réside dans l'absence de certificat côté client, qui n'est donc pas identifié de façon fiable. Seul un couple utilisateur / mot de passe envoyé par ce dernier permet au serveur de l'identifier. Ces informations sont hashées (via MD5, pap, chap, mschap ou mschapv2) puis envoyées via le tunnel sécurisé.
+\end{description}
+
+Dans les trois cas, le serveur dispose d'un  certificat d'autorité qu'il a lui-même généré, en version privée comme publique. Il dispose également d'un certificat d'authentification qu'il a pris soin de s'autosigner. Les clients ont accès à la version publique de ce dernier. Avec la version publique du certificat d'autorité, ils vérifient la validité du certificat d'authentification publique diffusé par le serveur.
+
+Dans le cas du TLS, le client s'est fait délivrer un couple de certificats privé/publique par le serveur, signés par ce dernier avec le certiticat d'autorité.
+
+TODO: Ajouter schéma TLS et TTLS
+
+En accord avec l'intervenant industriel, nous sommes arrivés à la conclusion qu'il fallait que les authentifications proposent le TLS et le TTLS. Concernant le chiffrement des informations transmises dans le tunnel dans le cas du TTLS, les recherches effectuées aboutissent à la conclusion que la solution mschapv2 est la plus sécurisée. Elle devra donc être utilisée en priorité par les clients.
 
 \subsection{Interface web}
 \subsubsection{Langages et environnements de développement}
