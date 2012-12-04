@@ -14,11 +14,11 @@ class Radgroup extends AppModel
         'groupname' => array(
             'isUnique' => array(
                 'rule' => 'isUnique',
-                'message' => 'Username already used'
+                'message' => 'Groupname already used'
             ),
             'notEmpty' => array(
                 'rule' => 'notEmpty',
-                'message' => 'Username cannot be empty',
+                'message' => 'Groupname cannot be empty',
                 'allowEmpty' => false
             )
         ),

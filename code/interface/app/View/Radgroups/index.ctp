@@ -5,48 +5,44 @@ $this->assign('groups_active', 'active');
 <h1>Groups</h1>
 <p>
     <?php echo $this->Html->link('Add a group',
-    array('controller' => 'groups', 'action' => 'add'),
+    array('controller' => 'radgroups', 'action' => 'add'),
     array('class' => 'btn')); ?>
 </p>
 
-<? if(!empty($groups)){ ?>
+<? if(!empty($radgroups)){ ?>
 <table class="table">
     <thead>
     <tr>
         <th>Groupname</th>
         <th>Comment</th>
-        <th>Type</th>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
     </thead>
 
     <tbody>
-    <? foreach ($groups as $g): ?>
+    <? foreach ($radgroups as $g): ?>
     <tr>
         <td>
-            <? echo $this->Html->link($rad['Raduser']['username'],
-            array('controller' => 'Radusers', 'action' => 'view_' . $rad['Raduser']['type'], $rad['Raduser']['id'])); ?>
+            <? echo $this->Html->link($g['Radgroup']['groupname'],
+            array('controller' => 'Radgroups', 'action' => 'view', $g['Radgroup']['id'])); ?>
         </td>
         <td>
-            <? echo $rad['Raduser']['comment']; ?>
-        </td>
-        <td>
-            <? echo $rad['Raduser']['ntype']; ?>
+            <? echo $g['Radgroup']['comment']; ?>
         </td>
         <td>
             <i class="icon-edit"></i>
-            <? echo $this->Html->link('Edit', array('action' => 'edit_' . $rad['Raduser']['type'], $rad['Raduser']['id'])); ?>
+            <? echo $this->Html->link('Edit', array('action' => 'edit', $g['Radgroup']['id'])); ?>
 
         </td>
         <td>
             <i class="icon-remove"></i>
-            <? echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Raduser']['id']),
+            <? echo $this->Form->postLink('Delete', array('action' => 'delete', $g['Radgroup']['id']),
             array('confirm' => 'Are you sure?')); ?>
         </td>
     </tr>
         <? endforeach; ?>
-    <? unset($rad); ?>
+    <? unset($g); ?>
     </tbody>
 </table>
 <? } ?>

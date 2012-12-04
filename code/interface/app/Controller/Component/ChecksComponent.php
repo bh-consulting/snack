@@ -26,7 +26,9 @@ class ChecksComponent extends Component
     public function getChecks($id){
         $this->baseClass->id = $id;
 
-        return $this->checkClass->findAllByUsername($this->baseClass->field($this->displayName));
+        // sorry for that...
+        $findAllFunc = 'findAllBy' . ucfirst($this->displayName);
+        return $this->checkClass->$findAllFunc($this->baseClass->field($this->displayName));
     }
 
     public function getType($rad, $nice = false) {
@@ -51,9 +53,11 @@ class ChecksComponent extends Component
     public function index()
     {
         $rads = $this->baseClass->find('all');
-        foreach ($rads as &$r) {
-            $r[$this->baseClassName]['ntype'] = $this->getType($r[$this->baseClassName], true);
-            $r[$this->baseClassName]['type'] = $this->getType($r[$this->baseClassName], false);
+        if($this->baseClassName == 'Raduser'){
+            foreach ($rads as &$r) {
+                $r[$this->baseClassName]['ntype'] = $this->getType($r[$this->baseClassName], true);
+                $r[$this->baseClassName]['type'] = $this->getType($r[$this->baseClassName], false);
+            }
         }
         return $rads;
     }
@@ -65,7 +69,7 @@ class ChecksComponent extends Component
         	'checks' => $this->getChecks($id));
     }
 
-    public function create_radcheck($displayName, $attribute, $op, $value){
+    public function create_check($displayName, $attribute, $op, $value){
         $data = array(
             $this->displayName => $displayName
           ,
@@ -85,12 +89,13 @@ class ChecksComponent extends Component
             $success = $this->baseClass->save($request->data);
 
             foreach($checks as $rc)
-                $success = $success && $this->create_radcheck($rc[0], $rc[1], $rc[2], $rc[3]);
+                $success = $success && $this->create_check($rc[0], $rc[1], $rc[2], $rc[3]);
 
             return $success;
         }
     }
 
+    // can be moved to RadusersController
     public function add_cisco($request)
     {
         if ($request->is('post')) {
@@ -120,6 +125,7 @@ class ChecksComponent extends Component
         }
     }
 
+    // can be moved to RadusersController
     public function add_loginpass($request)
     {
         if ($request->is('post')) {
@@ -147,6 +153,7 @@ class ChecksComponent extends Component
         }
     }
 
+    // can be moved to RadusersController
     public function add_mac($request){
         if ($request->is('post')) {
 
@@ -177,6 +184,7 @@ class ChecksComponent extends Component
         }
     }
 
+    // can be moved to RadusersController
     public function add_cert($request)
     {
         if ($request->is('post')) {
@@ -203,6 +211,16 @@ class ChecksComponent extends Component
         }
     }
 
+    // can be moved to RadgroupsController
+    public function add_group($request)
+    {
+        if ($request->is('post')) {
+            $name = $request->data[$this->baseClassName][$this->displayName];
+            return $this->add($request, array());
+        }
+    }
+
+    // can be moved to RadusersController
     public function edit_cisco($request, $id = null) {
         $this->baseClass->id = $id;
         if ($request->is('get')) {
@@ -233,6 +251,7 @@ class ChecksComponent extends Component
         }
     }
 
+    // can be moved to RadusersController
     public function edit_loginpass($request, $id = null) {
         $this->baseClass->id = $id;
         if ($request->is('get')) {
@@ -255,6 +274,7 @@ class ChecksComponent extends Component
         }
     }
     
+    // can be moved to RadusersController
     public function edit_cert($request, $id = null) {
         $this->baseClass->id = $id;
         if ($request->is('get')) {
@@ -277,6 +297,7 @@ class ChecksComponent extends Component
         }
     }
 
+    // can be moved to RadusersController
     public function edit_mac($request, $id = null) {
         $this->baseClass->id = $id;
         if ($request->is('get')) {

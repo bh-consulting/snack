@@ -22,86 +22,30 @@ class RadgroupsController extends AppController
         $this->set('radgroupchecks', $views['checks']);
     }
 
-    public function view_cisco($id = null) {
-        $this->view($id);
-    }
-
-    public function view_cert($id = null) {
-        $this->view($id);
-    }
-
-    public function view_loginpass($id = null) {
-        $this->view($id);
-    }
-
-    public function view_mac($id = null) {
-        $this->view($id);
-    }
-
-    public function add($success){
+    public function add(){
         if($this->request->is('post')){
-            if($success){
-                if(array_key_exists('cert_path', $this->request->data['Raduser']))
-                    $this->Session->setFlash('New user added. Certificate in ' . $this->request->data['Raduser']['cert_path']);
-                else
-                    $this->Session->setFlash('New user added.');
+            $success = $this->Checks->add_group($this->request);
 
+            if($success){
+                $this->Session->setFlash('New group added.');
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash('Unable to add user.', 'flash_error');
+                $this->Session->setFlash('Unable to add group.', 'flash_error');
             }
         }
     }
 
-    public function add_cisco(){
-        $success = $this->Checks->add_cisco($this->request);
-        $this->add($success);
-    }
-
-    public function add_loginpass(){
-        $success = $this->Checks->add_loginpass($this->request);
-        $this->add($success);
-    }
-    public function add_mac(){
-        $success = $this->Checks->add_mac($this->request);
-        $this->add($success);
-    }
-
-    public function add_cert(){
-        $success = $this->Checks->add_cert($this->request);
-        $this->add($success);
-    }
-
-    public function edit_cisco($id = null){
-        $result = $this->Checks->edit_cisco($this->request, $id);
-        $this->edit($result);
-    }
-
-    public function edit_loginpass($id = null){
-        $result = $this->Checks->edit_loginpass($this->request, $id);
-        $this->edit($result);
-    }
-
-    public function edit_mac($id = null){
-        $result = $this->Checks->edit_mac($this->request, $id);
-        $this->edit($result);
-    }
-
-    public function edit_cert($id = null){
-        $result = $this->Checks->edit_cert($this->request, $id);
-        $this->edit($result);
-    }
-
-    public function edit($result){
-        if($this->request->is('post')){
-            if($result){
-                $this->Session->setFlash('User has been updated.');
+    public function edit($id = null){
+        if ($this->request->is('get')) {
+            $this->Radgroup->id = $id;
+            $this->request->data = $this->Radgroup->read();
+        } else {
+            if ($this->Radgroup->save($this->request->data)) {
+                $this->Session->setFlash('Group has been updated.');
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash('Unable to update user.', 'flash_error');
+                $this->Session->setFlash('Unable to update group.', 'flash_error');
             }
-        } else {
-            $this->request = $result;
         }
     }
 

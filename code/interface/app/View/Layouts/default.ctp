@@ -28,7 +28,7 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <?php
-    echo $this->Html->meta('icon');
+    echo $this->Html->meta('icon', 'favicon.png');
 
     echo $this->Html->css('bootstrap.min');
     echo $this->Html->css('bootstrap-responsive.min');
