@@ -32,6 +32,7 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
 
     echo $this->Html->css('bootstrap.min');
     echo $this->Html->css('bootstrap-responsive.min');
+    echo $this->Html->css('datepicker');
 
     echo $this->fetch('meta');
     echo $this->fetch('css');
@@ -90,6 +91,7 @@ echo $this->element('sql_dump');
 echo $this->Html->script('http://code.jquery.com/jquery-latest.js');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapify');
+echo $this->Html->script('bootstrap-datepicker');
 ?>
 </body>
 </html>

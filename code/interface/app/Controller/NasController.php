@@ -19,7 +19,7 @@ class NasController extends AppController
     // method to display a warning field to restart the server after Nas changes
     public function alert_restart_server(){
         // TODO: add a link to the restart button in the message
-        $this->Session->setFlash('You HAVE to restart the Radius server to apply NAS changes!', 'default', array(), 'warning');
+        $this->Session->setFlash('You HAVE to restart the Radius server to apply NAS changes!', 'flash_error');
     }
 
     public function add(){
@@ -46,7 +46,7 @@ class NasController extends AppController
             $this->request->data = $this->Nas->read();
         } else {
             if($this->Nas->save($this->request->data)){
-                $this->Session->setFlash('NAS has been updated.');
+                $this->alert_restart_server();
                 $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash('Unable to update NAS', 'flash_error');

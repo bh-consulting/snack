@@ -6,7 +6,7 @@ $this->assign('users_active', 'active');
 <?php
 echo $this->Form->create('Raduser');
 echo $this->Form->input('mac', array('label' => 'MAC address'));
-echo $this->Form->input('comment');
+echo $this->element('check_common_fields');
 echo $this->Form->end('Create');
 ?>
 

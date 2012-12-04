@@ -328,7 +328,7 @@ class ChecksComponent extends Component
         }
 
         foreach($radsToSave as $r){
-            $checkClass->save($r);
+            $this->checkClass->save($r);
         }
     }
 
