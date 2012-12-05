@@ -7,12 +7,12 @@ $this->assign('users_active', 'active');
 <p><strong>Comment: </strong>
 <? echo $raduser['Raduser']['comment']; ?></p>
 
-<p><strong>NAS Port Type: </strong>
 <? foreach($radchecks as $r){
-    if($r['Radcheck']['attribute'] == 'NAS-Port-Type'){
-        echo $r['Radcheck']['value'];
-        break;
-    }
+    if($r['Radcheck']['attribute'] == 'NAS-Port-Type')
+        echo '<p><strong>NAS Port Type: </strong> ' . $r['Radcheck']['value'];
+    if($r['Radcheck']['attribute'] == 'Simultaneous-Use')
+        echo '<p><strong>Simultaneous use: </strong> ' . $r['Radcheck']['value'];
+    if($r['Radcheck']['attribute'] == 'Expiration')
+        echo '<p><strong>Expiration date: </strong> ' . $r['Radcheck']['value'];
 }
 ?>
-</p>

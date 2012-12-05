@@ -7,3 +7,10 @@ $this->assign('users_active', 'active');
 <p><strong>Comment: </strong>
 <? echo $raduser['Raduser']['comment']; ?></p>
 
+<? foreach($radchecks as $r){
+    if($r['Radcheck']['attribute'] == 'Simultaneous-Use')
+        echo '<p><strong>Simultaneous use: </strong> ' . $r['Radcheck']['value'];
+    if($r['Radcheck']['attribute'] == 'Expiration')
+        echo '<p><strong>Expiration date: </strong> ' . $r['Radcheck']['value'];
+}
+?>

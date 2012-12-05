@@ -7,16 +7,14 @@ $this->assign('users_active', 'active');
 <p><strong>Comment: </strong>
 <? echo $raduser['Raduser']['comment']; ?></p>
 
-<p><strong>Certificate path: </strong>
-<? echo $raduser['Raduser']['cert_path']; ?></p>
+<p><strong>Certificate path: </strong><? echo $raduser['Raduser']['cert_path']; ?></p>
 
-<p><strong>EAP Type: </strong>
 <? foreach($radchecks as $r){
-    if($r['Radcheck']['attribute'] == 'EAP-Type'){
-        echo $r['Radcheck']['value'];
-        break;
-    }
+    if($r['Radcheck']['attribute'] == 'EAP-Type')
+        echo '<p><strong>EAP Type: </strong> ' . $r['Radcheck']['value'];
+    if($r['Radcheck']['attribute'] == 'Simultaneous-Use')
+        echo '<p><strong>Simultaneous use: </strong> ' . $r['Radcheck']['value'];
+    if($r['Radcheck']['attribute'] == 'Expiration')
+        echo '<p><strong>Expiration date: </strong> ' . $r['Radcheck']['value'];
 }
 ?>
-</p>
-

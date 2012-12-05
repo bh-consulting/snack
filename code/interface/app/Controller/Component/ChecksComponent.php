@@ -70,21 +70,43 @@ class ChecksComponent extends Component
     }
 
     public function create_check($displayName, $attribute, $op, $value){
-        $data = array(
-            $this->displayName => $displayName
-          ,
-            'attribute' => $attribute,
-            'op' => $op,
-            'value' => $value
-        );
-        $rad = new $this->checkClass;
-        $rad->create();
-        return $rad->save($data);
+        if($value != "" && $attribute != ""){
+            $data = array(
+                $this->displayName => $displayName
+                ,
+                'attribute' => $attribute,
+                'op' => $op,
+                'value' => $value
+                );
+            $rad = new $this->checkClass;
+            $rad->create();
+            return $rad->save($data);
+        } else {
+            echo $attribute;
+            echo $value;
+            return false;
+        }
     }
 
     public function add($request, $checks){
         if($request->is('post')){
-                    
+                
+            // add common checks values (expiration date and simultaneous uses) 
+            $name = $request->data[$this->baseClassName][$this->displayName];
+            $checks = array_merge($checks, array(
+                array($name,
+                    'Expiration',
+                    ':=',
+                    $request->data[$this->baseClassName]['expiration_date']
+                    ),
+                array($name,
+                    'Simultaneous-Use',
+                    ':=',
+                    $request->data[$this->baseClassName]['simultaneous_use']
+                    )
+                ));
+
+            print_r($checks);
             $this->baseClass->create();
             $success = $this->baseClass->save($request->data);
 
@@ -225,23 +247,20 @@ class ChecksComponent extends Component
         $this->baseClass->id = $id;
         if ($request->is('get')) {
             $request->data = $this->baseClass->read();
-            $rads = $this->getChecks($id);
-            foreach($rads as $r){
-                if($r[$this->checkClassName]['attribute'] == 'NAS-Port-Type'){
-                    $request->data[$this->baseClassName]['nas-port-type'] = $r[$this->checkClassName]['value'];
-                    break;
-                }
-            }
+
+            // restore values from radchecks
+            $this->restore_common_check_fields($request, $id, $cisco=true);
+
             return $request;
         } else {
 
             if ($this->baseClass->save($request->data)) {
 
                 // update radchecks fields
-                $checkClassFields = array('NAS-Port-Type' => $request->data[$this->baseClassName]['nas-port-type']);
-                if(!empty($request->data[$this->baseClassName]['password']))
-                    $checkClassFields['Cleartext-Password'] = $request->data[$this->baseClassName]['password'];
-                $this->update_radcheck_fields($id, $checkClassFields);
+                $checkClassFields = array(
+                    'NAS-Port-Type' => $request->data[$this->baseClassName]['nas-port-type'],
+                    'Cleartext-Password' => $request->data[$this->baseClassName]['password']);
+                $this->update_radcheck_fields($id, $request, $checkClassFields);
 
                 return true;
 
@@ -256,16 +275,15 @@ class ChecksComponent extends Component
         $this->baseClass->id = $id;
         if ($request->is('get')) {
             $request->data = $this->baseClass->read();
+            $this->restore_common_check_fields($request, $id);
             return $request;
         } else {
 
             if ($this->baseClass->save($request->data)) {
 
                 // update radchecks fields
-                $checkClassFields = array();
-                if(!empty($request->data[$this->baseClassName]['password']))
-                    $checkClassFields['Cleartext-Password'] = $request->data[$this->baseClassName]['password'];
-                $this->update_radcheck_fields($id, $checkClassFields);
+                $checkClassFields = array('Cleartext-Password' => $request->data[$this->baseClassName]['password']);
+                $this->update_radcheck_fields($id, $request, $checkClassFields);
 
                 return true;
             } else {
@@ -279,6 +297,7 @@ class ChecksComponent extends Component
         $this->baseClass->id = $id;
         if ($request->is('get')) {
             $request->data = $this->baseClass->read();
+            $this->restore_common_check_fields($request, $id);
             return $request;
         } else {
 
@@ -286,6 +305,7 @@ class ChecksComponent extends Component
 
                 $newCert = ($request->data[$this->baseClassName]['cert_gen'] == 1);
 
+                $this->update_radcheck_fields($id, $request);
                 if($newCert){
                     // TODO: generate a new cert
                 }
@@ -302,10 +322,12 @@ class ChecksComponent extends Component
         $this->baseClass->id = $id;
         if ($request->is('get')) {
             $request->data = $this->baseClass->read();
+            $this->restore_common_check_fields($request, $id);
             return $request;
         } else {
 
             if ($this->baseClass->save($request->data)) {
+                $this->update_radcheck_fields($id, $request);
             	return true;
             } else {
             	return false;
@@ -313,22 +335,24 @@ class ChecksComponent extends Component
         }
     }
 
-    public function update_radcheck_fields($id, $fields = array()){
+    public function update_radcheck_fields($id, $request, $additionalFields = array()){
+        // common fields
+        $fields = array(
+            'Expiration' => $request->data[$this->baseClassName]['expiration_date'],
+            'Simultaneous-Use' => $request->data[$this->baseClassName]['simultaneous_use']
+            );
+        $fields = array_merge($fields, $additionalFields);
         $rads = $this->getChecks($id);
-        $radsToSave = array();
 
         foreach($fields as $key=>$value){
             foreach($rads as &$r){
-                if($r[$this->checkClassName]['attribute'] == $key){
+                if($r[$this->checkClassName]['attribute'] == $key
+                    && $r[$this->checkClassName]['value'] != ""){
                     $r[$this->checkClassName]['value'] = $value;
-                    $radsToSave[]= $r;
+                    $this->checkClass->save($r);
                     break;
                 }
             }
-        }
-
-        foreach($radsToSave as $r){
-            $this->checkClass->save($r);
         }
     }
 
@@ -350,6 +374,23 @@ class ChecksComponent extends Component
         }
 
         // TODO: delete certificate on filesystem if necessary
+    }
+
+    public function restore_common_check_fields(&$request, $id, $cisco=false)
+    {
+        // restore values from radchecks
+        $rads = $this->getChecks($id);
+        foreach($rads as $r){
+            if($r[$this->checkClassName]['attribute'] == 'NAS-Port-Type' && $cisco){
+                $request->data[$this->baseClassName]['nas-port-type'] = $r[$this->checkClassName]['value'];
+            } else if($r[$this->checkClassName]['attribute'] == 'Expiration'){
+                $request->data[$this->baseClassName]['expiration_date'] = $r[$this->checkClassName]['value'];
+            } else if($r[$this->checkClassName]['attribute'] == 'Simultaneous-Use'){
+                $request->data[$this->baseClassName]['simultaneous_use'] = $r[$this->checkClassName]['value'];
+            }
+        }
+
+        return $request;
     }
 
     // FIXME
