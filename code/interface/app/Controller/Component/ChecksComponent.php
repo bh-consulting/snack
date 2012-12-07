@@ -353,6 +353,7 @@ class ChecksComponent extends Component
                     break;
                 }
             }
+            // FIXME: doesn't work for new check fields!
         }
     }
 
