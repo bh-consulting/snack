@@ -29,6 +29,7 @@ sed\
 	-e 's/#\(\s*\$INCLUDE sql\.conf\)/\1/'\
 	-e 's/#\(\s*\$INCLUDE sql\/mysql\/counter.conf\)/\1/'\
 	-e 'N; s/\(#\s*clients\s*=\s*per_socket_clients.*\)\(}\)/\1\tvirtual_server = bh.consulting.net\n\2/'\
+	-e 's/\(\$INCLUDE clients\.conf\)/#\1/'\
 	-i /etc/freeradius/radiusd.conf
 
 #Certificats
