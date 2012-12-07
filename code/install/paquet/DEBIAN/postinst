@@ -21,7 +21,7 @@ echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cle
 # Configuration de Radius pour intéragir avec la base de donnée
 
 sed\
-	-e "s/radpass/$mdp_root/"\
+	-e "s/radpass/$mdp_radius/"\
 	-e "s/#\(readclients\)/\1/"\
 	-i /etc/freeradius/sql.conf
 
