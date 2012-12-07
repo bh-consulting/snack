@@ -1,49 +1,50 @@
-authorize {
-	preprocess
-	suffix
+server bh.consulting.net {
+	authorize {
+		preprocess
+		suffix
 
-	eap {
-		ok = return
+		eap {
+			ok = return
+		}
+		sql
+
+		expiration
+		logintime
 	}
-	sql
 
-	expiration
-	logintime
-}
+	authenticate {
+		eap
+	}
 
-authenticate {
-	eap
-}
+	preacct {
+		preprocess
+		acct_unique
+		suffix
+	}
 
-preacct {
-	preprocess
-	acct_unique
-	suffix
-}
+	accounting {
+		detail
+		radutmp
+		sql
+	}
 
-accounting {
-	detail
-	radutmp
-	sql
-}
+	session {
+		radutmp
+		sql
+	}
 
-session {
-	radutmp
-	sql
-}
+	post-auth {
+		sql
 
-post-auth {
-	sql
+		Post-Auth-Type REJECT {
+			attr_filter.access_reject
+		}
+	}
 
-	Post-Auth-Type REJECT {
-		attr_filter.access_reject
+	pre-proxy {
+	}
+
+	post-proxy {
+		eap
 	}
 }
-
-pre-proxy {
-}
-
-post-proxy {
-	eap
-}
-
