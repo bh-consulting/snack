@@ -1,6 +1,6 @@
 \documentclass[12pt]{beamer}
 \usepackage[utf8]{inputenc}
-\usepackage[francais]{babel}
+%\usepackage[francais]{babel}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern, marvosym, graphicx, multicol, lastpage}
 \usepackage{geometry}
@@ -67,14 +67,28 @@
 \titlepage
 \end{frame}
 
+\begin{frame}{Introduction}
+    \begin{itemize}
+	\item TELECOM Nancy third year bigest project
+	\vfill
+	\item Multiples supervisors
+	\vfill
+	\item Intermediary presentation
+	\vfill
+	\item Overview of the situation and progession
+    \end{itemize}
+\end{frame}
+
 \begin{frame}
     \frametitle{Outlines}
 	\tableofcontents[pausesection]
 \end{frame}
 
-\begin{frame}{Introduction}
-\end{frame}
+
+
     
+\part{Context}
+\frame{\partpage}
 \section{Context}
 
 \begin{frame}{TELECOM Nancy}
@@ -87,18 +101,21 @@
     %\begin{tikzpicture}
 %	\pie{10/A, 20/B, 30/C, 40/D}
     %\end{tikzpicture}
+    \begin{figure}
+	\includegraphics[width=100pt]{img/promo.jpg}
+    \end{figure}
 \end{frame}
 
 
 
 \begin{frame}{Industrial project}
-    Industrial project, a full project management.\\
+    Every part of a project represented\\
     \vfill
-    A good occasion to discover the way to manage a project.
+    A good occasion to discover the way to manage a project
     \vfill
     \begin{itemize}
-	\item 4 students working for an enterprise.
-	\item 12 hours a week.
+	\item 4 students working for an enterprise
+	\item 12 hours a week (about 250 hours per student)
 	\item Use of a real project procedure
     \end{itemize}
 \end{frame}
@@ -118,15 +135,18 @@
 
 
 \begin{frame}{Project motivations}
-    Network access control needed
-    \vfill
-    Simplify access right management
-    \vfill
-    Avoid repetitive tasks
+    \begin{itemize}
+	\item<1->Network access control needed
+	\vfill
+	\item<2->Simplify access right management
+	\vfill
+	\item<3->Avoid repetitive tasks
+    \end{itemize}
 
 \end{frame}
     
-
+\part{Organization}
+\frame{\partpage}
 \section{Organization}
 
 \begin{frame}{Team presentation}
@@ -135,9 +155,9 @@
 	\vfill
 	\item {\bf Julien Guepin} \emph{IL} Web developer \hfill \includegraphics[width=30pt]{img/guepin.jpg}
 	\vfill
-	\item {\bf Marc Pinhede} \emph{LE} Electronic designer \hfill \includegraphics[width=30pt]{img/pinhede.jpg}
+	\item {\bf Marc Pinhede} \emph{LE} General developer\hfill \includegraphics[width=30pt]{img/pinhede.jpg}
 	\vfill
-	\item {\bf Julien Vaubourg} \emph{TRS} NAS master \hfill \includegraphics[width=30pt]{img/vaubourg.jpg}
+	\item {\bf Julien Vaubourg} \emph{TRS} Network developer \hfill \includegraphics[width=30pt]{img/vaubourg.jpg}
     \end{itemize}
 \end{frame}
 
@@ -157,13 +177,20 @@
 \end{frame}
     
 \begin{frame}{Meeting}
-    Meeting every monday (if possible) with our industrial supervisor, Guillaume ROCHE
+    Meeting every monday with Guillaume Roche
     \vfill
-    Week summary, questions and directions given during those meetings
+    \begin{itemize}
+	\item Week summary
+	\item Questions 
+	\item Directions 
+    \end{itemize}
     \vfill
-    Report sent to every member of the team including our supervisor (VM Project)
+    More occasional meeting with our academic supervisor
 \end{frame}
 
+
+\part{Technical situation}
+\frame{\partpage}
 \section{Technical situation}
 
 \begin{frame}{Client needs}
@@ -198,9 +225,7 @@
 \end{frame}
 	
 \begin{frame}{802.1X}
-    Port locking standard
-    %\includegraphics[width=100pt]{img/dot1x.jpg}
-
+    \includegraphics[width=300pts]{img/dot1x.jpg}
 \end{frame}
 
 \begin{frame}{Implemented solution}
