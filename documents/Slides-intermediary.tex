@@ -17,13 +17,13 @@
 \defbeamertemplate*{footline}{infolines theme}{
 	\leavevmode%
 		\hbox{%
-				\begin{beamercolorbox}[wd=.34\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+				\begin{beamercolorbox}[wd=.43\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
 				\usebeamerfont{title in head/foot}\insertshorttitle
 				\end{beamercolorbox}%
-				\begin{beamercolorbox}[wd=.15\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+				\begin{beamercolorbox}[wd=.50\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
 				\usebeamerfont{date in head/foot}\insertshortdate{}%
 				\end{beamercolorbox}%
-				\begin{beamercolorbox}[wd=.07\paperwidth,ht=2.25ex,dp=1ex,center]{page in head/foot}%
+				\begin{beamercolorbox}[wd=.07\paperwidth,ht=2.25ex,dp=1ex,left]{page in head/foot}%
 				\insertframenumber{} / \inserttotalframenumber
 				\end{beamercolorbox}
 		}
@@ -54,7 +54,7 @@
 
 \title{\titreA}
 \subtitle{\titreB}
-\author{Nicolas BOUGET, Julien GUÉPIN, Marc PINHÈDE, Julien VAUBOURG}
+\author{Nicolas BOUGET, Julien GUÉPIN, Marc~PINHÈDE,~Julien~VAUBOURG}
 \institute{TELECOM Nancy}
 \date{December 20, 2012}
 \titlegraphic{\includegraphics[width=60pt]{img/BHConsulting.jpg}\hfill\includegraphics[width=80pt]{img/ul.png}\hfill\includegraphics[width=70pt]{img/telecom-nancy.jpg}}
@@ -65,7 +65,7 @@
 \end{frame}
 
 \begin{frame}{Introduction}
-    \begin{itemize}
+    \begin{itemize}[<+->]
 	\item \emph{TELECOM Nancy} third year biggest project
 	\vfill
 	\item Multiple supervisors
@@ -96,18 +96,22 @@
 \section{Context}
 
 \begin{frame}{TELECOM Nancy}
-    French engineering school in computer science\\
-    \vfill
-    Capacitated by the engineer diploma comission (\emph{CTI})\\
-    \vfill
-    Formerly named \textbf{ESIAL}, changed its name in 2012\\
-    \vfill
+    \begin{itemize}[<+->]
+	\item French engineering school in computer science\\
+	\vfill
+	\item Capacitated by the engineer degree comission (\emph{CTI})\\
+	\vfill
+	\item Formerly named \textbf{ESIAL}, changed its name in 2012\\
+	\vfill
+	\includegraphics[width=100pt]{img/promo.jpg}
+    \end{itemize}
     %\begin{tikzpicture}
 %	\pie{10/A, 20/B, 30/C, 40/D}
     %\end{tikzpicture}
-    \begin{figure}
-	\includegraphics[width=100pt]{img/promo.jpg}
-    \end{figure}
+    %\begin{figure}
+    %\end{figure}
+    \hfill
+    \includegraphics[width=60pt]{img/telecom-nancy.jpg}
 \end{frame}
 
 
@@ -127,24 +131,26 @@
 
     
 \begin{frame}{B.H. Consulting}
-    Created by \emph{Bertrand PÉTAT} in 2000.\\
+    Created by \emph{Bertrand PÉTAT} in 2000\\
+    \hfill
+	\includegraphics[width=50pt]{img/BHConsulting.jpg}
     \vfill
-    Human-scaled firm working in network implementation.\\
+    Human-scaled firm working in network implementation\\
     \vfill
     Five employees:
     \begin{figure}
-	\includegraphics[width=300pt]{img/organigramme.pdf}
+	\includegraphics[width=300pt]{img/organigramme_en.pdf}
     \end{figure}
 \end{frame}
 
 
 \begin{frame}{Project motivations}
-    \begin{itemize}
-	\item<1->Set up a network access control 
+    \begin{itemize}[<+->]
+	\item Set up a network access control 
 	\vfill
-	\item<2->Simplify access right management
+	\item Simplify access right management
 	\vfill
-	\item<3->Avoid repetitive tasks
+	\item Avoid repetitive tasks
     \end{itemize}
 
 \end{frame}
@@ -167,13 +173,16 @@
 
 
 \begin{frame}{VM Project}
-    Software used to assist the team
-    \vfill
-    Assist the project leader to follow task progress
-    \vfill
-    Gantt auto-generation
-    \vfill
-    Meeting report system
+    \begin{itemize}[<+->]
+	\item Software used to assist the team
+    	\vfill
+    	\item Assist the project leader to follow task progress
+    	\vfill
+    	\item Gantt auto-generation
+    	\vfill
+    	\item Meeting report system
+    \end{itemize}
+    \vfill \hfill \includegraphics[width=100pt]{img/vmproject_logo.png}
 \end{frame}
 
 \begin{frame}{Planning}
@@ -205,7 +214,7 @@
 \section{Technical situation}
 
 \begin{frame}{Client needs}
-    \begin{itemize}
+    \begin{itemize}[<+->]
 	\item Control network access for each client
 	\vfill
 	\item Monitor user sessions
@@ -221,8 +230,8 @@
 \begin{frame}{Implemented solution}
     \textbf{Radius Server} linked with \textbf{MySQL} and \textbf{802.1X} NAS
     \begin{itemize}
-	\item<1-2> Network access controlled
-	\item<2> User accounting
+	\item<2-> Network access controlled
+	\item<3-> User accounting
     \end{itemize}
     \vfill
     \uncover<0>{Graphical web interface}
@@ -246,14 +255,35 @@
 	\item User accounting
     \end{itemize}
     \vfill
-    Graphical web interface
+    \uncover<2->{Graphical web interface}
     \begin{itemize}
-	\item<1-> Simplify user management
-	\item<2-> Allow easy authentication control
-	\item<3-> Offer an easy way to configure the network
+	\item<3-> Simplify user management
+	\item<4-> Allow easy authentication control
+	\item<5-> Offer an easy way to configure the network
     \end{itemize}
     \vfill
-    \uncover<4>{Regular network configuration backups}
+    \uncover<0>{Regular network configuration backups}
+\end{frame}
+
+\begin{frame}{Interface}
+    %\includegraphic[widht=400pt]{img/screenshot.jpg}
+\end{frame}
+
+\begin{frame}{Implemented solution}
+    \textbf{Radius Server} linked with \textbf{MySQL} and \textbf{802.1X} NAS
+    \begin{itemize}
+	\item Network access controlled
+	\item User accounting
+    \end{itemize}
+    \vfill
+    Graphical web interface
+    \begin{itemize}
+	\item Simplify user management
+	\item Allow easy authentication control
+	\item Offer an easy way to configure the network
+    \end{itemize}
+    \vfill
+    \uncover<2>{Regular network configuration backups}
 \end{frame}
 
 \begin{frame}{Current progression}
@@ -263,7 +293,7 @@
 
 \begin{frame}{Conclusion}
     \begin{itemize}
-	\item<1->Quick specification from \emph{B.H. Consulting}
+	\item<1->Quick reaction from \emph{B.H. Consulting}
 	\vfill
 	\item<2->Some difficulties because of needed equipments
 	\vfill
