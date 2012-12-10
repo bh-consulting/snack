@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="organigramme.svg">
+   sodipodi:docname="organigramme.pdf">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,10 +25,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.66"
-     inkscape:cx="765.62312"
+     inkscape:cx="393.38697"
      inkscape:cy="684.72176"
      inkscape:document-units="px"
-     inkscape:current-layer="g3871"
+     inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1276"
      inkscape:window-height="796"
@@ -43,7 +43,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -53,7 +53,10 @@
      id="layer1">
     <g
        id="g3949"
-       transform="translate(0,23.17514)">
+       transform="translate(0,23.17514)"
+       inkscape:export-filename="/home/nicolas/PI - BH Consulting/svn/trunk/documents/img/test.pdf.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <path
          inkscape:connector-curvature="0"
          id="path3895-5-5"
@@ -86,12 +89,15 @@
              x="440.63803"
              y="209.51129"
              id="tspan3759"
-             style="font-size:30px;font-style:italic;text-align:center;text-anchor:middle">Gérant</tspan></text>
+             style="font-size:30px;font-style:italic;text-align:center;text-anchor:middle">CEO</tspan></text>
       </g>
     </g>
     <g
        id="g3957"
-       transform="translate(6.0609173,0)">
+       transform="translate(6.0609173,0)"
+       inkscape:export-filename="/home/nicolas/PI - BH Consulting/svn/trunk/documents/img/test.pdf.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <path
          inkscape:connector-curvature="0"
          id="path3895"
@@ -141,7 +147,7 @@
                id="tspan3759-3"
                y="424.68695"
                x="94.079811"
-               sodipodi:role="line">Secrétaire de direction</tspan></text>
+               sodipodi:role="line">Executive assistant</tspan></text>
         </g>
         <g
            id="g3847"
