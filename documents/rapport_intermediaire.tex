@@ -95,7 +95,7 @@ Une seconde liste d'objectifs se dégage rapidement, de façon relativement ind�
 
 \begin{enumerate}
 \item Concevoir une interface permettant la configuration des accès au réseau, avec des profils d'utilisateurs définis par des ensembles de permissions.
-\item Ajouter des fonctionnalités supplémentaires à l'interface, comme la console ou la gestion des équipements actifs.
+\item Ajouter des fonctionnalités supplémentaires à l'interface, comme la console virtuelle, la possibilité de disposer d'un historique des configurations ou la gestion des équipements actifs.
 \item Intégrer l'interface dans la solution logicielle proposée lors de la première étape, pour le déploiement de la solution chez les clients.
 \end{enumerate}
 
@@ -220,7 +220,7 @@ L'étude destinée à les différencier pour n'en choisir qu'un seul a porté su
 \item La date de la dernière mise à jour du logiciel.
 \end{itemize}
 
-Sur la base de ces trois critères, FreeRadius est ressorti du lot. Outre ses fonctionnalités très complètes, le principal critère différenciateur fut le suivi du projet, avec une dernière mise à jour en 2012, contre 2008 pour GnuRadius et 2007 pour OpenRadius. Le projet FreeRadius bénéficie également d'une communauté exemplaire, et d'une documentation très fournie. Il s'agit d'une référence dans le monde l'entreprise, et assure à B.H. Consulting un suivi du produit sérieux pour l'avenir. C'est également la seule solution qui dispose d'un paquet Debian/Ubuntu, facilitant d'autant plus son installation sur les serveurs.
+Sur la base de ces trois critères, FreeRadius est ressorti du lot. Outre ses fonctionnalités très complètes, le principal critère différenciateur fut le suivi du projet, avec une dernière mise à jour en 2012, contre 2008 pour GnuRadius et 2007 pour OpenRadius. Le projet FreeRadius bénéficie également d'une communauté exemplaire, et d'une documentation très fournie. Il s'agit d'une référence dans le monde de l'entreprise, et assure à B.H. Consulting un suivi du produit sérieux pour l'avenir. C'est également la seule solution qui dispose d'un paquet Debian/Ubuntu, facilitant d'autant plus son installation sur les serveurs.
 
 \subsection{Types de certificats}
 
@@ -357,7 +357,15 @@ Jusqu'alors, les authentifications ont été faites en MD5, c'est-à-dire avec u
 
 \subsection{Procédure d'installation}
 
-Une fois les différentes tâches concernant le Radius et le SQL terminées, une réinstallation totale du système a été effectuée. Il a ensuite été réinstallé pas-à-pas, grâce aux documentations réalisées durant les tests. Cette étape a été l'occasion de corriger la documentation, et de se confronter à d'autres problèmes mineurs.
+Une fois les différentes tâches concernant le Radius et le SQL terminées, une réinstallation totale du système a été effectuée. Il a ensuite été réinstallé pas-à-pas, grâce aux documentations réalisées durant les tests. Cette étape a été l'occasion de corriger la documentation, et de se confronter à d'autres problèmes mineurs. Cette tâche est décrite en figure~\ref{gantt_finalisation} page~\pageref{gantt_finalisation}.
+
+\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[width=0.5\textwidth]{img/gantt_finalisation.png}
+	\end{center}
+	\caption{Tâche \textit{Finalisation}}
+	\label{gantt_finalisation}
+\end{figure}
 
 Un paquet Ubuntu a été réalisé au fur et à mesure de la réinstallation, pour permettre son automatisation. Une dernière réinstallation aura permis de tester son bon fonctionnement. Ce paquet permettra un gain de temps précieux pour l'entreprise, qui aura à le déployer sur toutes les machines d'authentification de ses clients. Différentes questions sont posées durant son installation, pour qu'il s'adapte le plus simplement possible au client.
 
@@ -365,7 +373,7 @@ La réinstallation du système a posé plusieurs fois problème~: les machines m
 
 \subsection{Interface web}
 
-En parallèle de beaucoup des tâches décrites ci-dessus, la prise en main de l'environnement de travail CakePHP a été faite sans aucun lien avec le reste du projet. Ainsi, une seule personne a pris en charge cette étude, en prenant soin de s'auto-former en documentant ses recherches. Une fois les tâches parallèles terminées, le reste du groupe l'a rejoint, pour une rapide formation sur le sujet. Les sous-tâches sont détaillées dans la figure~\ref{gantt_interface} page~\pageref{gantt_interface}.
+En parallèle de beaucoup des tâches décrites ci-dessus, la prise en main de l'environnement de travail CakePHP a été faite sans aucun lien avec le reste du projet. Ainsi, une seule personne a pris en charge cette étude, en prenant soin de s'auto-former tout en documentant soigneusement ses recherches. Une fois les tâches parallèles terminées, le reste du groupe l'a rejoint, pour une rapide formation sur le sujet. Les sous-tâches sont détaillées dans la figure~\ref{gantt_interface} page~\pageref{gantt_interface}.
 
 \begin{figure}[!h]
 	\begin{center}
@@ -381,13 +389,27 @@ TODO: QUE FAIT L'INTERFACE ACTUELLEMENT
 
 TODO: SCREENSHOTS EN ANNEXE ET A REFERENCER
 
+\subsection{La suite}
+
+Une vue macro-scopique des tâches à venir est proposée en figure~\ref{gantt_suite} page~\pageref{gantt_suite}. La seconde grande partie du projet démarrera à la suite de la soutenance intermédiaire, avec notamment toute la conception et l'intégration du système de sauvegarde des configurations des équipements actifs. Celui-ci devra permettre de faire des retours arrières en annulant des séries d'actions, tout en proposant des sauvegardes complètes et en surveillant la bonne écriture des modifications sur les équipements.
+
+\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[width=\textwidth]{img/gantt_suite.png}
+	\end{center}
+	\caption{Vue macro-scopique des tâches à venir}
+	\label{gantt_suite}
+\end{figure}
+
+Le travail portera donc à la fois sur la recherche des fonctionnalités qui peuvent être utilisées à cet effet sur les équipements, et l'intégration d'un onglet ergonomique dédié à cette tâche dans l'interface. Le développement de cette dernière continue durant cette seconde partie.
+
 \section{Conclusion}
 
 Cette première partie du rapport final étant rédigée pour la soutenance intermédiaire, le temps imparti pour la réalisation du projet est écoulé de moitié. Avec une interface déjà bien avancée et la plupart des recherches abouties, l'équipe démarrera la seconde grande étape dès janvier, respectant ainsi parfaitement les délais prévus dans le planning.
 
 Le matériel attribué au projet dans la salle des projets aura posé beaucoup de problèmes (matériel non-reconnu, disques durs corrompus, crashs inexpliqués, etc.), et aura déjà coûté beaucoup de temps aux membres de l'équipe. Quelques exigences supplémentaires arrivent parfois de la part de l'entreprise (comme la gestion d'utilisateurs d'un pare-feu), venant surcharger le cahier des charges. Nous essayons de faire avec ces contre-temps pour satisfaire l'ensemble des observateurs du projet.
 
-La seconde partie étant particulièrement concentrée sur l'interface web, la première étape de janvier sera de former tous les membres de l'équipe qui n'ont pas encore travaillé dessus.
+Le système de sauvegardes de la seconde partie impliquant plus de travail sur l'interface web, la première étape de janvier sera de former tous les membres de l'équipe qui n'ont pas encore travaillé dessus.
 
 \newpage
 ~\vspace{5cm}
@@ -408,6 +430,10 @@ La seconde partie étant particulièrement concentrée sur l'interface web, la p
 
 \section{Diagramme de Gantt}
 \label{gantt}
-TODO: INTEGRER GANTT
+\begin{center}
+	\includegraphics[width=\textwidth]{img/gantt1.png}
+
+	\includegraphics[width=\textwidth]{img/gantt2.png}
+\end{center}
 
 \end{document}
