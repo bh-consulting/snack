@@ -1,6 +1,6 @@
 all: doc cadrage report slides
 
-report:
+report: cadrage
 	pdflatex rapport_intermediaire.tex
 	pdflatex rapport_intermediaire.tex
 
