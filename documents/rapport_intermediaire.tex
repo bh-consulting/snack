@@ -198,7 +198,7 @@ Cette technologie présente un second avantage pour l'entreprise~: en cas de rem
 
 Les serveurs d'authentification les plus connus dans le domaine des réseaux, et en particulier du 802.1x, sont ceux qui sont basés sur le protocole Radius. Il en existe plusieurs implémentations, parmi lesquelles un choix a dû être fait.
 
-\subsection{Serveur d'authentification}
+\subsubsection{Serveur d'authentification}
 
 Le marché dispose de plusieurs dizaines d'implémentations différentes du protocole Radius. L'entreprise souhaitant se restreindre aux solutions libres, le choix se réduit automatiquement à une dizaine de solutions différentes.
 
@@ -222,7 +222,7 @@ L'étude destinée à les différencier pour n'en choisir qu'un seul a porté su
 
 Sur la base de ces trois critères, FreeRadius est ressorti du lot. Outre ses fonctionnalités très complètes, le principal critère différenciateur fut le suivi du projet, avec une dernière mise à jour en 2012, contre 2008 pour GnuRadius et 2007 pour OpenRadius. Le projet FreeRadius bénéficie également d'une communauté exemplaire, et d'une documentation très fournie. Il s'agit d'une référence dans le monde de l'entreprise, et assure à B.H. Consulting un suivi du produit sérieux pour l'avenir. C'est également la seule solution qui dispose d'un paquet Debian/Ubuntu, facilitant d'autant plus son installation sur les serveurs.
 
-\subsection{Types de certificats}
+\subsubsection{Types de certificats}
 
 L'authentification des postes clients par certificats représente le moyen le plus simple et le plus sécurisé de se relier au réseau en utilisant la technologie 802.1x. Il existe plusieurs types d'authentification par certificats, qui apportent un niveau plus ou moins élevé de sécurité. Elles utilisent toutes le protocole EAP.
 
@@ -386,7 +386,7 @@ En parallèle de beaucoup des tâches décrites ci-dessus, la prise en main de l
 L'environnement de travail Bootstrap Twitter étant une prérogative du projet, un temps important a dû être consacré à étudier et tester ses possibles interactions avec CakePHP. Une méthode propre et pratique a été trouvée, permettant au projet d'évoluer rapidement en respectant ses contraintes : un script en langage Javascript a été développé pour modifier les styles générés par CakePHP en style compatible Bootstrap. L'activation de Javascript est donc nécessaire dans le navigateur de l'utilisateur, mais cette contrainte été déjà imposée par CakePHP.
 En outre, nous avons décidé d'utiliser FreeRadius en lien avec une base de données MySQL. Il a donc fallu adapter CakePHP pour fonctionner avec le schéma de base de données imposé par FreeRadius. La création des classes (contrôleurs et modèles) se fait facilement en respectant les normes de CakePHP.
 
-Actuellement, l'interface web permet de gérer les utilisateurs de chaque type (Cisco, Identifiant/Mot de passe, adresse MAC, certificat). Les règles correspondantes sont écrites dans la table "radcheck" de la base de données. Il est possible de créer des groupes pour appliquer des règles à un ensemble d'utilisateurs. Une partie de ces règles Radius sont communes aux utilisateurs et aux groupes : nombre de connexions simultanées, date d'expiration, ... Enfin, il est possible de gérer les NAS qui peuvent se connecter au serveur Radius. Tous ces éléments peuvent être ajoutés, modifiés et supprimés à l'aide de formulaires qui guident l'utilisateur et valident les données insérées.
+Actuellement, l'interface web permet de gérer les utilisateurs de chaque type (Cisco, Identifiant/Mot de passe, adresse MAC, certificats). Les règles correspondantes sont écrites dans la table \emph{radcheck} de la base de données. Il est possible de créer des groupes pour appliquer des règles à un ensemble d'utilisateurs. Une partie de ces règles Radius sont communes aux utilisateurs et aux groupes~: nombre de connexions simultanées, date d'expiration, etc. Enfin, il est possible de gérer les NAS (les commutateurs) qui peuvent se connecter au serveur Radius. Tous ces éléments peuvent être ajoutés, modifiés et supprimés à l'aide de formulaires qui guident l'utilisateur et valident les données insérées.
 
 Des captures de l'interface actuelle sont disponibles en annexe~\ref{captures} page~\pageref{captures}.
 
@@ -437,6 +437,7 @@ Le système de sauvegardes de la seconde partie impliquant plus de travail sur l
 	\includegraphics[width=\textwidth]{img/gantt2.png}
 \end{center}
 
+\newpage
 \section{Captures de l'interface}
 \label{captures}
 
