@@ -383,11 +383,12 @@ En parallèle de beaucoup des tâches décrites ci-dessus, la prise en main de l
 	\label{gantt_interface}
 \end{figure}
 
-L'environnement de travail Bootstrap Twitter étant une prérogative du projet, un temps important a dû être consacré à étudier et tester ses possibles interactions avec CakePHP. Une méthode propre et pratique a été trouvée, permettant au projet d'évoluer rapidement en respectant ses contraintes.
+L'environnement de travail Bootstrap Twitter étant une prérogative du projet, un temps important a dû être consacré à étudier et tester ses possibles interactions avec CakePHP. Une méthode propre et pratique a été trouvée, permettant au projet d'évoluer rapidement en respectant ses contraintes : un script en langage Javascript a été développé pour modifier les styles générés par CakePHP en style compatible Bootstrap. L'activation de Javascript est donc nécessaire dans le navigateur de l'utilisateur, mais cette contrainte été déjà imposée par CakePHP.
+En outre, nous avons décidé d'utiliser FreeRadius en lien avec une base de données MySQL. Il a donc fallu adapter CakePHP pour fonctionner avec le schéma de base de données imposé par FreeRadius. La création des classes (contrôleurs et modèles) se fait facilement en respectant les normes de CakePHP.
 
-TODO: QUE FAIT L'INTERFACE ACTUELLEMENT
+Actuellement, l'interface web permet de gérer les utilisateurs de chaque type (Cisco, Identifiant/Mot de passe, adresse MAC, certificat). Les règles correspondantes sont écrites dans la table "radcheck" de la base de données. Il est possible de créer des groupes pour appliquer des règles à un ensemble d'utilisateurs. Une partie de ces règles Radius sont communes aux utilisateurs et aux groupes : nombre de connexions simultanées, date d'expiration, ... Enfin, il est possible de gérer les NAS qui peuvent se connecter au serveur Radius. Tous ces éléments peuvent être ajoutés, modifiés et supprimés à l'aide de formulaires qui guident l'utilisateur et valident les données insérées.
 
-TODO: SCREENSHOTS EN ANNEXE ET A REFERENCER
+Des captures de l'interface actuelle sont disponibles en annexe~\ref{captures} page~\pageref{captures}.
 
 \subsection{La suite}
 
@@ -435,5 +436,29 @@ Le système de sauvegardes de la seconde partie impliquant plus de travail sur l
 
 	\includegraphics[width=\textwidth]{img/gantt2.png}
 \end{center}
+
+\section{Captures de l'interface}
+\label{captures}
+
+	\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[width=\textwidth]{img/capture2.png}
+	\end{center}
+	\caption{Liste des utilisateurs Radius}
+	\end{figure}
+
+	\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[width=\textwidth]{img/capture1.png}
+	\end{center}
+	\caption{Formulaire d'ajout d'un utilisateur Cisco}
+	\end{figure}
+
+	\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[width=\textwidth]{img/capture3.png}
+	\end{center}
+	\caption{Liste des groupes Radius}
+	\end{figure}
 
 \end{document}
