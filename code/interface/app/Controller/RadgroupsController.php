@@ -24,7 +24,7 @@ class RadgroupsController extends AppController
 
     public function add(){
         if($this->request->is('post')){
-            $success = $this->Checks->add_group($this->request);
+            $success = $this->Checks->add($this->request, array());
 
             if($success){
                 $this->Session->setFlash('New group added.');
@@ -39,8 +39,10 @@ class RadgroupsController extends AppController
         if ($this->request->is('get')) {
             $this->Radgroup->id = $id;
             $this->request->data = $this->Radgroup->read();
+            $this->Checks->restore_common_check_fields($id, $this->request);
         } else {
             if ($this->Radgroup->save($this->request->data)) {
+                $this->Checks->update_radcheck_fields($id, $this->request);
                 $this->Session->setFlash('Group has been updated.');
                 $this->redirect(array('action' => 'index'));
             } else {

@@ -18,7 +18,6 @@ $this->assign('nas_active', 'active');
         <th>Short name</th>
         <th>Type</th>
         <th>Ports</th>
-        <th>Secret</th>
         <th>Server</th>
         <th>Community</th>
         <th>Description</th>
@@ -38,7 +37,6 @@ $this->assign('nas_active', 'active');
         <td><?php echo $n['Nas']['shortname']; ?></td>
         <td><?php echo $n['Nas']['type']; ?></td>
         <td><?php echo $n['Nas']['ports']; ?></td>
-        <td><?php echo $n['Nas']['secret']; ?></td>
         <td><?php echo $n['Nas']['server']; ?></td>
         <td><?php echo $n['Nas']['community']; ?></td>
         <td><?php echo $n['Nas']['description']; ?></td>

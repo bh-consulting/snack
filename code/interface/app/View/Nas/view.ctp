@@ -17,10 +17,6 @@ echo '<h1>NAS ' . $nas['Nas']['nasname'] . '</h1>';
 <? echo $nas['Nas']['ports']; ?>
 </p>
 
-<p><strong>Secret:</strong> 
-<? echo $nas['Nas']['secret']; ?>
-</p>
-
 <p><strong>Server:</strong> 
 <? echo $nas['Nas']['server']; ?>
 </p>

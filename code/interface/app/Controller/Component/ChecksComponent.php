@@ -82,9 +82,7 @@ class ChecksComponent extends Component
             $rad->create();
             return $rad->save($data);
         } else {
-            echo $attribute;
-            echo $value;
-            return false;
+            return true;
         }
     }
 
@@ -233,15 +231,6 @@ class ChecksComponent extends Component
         }
     }
 
-    // can be moved to RadgroupsController
-    public function add_group($request)
-    {
-        if ($request->is('post')) {
-            $name = $request->data[$this->baseClassName][$this->displayName];
-            return $this->add($request, array());
-        }
-    }
-
     // can be moved to RadusersController
     public function edit_cisco($request, $id = null) {
         $this->baseClass->id = $id;
@@ -249,7 +238,7 @@ class ChecksComponent extends Component
             $request->data = $this->baseClass->read();
 
             // restore values from radchecks
-            $this->restore_common_check_fields($request, $id, $cisco=true);
+            $this->restore_common_check_fields($id, $request, $cisco=true);
 
             return $request;
         } else {
@@ -275,7 +264,7 @@ class ChecksComponent extends Component
         $this->baseClass->id = $id;
         if ($request->is('get')) {
             $request->data = $this->baseClass->read();
-            $this->restore_common_check_fields($request, $id);
+            $this->restore_common_check_fields($id, $request);
             return $request;
         } else {
 
@@ -297,7 +286,7 @@ class ChecksComponent extends Component
         $this->baseClass->id = $id;
         if ($request->is('get')) {
             $request->data = $this->baseClass->read();
-            $this->restore_common_check_fields($request, $id);
+            $this->restore_common_check_fields($id, $request);
             return $request;
         } else {
 
@@ -322,7 +311,7 @@ class ChecksComponent extends Component
         $this->baseClass->id = $id;
         if ($request->is('get')) {
             $request->data = $this->baseClass->read();
-            $this->restore_common_check_fields($request, $id);
+            $this->restore_common_check_fields($id, $request);
             return $request;
         } else {
 
@@ -333,6 +322,26 @@ class ChecksComponent extends Component
             	return false;
             }
         }
+    }
+
+    public function delete($request, $id)
+    {
+        if ($request->is('get')) {
+            throw new MethodNotAllowedException();
+        }
+
+        // delete matching radchecks
+        $rads = $this->getChecks($id);
+        foreach($rads as $r)
+            $this->checkClass->delete($r[$this->checkClassName]['id']);
+
+        if ($this->baseClass->delete($id)) {
+            return true;
+        } else {
+            return false;
+        }
+
+        // TODO: delete certificate on filesystem if necessary
     }
 
     public function update_radcheck_fields($id, $request, $additionalFields = array()){
@@ -357,27 +366,7 @@ class ChecksComponent extends Component
         }
     }
 
-    public function delete($request, $id)
-    {
-        if ($request->is('get')) {
-            throw new MethodNotAllowedException();
-        }
-
-        // delete matching radchecks
-        $rads = $this->getChecks($id);
-        foreach($rads as $r)
-            $this->checkClass->delete($r[$this->checkClassName]['id']);
-
-        if ($this->baseClass->delete($id)) {
-        	return true;
-        } else {
-        	return false;
-        }
-
-        // TODO: delete certificate on filesystem if necessary
-    }
-
-    public function restore_common_check_fields(&$request, $id, $cisco=false)
+    public function restore_common_check_fields($id, &$request, $cisco=false)
     {
         // restore values from radchecks
         $rads = $this->getChecks($id);
@@ -390,8 +379,6 @@ class ChecksComponent extends Component
                 $request->data[$this->baseClassName]['simultaneous_use'] = $r[$this->checkClassName]['value'];
             }
         }
-
-        return $request;
     }
 
     // FIXME
