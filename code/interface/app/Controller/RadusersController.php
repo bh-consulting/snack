@@ -54,41 +54,207 @@ class RadusersController extends AppController
     }
 
     public function add_cisco(){
-        $success = $this->Checks->add_cisco($this->request);
-        $this->add($success);
+        if ($this->request->is('post')) {
+            $name = $this->request->data['Raduser']['username'];
+            $this->request->data['Raduser']['is_cisco'] = 1;
+            $checks = array(
+                array($name,
+                    'NAS-Port-Type',
+                    '==',
+                    $this->request->data['Raduser']['nas-port-type']
+                ),
+                array($name,
+                    'Cleartext-Password',
+                    ':=',
+                    $this->request->data['Raduser']['password']
+                ),
+                array($name,
+                    'EAP-Type',
+                    ':=',
+                    'MD5-CHALLENGE'
+                )
+            );
+
+            $success = $this->Checks->add($this->request, $checks);
+            $this->add($success);
+
+            // TODO: add a cisco user with $this->request->data['Raduser']['username']/ $this->request->data['Raduser']['password']
+        }
     }
 
     public function add_loginpass(){
-        $success = $this->Checks->add_loginpass($this->request);
-        $this->add($success);
+        if ($this->request->is('post')) {
+
+            $name = $this->request->data['Raduser']['username'];
+            $this->request->data['Raduser']['is_loginpass'] = 1;
+            $rads = array(
+                array($name,
+                    'NAS-Port-Type',
+                    '==',
+                    '15'
+                ),
+                array($name,
+                    'Cleartext-Password',
+                    ':=',
+                    $this->request->data['Raduser']['password']
+                ),
+                array($name,
+                    'EAP-Type',
+                    ':=',
+                    'MD5-CHALLENGE'
+                )
+            );
+            $success = $this->Checks->add($this->request, $rads);
+            $this->add($success);
+        }
     }
+
     public function add_mac(){
-        $success = $this->Checks->add_mac($this->request);
-        $this->add($success);
+        if ($this->request->is('post')) {
+
+            $this->request->data['Raduser']['mac'] = str_replace(':', '', $this->request->data['Raduser']['mac']);
+            $this->request->data['Raduser']['mac'] = str_replace('-', '', $this->request->data['Raduser']['mac']);
+            $name = $this->request->data['Raduser']['mac'];
+            $this->request->data['Raduser']['is_mac'] = 1;
+            $this->request->data['Raduser']['username'] = $this->request->data['Raduser']['mac'];
+            $rads = array(
+                array($name,
+                    'NAS-Port-Type',
+                    '==',
+                    '15'
+                ),
+                array($name,
+                    'Cleartext-Password',
+                    ':=',
+                    $this->request->data['Raduser']['mac']
+                ),
+                array($name,
+                    'EAP-Type',
+                    ':=',
+                    'MD5-CHALLENGE'
+                )
+            );
+            $success = $this->Checks->add($this->request, $rads);
+            $this->add($success);
+        }
     }
 
     public function add_cert(){
-        $success = $this->Checks->add_cert($this->request);
-        $this->add($success);
+        if ($this->request->is('post')) {
+
+            $name = $this->request->data['Raduser']['username'
+          ];
+            $this->request->data['Raduser']['is_cert'] = 1;
+            $this->request->data['Raduser']['cert_path'] = '/var/www/cert/newcerts/' . $name . '.pem';
+            $rads = array(
+                array($name,
+                    'NAS-Port-Type',
+                    '==',
+                    '15'
+                ),
+                array($name,
+                    'EAP-Type',
+                    ':=',
+                    'EAP-TTLS'
+                )
+            );
+            $success = $this->Checks->add($this->request, $rads);
+            $this->add($success);
+
+            // TODO: generate a certificate
+        }
     }
 
     public function edit_cisco($id = null){
-        $result = $this->Checks->edit_cisco($this->request, $id);
+        $this->id = $id;
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Raduser->read();
+
+            // restore values from radchecks
+            $this->Checks->restore_common_check_fields($id, $this->request, $cisco=true);
+
+            $result = $request;
+        } else {
+
+            if ($this->Raduser->save($this->request->data)) {
+
+                // update radchecks fields
+                $checkClassFields = array(
+                    'NAS-Port-Type' => $this->request->data['Raduser']['nas-port-type'],
+                    'Cleartext-Password' => $this->request->data['Raduser']['password']);
+                $this->Checks->update_radcheck_fields($id, $this->request, $checkClassFields);
+
+                $result = true;
+
+            } else {
+                $result = false;
+            }
+        }
         $this->edit($result);
     }
 
     public function edit_loginpass($id = null){
-        $result = $this->Checks->edit_loginpass($this->request, $id);
+        $this->id = $id;
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Raduser->read();
+            $this->Checks->restore_common_check_fields($id, $this->request);
+            $result = $this->request;
+        } else {
+
+            if ($this->Raduser->save($this->request->data)) {
+
+                // update radchecks fields
+                $checkClassFields = array('Cleartext-Password' => $this->request->data['Raduser']['password']);
+                $this->Checks->update_radcheck_fields($id, $this->request, $checkClassFields);
+
+                $result = true;
+            } else {
+                $result = false;
+            }
+        }
         $this->edit($result);
     }
 
     public function edit_mac($id = null){
-        $result = $this->Checks->edit_mac($this->request, $id);
+        $this->id = $id;
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Raduser->read();
+            $this->Checks->restore_common_check_fields($id, $this->request);
+            $result = $request;
+        } else {
+
+            if ($this->Raduser->save($this->request->data)) {
+                $this->Checks->update_radcheck_fields($id, $this->request);
+                $result = true;
+            } else {
+                $result = false;
+            }
+        }
         $this->edit($result);
     }
 
     public function edit_cert($id = null){
-        $result = $this->Checks->edit_cert($this->request, $id);
+        $this->id = $id;
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Raduser->read();
+            $this->Checks->restore_common_check_fields($id, $this->request);
+            $result = $this->request;
+        } else {
+
+            if ($this->Raduser->save($this->request->data)) {
+
+                $newCert = ($this->request->data['Raduser']['cert_gen'] == 1);
+
+                $this->Checks->update_radcheck_fields($id, $this->request);
+                if($newCert){
+                    // TODO: generate a new cert
+                }
+                $result = true;
+
+            } else {
+                $result = false;
+            }
+        }
         $this->edit($result);
     }
 
