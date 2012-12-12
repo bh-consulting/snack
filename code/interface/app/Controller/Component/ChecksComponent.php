@@ -104,8 +104,7 @@ class ChecksComponent extends Component
                     )
                 ));
 
-            print_r($checks);
-            $this->baseClass->create();
+                $this->baseClass->create();
             $success = $this->baseClass->save($request->data);
 
             foreach($checks as $rc)
@@ -145,15 +144,25 @@ class ChecksComponent extends Component
         $rads = $this->getChecks($id);
 
         foreach($fields as $key=>$value){
+            $found = false;
             foreach($rads as &$r){
                 if($r[$this->checkClassName]['attribute'] == $key
                     && $r[$this->checkClassName]['value'] != ""){
                     $r[$this->checkClassName]['value'] = $value;
                     $this->checkClass->save($r);
+                    $found = true;
                     break;
                 }
             }
             // FIXME: doesn't work for new check fields!
+            if(!$found){
+                $r = array($this->checkClassName => array(
+                    'attribute' => $key,
+                    'value' => $value,
+                    'op' => ':=',
+                    $this->displayName => $this->baseClass->field($this->displayName)));
+                $this->checkClass->save($r);
+            }
         }
     }
 

@@ -166,14 +166,14 @@ class RadusersController extends AppController
     }
 
     public function edit_cisco($id = null){
-        $this->id = $id;
+        $this->Raduser->id = $id;
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
 
             // restore values from radchecks
             $this->Checks->restore_common_check_fields($id, $this->request, $cisco=true);
 
-            $result = $request;
+            $result = $this->request;
         } else {
 
             if ($this->Raduser->save($this->request->data)) {
@@ -194,7 +194,7 @@ class RadusersController extends AppController
     }
 
     public function edit_loginpass($id = null){
-        $this->id = $id;
+        $this->Raduser->id = $id;
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
             $this->Checks->restore_common_check_fields($id, $this->request);
@@ -216,11 +216,11 @@ class RadusersController extends AppController
     }
 
     public function edit_mac($id = null){
-        $this->id = $id;
+        $this->Raduser->id = $id;
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
             $this->Checks->restore_common_check_fields($id, $this->request);
-            $result = $request;
+            $result = $this->request;
         } else {
 
             if ($this->Raduser->save($this->request->data)) {
@@ -234,7 +234,7 @@ class RadusersController extends AppController
     }
 
     public function edit_cert($id = null){
-        $this->id = $id;
+        $this->Raduser->id = $id;
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
             $this->Checks->restore_common_check_fields($id, $this->request);
