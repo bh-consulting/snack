@@ -1,6 +1,7 @@
 <?php
 
 App::import('Model', 'Radcheck');
+App::import('Model', 'Radgroup');
 class RadusersController extends AppController
 {
     public $helpers = array('Html', 'Form');
@@ -51,9 +52,12 @@ class RadusersController extends AppController
                 $this->Session->setFlash('Unable to add user.', 'flash_error');
             }
         }
+        $groups = new Radgroup();
+        $this->set('groups', $groups->find('list', array('fields' => array('groupname'))));
     }
 
     public function add_cisco(){
+        $success = false;
         if ($this->request->is('post')) {
             $name = $this->request->data['Raduser']['username'];
             $this->request->data['Raduser']['is_cisco'] = 1;
@@ -76,13 +80,14 @@ class RadusersController extends AppController
             );
 
             $success = $this->Checks->add($this->request, $checks);
-            $this->add($success);
 
             // TODO: add a cisco user with $this->request->data['Raduser']['username']/ $this->request->data['Raduser']['password']
         }
+        $this->add($success);
     }
 
     public function add_loginpass(){
+        $success = false;
         if ($this->request->is('post')) {
 
             $name = $this->request->data['Raduser']['username'];
@@ -105,11 +110,12 @@ class RadusersController extends AppController
                 )
             );
             $success = $this->Checks->add($this->request, $rads);
-            $this->add($success);
         }
+        $this->add($success);
     }
 
     public function add_mac(){
+        $success = false;
         if ($this->request->is('post')) {
 
             $this->request->data['Raduser']['mac'] = str_replace(':', '', $this->request->data['Raduser']['mac']);
@@ -135,11 +141,12 @@ class RadusersController extends AppController
                 )
             );
             $success = $this->Checks->add($this->request, $rads);
-            $this->add($success);
         }
+        $this->add($success);
     }
 
     public function add_cert(){
+        $success = false;
         if ($this->request->is('post')) {
 
             $name = $this->request->data['Raduser']['username'
@@ -159,10 +166,10 @@ class RadusersController extends AppController
                 )
             );
             $success = $this->Checks->add($this->request, $rads);
-            $this->add($success);
 
             // TODO: generate a certificate
         }
+        $this->add($success);
     }
 
     public function edit_cisco($id = null){
@@ -267,6 +274,9 @@ class RadusersController extends AppController
                 $this->Session->setFlash('Unable to update user.', 'flash_error');
             }
         } else {
+            $groups = new Radgroup();
+            $this->set('groups', $groups->find('list', array('fields' => array('groupname'))));
+
             $this->request = $result;
         }
     }
@@ -280,6 +290,14 @@ class RadusersController extends AppController
         } else {
             $this->Session->setFlash('Unable to delete user with id:' . $id . ' has been deleted.', 'flash_error');
         }
+    }
+
+    public function getGroups($id)
+    {
+        $this->Raduser->id = $id;
+        $username = $this->Raduser->field('username');
+        $groups = $this->Radusergroup->findAllByUsername($username);
+        print_r($groups);
     }
 }
 

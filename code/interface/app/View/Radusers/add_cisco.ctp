@@ -14,6 +14,7 @@ echo $this->Form->input('nas-port-type', array(
     'label' => 'NAS Port Type')
 );
 echo $this->element('check_common_fields');
+echo $this->Form->input('groups', array('type' => 'select', 'label' => 'Groups', 'multiple' => 'multiple'));
 echo $this->Form->end('Create');
 ?>
 

@@ -14,6 +14,7 @@ echo $this->Form->input('nas-port-type', array(
     'selected' => $this->data['Raduser']['nas-port-type'])
 );
 echo $this->element('check_common_fields');
+echo $this->Form->input('groups', array('type' => 'select', 'label' => 'Groups', 'multiple' => 'multiple'));
 echo $this->Form->input('id', array('type' => 'hidden'));
 echo $this->Form->input('username', array('type' => 'hidden'));
 echo $this->Form->end('Update');

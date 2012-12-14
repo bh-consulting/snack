@@ -5,6 +5,7 @@ App::import('Model', 'Radcheck');
 App::import('Model', 'Raduser');
 App::import('Model', 'Radgroupcheck');
 App::import('Model', 'Radgroup');
+App::import('Model', 'Radusergroup');
 
 class ChecksComponent extends Component
 {
@@ -104,13 +105,29 @@ class ChecksComponent extends Component
                     )
                 ));
 
-                $this->baseClass->create();
+            $this->baseClass->create();
             $success = $this->baseClass->save($request->data);
+
+            $this->addGroup($this->baseClass->id, $request->data[$this->baseClassName]['groups']);
 
             foreach($checks as $rc)
                 $success = $success && $this->create_check($rc[0], $rc[1], $rc[2], $rc[3]);
 
             return $success;
+        }
+    }
+
+    public function addGroup($id, $groupsId)
+    {
+        if(!empty($groupsId)){
+            $this->baseClass->id = $id;
+            $Radusergroup = new Radusergroup();
+            $Radgroup = new Radgroup();
+            foreach($groupsId as $gid){
+                $Radgroup->id = $gid;
+                $Radusergroup->create();
+                $Radusergroup->save(array('username' => $this->baseClass->field('username'), 'groupname' => $Radgroup->field('groupname')));
+            }
         }
     }
 
@@ -121,7 +138,7 @@ class ChecksComponent extends Component
         }
 
         // delete matching radchecks
-        $rads = $this->getChecks($id);
+        $rads = $this->getChecks($id)   ;
         foreach($rads as $r)
             $this->checkClass->delete($r[$this->checkClassName]['id']);
 
