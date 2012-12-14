@@ -2,6 +2,7 @@
 
 App::import('Model', 'Radcheck');
 App::import('Model', 'Radgroup');
+App::import('Model', 'Radusergroup');
 class RadusersController extends AppController
 {
     public $helpers = array('Html', 'Form');
@@ -190,6 +191,7 @@ class RadusersController extends AppController
                     'NAS-Port-Type' => $this->request->data['Raduser']['nas-port-type'],
                     'Cleartext-Password' => $this->request->data['Raduser']['password']);
                 $this->Checks->update_radcheck_fields($id, $this->request, $checkClassFields);
+                $this->update_groups($this->Raduser->id, $this->request);
 
                 $result = true;
 
@@ -209,10 +211,11 @@ class RadusersController extends AppController
         } else {
 
             if ($this->Raduser->save($this->request->data)) {
-
                 // update radchecks fields
                 $checkClassFields = array('Cleartext-Password' => $this->request->data['Raduser']['password']);
                 $this->Checks->update_radcheck_fields($id, $this->request, $checkClassFields);
+
+                $this->update_groups($this->Raduser->id, $this->request);
 
                 $result = true;
             } else {
@@ -231,6 +234,7 @@ class RadusersController extends AppController
         } else {
 
             if ($this->Raduser->save($this->request->data)) {
+                $this->update_groups($this->Raduser->id, $this->request);
                 $this->Checks->update_radcheck_fields($id, $this->request);
                 $result = true;
             } else {
@@ -249,7 +253,7 @@ class RadusersController extends AppController
         } else {
 
             if ($this->Raduser->save($this->request->data)) {
-
+                $this->update_groups($this->Raduser->id, $this->request);
                 $newCert = ($this->request->data['Raduser']['cert_gen'] == 1);
 
                 $this->Checks->update_radcheck_fields($id, $this->request);
@@ -273,12 +277,13 @@ class RadusersController extends AppController
             } else {
                 $this->Session->setFlash('Unable to update user.', 'flash_error');
             }
-        } else {
-            $groups = new Radgroup();
-            $this->set('groups', $groups->find('list', array('fields' => array('groupname'))));
-
+        } else{
             $this->request = $result;
         }
+
+        $groups = new Radgroup();
+        $this->set('groups', $groups->find('list', array('fields' => array('groupname'))));
+        $this->restore_groups($this->Raduser->id);
     }
 
     public function delete($id = null){
@@ -292,12 +297,60 @@ class RadusersController extends AppController
         }
     }
 
-    public function getGroups($id)
+    public function getUserGroups($id)
     {
         $this->Raduser->id = $id;
         $username = $this->Raduser->field('username');
-        $groups = $this->Radusergroup->findAllByUsername($username);
-        print_r($groups);
+        $Radusergroup = new Radusergroup();
+        $groups = $Radusergroup->findAllByUsername($username);
+        return $groups;
+    }
+
+    public function restore_groups($id)
+    {
+        $Radgroup = new Radgroup();
+        $groups = $this->getUserGroups($id);
+        if(!empty($groups)){
+            $groupsId = array();
+            foreach ($groups as $usergroup) {
+                $g = $Radgroup->findByGroupname($usergroup['Radusergroup']['groupname']);
+                $groupsId[]= $g['Radgroup']['id'];
+            }
+            $this->set('groups_selected', $groupsId);
+        }
+    }
+
+    public function update_groups($id, $request){
+        $groups = $this->getUserGroups($id);
+
+        // add new groups
+        foreach($request->data['Raduser']['groups'] as $requestGroup){
+            $found = false;
+            print_r($groups);
+            // FIXME: Radusergroup
+            foreach($groups as $group){
+                if($group['Radgroup']['id'] == $requestGroup)
+                    $found = false;
+            }
+
+            if(!$found){
+                $this->Checks->addGroup($id, $requestGroup);
+            }
+        }
+
+        // remove deleted groups
+        foreach($groups as $group){
+            $found = false;
+            foreach($request->data['Raduser']['groups'] as $requestGroup){
+                if($group['Radgroup']['id'] == $requestGroup)
+                    $found = false;
+            }
+
+            if(!$found){
+                // delete group
+            }
+        }
+
     }
 }
 
