@@ -146,12 +146,13 @@ class ChecksComponent extends Component
         foreach($fields as $key=>$value){
             $found = false;
             foreach($rads as &$r){
-                if($r[$this->checkClassName]['attribute'] == $key
-                    && $r[$this->checkClassName]['value'] != ""){
-                    $r[$this->checkClassName]['value'] = $value;
-                    $this->checkClass->save($r);
+                if($r[$this->checkClassName]['attribute'] == $key){
                     $found = true;
-                    break;
+                    if($r[$this->checkClassName]['value'] != ""){
+                        $r[$this->checkClassName]['value'] = $value;
+                        $this->checkClass->save($r);
+                        break;
+                    }
                 }
             }
             // FIXME: doesn't work for new check fields!
@@ -161,7 +162,10 @@ class ChecksComponent extends Component
                     'value' => $value,
                     'op' => ':=',
                     $this->displayName => $this->baseClass->field($this->displayName)));
-                $this->checkClass->save($r);
+                if($value != ""){
+                    $this->checkClass->create();
+                    $this->checkClass->save($r);
+                }
             }
         }
     }
