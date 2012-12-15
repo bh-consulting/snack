@@ -10,7 +10,7 @@
             <a href="/interface/nas/"><i class="icon-hdd"></i> NAS</a>
         </li>
         <li class="<? echo $this->fetch('monitoring_active'); ?>">
-            <a href="#"><i class="icon-ok"></i> Monitoring</a>
+            <a href="/interface/radaccts/"><i class="icon-ok"></i> Monitoring</a>
         </li>
         <li class="<? echo $this->fetch('logs_active'); ?>">
             <a href="#"><i class="icon-list-alt"></i> Logs</a>
