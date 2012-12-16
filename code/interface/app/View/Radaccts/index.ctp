@@ -7,13 +7,13 @@ $this->assign('monitoring_active', 'active');
 <table class="table">
     <thead>
     <tr>
-        <th><? echo $this->Paginator->sort('acctuniqueid', 'Session ID ' . ( ($this->Paginator->sortKey() == "acctuniqueid") ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-        <th><? echo $this->Paginator->sort('username', 'Username ' . ( ($this->Paginator->sortKey() == "username") ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-        <th><? echo $this->Paginator->sort('callingstationid', 'IP ' . ( ($this->Paginator->sortKey() == "callingstationid") ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-        <th><? echo $this->Paginator->sort('acctstarttime', 'Start ' . ( ($this->Paginator->sortKey() == "acctstarttime") ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-        <th><? echo $this->Paginator->sort('acctstoptime', 'Stop ' . ( ($this->Paginator->sortKey() == "acctstoptime") ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-				<th><? echo $this->Paginator->sort('nasipaddress', 'NAS IP ' . ( ($this->Paginator->sortKey() == "nasipaddress") ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-				<th><? echo $this->Paginator->sort('nasportid', 'Nas Port ' . ( ($this->Paginator->sortKey() == "nasportid") ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
+        <th><? echo $this->Paginator->sort('acctuniqueid', 'Session ID '	. ( (preg_match( "#acctuniqueid$#",			$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
+        <th><? echo $this->Paginator->sort('username', 'Username '				. ( (preg_match( "#username$#",					$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
+        <th><? echo $this->Paginator->sort('callingstationid', 'IP '			. ( (preg_match( "#callingstationid$#",	$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
+        <th><? echo $this->Paginator->sort('acctstarttime', 'Start '			. ( (preg_match( "#acctstarttime$#",		$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
+        <th><? echo $this->Paginator->sort('acctstoptime', 'Stop '				. ( (preg_match( "#acctstoptime$#",			$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
+				<th><? echo $this->Paginator->sort('nasipaddress', 'NAS IP '			. ( (preg_match( "#nasipaddress$#",			$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
+				<th><? echo $this->Paginator->sort('nasportid', 'Nas Port '				. ( (preg_match( "#nasportid$#",				$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
     </tr>
     </thead>
 
