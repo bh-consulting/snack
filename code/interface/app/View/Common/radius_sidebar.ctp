@@ -16,7 +16,7 @@
             <a href="#"><i class="icon-list-alt"></i> Logs</a>
         </li>
         <li class="<? echo $this->fetch('dashboard_active'); ?>">
-            <a href="#"><i class="icon-th-large"></i> Server dashboard</a>
+            <a href="/interface/systemDetails/"><i class="icon-th-large"></i> Server dashboard</a>
         </li>
         <li class="<? echo $this->fetch('param_active'); ?>">
             <a href="#"><i class="icon-wrench"></i> Server parameters</a>
