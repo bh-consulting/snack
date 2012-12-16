@@ -4,9 +4,16 @@ class RadacctsController extends AppController
 {
     public $helpers = array('Html', 'Form');
 
+		public $paginate = array(	'order' => array( 'acctuniqueid' => 'asc' ) );
+
     public function index()
     {
-        $this->set('radaccts', $this->Radacct->find('all'));
+        $this->set('radaccts', $this->paginate( 'Radacct', array(), array(	'acctuniqueid'	,
+																																						'username'			,
+																																						'acctstarttime'	,
+																																						'acctstoptime'	,
+																																						'nasipaddress'	,
+																																						'nasportid'			) ) );
     }
 
     public function view($id = null)
