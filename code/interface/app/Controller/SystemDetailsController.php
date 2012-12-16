@@ -34,8 +34,6 @@ class SystemDetailsController extends AppController
 
 				$this->set('radiusstate', $this->SystemDetail->checkService("freeradius"));
 				$this->set('mysqlstate', $this->SystemDetail->checkService("mysql"));
-
-				print_r($this->SystemDetail->restartService("mysql"));
     }
 }
 
