@@ -12,7 +12,7 @@ echo "	create database radius;\
 	grant all on radius.* to radius@localhost identified by '$mdp_radius';\
 	flush privileges;\
 " | mysql -uroot -p$mdp_root
-until $? -eq 0
+until [ $? -eq 0 ]
 do
 	echo -n "Mot de passe root MySQL : "
 	read mdp_root
