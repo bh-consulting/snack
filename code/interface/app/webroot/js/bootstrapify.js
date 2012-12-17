@@ -31,6 +31,19 @@ var Boostrapify = {
 
         // ELEMENTS
         $('table').addClass('table table-hover table-bordered');
+
+				// PAGINATION
+				$('div.pagination').wrapInner('<ul/>');
+				$('div.pagination span').replaceWith(function() { 
+					var content = $(this).html();
+					var attr		= $(this).attr("class");
+
+					if( attr != null )
+						$(this).replaceWith("<li class='" + attr + "'>" + content + "</li>");
+					else
+						$(this).replaceWith("<li>" + content + "</li>");
+				});
+				$('div.pagination li.disabled').wrapInner('<a href="#"></a>');
     }
 }
 

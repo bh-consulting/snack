@@ -35,6 +35,26 @@ $this->assign('dashboard_active', 'active');
 	<strong>Total disk:</strong> <?php echo $totaldisk; ?>
 </p>
 
+<?php
+/*
+echo $this->GoogleChart	->create()
+												->setTitle( 'Disk memory', array( 'size' => 14, 'color' => '000000' ) )
+												->setType( 'pie', array( '2d' ) )
+												->setSize( 300, 200 )
+												->setMargins( 10, 10, 10, 10 )
+												->addData( array( $useddisk / $totaldisk, $freedisk / $totaldisk ) )
+												->setPieChartLabels( array( 'Used', 'Free' ) );
+
+echo $this->GoogleChart	->create()
+												->setTitle( 'Disk memory', array( 'size' => 14, 'color' => '000000' ) )
+												->setType( 'pie', array( '2d' ) )
+												->setSize( 300, 200 )
+												->setMargins( 10, 10, 10, 10 )
+												->addData( array( 1, 5 ) )
+												->setPieChartLabels( array( 'Used', 'Free' ) );
+*/
+?> 
+
 <h4>Network:</h4>
 <table class="table">
     <thead>

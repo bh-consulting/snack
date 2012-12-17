@@ -4,7 +4,7 @@ class RadacctsController extends AppController
 {
     public $helpers = array('Html', 'Form');
 
-		public $paginate = array(	'order' => array( 'acctuniqueid' => 'asc' ) );
+		public $paginate = array(	'limit' => 1, 'order' => array( 'acctuniqueid' => 'asc' ) );
 
     public function index()
     {
@@ -14,6 +14,8 @@ class RadacctsController extends AppController
 																																						'acctstoptime'	,
 																																						'nasipaddress'	,
 																																						'nasportid'			) ) );
+
+				$this->set('sortIcons', array( 'asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up' ));
     }
 
     public function view($id = null)

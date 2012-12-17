@@ -2,7 +2,7 @@
 
 class SystemDetailsController extends AppController
 {
-    public $helpers = array('Html', 'Form');
+    public $helpers = array('Html', 'Form'); //, 'GoogleChart');
 
     public function index()
     {

@@ -1,19 +1,26 @@
 <? 
 $this->extend('/Common/radius_sidebar');
 $this->assign('monitoring_active', 'active');
+
+$columns = array(
+	'acctuniqueid'			=> 'Session ID',
+	'username'					=> 'Username',
+	'callingstationid'	=> 'IP',
+	'acctstarttime'			=> 'Start',
+	'acctstoptime'			=> 'Stop',
+	'nasipaddress'			=> 'NAS IP',
+	'nasportid'					=> 'Nas Port',
+);
 ?>
 <h1>Sessions</h1>
 
 <table class="table">
     <thead>
     <tr>
-        <th><? echo $this->Paginator->sort('acctuniqueid', 'Session ID '	. ( (preg_match( "#acctuniqueid$#",			$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-        <th><? echo $this->Paginator->sort('username', 'Username '				. ( (preg_match( "#username$#",					$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-        <th><? echo $this->Paginator->sort('callingstationid', 'IP '			. ( (preg_match( "#callingstationid$#",	$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-        <th><? echo $this->Paginator->sort('acctstarttime', 'Start '			. ( (preg_match( "#acctstarttime$#",		$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-        <th><? echo $this->Paginator->sort('acctstoptime', 'Stop '				. ( (preg_match( "#acctstoptime$#",			$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-				<th><? echo $this->Paginator->sort('nasipaddress', 'NAS IP '			. ( (preg_match( "#nasipaddress$#",			$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
-				<th><? echo $this->Paginator->sort('nasportid', 'Nas Port '				. ( (preg_match( "#nasportid$#",				$this->Paginator->sortKey()) ) ? $this->Html->image( $this->Paginator->sortDir().'.png') : '' ), array( 'escape' => false )); ?></th>
+				<?
+					foreach( $columns as $field => $text )
+						echo "<th>" . $this->Paginator->sort($field, $text . " " . ( (preg_match( "#$field$#", $this->Paginator->sortKey()) ) ? $this->Html->tag('i', '', array('class' => $sortIcons[$this->Paginator->sortDir()])) : '' ), array( 'escape' => false )) . "</th>";
+				?>
     </tr>
     </thead>
 
@@ -62,21 +69,36 @@ $this->assign('monitoring_active', 'active');
 ?>
 </table>
 
-<p style="float:left;">
+<? /* Version Bootstrap
+<div class="pagination">
+	<ul>
 <?
-	echo 	$this->Paginator->prev('Prev. ', null, null, array('class' => 'disabled')) .
-				$this->Paginator->numbers( array(	'modulus'		=> 4,
-																					'first'			=> 2,
-																					'last'			=> 2,
-																					'ellipsis'	=> " ... "
-																					)) .
-				$this->Paginator->next(' Next', null, null, array('class' => 'disabled'));
+	echo 	$this->Paginator->prev('Prev.', array('tag' => 'li'), '<a href="#">Prev.</a>', array( 'tag' => 'li', 'class' => 'disabled', 'escape' => false )) .
+				$this->Paginator->numbers( array(	'tag' => 'li', 'currentTag' => 'strong', 'currentClass' => 'active', 'modulus' => 1, 'first' => 2, 'last' => 2, 'ellipsis' => '<li class="disabled"><a href="#">...</a></li>', 'separator' => '' )) .
+				$this->Paginator->next('Next', array('tag' => 'li'), '<a href="#">Next</a>', array( 'tag' => 'li', 'class' => 'disabled', 'escape' => false ));
 ?>
-</p>
+	</ul>
+</div>
+*/
+?>
 
-<p style="float:right;">
+<?
+	$paginate = $this->Paginator->prev('Prev.', array(), null, array('class' => 'disabled')) .
+							$this->Paginator->numbers( array(	'modulus'		=> 2,
+																								'first'			=> 2,
+																								'last'			=> 2,
+																								'ellipsis'	=> "<span class='disabled'>...</span>",
+																								'separator'	=> '',	
+																								'currentClass' => 'disabled'
+																								)) .
+							$this->Paginator->next('Next', array(), null, array('class' => 'disabled'));
+
+	echo $this->Html->tag('div', $paginate, array('class' => 'pagination pagination-small', 'style' => 'float:left;'));
+?>
+
+<div style="float:right;">
 <?
 	echo $this->Paginator->counter( array('format' => 'range') );
 ?>
-</p>
+</div>
 
