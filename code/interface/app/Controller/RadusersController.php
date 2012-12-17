@@ -306,6 +306,8 @@ class RadusersController extends AppController
         return $groups;
     }
 
+    
+
     public function restore_groups($id)
     {
         $Radgroup = new Radgroup();
@@ -321,28 +323,33 @@ class RadusersController extends AppController
     }
 
     public function update_groups($id, $request){
+        $radgroup = new Radgroup();
         $groups = $this->getUserGroups($id);
+        $groupsToAdd = array();
 
         // add new groups
         foreach($request->data['Raduser']['groups'] as $requestGroup){
             $found = false;
-            print_r($groups);
+            //print_r($groups);
             // FIXME: Radusergroup
             foreach($groups as $group){
-                if($group['Radgroup']['id'] == $requestGroup)
+                $radgroup->findByGroupname($group['Radusergroup']['groupname']);
+                if($radgroup->id == $requestGroup)
                     $found = false;
             }
 
             if(!$found){
-                $this->Checks->addGroup($id, $requestGroup);
+                $groupsToAdd[]= $requestGroup;
             }
         }
+        $this->Checks->addGroup($id, $groupsToAdd);
 
         // remove deleted groups
         foreach($groups as $group){
             $found = false;
             foreach($request->data['Raduser']['groups'] as $requestGroup){
-                if($group['Radgroup']['id'] == $requestGroup)
+                $radgroup->findByGroupname($group['Radusergroup']['groupname']);
+                if($radgroup->id == $requestGroup)
                     $found = false;
             }
 
