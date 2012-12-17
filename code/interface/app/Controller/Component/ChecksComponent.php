@@ -117,7 +117,7 @@ class ChecksComponent extends Component
         }
     }
 
-    public function addGroup($id, $groupsId)
+    public function addGroups($id, $groupsId)
     {
         if(!empty($groupsId)){
             $this->baseClass->id = $id;
@@ -127,6 +127,21 @@ class ChecksComponent extends Component
                 $Radgroup->id = $gid;
                 $Radusergroup->create();
                 $Radusergroup->save(array('username' => $this->baseClass->field('username'), 'groupname' => $Radgroup->field('groupname')));
+            }
+        }
+    }
+
+    public function deleteGroups($id, $groupsId)
+    {
+        if(!empty($groupsId)){
+            $this->baseClass->id = $id;
+            $Radusergroup = new Radusergroup();
+            $Radgroup = new Radgroup();
+            foreach($groupsId as $gid){
+                $Radgroup->findById($gid);
+                $Radusergroup->deleteAll(array(
+                    'Radusergroup.groupname' => $Radgroup->field('groupname'),
+                    'Radusergroup.username' => $this->baseClass->field('username')));
             }
         }
     }
