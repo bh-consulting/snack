@@ -50,7 +50,7 @@ class RadusersController extends AppController
 
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash('Unable to add user.', 'flash_error');
+                $this->Session->flash('Unable to add user.', 'error');
             }
         }
         $groups = new Radgroup();
@@ -306,7 +306,7 @@ class RadusersController extends AppController
         return $groups;
     }
 
-    
+
 
     public function restore_groups($id)
     {

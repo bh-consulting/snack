@@ -9,7 +9,6 @@ echo $this->Form->create('Raduser');
 echo $this->Form->input('username');
 echo $this->element('check_common_fields');
 echo $this->Form->input('groups', array('type' => 'select', 'label' => 'Groups', 'multiple' => 'multiple'));
-echo $this->Form->submit('Create', array('class' => 'btn btn-primary'));
-echo $this->Form->end();
+echo $this->Form->end('Create');
 ?>
 
