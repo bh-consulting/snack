@@ -11,7 +11,7 @@ echo $this->Form->input('nas-port-type', array(
     'options' => array(0 => 0, 5 => 5),
     'empty' => false,
     'label' => 'NAS Port Type',
-    'selected' => $this->data['Raduser']['nas-port-type'])
+    'selected' => isset($this->data['Raduser']['nas-port-type'])) ? $this->data['Raduser']['nas-port-type'] : '0'
 );
 echo $this->element('check_common_fields');
 echo $this->Form->input('groups', array('type' => 'select', 'label' => 'Groups', 'multiple' => 'multiple', 'selected' => isset($groups_selected) ? array_values($groups_selected) : ''));

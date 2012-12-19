@@ -108,7 +108,7 @@ class ChecksComponent extends Component
             $this->baseClass->create();
             $success = $this->baseClass->save($request->data);
 
-            $this->addGroup($this->baseClass->id, $request->data[$this->baseClassName]['groups']);
+            $this->addGroups($this->baseClass->id, $request->data[$this->baseClassName]['groups']);
 
             foreach($checks as $rc)
                 $success = $success && $this->create_check($rc[0], $rc[1], $rc[2], $rc[3]);
@@ -133,17 +133,20 @@ class ChecksComponent extends Component
 
     public function deleteGroups($id, $groupsId)
     {
+        $success = true;
         if(!empty($groupsId)){
             $this->baseClass->id = $id;
             $Radusergroup = new Radusergroup();
             $Radgroup = new Radgroup();
             foreach($groupsId as $gid){
-                $Radgroup->findById($gid);
-                $Radusergroup->deleteAll(array(
+                $Radgroup->id = $gid;
+                $success = $success && $Radusergroup->deleteAll(array(
                     'Radusergroup.groupname' => $Radgroup->field('groupname'),
-                    'Radusergroup.username' => $this->baseClass->field('username')));
+                    'Radusergroup.username' => $this->baseClass->field('username')
+                ), false);
             }
         }
+        return $success;
     }
 
     public function delete($request, $id)
@@ -151,11 +154,17 @@ class ChecksComponent extends Component
         if ($request->is('get')) {
             throw new MethodNotAllowedException();
         }
+        $this->baseClass->id = $id;
 
         // delete matching radchecks
         $rads = $this->getChecks($id)   ;
         foreach($rads as $r)
             $this->checkClass->delete($r[$this->checkClassName]['id']);
+
+        // delete usergroup relations
+        $username = $this->baseClass->field($this->displayName);
+        $Radusergroup = new Radusergroup();
+        $Radusergroup->deleteAll(array('Radusergroup.' . $this->displayName => $username));
 
         if ($this->baseClass->delete($id)) {
             return true;

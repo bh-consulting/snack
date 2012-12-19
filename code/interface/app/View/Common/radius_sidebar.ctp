@@ -1,5 +1,5 @@
 <div class="span3">
-    <div class="sidebar-nav well affix">
+    <div class="sidebar-nav well">
         <ul class="nav nav-list">
             <li class="<? echo $this->fetch('users_active'); ?>">
                 <a href="/interface/radusers/"><i class="icon-user"></i> Users</a>
