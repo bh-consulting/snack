@@ -14,7 +14,7 @@
                 <a href="/interface/radaccts/"><i class="icon-ok"></i> Monitoring</a>
             </li>
             <li class="<? echo $this->fetch('logs_active'); ?>">
-                <a href="#"><i class="icon-list-alt"></i> Logs</a>
+                <a href="/interface/loglines"><i class="icon-list-alt"></i> Logs</a>
             </li>
             <li class="<? echo $this->fetch('dashboard_active'); ?>">
                 <a href="/interface/systemDetails/"><i class="icon-th-large"></i> Server dashboard</a>
