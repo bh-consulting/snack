@@ -13,7 +13,6 @@ $this->assign('nas_active', 'active');
 <table class="table">
     <thead>
     <tr>
-        <th>Id</th>
         <th>Nas name</th>
         <th>Short name</th>
         <th>Type</th>
@@ -29,7 +28,6 @@ $this->assign('nas_active', 'active');
     <tbody>
     <?php foreach ($nas as $n): ?>
     <tr>
-        <td><?php echo $n['Nas']['id']; ?></td>
         <td>
             <?php echo $this->Html->link($n['Nas']['nasname'],
             array('controller' => 'nas', 'action' => 'view', $n['Nas']['id'])); ?>

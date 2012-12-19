@@ -7,5 +7,6 @@ $this->assign('groups_active', 'active');
 echo $this->Form->create('Radgroup');
 echo $this->Form->input('groupname', array('label' => 'Name'));
 echo $this->element('check_common_fields');
+echo $this->Form->input('users', array('type' => 'select', 'label' => 'Users', 'multiple' => 'multiple'));
 echo $this->Form->end('Create');
 ?>

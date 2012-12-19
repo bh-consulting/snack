@@ -108,8 +108,13 @@ class ChecksComponent extends Component
             $this->baseClass->create();
             $success = $this->baseClass->save($request->data);
 
-            $this->addGroups($this->baseClass->id, $request->data[$this->baseClassName]['groups']);
+            // add users or groups linked to this group or user
+            if(isset($request->data[$this->baseClassName]['groups']))
+                $this->addUsersOrGroups($this->baseClass->id, $request->data[$this->baseClassName]['groups']);
+            else if(isset($request->data[$this->baseClassName]['users']))
+                $this->addUsersOrGroups($this->baseClass->id, $request->data[$this->baseClassName]['users']);
 
+            // create all checks
             foreach($checks as $rc)
                 $success = $success && $this->create_check($rc[0], $rc[1], $rc[2], $rc[3]);
 
@@ -117,36 +122,63 @@ class ChecksComponent extends Component
         }
     }
 
-    public function addGroups($id, $groupsId)
+    public function addUsersOrGroups($id, $idToAdd)
     {
-        if(!empty($groupsId)){
+        if(!empty($idToAdd)){
             $this->baseClass->id = $id;
             $Radusergroup = new Radusergroup();
-            $Radgroup = new Radgroup();
-            foreach($groupsId as $gid){
-                $Radgroup->id = $gid;
+            if($this->baseClassName == 'Raduser')
+                $ClassToAdd = new Radgroup();
+            else if($this->baseClassName == 'Radgroup')
+                $ClassToAdd = new Raduser();
+
+            foreach($idToAdd as $aid){
+                $ClassToAdd->id = $aid;
                 $Radusergroup->create();
-                $Radusergroup->save(array('username' => $this->baseClass->field('username'), 'groupname' => $Radgroup->field('groupname')));
+                if($this->baseClassName == 'Raduser')
+                    $Radusergroup->save(array('username' => $this->baseClass->field('username'), 'groupname' => $ClassToAdd->field('groupname')));
+                else if($this->baseClassName == 'Radgroup')
+                    $Radusergroup->save(array('groupname' => $this->baseClass->field('groupname'), 'username' => $ClassToAdd->field('username')));
             }
         }
     }
 
-    public function deleteGroups($id, $groupsId)
+    public function deleteUsersOrGroups($id, $idToDelete)
     {
         $success = true;
-        if(!empty($groupsId)){
+        if(!empty($idToDelete)){
             $this->baseClass->id = $id;
             $Radusergroup = new Radusergroup();
-            $Radgroup = new Radgroup();
-            foreach($groupsId as $gid){
-                $Radgroup->id = $gid;
-                $success = $success && $Radusergroup->deleteAll(array(
-                    'Radusergroup.groupname' => $Radgroup->field('groupname'),
-                    'Radusergroup.username' => $this->baseClass->field('username')
-                ), false);
+            if($this->baseClassName == 'Raduser')
+                $ClassToAdd = new Radgroup();
+            else if($this->baseClassName == 'Radgroup')
+                $ClassToAdd = new Raduser();
+
+            foreach($idToDelete as $did){
+                $ClassToAdd->id = $did;
+                if($this->baseClassName == 'Raduser')
+                    $success = $success && $Radusergroup->deleteAll(array(
+                        'Radusergroup.groupname' => $ClassToAdd->field('groupname'),
+                        'Radusergroup.username' => $this->baseClass->field('username')
+                    ), false);
+                else if($this->baseClassName == 'Radgroup')
+                    $success = $success && $Radusergroup->deleteAll(array(
+                        'Radusergroup.groupname' => $ClassToAdd->field('username'),
+                        'Radusergroup.username' => $this->baseClass->field('groupname')
+                    ), false);
             }
         }
         return $success;
+    }
+
+    public function getUserGroups($id)
+    {
+        $this->baseClass->id = $id;
+        $name = $this->baseClass->field($this->displayName);
+        $Radusergroup = new Radusergroup();
+        $findAllFunc = 'findAllBy' . ucfirst($this->displayName);
+        $usergroups = $Radusergroup->$findAllFunc($name);
+        return $usergroups;
     }
 
     public function delete($request, $id)

@@ -1,6 +1,7 @@
 <?php
 
 App::import('Model', 'Radgroupcheck');
+App::import('Model', 'Raduser');
 class RadgroupsController extends AppController
 {
     public $helpers = array('Html', 'Form');
@@ -33,22 +34,30 @@ class RadgroupsController extends AppController
                 $this->Session->setFlash('Unable to add group.', 'flash_error');
             }
         }
+        $Raduser = new Raduser();
+        $this->set('users', $Raduser->find('list', array('fields' => array('username'))));
     }
 
     public function edit($id = null){
         if ($this->request->is('get')) {
             $this->Radgroup->id = $id;
             $this->request->data = $this->Radgroup->read();
-            $this->Checks->restore_common_check_fields($id, $this->request);
+
         } else {
             if ($this->Radgroup->save($this->request->data)) {
                 $this->Checks->update_radcheck_fields($id, $this->request);
+                $this->updateUsers($id, $this->request);
                 $this->Session->setFlash('Group has been updated.');
                 $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash('Unable to update group.', 'flash_error');
             }
         }
+
+        $Raduser = new Raduser();
+        $this->set('users', $Raduser->find('list', array('fields' => array('username'))));
+        $this->restoreUsers($this->Radgroup->id);
+        $this->Checks->restore_common_check_fields($id, $this->request);
     }
 
     public function delete($id = null){
@@ -60,6 +69,62 @@ class RadgroupsController extends AppController
         } else {
             $this->Session->setFlash('Unable to delete user with id:' . $id . ' has been deleted.', 'flash_error');
         }
+    }
+
+    public function restoreUsers($id)
+    {
+        $Raduser = new Raduser();
+        $users = $this->Checks->getUserGroups($id);
+        if(!empty($users)){
+            $usersId = array();
+            foreach ($users as $usergroup) {
+                $u = $Raduser->findByUsername($usergroup['Radusergroup']['username']);
+                $usersId[]= $u['Raduser']['id'];
+            }
+            $this->set('users_selected', $usersId);
+        }
+    }
+
+    public function updateUsers($id, $request){
+        $Raduser = new Raduser();
+        $users = $this->Checks->getUserGroups($id);
+        $usersToAdd = array();
+        $usersToDelete = array();
+
+        // remove deleted users
+        foreach($users as $user){
+            $found = false;
+            $raduser = $Raduser->findByUsername($user['Radusergroup']['username']);
+            if(!empty($request->data['Radgroup']['users'])){
+                foreach($request->data['Radgroup']['users'] as $requestUser){
+                    if($raduser['Raduser']['id'] == $requestUser)
+                        $found = true;
+                }
+            }
+
+            if(!$found){
+                $usersToDelete[]= $raduser['Raduser']['id'];
+            }
+        }
+        $this->Checks->deleteUsersOrGroups($id, $usersToDelete);
+
+        // add new users
+        if(!empty($request->data['Radgroup']['users'])){
+            foreach($request->data['Radgroup']['users'] as $requestUser){
+                $found = false;
+                foreach($users as $user){
+                    $raduser = $Raduser->findByUsername($user['Radusergroup']['username']);
+                    if($raduser['Raduser']['id'] == $requestUser)
+                        $found = true;
+                }
+
+                if(!$found){
+                    $usersToAdd[]= $requestUser;
+                }
+            }
+        }
+        $this->Checks->addUsersOrGroups($id, $usersToAdd);
+
     }
 }
 

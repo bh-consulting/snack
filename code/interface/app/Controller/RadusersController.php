@@ -178,9 +178,6 @@ class RadusersController extends AppController
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
 
-            // restore values from radchecks
-            $this->Checks->restore_common_check_fields($id, $this->request, $cisco=true);
-
             $result = $this->request;
         } else {
 
@@ -191,7 +188,7 @@ class RadusersController extends AppController
                     'NAS-Port-Type' => $this->request->data['Raduser']['nas-port-type'],
                     'Cleartext-Password' => $this->request->data['Raduser']['password']);
                 $this->Checks->update_radcheck_fields($id, $this->request, $checkClassFields);
-                $this->update_groups($this->Raduser->id, $this->request);
+                $this->updateGroups($this->Raduser->id, $this->request);
 
                 $result = true;
 
@@ -206,7 +203,6 @@ class RadusersController extends AppController
         $this->Raduser->id = $id;
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
-            $this->Checks->restore_common_check_fields($id, $this->request);
             $result = $this->request;
         } else {
 
@@ -215,7 +211,7 @@ class RadusersController extends AppController
                 $checkClassFields = array('Cleartext-Password' => $this->request->data['Raduser']['password']);
                 $this->Checks->update_radcheck_fields($id, $this->request, $checkClassFields);
 
-                $this->update_groups($this->Raduser->id, $this->request);
+                $this->updateGroups($this->Raduser->id, $this->request);
 
                 $result = true;
             } else {
@@ -229,12 +225,11 @@ class RadusersController extends AppController
         $this->Raduser->id = $id;
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
-            $this->Checks->restore_common_check_fields($id, $this->request);
             $result = $this->request;
         } else {
 
             if ($this->Raduser->save($this->request->data)) {
-                $this->update_groups($this->Raduser->id, $this->request);
+                $this->updateGroups($this->Raduser->id, $this->request);
                 $this->Checks->update_radcheck_fields($id, $this->request);
                 $result = true;
             } else {
@@ -248,12 +243,11 @@ class RadusersController extends AppController
         $this->Raduser->id = $id;
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
-            $this->Checks->restore_common_check_fields($id, $this->request);
             $result = $this->request;
         } else {
 
             if ($this->Raduser->save($this->request->data)) {
-                $this->update_groups($this->Raduser->id, $this->request);
+                $this->updateGroups($this->Raduser->id, $this->request);
                 $newCert = ($this->request->data['Raduser']['cert_gen'] == 1);
 
                 $this->Checks->update_radcheck_fields($id, $this->request);
@@ -273,7 +267,7 @@ class RadusersController extends AppController
         if($this->request->is('post')){
             if($result){
                 $this->Session->setFlash('User has been updated.');
-                //$this->redirect(array('action' => 'index'));
+                $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash('Unable to update user.', 'flash_error');
             }
@@ -283,7 +277,8 @@ class RadusersController extends AppController
 
         $groups = new Radgroup();
         $this->set('groups', $groups->find('list', array('fields' => array('groupname'))));
-        $this->restore_groups($this->Raduser->id);
+        $this->restoreGroups($this->Raduser->id);
+        $this->Checks->restore_common_check_fields($this->Raduser->id, $this->request);
     }
 
     public function delete($id = null){
@@ -297,19 +292,10 @@ class RadusersController extends AppController
         }
     }
 
-    public function getUserGroups($id)
-    {
-        $this->Raduser->id = $id;
-        $username = $this->Raduser->field('username');
-        $Radusergroup = new Radusergroup();
-        $groups = $Radusergroup->findAllByUsername($username);
-        return $groups;
-    }
-
-    public function restore_groups($id)
+    public function restoreGroups($id)
     {
         $Radgroup = new Radgroup();
-        $groups = $this->getUserGroups($id);
+        $groups = $this->Checks->getUserGroups($id);
         if(!empty($groups)){
             $groupsId = array();
             foreach ($groups as $usergroup) {
@@ -320,9 +306,9 @@ class RadusersController extends AppController
         }
     }
 
-    public function update_groups($id, $request){
+    public function updateGroups($id, $request){
         $Radgroup = new Radgroup();
-        $groups = $this->getUserGroups($id);
+        $groups = $this->Checks->getUserGroups($id);
         $groupsToAdd = array();
         $groupsToDelete = array();
 
@@ -341,7 +327,7 @@ class RadusersController extends AppController
                 $groupsToDelete[]= $radgroup['Radgroup']['id'];
             }
         }
-        $this->Checks->deleteGroups($id, $groupsToDelete);
+        $this->Checks->deleteUsersOrGroups($id, $groupsToDelete);
 
         // add new groups
         if(!empty($request->data['Raduser']['groups'])){
@@ -358,7 +344,7 @@ class RadusersController extends AppController
                 }
             }
         }
-        $this->Checks->addGroups($id, $groupsToAdd);
+        $this->Checks->addUsersOrGroups($id, $groupsToAdd);
 
     }
 }
