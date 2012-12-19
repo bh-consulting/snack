@@ -1,19 +1,11 @@
 all:
-	sudo dpkg-deb --build paquet
+	sudo rm -fr paquet_deb
+	sudo cp -a paquet paquet_deb
+	sudo find paquet_deb -name .svn -exec rm -r {} +
+	sudo dpkg-deb --build paquet_deb Radius-BH-Consulting.deb
 
 install:
-	sudo dpkg -i paquet.deb
-	sudo apt-get install -f
+	sudo dpkg -i Radius-BH-Consulting.deb || sudo apt-get -y --force-yes -f install
 
-get:
-
-	cp -R BH-Consulting/trunk/code/install/paquet .
-
-	sudo rm -R -f paquet/.svn
-	sudo rm -R -f paquet/DEBIAN/.svn/
-	sudo rm -R -f paquet/var/.svn/
-	sudo rm -R -f paquet/var/www/.svn/
-	sudo rm -R -f paquet/etc/.svn/
-	sudo rm -R -f paquet/etc/freeradius/.svn
-	sudo rm -R -f paquet/etc/freeradius/sites-available/.svn
-	sudo rm -R -f paquet/etc/freeradius/sites-enabled/.svn
+clean:
+	sudo rm -fr paquet_deb Radius-BH-Consulting.deb
