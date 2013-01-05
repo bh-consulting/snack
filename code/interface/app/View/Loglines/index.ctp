@@ -3,8 +3,10 @@
 	$this->assign('logs_active', 'active');
 
 	$columns = array(
-		'test1' => 'Test 1',
-		'test2' => 'Test 2'
+		'id' => 'Line',
+		'datetime' => 'Date',
+		'level' => 'Level',
+		'msg' => 'Message'
 	);
 ?>
 
@@ -14,11 +16,8 @@
 	<thead>
 	<tr>
 	    <?php
-		foreach($columns as $field => $text) {
-			//$sort = preg_match("#$field$#", $this->Paginator->sortKey()) ? $this->Html->tag('i', '', array('class' => $sortIcons[$this->Paginator->sortDir()])) : '';
-			//echo '<th>'.$this->Paginator->sort($field, "$text $sort", array('escape' => false)).'</th>';
+		foreach($columns as $field => $text)
 			echo "<th>$text</th>";
-		}
 	    ?>
 	</tr>
 	</thead>
@@ -30,7 +29,7 @@
 				echo '<tr>';
 
 				foreach($columns as $field => $text)
-					echo "<td>{$logline[$field]}</td>";
+					echo "<td>{$logline['Logline'][$field]}</td>";
 
 				echo '</tr>';
 			}
