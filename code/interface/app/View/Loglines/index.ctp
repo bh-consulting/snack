@@ -16,8 +16,13 @@
 	<thead>
 	<tr>
 	    <?php
-		foreach($columns as $field => $text)
-			echo "<th>$text</th>";
+		foreach($columns as $field => $text) {
+			$sort = preg_match("#$field$#", $this->Paginator->sortKey()) ?  $this->Html->tag('i', '', array('class' => $sortIcons[$this->Paginator->sortDir()])) : '';
+
+			echo "<th>";
+			echo $this->Paginator->sort($field, "$text $sort", array('escape' => false));
+			echo "</th>";
+		}
 	    ?>
 	</tr>
 	</thead>
@@ -43,22 +48,22 @@
 	<?php endif; ?>
 	</tbody>
 </table>
-
 <?php
-//	$paginate = $this->Paginator->prev('Prev.', array(), null, array('class' => 'disabled')).$this->Paginator->numbers(array(
-//		'modulus' => 2,
-//		'first' => 2,
-//		'last' => 2,
-//		'ellipsis' => "<span class='disabled'>...</span>",
-//		'separator' => '',	
-//		'currentClass' => 'disabled'
-//
-//	)).$this->Paginator->next('Next', array(), null, array('class' => 'disabled'));
-//
-//	echo $this->Html->tag('div', $paginate, array('class' => 'pagination pagination-small', 'style' => 'float:left;'));
+	$paginate = $this->Paginator->prev('Prev.', array(), null, array('class' => 'disabled')).$this->Paginator->numbers(array(
+		'modulus' => 2,
+		'first' => 2,
+		'last' => 2,
+		'ellipsis' => "<span class='disabled'>...</span>",
+		'separator' => '',	
+		'currentClass' => 'disabled'
+
+	)).$this->Paginator->next('Next', array(), null, array('class' => 'disabled'));
+
+	echo $this->Html->tag('div', $paginate, array('class' => 'pagination pagination-small', 'style' => 'float:left;'));
 ?>
+<br />
 <div style="float:right;">
 <?php
-//	echo $this->Paginator->counter(array('format' => 'range'));
+	echo $this->Paginator->counter(array('format' => 'range'));
 ?>
 </div>
