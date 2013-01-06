@@ -22,8 +22,12 @@
 	);
 
 	echo $this->Html->link(__('Filters', true), '#', array('onclick' => "\$('#PostSearchForm').toggle()"));
-	echo ' - ';
-	echo $this->Html->link(__('No filters', true), '.');
+
+	if(count($this->params['url']) > 0) {
+		echo ' - ';
+		echo $this->Html->link(__('No filters', true), '.', array('style' => 'font-weight: bold'));
+	}
+
 	echo '<br /><br />';
 
 	echo '<fieldset id="PostSearchForm" style="display:none"><legend>Filters</legend>';
