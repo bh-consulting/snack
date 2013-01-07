@@ -16,7 +16,6 @@ var Boostrapify = {
         // FORMS
         $('form').addClass('form-horizontal');
         $('div.input').wrap('<div class="control-group"></div>');
-        $('div.select').wrap('<div class="control-group"></div>');
         $('input').wrap('<div class="controls"></div>');
         $('textarea').wrap('<div class="controls"></div>');
         $('select').wrap('<div class="controls"></div>');
@@ -32,18 +31,27 @@ var Boostrapify = {
         // ELEMENTS
         $('table').addClass('table table-hover table-bordered');
 
-				// PAGINATION
-				$('div.pagination').wrapInner('<ul/>');
-				$('div.pagination span').replaceWith(function() { 
-					var content = $(this).html();
-					var attr		= $(this).attr("class");
+	// PAGINATION
+	$('div.pagination').wrapInner('<ul/>');
+	$('div.pagination span').replaceWith(function() { 
+		var content = $(this).html();
+		var attr		= $(this).attr("class");
 
-					if( attr != null )
-						$(this).replaceWith("<li class='" + attr + "'>" + content + "</li>");
-					else
-						$(this).replaceWith("<li>" + content + "</li>");
-				});
-				$('div.pagination li.disabled').wrapInner('<a href="#"></a>');
+		if( attr != null )
+			$(this).replaceWith("<li class='" + attr + "'>" + content + "</li>");
+		else
+			$(this).replaceWith("<li>" + content + "</li>");
+	});
+	$('div.pagination li.disabled').wrapInner('<a href="#"></a>');
+
+	// DATETIMEPICKER
+	$('.datetimepicker').wrap('<div class="input-append date datetimepickerwrap" />');
+	$('.datetimepicker').attr('data-format', 'dd/MM/yyyy hh:mm:ss');
+	$('<span class="add-on datetimepickeradd" />').insertAfter('.datetimepicker');
+	$('.datetimepickeradd').append('<i data-time-icon="icon-time" data-date-icon="icon-calendar" />');
+	$('.datetimepickerwrap').datetimepicker({
+		language: 'fr'
+	});
     }
 }
 
