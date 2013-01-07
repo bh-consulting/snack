@@ -5,7 +5,8 @@ App::import('Model', 'Radgroup');
 App::import('Model', 'Radusergroup');
 class RadusersController extends AppController
 {
-    public $helpers = array('Html', 'Form');
+    public $helpers = array('Html', 'Form', 'JqueryEngine');
+    public $paginate = array('limit' => 10, 'order' => array('Raduser.id' => 'asc'));
     public $components = array(
         'Checks' => array(
             'displayName' => 'username',
@@ -15,7 +16,14 @@ class RadusersController extends AppController
         'Session');
 
     public function index(){
-        $this->set('radusers', $this->Checks->index());
+        $radusers = $this->paginate('Raduser');
+
+        foreach ($radusers as &$r) {
+            $r['Raduser']['ntype'] = $this->Checks->getType($r['Raduser'], true);
+            $r['Raduser']['type'] = $this->Checks->getType($r['Raduser'], false);
+        }
+        $this->set('radusers', $radusers);
+        $this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
     }
 
     public function view($id = null){

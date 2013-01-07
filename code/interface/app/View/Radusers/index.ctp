@@ -18,44 +18,69 @@ $this->assign('users_active', 'active');
         </ul>
     </div>
 </p>
-<? if(!empty($radusers)){ ?>
+
+<? 
+$columns = array(
+    'username' => 'Username',
+    'comment' => 'Comment',
+    'ntype' => 'Type'
+);
+?>
+
 <table class="table">
     <thead>
     <tr>
-        <th>Username</th>
-        <th>Comment</th>
-        <th>Type</th>
+        <?
+        foreach($columns as $field => $text){
+            $sort = preg_match("#$field$#", $this->Paginator->sortKey()) ?  $this->Html->tag('i', '', array('class' => $sortIcons[$this->Paginator->sortDir()])) : '';
+
+            echo "<th>";
+            echo $this->Paginator->sort($field, "$text $sort", array('escape' => false));
+            echo "</th>";
+        }
+        ?>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
     </thead>
 
     <tbody>
-    <? foreach ($radusers as $rad): ?>
-    <tr>
-        <td>
-            <? echo $this->Html->link($rad['Raduser']['username'],
-            array('controller' => 'Radusers', 'action' => 'view_' . $rad['Raduser']['type'], $rad['Raduser']['id'])); ?>
-        </td>
-        <td>
-            <? echo $rad['Raduser']['comment']; ?>
-        </td>
-        <td>
-            <? echo $rad['Raduser']['ntype']; ?>
-        </td>
-        <td>
-            <i class="icon-edit"></i>
-            <? echo $this->Html->link('Edit', array('action' => 'edit_' . $rad['Raduser']['type'], $rad['Raduser']['id'])); ?>
+    <? 
+    if(!empty($radusers)){
+        foreach ($radusers as $rad): ?>
+        <tr>
+            <td>
+                <? echo $this->Html->link($rad['Raduser']['username'],
+                array('controller' => 'Radusers', 'action' => 'view_' . $rad['Raduser']['type'], $rad['Raduser']['id'])); ?>
+            </td>
+            <td>
+                <? echo $rad['Raduser']['comment']; ?>
+            </td>
+            <td>
+                <? echo $rad['Raduser']['ntype']; ?>
+            </td>
+            <td>
+                <i class="icon-edit"></i>
+                <? echo $this->Html->link('Edit', array('action' => 'edit_' . $rad['Raduser']['type'], $rad['Raduser']['id'])); ?>
 
-        </td>
-        <td>
-            <i class="icon-remove"></i>
-            <? echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Raduser']['id']),
-            array('confirm' => 'Are you sure?')); ?>
-        </td>
-    </tr>
-        <? endforeach; ?>
-    <? unset($rad); ?>
+            </td>
+            <td>
+                <i class="icon-remove"></i>
+                <? echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Raduser']['id']),
+                array('confirm' => 'Are you sure?')); ?>
+            </td>
+        </tr>
+        <? endforeach;
+    } else {
+        ?>
+        <tr>
+            <td colspan="5">No users yet.</td>
+        </tr>
+    <?
+    }
+    unset($rad);
+    ?>
     </tbody>
 </table>
-<? } ?>
+<? echo $this->element('paginator_footer'); ?>
+</div>
