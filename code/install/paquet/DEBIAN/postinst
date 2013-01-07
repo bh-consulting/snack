@@ -1,3 +1,6 @@
+PAQUETNAME=snack
+
+
 #!/bin/bash
 if [ 'root' != $USER ]
     then
@@ -72,7 +75,7 @@ fi
 
 CAplPATH=install/files/usr/lib/ssl/misc
 DESTROOTPATH=$USER_HOME
-DESTFOLDER=cert
+DESTFOLDER=$PAQUETNAME/cert
 DESTPATH=$DESTROOTPATH/$DESTFOLDER
 SSLCNF=/etc/ssl/openssl.cnf
 RADCERTVALIDITY=3650 #ten years
@@ -222,11 +225,11 @@ sed -e "/USER_HOME_TO_SED/$USER_HOME/g/"\
 sed -e "/USER_HOME_TO_SED/$USER_HOME/g/"\
     -i scripts/revocationCheck
 
-mkdir $USER_HOME/scripts
-cp -r scripts/* $USER_HOME/scripts
-chmod +x $USER_HOME/scripts/createCertificate
-chmod +x $USER_HOME/scripts/revokeClient
-chmod +x $USER_HOME/scripts/revocationCheck
+mkdir $USER_HOME/$PAQUETNAME/scripts
+cp -r scripts/* $USER_HOME/$PAQUETNAME/scripts
+chmod +x $USER_HOME/$PAQUETNAME/scripts/createCertificate
+chmod +x $USER_HOME/$PAQUETNAME/scripts/revokeClient
+chmod +x $USER_HOME/$PAQUETNAME/scripts/revocationCheck
 
 
 exit 0
