@@ -1,12 +1,20 @@
 #!/bin/bash
+if [ 'root' != $USER ]
+    then
+    echo "This install script must be launched with sudo right";
+    exit
+fi
 
 # Création de la base de donnée + création d'un utilisateur admin
 
-echo -n "Mot de passe root MySQL : "
-read mdp_root
+#echo -n "Mot de passe root MySQL : "
+read -s -P "Mot de passe root MySQL : " mdp_root
 
-echo -n "Mot de passe de l'administrateur : "
-read mdp_radius
+#echo -n "Mot de passe de l'administrateur : "
+while [ -z "$mdp_radius" -o $mdp_radius != $mdp_radius_bis ] 
+read -s -P "Mot de passe de l'administrateur : " mdp_radius
+
+read -s -P "Répetez le mot de passe de l'administrateur : "mdp_radius_bis
 
 echo "	create database radius;\
 	grant all on radius.* to radius@localhost identified by '$mdp_radius';\
@@ -15,7 +23,7 @@ echo "	create database radius;\
 until [ $? -eq 0 ]
 do
 	echo -n "Mot de passe root MySQL : "
-	read mdp_root
+	read -s -P  mdp_root
 
 	echo "	create database radius;\
 		grant all on radius.* to radius@localhost identified by '$mdp_radius';\
@@ -45,14 +53,25 @@ sed\
 
 #Certificats
 
-#WARNING! THIS SCRIPT GENERATE A FILE IN THE CURRENT DIR!
-#Just kidding... not true anymore
-
-#use of the commandline 'hostname'. Is it dangerous?
 
 #CAplPATH=/usr/lib/ssl/misc
+#Guess the home path; 
+if [ -n "$SUDO_USER" ];
+    then
+	USER_HOME=/home/$SUDO_USER
+	echo "using sudo_user value"
+elif [ -d "/home/tech" ]
+    then
+	USER_HOME=/home/tech
+	echo "using /home/tech"
+else
+	USER_HOME=$HOME
+	echo "using home"
+fi
+
+
 CAplPATH=install/files/usr/lib/ssl/misc
-DESTROOTPATH=/var/www
+DESTROOTPATH=$USER_HOME
 DESTFOLDER=cert
 DESTPATH=$DESTROOTPATH/$DESTFOLDER
 SSLCNF=/etc/ssl/openssl.cnf
@@ -190,5 +209,24 @@ sed\
         -e "/^\s*#*CA_path =/c \\\t\t\tCA_path = \${certdir}/certs"\
         -e "/^\s*#*\s*check_cert_cn =/c \\\t\t\tcheck_cert_cn = %{User-Name}"\
         -i $EAPCONF
+
+
+
+#copy scripts version
+sed -e "/USER_HOME_TO_SED/$USER_HOME/g/"\
+    -i scripts/createCertificate
+
+sed -e "/USER_HOME_TO_SED/$USER_HOME/g/"\
+    -i scripts/revokeClient
+
+sed -e "/USER_HOME_TO_SED/$USER_HOME/g/"\
+    -i scripts/revocationCheck
+
+mkdir $USER_HOME/scripts
+cp -r scripts/* $USER_HOME/scripts
+chmod +x $USER_HOME/scripts/createCertificate
+chmod +x $USER_HOME/scripts/revokeClient
+chmod +x $USER_HOME/scripts/revocationCheck
+
 
 exit 0
