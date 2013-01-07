@@ -10,6 +10,6 @@ CREATE TABLE logs (
 	datetime datetime default NULL,
 	program varchar(15) default NULL,
 	msg text
-) ENGINE=MyISAM;
+);
 
 GRANT ALL ON raddb.logs TO 'logsfreeradius'@'localhost';

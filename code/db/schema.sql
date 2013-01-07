@@ -10,10 +10,15 @@
 #                                                                         #
 #                                   Mike Machado <mike@innercite.com>     #
 ###########################################################################
+
+CREATE DATABASE raddb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE user 'radius' identified by 'radiusroxx';
+
+GRANT ALL ON raddb to 'radius'@'localhost';
+
 #
 # Table structure for table 'radacct'
 #
-
 CREATE TABLE radacct (
   radacctid bigint(21) NOT NULL auto_increment,
   acctsessionid varchar(64) NOT NULL default '',
@@ -132,3 +137,53 @@ CREATE TABLE radpostauth (
   authdate timestamp NOT NULL,
   PRIMARY KEY  (id)
 ) ENGINE = INNODB;
+
+#
+# Table structure for table 'nas'
+#
+CREATE TABLE nas (
+  id int(10) NOT NULL auto_increment,
+  nasname varchar(128) NOT NULL,
+  shortname varchar(32),
+  type varchar(30) DEFAULT 'other',
+  ports int(5),
+  secret varchar(60) DEFAULT 'secret' NOT NULL,
+  server varchar(64),
+  community varchar(50),
+  description varchar(200) DEFAULT 'RADIUS Client',
+  PRIMARY KEY (id),
+  KEY nasname (nasname)
+);
+
+#
+# Table structure for table 'raduser'
+#
+CREATE TABLE raduser (
+    id int(11) unsigned NOT NULL auto_increment,
+    username varchar(64) NOT NULL default '',
+    admin boolean default '0',
+    cert_path varchar(255),
+    comment text,
+    is_cisco boolean default '0',
+    is_loginpass boolean default '0',
+    is_cert boolean default '0',
+    is_mac boolean default '0',
+    PRIMARY KEY (id),
+    KEY username (username(32))
+);
+
+#
+# Table structure for table 'radgroup'
+#
+CREATE TABLE radgroup (
+    id int(11) unsigned NOT NULL auto_increment,
+    groupname varchar(64) NOT NULL default '',
+    cert_path varchar(255),
+    comment text,
+    is_cisco boolean default '0',
+    is_loginpass boolean default '0',
+    is_cert boolean default '0',
+    is_mac boolean default '0',
+    PRIMARY KEY (id),
+    KEY groupname (groupname(32))
+);
