@@ -1,5 +1,5 @@
 <?
-    $paginate = $this->Paginator->prev('< Previous', array(), null, array('class' => 'disabled')).$this->Paginator->numbers(array(
+    $paginate = $this->Paginator->prev('<i class="icon-chevron-left"></i> Previous', array('escape' => false), null, array('class' => 'disabled', 'escape' => false)).$this->Paginator->numbers(array(
         'modulus' => 2,
         'first' => 2,
         'last' => 2,
@@ -7,7 +7,7 @@
         'separator' => '',  
         'currentClass' => 'disabled'
 
-    )).$this->Paginator->next('Next >', array(), null, array('class' => 'disabled'));
+    )).$this->Paginator->next('Next <i class="icon-chevron-right"></i>', array('escape' => false), null, array('class' => 'disabled', 'escape' => false));
 
     echo $this->Html->tag('div', $paginate, array('class' => 'pagination pagination-small', 'style' => 'float:left;'));
 ?>

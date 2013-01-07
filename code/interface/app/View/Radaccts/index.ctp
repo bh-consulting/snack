@@ -29,10 +29,10 @@ $columns = array(
     <? foreach ($radaccts as $acct): ?>
     <tr>
         <td>
-            <? echo $this->Html->link(	h($acct['Radacct']['acctuniqueid']),
-            														array(	'controller' => 'Radaccts', 
-																								'action' => 'view', 
-																								$acct['Radacct']['radacctid']	)); ?>
+            <? echo $this->Html->link(	h($acct['Radacct']['acctuniqueid']), 
+                array(	'controller' => 'Radaccts', 
+				'action' => 'view', 
+				$acct['Radacct']['radacctid']	)); ?>
         </td>
         <td>
             <? echo h($acct['Radacct']['username']); ?>
@@ -82,23 +82,6 @@ $columns = array(
 */
 ?>
 
-<?
-	$paginate = $this->Paginator->prev('Prev.', array(), null, array('class' => 'disabled')) .
-							$this->Paginator->numbers( array(	'modulus'		=> 2,
-																								'first'			=> 2,
-																								'last'			=> 2,
-																								'ellipsis'	=> "<span class='disabled'>...</span>",
-																								'separator'	=> '',	
-																								'currentClass' => 'disabled'
-																								)) .
-							$this->Paginator->next('Next', array(), null, array('class' => 'disabled'));
-
-	echo $this->Html->tag('div', $paginate, array('class' => 'pagination pagination-small', 'style' => 'float:left;'));
-?>
-
-<div style="float:right;">
-<?
-	echo $this->Paginator->counter( array('format' => 'range') );
-?>
+<? echo $this->element('paginator_footer'); ?>
 </div>
 
