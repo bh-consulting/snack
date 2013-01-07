@@ -17,11 +17,13 @@ stty echo
 
 #echo -n "Mot de passe de l'administrateur : "
 while [ -z "$mdp_radius" -o $mdp_radius != $mdp_radius_bis ] 
-stty -echo
-read -p "Mot de passe de l'administrateur : " mdp_radius
-
-read -p "Répetez le mot de passe de l'administrateur : " mdp_radius_bis
-stty echo
+do
+    stty -echo
+    read -p "Mot de passe de l'administrateur : " mdp_radius
+    
+    read -p "Répetez le mot de passe de l'administrateur : " mdp_radius_bis
+    stty echo
+done
 
 echo "	create database radius;\
 	grant all on radius.* to radius@localhost identified by '$mdp_radius';\
