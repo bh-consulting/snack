@@ -11,13 +11,17 @@ fi
 # Création de la base de donnée + création d'un utilisateur admin
 
 #echo -n "Mot de passe root MySQL : "
-read -s -P "Mot de passe root MySQL : " mdp_root
+stty -echo
+read -p "Mot de passe root MySQL : " mdp_root
+stty echo
 
 #echo -n "Mot de passe de l'administrateur : "
 while [ -z "$mdp_radius" -o $mdp_radius != $mdp_radius_bis ] 
-read -s -P "Mot de passe de l'administrateur : " mdp_radius
+stty -echo
+read -p "Mot de passe de l'administrateur : " mdp_radius
 
-read -s -P "Répetez le mot de passe de l'administrateur : "mdp_radius_bis
+read -p "Répetez le mot de passe de l'administrateur : " mdp_radius_bis
+stty echo
 
 echo "	create database radius;\
 	grant all on radius.* to radius@localhost identified by '$mdp_radius';\
@@ -25,8 +29,10 @@ echo "	create database radius;\
 " | mysql -uroot -p$mdp_root
 until [ $? -eq 0 ]
 do
-	echo -n "Mot de passe root MySQL : "
-	read -s -P  mdp_root
+	//echo -n "Mot de passe root MySQL : "
+	stty -echo
+	read -p "Mot de passe root MySQL : " mdp_root
+	stty echo
 
 	echo "	create database radius;\
 		grant all on radius.* to radius@localhost identified by '$mdp_radius';\
