@@ -34,8 +34,7 @@
 		'class' => 'well'
 	));
 
-	echo $this->Form->input('severity', array('label' => __('Severity from'), 'id' => 'severity'));
-	echo '<div id="severityslider"></div> <span id="severitysliderlabel"></span>';
+	echo $this->Form->input('severity', array('label' => __('Severity from'), 'id' => 'severity', 'class' => 'slidermax'));
 	echo $this->Form->input('datefrom', array('label' => __('From'), 'class' => 'datetimepicker', 'id' => 'datefrom'));
 	echo $this->Form->input('dateto', array('label' => __('To'), 'class' => 'datetimepicker', 'id' => 'dateto'));
 	echo $this->Form->input('message', array('label' => __('Message contains (accept regex)'), 'id' => 'logmessage'));

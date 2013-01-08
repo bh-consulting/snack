@@ -19,6 +19,10 @@
 	font-weight: bold;
 }
 
+.loglinks td.logcelldatetime {
+	width: 140px;
+}
+
 .loglinks td a {
 	color: #000;
 }
@@ -68,14 +72,17 @@ tr.loglevelnotice, tr.loglevelinfo, tr.logleveldebug {
 	float: right;
 }
 
-#severityslider {
-	width: 200px;
-	float: left;
-	margin-left: 200px;
+.slider {
+	padding-top: 10px;
 }
 
-#severitysliderlabel {
+.slider div {
+	width: 200px;
+	float: left;
+}
+
+.slider span {
 	display: block;
-	margin-top: -5px;
-	padding-left: 210px;
+	font-weight: bold;
+	margin: -5px 0 0 210px;
 }

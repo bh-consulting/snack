@@ -12,33 +12,40 @@ class LoglinesController extends AppController {
 		$this->request->data['Logline'] = $this->params['url'];
 
 		$severities = array(
-			'emerg' => 'Emergency',
-			'alert' => 'Alert',
-			'crit' => 'Critical',
-			'err' => 'Error',
-			'warn' => 'Warning',
-			'notice' => 'Notice',
+			'debug' => 'Debug',
 			'info' => 'Info',
-			'debug' => 'Debug'
+			'notice' => 'Notice',
+			'warn' => 'Warning',
+			'err' => 'Error',
+			'crit' => 'Critical',
+			'alert' => 'Alert',
+			'emerg' => 'Emergency'
 		);
 
 		// Search filter Severity
-		if(!empty($this->params['url']['severity'])) {
+		{
+			$valSeverity = null;
+
+			if(empty($this->params['url']['severity'])) {
+				$valSeverity = 'info';
+				$this->request->data['Logline']['severity'] = 'info';
+			} else
+				$valSeverity = $this->params['url']['severity'];
+
 			$regex = array();
 
-			foreach($severities as $keyword => $severity) {
-				if($keyword == $this->params['url']['severity'])
+			foreach(array_reverse($severities) as $keyword => $severity) {
+				if($keyword == $valSeverity)
 					break;
 
 				array_push($regex, $keyword);
 			}
 
-			array_push($regex, Sanitize::escape($this->params['url']['severity']));
+			array_push($regex, Sanitize::escape($valSeverity));
 			$constraint = "level REGEXP '^(".implode('|', $regex).")\$'";
 
 			array_push($constraints, $constraint);
-		} else
-			$this->request->data['Logline']['severity'] = 'debug';
+		}
 
 		// Search filter Date From
 		if(!empty($this->params['url']['datefrom']) && preg_match($patternDate, $this->params['url']['datefrom'], $date))

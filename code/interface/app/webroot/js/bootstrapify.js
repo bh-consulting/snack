@@ -45,12 +45,36 @@ var Boostrapify = {
 	$('div.pagination li.disabled').wrapInner('<a href="#"></a>');
 
 	// DATETIMEPICKER
-	$('.datetimepicker').wrap('<div class="input-append date datetimepickerwrap" />');
-	$('.datetimepicker').attr('data-format', 'dd/MM/yyyy hh:mm:ss');
-	$('<span class="add-on datetimepickeradd" />').insertAfter('.datetimepicker');
-	$('.datetimepickeradd').append('<i data-time-icon="icon-time" data-date-icon="icon-calendar" />');
-	$('.datetimepickerwrap').datetimepicker({
+		$('.datetimepicker').wrap('<div class="input-append date datetimepickerwrap" />');
+		$('.datetimepicker').attr('data-format', 'dd/MM/yyyy hh:mm:ss');
+		$('<span class="add-on datetimepickeradd" />').insertAfter('.datetimepicker');
+		$('.datetimepickeradd').append('<i data-time-icon="icon-time" data-date-icon="icon-calendar" />');
+		$('.datetimepickerwrap').datetimepicker({
 		language: 'fr'
+	});
+
+	// SLIDER MAX
+	$('<div class="slider"><div></div><span></span></div>').insertAfter('.slidermax');
+	$('.slidermax + div :first-child').each(function(index) {
+		var select = $(this).parent().prev();
+		var iSelected = select.find('option').index(select.children('option[selected]'));
+		var value = function(val) { return select.children(':nth-child(' + (val + 1) + ')').attr('value'); };
+		var label = function(val) { return select.children(':nth-child(' + (val + 1) + ')').text(); };
+
+		$(this).next().text(label(iSelected));
+		select.hide();
+
+		$(this).slider({
+			range: 'max',
+			value: iSelected,
+			min: 0,
+			max: select.find('option').size() - 1,
+			step: 1,
+			slide: function(event, ui) {
+				select.val(value(ui.value));
+				$(this).next().text(label(ui.value));
+			}
+		});
 	});
     }
 }
