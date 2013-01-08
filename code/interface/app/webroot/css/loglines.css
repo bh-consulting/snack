@@ -53,10 +53,6 @@ tr.loglevelwarn a {
 	color: #fff;
 }
 
-tr.loglevelnotice, tr.loglevelinfo, tr.logleveldebug {
-
-}
-
 #openpan {
 	background-color: rgb(245, 245, 245);
 	padding: 5px 10px;

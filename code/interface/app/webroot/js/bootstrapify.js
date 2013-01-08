@@ -58,11 +58,15 @@ var Boostrapify = {
 	$('.slidermax + div :first-child').each(function(index) {
 		var select = $(this).parent().prev();
 		var iSelected = select.find('option').index(select.children('option[selected]'));
+
 		var value = function(val) { return select.children(':nth-child(' + (val + 1) + ')').attr('value'); };
 		var label = function(val) { return select.children(':nth-child(' + (val + 1) + ')').text(); };
 
-		$(this).next().text(label(iSelected));
 		select.hide();
+
+		var labelColor = select.children('option[selected]').attr('label-color');
+		$(this).next().css('color', labelColor == undefined ? '#000' : labelColor);
+		$(this).next().text(label(iSelected));
 
 		$(this).slider({
 			range: 'max',
@@ -73,6 +77,9 @@ var Boostrapify = {
 			slide: function(event, ui) {
 				select.val(value(ui.value));
 				$(this).next().text(label(ui.value));
+
+				var labelColor = select.children('option[selected]').attr('label-color');
+				$(this).next().css('color', labelColor == undefined ? '#000' : labelColor);
 			}
 		});
 	});

@@ -32,3 +32,8 @@ function logsSearchFromDate(link) {
 	$('#datefrom').val(from_date[2] + '/' + from_date[1] + '/' + from_date[0] + ' ' + from_datetime[1]);
 	$('#logsSearchForm').submit();
 }
+
+$('#severity').children(':nth-child(4)').attr('label-color', '#df4b00');
+
+for(var i = 5; i < 9; i++)
+	$('#severity').children(':nth-child(' + i  + ')').attr('label-color', '#cc0000');
