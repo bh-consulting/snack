@@ -33,6 +33,9 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
     echo $this->Html->css('bootstrap.min');
     echo $this->Html->css('bootstrap-responsive.min');
     echo $this->Html->css('bootstrap-datetimepicker.min');
+    echo $this->Html->css('loglines');
+    echo $this->Html->css('jquery-ui-bootstrap/jquery-ui-1.9.2.custom');
+    echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
 
     echo $this->fetch('meta');
     echo $this->fetch('css');
@@ -89,6 +92,7 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
 <?php
 echo $this->element('sql_dump');
 echo $this->Html->script('http://code.jquery.com/jquery-latest.js');
+echo $this->Html->script('jquery-ui-1.9.2.custom.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapify');
 echo $this->Html->script('bootstrap-datetimepicker.min');

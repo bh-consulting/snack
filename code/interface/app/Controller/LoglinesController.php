@@ -1,5 +1,7 @@
 <?php
 
+App::uses('Sanitize', 'Utility');
+
 class LoglinesController extends AppController {
 	public $helpers = array('Html', 'Form');
 	public $paginate = array('limit' => 10, 'order' => array('id' => 'desc'));
@@ -31,8 +33,9 @@ class LoglinesController extends AppController {
 				array_push($regex, $keyword);
 			}
 
-			array_push($regex, $this->params['url']['severity']);
+			array_push($regex, Sanitize::escape($this->params['url']['severity']));
 			$constraint = "level REGEXP '^(".implode('|', $regex).")\$'";
+
 			array_push($constraints, $constraint);
 		} else
 			$this->request->data['Logline']['severity'] = 'debug';
@@ -63,7 +66,7 @@ class LoglinesController extends AppController {
 
 		// Search filter Message
 		if(!empty($this->params['url']['message']))
-			array_push($constraints, "msg REGEXP '{$this->params['url']['message']}'");
+			array_push($constraints, "msg REGEXP '".Sanitize::escape($this->params['url']['message'])."'");
 
 		// View configuration
 		$columnNames = array_keys($this->Logline->schema());

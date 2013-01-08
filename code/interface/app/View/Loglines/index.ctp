@@ -3,24 +3,26 @@
 	$this->assign('logs_active', 'active');
 
 	$columns = array(
-		'id' => 'Line',
-		'datetime' => 'Date',
-		'level' => 'Severity',
-		'msg' => 'Message'
+		'id' => __('Line'),
+		'datetime' => __('Date'),
+		'level' => __('Severity'),
+		'msg' => __('Message')
 	);
 ?>
 
 <h1>Logs</h1>
 
 <?php
-	echo $this->Html->link(__('Filters', true), '#', array('onclick' => 'logsToggleSearch()'));
+	echo '<div id="openpan" onclick="logsToggleSearch()">';
+	echo $this->Html->link(__('Filters'), '#');
 
 	if(count($this->params['url']) > 0) {
 		echo ' - ';
-		echo $this->Html->link(__('No filters', true), '.', array('style' => 'font-weight:bold'));
+		echo $this->Html->link(__('No filters'), '.', array('id' => 'nofilters'));
 	}
 
-	echo '<br /><br />';
+	echo '<i class="icon-chevron-down"></i>';
+	echo '</div>';
 
 	echo $this->Form->create(null, array(
 		'url' => array(
@@ -29,24 +31,24 @@
 		),
 		'type' => 'get',
 		'id' => 'logsSearchForm',
-		'style' => 'display:none',
 		'class' => 'well'
 	));
 
-	echo $this->Form->input('severity', array('label' => 'Severity from', 'id' => 'severity'));
-	echo $this->Form->input('datefrom', array('label' => 'From', 'class' => 'datetimepicker', 'id' => 'datefrom'));
-	echo $this->Form->input('dateto', array('label' => 'To', 'class' => 'datetimepicker', 'id' => 'dateto'));
-	echo $this->Form->input('message', array('label' => 'Message contains (accept regex)', 'style' => 'margin-top:12px'));
+	echo $this->Form->input('severity', array('label' => __('Severity from'), 'id' => 'severity'));
+	echo '<div id="severityslider"></div> <span id="severitysliderlabel"></span>';
+	echo $this->Form->input('datefrom', array('label' => __('From'), 'class' => 'datetimepicker', 'id' => 'datefrom'));
+	echo $this->Form->input('dateto', array('label' => __('To'), 'class' => 'datetimepicker', 'id' => 'dateto'));
+	echo $this->Form->input('message', array('label' => __('Message contains (accept regex)'), 'id' => 'logmessage'));
 
 	echo $this->Form->end('Search');
 ?>
 
-<table class="table">
+<table class="table loglinks">
 	<thead>
 	<tr>
 	    <?php
 		foreach($columns as $field => $text) {
-			$sort = preg_match("#$field$#", $this->Paginator->sortKey()) ?  $this->Html->tag('i', '', array('class' => $sortIcons[$this->Paginator->sortDir()])) : '';
+			$sort = preg_match("#$field$#", $this->Paginator->sortKey()) ? $this->Html->tag('i', '', array('class' => $sortIcons[$this->Paginator->sortDir()])) : '';
 
 			echo '<th>';
 			echo $this->Paginator->sort($field, "$text $sort", array('escape' => false));
@@ -60,15 +62,15 @@
 	<?php if(!empty($loglines)): ?>
 		<?php
 			foreach($loglines AS $logline) {
-				echo '<tr>';
+				echo "<tr class='loglevel{$logline['Logline']['level']}'>";
 
 				foreach($columns as $field => $text) {
-					echo '<td>';
+					echo "<td class='logcell$field'>";
 
 					if($field == 'datetime')
-						echo $this->Html->link(__($logline['Logline'][$field], true), '#', array('onclick' => 'logsSearchFromDate($(this))', 'title' => 'Search from this date'));
+						echo $this->Html->link(__($logline['Logline'][$field]), '#', array('onclick' => 'logsSearchFromDate($(this))', 'title' => __('Search from this date')));
 					else if($field == 'level')
-						echo $this->Html->link(__($logline['Logline'][$field], true), '#', array('onclick' => 'logsSearchFromSeverity($(this))', 'title' => 'Search from this severity'));
+						echo $this->Html->link(__($logline['Logline'][$field]), '#', array('onclick' => 'logsSearchFromSeverity($(this))', 'title' => __('Search from this severity')));
 					else
 						echo $logline['Logline'][$field];
 
@@ -82,12 +84,12 @@
 		<tr>
 		<td colspan="4">
 			<?php
-				echo 'No logs found (';
+				echo __('No logs found').' (';
 
 				if(count($this->params['url']) > 0)
-					echo $this->Html->link(__('retry with no filters', true), '.');
+					echo $this->Html->link(__('retry with no filters'), '.');
 				else
-					echo 'no filters';
+					echo __('no filters');
 
 				echo ').';
 			?>

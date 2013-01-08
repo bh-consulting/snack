@@ -1,5 +1,7 @@
 function logsToggleSearch() {
-	$('#logsSearchForm').toggle();
+	$('#logsSearchForm').slideToggle();
+	$('#openpan').find('i').toggleClass('icon-chevron-up');
+	$('#openpan').find('i').toggleClass('icon-chevron-down');
 }
 
 function logsSearchFromSeverity(link) {
@@ -30,3 +32,36 @@ function logsSearchFromDate(link) {
 	$('#datefrom').val(from_date[2] + '/' + from_date[1] + '/' + from_date[0] + ' ' + from_datetime[1]);
 	$('#logsSearchForm').submit();
 }
+
+$(function() {
+	var shortseverities = [
+		'debug',
+		'info',
+		'notice',
+		'warn',
+		'err',
+		'crit',
+		'alert' ,
+		'emerg' 
+	];
+
+	$("#severityslider").slider({
+		range: "min",
+		value: 0,
+		min: 0,
+		max: shortseverities.length - 1,
+		step: 1,
+		slide: function(event, ui) {
+			$("#severity").val(shortseverities[ui.value]);
+			$("#severitysliderlabel").text($('option[value="' + shortseverities[ui.value] + '"]').text());
+		}
+	});
+
+// TODO
+// * Valeur par défaut sur le curseur
+// * Valeur texte par défaut en full
+// * En faire un input()
+
+	var current = $("#severity").val();
+	$("#severitysliderlabel").text(current.charAt(0).toUpperCase() + current.slice(1));
+});

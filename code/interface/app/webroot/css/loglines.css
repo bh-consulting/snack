@@ -1,0 +1,81 @@
+#logsSearchForm { display: none }
+#logmessage { margin-top: 12px }
+
+#nofilters {
+	font-weight: bold;
+	color: #680e0e;
+}
+
+.loglinks td {
+	text-align: center;
+}
+
+.loglinks td.logcellmsg {
+	text-align: left;
+	font-style: italic;
+}
+
+.loglinks td.logcellid {
+	font-weight: bold;
+}
+
+.loglinks td a {
+	color: #000;
+}
+
+tr.loglevelemerg, tr.loglevelalert, tr.loglevelcrit, tr.loglevelerr {
+	background-color: #cc0000;
+	color: #fff;
+}
+
+.loglinks tr.loglevelemerg:hover td, .loglinks tr.loglevelalert:hover td, .loglinks tr.loglevelcrit:hover td, .loglinks tr.loglevelerr:hover td {
+	background-color: #a90000;
+}
+
+tr.loglevelemerg a, tr.loglevelalert a, tr.loglevelcrit a, tr.loglevelerr a {
+	color: #fff;
+}
+
+tr.loglevelwarn {
+	background-color: #cc4500;
+	color: #fff;
+}
+
+.loglinks tr.loglevelwarn:hover td {
+	background-color: #ba4b12;
+}
+
+tr.loglevelwarn a {
+	color: #fff;
+}
+
+tr.loglevelnotice, tr.loglevelinfo, tr.logleveldebug {
+
+}
+
+#openpan {
+	background-color: rgb(245, 245, 245);
+	padding: 5px 10px;
+	margin-bottom: 10px;
+}
+
+#openpan:hover {
+	background-color: rgb(238, 238, 238);
+}
+
+#openpan i {
+	display: block;
+	float: right;
+}
+
+#severityslider {
+	width: 200px;
+	float: left;
+	margin-left: 200px;
+}
+
+#severitysliderlabel {
+	display: block;
+	margin-top: -5px;
+	padding-left: 210px;
+}
