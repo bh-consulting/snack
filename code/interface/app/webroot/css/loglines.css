@@ -73,7 +73,7 @@ tr.loglevelnotice, tr.loglevelinfo, tr.logleveldebug {
 }
 
 .slider {
-	padding-top: 10px;
+	padding-top: 9px;
 }
 
 .slider div {
@@ -84,5 +84,9 @@ tr.loglevelnotice, tr.loglevelinfo, tr.logleveldebug {
 .slider span {
 	display: block;
 	font-weight: bold;
-	margin: -5px 0 0 210px;
+	margin: -4px 0 0 210px;
+}
+
+a.ui-slider-handle {
+	outline: none;
 }
