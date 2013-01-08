@@ -43,6 +43,7 @@ $this->assign('nas_active', 'active');
             <?php echo $this->Html->link('Edit', array('action' => 'edit', $n['Nas']['id'])); ?>
         </td>
         <td>
+						<i class="icon-trash"></i>
             <?php echo $this->Form->postLink('Delete', array('action' => 'delete', $n['Nas']['id']),
             array('confirm' => 'Are you sure?')); ?>
         </td>

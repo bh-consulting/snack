@@ -3,6 +3,14 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('dashboard_active', 'active');
 ?>
 
+<div class="pull-right">
+<?php
+	echo $this->Html->link('<i class="icon-refresh icon-white"></i> Refresh',
+		array('controller' => 'systemDetails', 'action' => 'refresh'),
+		array('class' => 'btn btn-success btn-large', 'escape' => false)
+		);
+?>
+</div>
 <h1>Dashboard</h1>
 
 <h4>General information:</h4>

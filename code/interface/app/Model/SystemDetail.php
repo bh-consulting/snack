@@ -22,25 +22,25 @@ class SystemDetail extends AppModel
 		return $result;
 	}
 
-	/* Gets state of a service. */
-	function checkService( $service ) {
-		$result = $this->execCmd( "pgrep " . $service );
-		return ( !empty($result) ) ? "Enabled" : "Disabled";
-	}
-
 	/* Converts seconds to days, hours, minutes, seconds. */
 	public function convertSecTime( $time ){
 		$seconds	= $time%60;
 		$minutes	= floor($time/60)%60;
 		$hours		= floor($time/3600)%24;
-		$days			= floor($time/86400);
+		$days		= floor($time/86400);
 
-		$result =		$days			. (($days > 1) ? " days " : " day ");
+		$result =	$days		. (($days > 1) ? " days " : " day ");
 		$result .=	$hours		. (($hours > 1) ? " hours " : " hour ");
 		$result .=	$minutes	. (($minutes > 1) ? " minutes " : " minute ");
 		$result .=	$seconds	. (($seconds > 1) ? " seconds" : " second");
 
 		return $result;
+	}
+
+	/* Gets the uptime of a service or -1 if the service is down. */
+	function checkService( $service ) {
+		$result = $this->execCmd( "ps -e -o comm,etimes | grep " . $service . " | tail -1" );
+		return ( !empty($result) ) ? $this->convertSecTime( preg_split ( "#\s#", $result[0], NULL, PREG_SPLIT_NO_EMPTY )[1] ) : -1;
 	}
 
 	/* Gets the current date. */
@@ -59,50 +59,49 @@ class SystemDetail extends AppModel
 	public function getUptimes() {
 		$content	= $this->readFile( "/proc/uptime" );
 		$result		= explode( " ", $content[0] );
-		$result[0]= $this->convertSecTime( $result[0] ); /* Up Time */
-		$result[1]= $this->convertSecTime( $result[1] ); /* Idle Time */
+		$result[0]	= $this->convertSecTime( $result[0] ); /* Up Time */
+		$result[1]	= $this->convertSecTime( $result[1] ); /* Idle Time */
 
 		return $result;
 	}
 
 	/* Gets System Load Average. */
 	function getSystemLoad() {
-		$content		= $this->readFile( "/proc/loadavg" );
-		$tmp				= explode(" ", $content[0]);
-		$result[0]	= $tmp[0] . " " . $tmp[1] . " " . $tmp[2]; /* Load average */
-		$tmp				= $this->execCmd( "top -b -n1 | grep \"Tasks:\"" );
-		$result[1]	= substr( $tmp[0], strpos($tmp[0], ":") + 2 ); /* Tasks */
+		$content	= $this->readFile( "/proc/loadavg" );
+		$tmp		= explode(" ", $content[0]);
+		$result[0]	= $tmp[0] . " " . $tmp[1] . " " . $tmp[2]; 		/* Load average */
+		$tmp		= $this->execCmd( "top -b -n1 | grep \"Tasks:\"" );
+		$result[1]	= substr( $tmp[0], strpos($tmp[0], ":") + 2 );		/* Tasks */
 	
 		return $result;
 	}
 
 	/* Gets Memory Total&Free */
 	function getMemory() {
-		$content 		= $this->readFile( "/proc/meminfo" );
-		$result[0]	= substr( $content[1], strpos($content[1], ":") + 2 ); /* Total memory */
-		$result[1]	= substr( $content[0], strpos($content[0], ":") + 2 ); /* Free memory */
-		$result[2]	= ($result[1] - $result[0]) . " kB"; /* Used disk */
+		$content 	= $this->readFile( "/proc/meminfo" );
+		$result[0]	= substr( $content[1], strpos($content[1], ":") + 2 );	/* Total memory */
+		$result[1]	= substr( $content[0], strpos($content[0], ":") + 2 );	/* Free memory */
+		$result[2]	= ($result[1] - $result[0]) . " kB";			/* Used disk */
 	
 		return $result;
 	}
 
 	/* Gets Disk Space */
 	function getDiskSpace() {
-		$result[0] = disk_free_space("/") . " kB"; /* Free space */
-		$result[1] = disk_total_space("/") . " kB"; /* Total space */
-		$result[2] = ($result[1] - $result[0]) . " kB"; /* Used space */
+		$result[0] = disk_free_space("/") . " kB"; 	/* Free space */
+		$result[1] = disk_total_space("/") . " kB"; 	/* Total space */
+		$result[2] = ($result[1] - $result[0]) . " kB";	/* Used space */
 
 		return $result;
 	}
 
 	/* Gets all network devices statistics */
 	function getInterfacesStats() {
-		$content	= array_slice( $this->readFile( "/proc/net/dev" ), 2);
+		$content = array_slice( $this->readFile( "/proc/net/dev" ), 2);
 
 		foreach( $content as $key => &$value){
-			$value = preg_split( "/\s+/", $value );
-
-			$value[0] = substr( $value[0], 0, strpos( $value[0], ":") );
+			$value		= preg_split( "/\s+/", $value );
+			$value[0]	= substr( $value[0], 0, strpos( $value[0], ":") );
 		}
 
 		return $content;
@@ -111,10 +110,10 @@ class SystemDetail extends AppModel
 	/* Gets all network devices details */
 	function getInterfaces() {
 		$content	= $this->execCmd( "/sbin/ip a" );
-
 		$n		= 0;
-		$nV4	= 0;
-		$nV6	= 0;
+		$nV4		= 0;
+		$nV6		= 0;
+
 		foreach( $content as $line){
 			if( preg_match("#^([0-9]+): (.*)?:#i", $line, $match)) {
 				$n = $match[1];
@@ -133,6 +132,12 @@ class SystemDetail extends AppModel
 		}
 
 		return $result;
+	}
+
+	/* Gets mysql server uptime */
+	function getMysqldUptime()
+	{
+		$content = $this->execCmd( "/sbin/ip a" );
 	}
 }
 ?>

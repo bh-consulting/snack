@@ -90,7 +90,6 @@ class RadusersController extends AppController
 
             $success = $this->Checks->add($this->request, $checks);
 
-            // TODO: add a cisco user with $this->request->data['Raduser']['username']/ $this->request->data['Raduser']['password']
         }
         $this->add($success);
     }
@@ -158,8 +157,7 @@ class RadusersController extends AppController
         $success = false;
         if ($this->request->is('post')) {
 
-            $name = $this->request->data['Raduser']['username'
-          ];
+            $name = $this->request->data['Raduser']['username'];
             $this->request->data['Raduser']['is_cert'] = 1;
             $this->request->data['Raduser']['cert_path'] = '/var/www/cert/newcerts/' . $name . '.pem';
             $rads = array(
@@ -284,8 +282,8 @@ class RadusersController extends AppController
         }
 
         $groups = new Radgroup();
-        $this->set('groups', $groups->find('list', array('fields' => array('groupname'))));
-        $this->restoreGroups($this->Raduser->id);
+        $this->set('groups', $groups->find('list', array('fields' => array('id', 'groupname'))));
+	$this->restoreGroups($this->Raduser->id);
         $this->Checks->restore_common_check_fields($this->Raduser->id, $this->request);
     }
 

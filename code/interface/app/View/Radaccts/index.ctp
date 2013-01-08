@@ -21,6 +21,7 @@ $columns = array(
 					foreach( $columns as $field => $text )
 						echo "<th>" . $this->Paginator->sort($field, $text . " " . ( (preg_match( "#$field$#", $this->Paginator->sortKey()) ) ? $this->Html->tag('i', '', array('class' => $sortIcons[$this->Paginator->sortDir()])) : '' ), array( 'escape' => false )) . "</th>";
 				?>
+				<th>Delete</th>
     </tr>
     </thead>
 
@@ -38,7 +39,7 @@ $columns = array(
             <? echo h($acct['Radacct']['username']); ?>
         </td>
         <td>
-            <? echo h($acct['Radacct']['callingstationid']); ?>
+            <? echo h($acct['Radacct']['framedipaddress']); ?>
         </td>
         <td>
             <? echo ( !empty( $acct['Radacct']['acctstarttime'] ) ) ? h($acct['Radacct']['acctstarttime']) : "Unknown"; ?>
@@ -51,6 +52,10 @@ $columns = array(
         </td>
         <td>
             <? echo ( !empty( $acct['Radacct']['nasportid'] ) ) ? h($acct['Radacct']['nasportid']) : "Unknown"; ?>
+        </td>
+        <td>
+						<i class="icon-trash"></i>
+            <?php echo $this->Form->postLink('Delete', array('action' => 'delete', $acct['Radacct']['radacctid']), array('confirm' => 'Are you sure?')); ?>
         </td>
     </tr>
     <? endforeach; ?>
@@ -68,19 +73,6 @@ $columns = array(
 	}
 ?>
 </table>
-
-<? /* Version Bootstrap
-<div class="pagination">
-	<ul>
-<?
-	echo 	$this->Paginator->prev('Prev.', array('tag' => 'li'), '<a href="#">Prev.</a>', array( 'tag' => 'li', 'class' => 'disabled', 'escape' => false )) .
-				$this->Paginator->numbers( array(	'tag' => 'li', 'currentTag' => 'strong', 'currentClass' => 'active', 'modulus' => 1, 'first' => 2, 'last' => 2, 'ellipsis' => '<li class="disabled"><a href="#">...</a></li>', 'separator' => '' )) .
-				$this->Paginator->next('Next', array('tag' => 'li'), '<a href="#">Next</a>', array( 'tag' => 'li', 'class' => 'disabled', 'escape' => false ));
-?>
-	</ul>
-</div>
-*/
-?>
 
 <? echo $this->element('paginator_footer'); ?>
 </div>

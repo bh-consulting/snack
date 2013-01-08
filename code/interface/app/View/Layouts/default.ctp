@@ -33,6 +33,7 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
     echo $this->Html->css('bootstrap.min');
     echo $this->Html->css('bootstrap-responsive.min');
     echo $this->Html->css('bootstrap-datetimepicker.min');
+    echo $this->Html->css('multi-value-ordered-selector');
     echo $this->Html->css('loglines');
     echo $this->Html->css('jquery-ui-bootstrap/jquery-ui-1.9.2.custom');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
@@ -45,7 +46,7 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
     <style>
         body {
             padding-top: 60px;
-        }
+	}
     </style>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -53,7 +54,6 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
     </script>
     <![endif]-->
-
 </head>
 <body>
 <div class="navbar navbar-fixed-top">
@@ -97,6 +97,8 @@ echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapify');
 echo $this->Html->script('bootstrap-datetimepicker.min');
 echo $this->Html->script('loglines');
+echo $this->Html->script('multi-value-ordered-selector');
 ?>
+</script>
 </body>
 </html>

@@ -1,0 +1,39 @@
+.lists-wrapper {
+	 margin: 0 0 0 40px;
+}
+
+.list-container {
+	padding: 0 10px 10px 0;
+	width: 175px;
+	min-height: 150px;
+}
+
+.list-title {
+	text-align: center;
+	line-height: 25px;
+	font-weight: bold;
+}
+
+.connectedList {
+	display: block;
+	list-style-type:none;
+	min-height: 22px;
+	height: 150px;
+	overflow: auto;
+	padding: 5px;
+	margin: 0;
+	background-color: #F5F5F5;
+	border: 1px solid rgba(0,0,0,0.15);
+	border-radius: 4px;
+}
+
+.connectedList li {
+	display: block;
+	margin: 2px;
+}
+
+.itemPlaceHolder:empty {
+	display: block;
+	height: 14px;
+	vertical-align: bottom;
+}
