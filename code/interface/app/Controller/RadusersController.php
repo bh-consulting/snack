@@ -309,10 +309,13 @@ class RadusersController extends AppController
                 $groupsId[]= $g['Radgroup']['id'];
             }
             $this->set('groups_selected', $groupsId);
-        }
+        } else {
+            $this->set('groups_selected', array());
+	}
     }
 
     public function updateGroups($id, $request){
+	/*
         $Radgroup = new Radgroup();
         $groups = $this->Checks->getUserGroups($id);
         $groupsToAdd = array();
@@ -351,7 +354,9 @@ class RadusersController extends AppController
             }
         }
         $this->Checks->addUsersOrGroups($id, $groupsToAdd);
-
+        */
+        $this->Checks->deleteAllUsersOrGroups($id);
+        $this->Checks->addUsersOrGroups($id, $request->data['Raduser']['groups']);
     }
 }
 

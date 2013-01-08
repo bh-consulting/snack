@@ -96,8 +96,8 @@ echo $this->Html->script('jquery-ui-1.9.2.custom.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapify');
 echo $this->Html->script('bootstrap-datetimepicker.min');
-echo $this->Html->script('loglines');
 echo $this->Html->script('multi-value-ordered-selector');
+echo $this->Html->script('loglines');
 ?>
 </script>
 </body>

@@ -24,9 +24,8 @@ echo $this->element('check_common_fields');
 		<div class="list-title">Selected groups</div>
 		<ul id="groups" class="sortList connectedList" subClass="label label-warning">
 		<?php
-		foreach( $groups as $id=>$groupname )
-			if( in_array( $id, $groups_selected) )
-				echo '<li id="' . $id . '">' . $groupname .'</li>';
+		foreach( $groups_selected as $groupId )
+			echo '<li id="' . $groupId . '">' . $groups[$groupId] .'</li>';
 		?>
 		</ul>
 	</div>

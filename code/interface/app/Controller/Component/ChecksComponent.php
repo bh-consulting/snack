@@ -124,21 +124,26 @@ class ChecksComponent extends Component
 
     public function addUsersOrGroups($id, $idToAdd)
     {
-        if(!empty($idToAdd)){
-            $this->baseClass->id = $id;
-            $Radusergroup = new Radusergroup();
-            if($this->baseClassName == 'Raduser')
-                $ClassToAdd = new Radgroup();
-            else if($this->baseClassName == 'Radgroup')
-                $ClassToAdd = new Raduser();
+	if(!empty($idToAdd)){
+		$this->baseClass->id = $id;
+		$Radusergroup = new Radusergroup();
 
-            foreach($idToAdd as $aid){
-                $ClassToAdd->id = $aid;
-                $Radusergroup->create();
-                if($this->baseClassName == 'Raduser')
-                    $Radusergroup->save(array('username' => $this->baseClass->field('username'), 'groupname' => $ClassToAdd->field('groupname')));
-                else if($this->baseClassName == 'Radgroup')
-                    $Radusergroup->save(array('groupname' => $this->baseClass->field('groupname'), 'username' => $ClassToAdd->field('username')));
+		if($this->baseClassName == 'Raduser')
+			$ClassToAdd = new Radgroup();
+		else if($this->baseClassName == 'Radgroup')
+			$ClassToAdd = new Raduser();
+
+		$priority = 1;
+		foreach($idToAdd as $aid){
+			$ClassToAdd->id = $aid;
+			$Radusergroup->create();
+			
+			if($this->baseClassName == 'Raduser')
+				$Radusergroup->save(array('username' => $this->baseClass->field('username'), 'groupname' => $ClassToAdd->field('groupname'), 'priority' => $priority));
+			else if($this->baseClassName == 'Radgroup')
+				$Radusergroup->save(array('groupname' => $this->baseClass->field('groupname'), 'username' => $ClassToAdd->field('username'), 'priority' => $priority));
+
+			++$priority;
             }
         }
     }
@@ -163,12 +168,30 @@ class ChecksComponent extends Component
                     ), false);
                 else if($this->baseClassName == 'Radgroup')
                     $success = $success && $Radusergroup->deleteAll(array(
-                        'Radusergroup.groupname' => $ClassToAdd->field('username'),
+                        'Radusergroup.groupname' => $ClassToAdd->field('username'), //TODO: N'y a-t-il pas inversion username/groupname ?
                         'Radusergroup.username' => $this->baseClass->field('groupname')
                     ), false);
             }
         }
         return $success;
+    }
+
+    public function deleteAllUsersOrGroups($id)
+    {
+	$success = true;
+	$this->baseClass->id = $id;
+	$Radusergroup = new Radusergroup();
+	if($this->baseClassName == 'Raduser')
+		$ClassToAdd = new Radgroup();
+	else if($this->baseClassName == 'Radgroup')
+		$ClassToAdd = new Raduser();
+
+	if($this->baseClassName == 'Raduser')
+		$success = $Radusergroup->deleteAll(array('Radusergroup.username' => $this->baseClass->field('username')), false);
+	else if($this->baseClassName == 'Radgroup')
+		$success = $Radusergroup->deleteAll(array('Radusergroup.groupname' => $this->baseClass->field('groupname')), false);
+	
+	return $success;
     }
 
     public function getUserGroups($id)
@@ -177,7 +200,7 @@ class ChecksComponent extends Component
         $name = $this->baseClass->field($this->displayName);
         $Radusergroup = new Radusergroup();
         $findAllFunc = 'findAllBy' . ucfirst($this->displayName);
-        $usergroups = $Radusergroup->$findAllFunc($name);
+        $usergroups = $Radusergroup->$findAllFunc($name, array(), array('priority' => 'asc'));
         return $usergroups;
     }
 
