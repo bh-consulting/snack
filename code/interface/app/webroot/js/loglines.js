@@ -34,6 +34,7 @@ function logsSearchFromDate(link) {
 }
 
 $('#severity').children(':nth-child(4)').attr('label-color', '#df4b00');
+$('#severity').children(':nth-child(1)').attr('label-color', '#558d9d');
 
 for(var i = 5; i < 9; i++)
 	$('#severity').children(':nth-child(' + i  + ')').attr('label-color', '#cc0000');

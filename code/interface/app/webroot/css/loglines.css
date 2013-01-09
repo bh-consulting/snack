@@ -36,6 +36,14 @@ tr.loglevelemerg, tr.loglevelalert, tr.loglevelcrit, tr.loglevelerr {
 	background-color: #a90000;
 }
 
+tr.logleveldebug {
+	background-color: #95c2cf;
+}
+
+.loglinks tr.logleveldebug:hover td {
+	background-color: #84acb8;
+}
+
 tr.loglevelemerg a, tr.loglevelalert a, tr.loglevelcrit a, tr.loglevelerr a {
 	color: #fff;
 }
