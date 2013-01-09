@@ -239,7 +239,7 @@ sed -e "s|USER_HOME_TO_SED|$USER_HOME|"\
 sed -e "s|USER_HOME_TO_SED|$USER_HOME|"\
     -i scripts/revokeClient
 
-sed -e "s|USER_HOME_TO_SED/$USER_HOME|"\
+sed -e "s|USER_HOME_TO_SED|$USER_HOME|"\
     -i scripts/revocationCheck
 
 mkdir $USER_HOME/$PAQUETNAME/scripts
