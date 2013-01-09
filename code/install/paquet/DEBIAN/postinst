@@ -233,13 +233,13 @@ sed\
 
 
 #copy scripts version
-sed -e "/USER_HOME_TO_SED/$USER_HOME/g/"\
+sed -e "s|USER_HOME_TO_SED|$USER_HOME|"\
     -i scripts/createCertificate
 
-sed -e "/USER_HOME_TO_SED/$USER_HOME/g/"\
+sed -e "s|USER_HOME_TO_SED|$USER_HOME|"\
     -i scripts/revokeClient
 
-sed -e "/USER_HOME_TO_SED/$USER_HOME/g/"\
+sed -e "s|USER_HOME_TO_SED/$USER_HOME|"\
     -i scripts/revocationCheck
 
 mkdir $USER_HOME/$PAQUETNAME/scripts
