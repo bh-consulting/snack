@@ -33,7 +33,7 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
     echo $this->Html->css('bootstrap.min');
     echo $this->Html->css('bootstrap-responsive.min');
     echo $this->Html->css('bootstrap-datetimepicker.min');
-    echo $this->Html->css('multi-value-ordered-selector');
+    echo $this->Html->css('doubleListsSelector');
     echo $this->Html->css('loglines');
     echo $this->Html->css('jquery-ui-bootstrap/jquery-ui-1.9.2.custom');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
@@ -86,17 +86,17 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
     </div>
     <hr/>
     <footer>
-        <p><a href="http://bh-consulting.net">b.h. consulting 2012</a></p>
+        <p><a href="http://bh-consulting.net">b.h. consulting 2013</a></p>
     </footer>
 </div>
 <?php
 echo $this->element('sql_dump');
-echo $this->Html->script('http://code.jquery.com/jquery-latest.js');
-echo $this->Html->script('jquery-ui-1.9.2.custom.min');
+echo $this->Html->script('jquery.min');
+echo $this->Html->script('jquery-ui.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapify');
 echo $this->Html->script('bootstrap-datetimepicker.min');
-echo $this->Html->script('multi-value-ordered-selector');
+echo $this->Html->script('doubleListsSelector');
 echo $this->Html->script('loglines');
 ?>
 </script>

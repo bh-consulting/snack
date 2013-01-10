@@ -22,18 +22,11 @@
 	overflow: auto;
 	padding: 5px;
 	margin: 0;
-	background-color: #F5F5F5;
-	border: 1px solid rgba(0,0,0,0.15);
-	border-radius: 4px;
 }
 
-.connectedList li {
+.connectedList li, .connectedList li:empty {
 	display: block;
 	margin: 2px;
-}
-
-.itemPlaceHolder:empty {
-	display: block;
 	height: 14px;
 	vertical-align: bottom;
 }
