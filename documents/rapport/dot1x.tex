@@ -81,8 +81,16 @@ Disabled.
 
 \subsubsection{Configurer une interface}
 
+L'interface dois être en mode 'access'. 
+Si ce n'est pas le cas,
 \begin{verbatim}
 Switch(config)# interface fastethernet0/1
+Switch(config-if)# switchport mode access
+\end{verbatim}
+
+puis,
+
+\begin{verbatim}
 Switch(config-if)# dot1x port-control {auto | force-authorized | force-unauthorized}
 \end{verbatim}
 

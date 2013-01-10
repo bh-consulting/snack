@@ -1,0 +1,80 @@
+#!/usr/bin/expect --
+set SWITCH_IP 193.50.40.78
+set RADIUS_IP 193.50.40.117
+set RADIUS_PORT 1812
+set SECRET poil
+
+set timeout 60
+set baud 9600
+set port /dev/ttyS0
+
+#spawn telnet 193.50.40.85
+#expect "Username"
+#send "root\r"
+#    
+#expect "Password"
+#send "behappy\r"
+
+set fh [open $port RDWR]
+fconfigure $fh -blocking 0 -buffering none \
+          -mode 9600,n,8,1 -translation binary -eofchar {}
+spawn -open $fh
+
+send "\n"
+
+
+expect "Switch>"
+send "enable\r"
+
+#expect "Password"
+#send "behappy\r"
+expect "Switch#"
+
+send "conf t\r"
+expect "Switch(config)#"
+
+#Setting ip adress
+send "interface vlan 1\r"
+expect "Switch(config-if)#"
+send "ip addr $SWITCH_IP 255.255.255.192\r"
+expect "Switch(config-if)#"
+send "no shutdown\r"
+expect "Switch(config-if)#"
+send "exit\r"
+expect "Switch(config)#"
+
+
+#Dot1x activation
+send "aaa new-model\r"
+expect "Switch(config)#"
+send "aaa authentication dot1x default group radius\r"
+expect "Switch(config)#"
+send "dot1x system-auth-control\r"
+expect "Switch(config)#"
+
+#interfaces configuration
+for {set i 1} {$i<3} {incr i 1} {
+    send "interface fastethernet 0/$i\r"
+    expect "Switch(config-if)#"
+    send "switchport mode access\r"
+    expect "Switch(config-if)#"
+    send "dot1x port-control auto\r"
+    expect "Switch(config-if)#"
+    send "exit\r"
+    expect "Switch(config)#"
+}
+
+#Server configuration
+send "aaa new-model\r"
+expect "Switch(config)#"
+send "radius-server host $RADIUS_IP auth-port $RADIUS_PORT key $SECRET\r"
+expect "Switch(config)#"
+send "exit\r"
+expect "Switch#"
+send "exit\r"
+
+exit 0
+
+
+
+
