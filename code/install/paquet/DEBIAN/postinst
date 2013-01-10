@@ -97,8 +97,8 @@ DESTPATH=$DESTROOTPATH/$DESTFOLDER
 SSLCNF=/etc/ssl/openssl.cnf
 RADCERTVALIDITY=3650 #ten years
 CACERTVALIDITY=3650 #ten years
-PATHDIRMODE=0744
-DIRMODE=0500
+PATHDIRMODE=0754
+DIRMODE=0750
 
 CAKEY=cakey.pem
 CAREQ=careq.pem
@@ -247,6 +247,11 @@ cp -r scripts/* $USER_HOME/$PAQUETNAME/scripts
 chmod +x $USER_HOME/$PAQUETNAME/scripts/createCertificate
 chmod +x $USER_HOME/$PAQUETNAME/scripts/revokeClient
 chmod +x $USER_HOME/$PAQUETNAME/scripts/revocationCheck
+
+groupadd snack
+useradd -G snack freeradius
+useradd -G snack www-data
+chown -R :snack $USER_HOME/$PAQUETNAME
 
 
 exit 0
