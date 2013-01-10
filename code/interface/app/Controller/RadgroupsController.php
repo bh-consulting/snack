@@ -4,7 +4,8 @@ App::import('Model', 'Radgroupcheck');
 App::import('Model', 'Raduser');
 class RadgroupsController extends AppController
 {
-    public $helpers = array('Html', 'Form');
+    public $helpers = array('Html', 'Form', 'JqueryEngine');
+    public $paginate = array('limit' => 10, 'order' => array('Radgroup.id' => 'asc'));
     public $components = array(
         'Checks' => array(
             'displayName' => 'groupname',
@@ -14,7 +15,9 @@ class RadgroupsController extends AppController
         'Session');
 
     public function index(){
-        $this->set('radgroups', $this->Checks->index());
+        $this->set('radgroups', $this->paginate('Radgroup'));
+        // FIXME: should not be here, DRY
+        $this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
     }
 
     public function view($id = null){

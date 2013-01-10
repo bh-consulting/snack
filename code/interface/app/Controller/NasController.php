@@ -2,12 +2,15 @@
 
 class NasController extends AppController
 {
-    public $helpers = array('Html', 'Form');
+    public $helpers = array('Html', 'Form', 'JqueryEngine');
+    public $paginate = array('limit' => 10, 'order' => array('Nas.id' => 'asc'));
     public $uses = array('Nas');
 
     public function index()
     {
-        $this->set('nas', $this->Nas->find('all'));
+        $this->set('nas', $this->paginate('Nas'));
+        // FIXME: should not be here, DRY
+        $this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
     }
 
     public function view($id = null)

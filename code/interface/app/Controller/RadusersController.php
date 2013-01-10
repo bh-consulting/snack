@@ -23,6 +23,7 @@ class RadusersController extends AppController
             $r['Raduser']['type'] = $this->Checks->getType($r['Raduser'], false);
         }
         $this->set('radusers', $radusers);
+        // FIXME: should not be here, DRY
         $this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
     }
 

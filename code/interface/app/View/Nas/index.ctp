@@ -9,29 +9,46 @@ $this->assign('nas_active', 'active');
     array('controller' => 'nas', 'action' => 'add'),
     array('class' => 'btn')); ?>
 </p>
-<? if(!empty($nas)){ ?>
+<? 
+$columns = array(
+    'id' => __('ID'),
+    'nasname' => __('Name'),
+    'shortname' => __('Short name'),
+    'type' => __('Type'),
+    'ports' => __('Ports'),
+    'server' => __('Server'),
+    'community' => __('Community'),
+    'description' => __('Description')
+);
+?>
+
 <table class="table">
     <thead>
     <tr>
-        <th>Nas name</th>
-        <th>Short name</th>
-        <th>Type</th>
-        <th>Ports</th>
-        <th>Server</th>
-        <th>Community</th>
-        <th>Description</th>
+        <?
+        foreach($columns as $field => $text){
+            $sort = preg_match("#$field$#", $this->Paginator->sortKey()) ?  $this->Html->tag('i', '', array('class' => $sortIcons[$this->Paginator->sortDir()])) : '';
+
+            echo "<th>";
+            echo $this->Paginator->sort($field, "$text $sort", array('escape' => false));
+            echo "</th>";
+        }
+        ?>
         <th>Edit</th>
         <th>Delete</th>
     </tr>
     </thead>
 
     <tbody>
-    <?php foreach ($nas as $n): ?>
+<?
+if(!empty($nas)){
+    foreach ($nas as $n): ?>
     <tr>
         <td>
-            <?php echo $this->Html->link($n['Nas']['nasname'],
+            <?php echo $this->Html->link($n['Nas']['id'],
             array('controller' => 'nas', 'action' => 'view', $n['Nas']['id'])); ?>
         </td>
+        <td><?php echo $n['Nas']['nasname']; ?></td>
         <td><?php echo $n['Nas']['shortname']; ?></td>
         <td><?php echo $n['Nas']['type']; ?></td>
         <td><?php echo $n['Nas']['ports']; ?></td>
@@ -48,10 +65,16 @@ $this->assign('nas_active', 'active');
             array('confirm' => 'Are you sure?')); ?>
         </td>
     </tr>
-        <?php endforeach; ?>
-    <?php unset($n); ?>
+        <?php endforeach;
+    } else {
+        ?>
+        <tr>
+            <td colspan="8">No NAS yet.</td>
+        </tr>
+    <?
+    }
+    unset($n);
+    ?>
     </tbody>
 </table>
-<? } else { ?>
-<p>You don't have any NAS yet!</p>
-<? } ?>
+<? echo $this->element('paginator_footer');

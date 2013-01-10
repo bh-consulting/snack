@@ -21,6 +21,7 @@ $this->assign('users_active', 'active');
 
 <? 
 $columns = array(
+    'id' => 'ID',
     'username' => 'Username',
     'comment' => 'Comment',
     'ntype' => 'Type'
@@ -50,8 +51,11 @@ $columns = array(
         foreach ($radusers as $rad): ?>
         <tr>
             <td>
-                <? echo $this->Html->link($rad['Raduser']['username'],
+                <? echo $this->Html->link($rad['Raduser']['id'],
                 array('controller' => 'Radusers', 'action' => 'view_' . $rad['Raduser']['type'], $rad['Raduser']['id'])); ?>
+            </td>
+            <td>
+                <? echo $rad['Raduser']['username']; ?>
             </td>
             <td>
                 <? echo $rad['Raduser']['comment']; ?>
@@ -83,4 +87,3 @@ $columns = array(
     </tbody>
 </table>
 <? echo $this->element('paginator_footer'); ?>
-</div>
