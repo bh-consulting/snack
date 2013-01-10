@@ -37,31 +37,11 @@ $this->assign('dashboard_active', 'active');
 <p style="padding: 0 0 0 20px;">
 	<strong>Used memory:</strong> <?php echo $usedmem; ?></br>
 	<strong>Free memory:</strong> <?php echo $freemem; ?></br>
-	<strong>Total memory:</strong> <?php echo $totalmem; ?></br></br>
+	<strong>Total memory:</strong> <?php echo $totalmem; ?></br>
 	<strong>Used disk:</strong> <?php echo $useddisk; ?></br>
 	<strong>Free disk:</strong> <?php echo $freedisk; ?></br>
 	<strong>Total disk:</strong> <?php echo $totaldisk; ?>
 </p>
-
-<?php
-/*
-echo $this->GoogleChart	->create()
-												->setTitle( 'Disk memory', array( 'size' => 14, 'color' => '000000' ) )
-												->setType( 'pie', array( '2d' ) )
-												->setSize( 300, 200 )
-												->setMargins( 10, 10, 10, 10 )
-												->addData( array( $useddisk / $totaldisk, $freedisk / $totaldisk ) )
-												->setPieChartLabels( array( 'Used', 'Free' ) );
-
-echo $this->GoogleChart	->create()
-												->setTitle( 'Disk memory', array( 'size' => 14, 'color' => '000000' ) )
-												->setType( 'pie', array( '2d' ) )
-												->setSize( 300, 200 )
-												->setMargins( 10, 10, 10, 10 )
-												->addData( array( 1, 5 ) )
-												->setPieChartLabels( array( 'Used', 'Free' ) );
-*/
-?> 
 
 <h4>Network:</h4>
 <table class="table">
@@ -113,50 +93,82 @@ echo $this->GoogleChart	->create()
 </table>
 
 <table class="table">
-    <thead>
-    <tr>
-        <th rowspan="2">Interface</th>
-        <th colspan="8">Receive</th>
-        <th colspan="8">Transmit</th>
-    </tr>
-    <tr>
-        <th>bytes</th>
-        <th>packets</th>
-        <th>errors</th>
-        <th>drop</th>
-        <th>fifo</th>
-        <th>frame</th>
-        <th>compressed</th>
-        <th>multicast</th>
-        <th>bytes</th>
-        <th>packets</th>
-        <th>errors</th>
-        <th>drop</th>
-        <th>fifo</th>
-        <th>collisions</th>
-        <th>carrier</th>
-        <th>compressed</th>
-    </tr>
-    </thead>
+	<thead>
+		<tr>
+			<th rowspan="2">Interface</th>
+			<th colspan="8" style="text-align:center;">Receive</th>
+		</tr>
+		<tr>
+			<th>bytes</th>
+			<th>packets</th>
+			<th>errors</th>
+			<th>drop</th>
+			<th>fifo</th>
+			<th>frame</th>
+			<th>compressed</th>
+			<th>multicast</th>
+		</tr>
+	</thead>
 	<? if(!empty($intstats)){ ?>
-		<tbody>
+	<tbody>
 		<? foreach ($intstats as $int): ?>
-			<tr>
-				<?
-					for($i=0; $i<17; ++$i)
-						echo ($i) ? "<td>" . $int[$i] . "</td>" : "<th>" . $int[$i] . "</th>"; 
-				?>
-			</tr>
+		<tr>
+			<?
+			echo "<th>" . $int[0] . "</th>"; 
+			
+			for($i=1; $i<9; ++$i)
+				echo "<td>" . $int[$i] . "</td>"; 
+			?>
+		</tr>
 		<?
-			endforeach;
-			unset($intstats);
+		endforeach;
 		?>
-		</tbody>
+	</tbody>
 	<? }else{ ?>
-		<tbody>
-    	<tr>
-				<td colspan="17">No interface</td>
-			</tr>
-		</tbody>
+	<tbody>
+		<tr>
+			<td colspan="9">No interface</td>
+		</tr>
+	</tbody>
+	<? } ?>
+</table>
+<table class="table">
+	<thead>
+		<tr>
+			<th rowspan="2">Interface</th>
+			<th colspan="8" style="text-align:center;">Transmit</th>
+		</tr>
+		<tr>
+			<th>bytes</th>
+			<th>packets</th>
+			<th>errors</th>
+			<th>drop</th>
+			<th>fifo</th>
+			<th>collisions</th>
+			<th>carrier</th>
+			<th>compressed</th>
+		</tr>
+	</thead>
+	<? if(!empty($intstats)){ ?>
+	<tbody>
+		<? foreach ($intstats as $int): ?>
+		<tr>
+			<?
+			echo "<th>" . $int[0] . "</th>"; 
+			
+			for($i=9; $i<17; ++$i)
+				echo "<td>" . $int[$i] . "</td>"; 
+			?>
+		</tr>
+		<?
+		endforeach;
+		?>
+	</tbody>
+	<? }else{ ?>
+	<tbody>
+		<tr>
+			<td colspan="9">No interface</td>
+		</tr>
+	</tbody>
 	<? } ?>
 </table>
