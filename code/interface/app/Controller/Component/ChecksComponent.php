@@ -138,10 +138,11 @@ class ChecksComponent extends Component
 			$ClassToAdd->id = $aid;
 			$Radusergroup->create();
 			
-			if($this->baseClassName == 'Raduser')
+			if($this->baseClassName == 'Raduser') {
 				$Radusergroup->save(array('username' => $this->baseClass->field('username'), 'groupname' => $ClassToAdd->field('groupname'), 'priority' => $priority));
-			else if($this->baseClassName == 'Radgroup')
-				$Radusergroup->save(array('groupname' => $this->baseClass->field('groupname'), 'username' => $ClassToAdd->field('username'), 'priority' => $priority));
+			} else if($this->baseClassName == 'Radgroup') {
+				$Radusergroup->save(array('groupname' => $this->baseClass->field('groupname'), 'username' => $ClassToAdd->field('username'), 'priority' => $Radusergroup->find('count', array('conditions' => array('username' => $ClassToAdd->field('username')))) + 1));
+			}
 
 			++$priority;
             }
@@ -168,8 +169,8 @@ class ChecksComponent extends Component
                     ), false);
                 else if($this->baseClassName == 'Radgroup')
                     $success = $success && $Radusergroup->deleteAll(array(
-                        'Radusergroup.groupname' => $ClassToAdd->field('username'), //TODO: N'y a-t-il pas inversion username/groupname ?
-                        'Radusergroup.username' => $this->baseClass->field('groupname')
+                        'Radusergroup.username' => $ClassToAdd->field('username'), 
+                        'Radusergroup.groupname' => $this->baseClass->field('groupname')
                     ), false);
             }
         }
@@ -181,6 +182,7 @@ class ChecksComponent extends Component
 	$success = true;
 	$this->baseClass->id = $id;
 	$Radusergroup = new Radusergroup();
+	
 	if($this->baseClassName == 'Raduser')
 		$ClassToAdd = new Radgroup();
 	else if($this->baseClassName == 'Radgroup')
@@ -194,14 +196,15 @@ class ChecksComponent extends Component
 	return $success;
     }
 
-    public function getUserGroups($id)
+    public function getUserGroups($id, $order = array())
     {
-        $this->baseClass->id = $id;
-        $name = $this->baseClass->field($this->displayName);
-        $Radusergroup = new Radusergroup();
-        $findAllFunc = 'findAllBy' . ucfirst($this->displayName);
-        $usergroups = $Radusergroup->$findAllFunc($name, array(), array('priority' => 'asc'));
-        return $usergroups;
+	$this->baseClass->id = $id;
+	$name = $this->baseClass->field($this->displayName);
+	$Radusergroup = new Radusergroup();
+	$findAllFunc = 'findAllBy' . ucfirst($this->displayName);
+	$usersOrGroups = $Radusergroup->$findAllFunc($name, array(), $order);
+
+	return $usersOrGroups;
     }
 
     public function delete($request, $id)

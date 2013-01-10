@@ -9,6 +9,7 @@ echo $this->Form->input('username');
 echo $this->Form->input('password');
 echo $this->Form->input('confirm_password', array('type' => 'password'));
 echo $this->element('check_common_fields');
-echo $this->Form->input('groups', array('type' => 'select', 'label' => 'Groups', 'multiple' => 'multiple'));
+echo $this->element('doubleListsSelector', array('leftTitle' => 'Groups', 'rightTitle' => 'Selected groups', 'contents' => $groups, 'selectedContents' => array()));
+echo $this->Form->input('groups', array('type' => 'select', 'id' => 'select-right', 'label' => '', 'class' => 'hidden', 'multiple' => 'multiple'));
 echo $this->Form->end('Create');
 ?>

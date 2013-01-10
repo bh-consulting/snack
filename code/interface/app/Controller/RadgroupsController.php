@@ -60,29 +60,29 @@ class RadgroupsController extends AppController
         $this->Checks->restore_common_check_fields($id, $this->request);
     }
 
-    public function delete($id = null){
+    public function delete($id = null)
+    {
+	$success = $this->Checks->delete($this->request, $id);
 
-        $success = $this->Checks->delete($this->request, $id);
-        if($success){
-            $this->Session->setFlash('The user with id:' . $id . ' has been deleted.');
-            $this->redirect(array('action' => 'index'));
-        } else {
-            $this->Session->setFlash('Unable to delete user with id:' . $id . ' has been deleted.', 'flash_error');
-        }
+	if($success){
+		$this->Session->setFlash('The user with id #' . $id . ' has been deleted.');
+		$this->redirect(array('action' => 'index'));
+	} else {
+		$this->Session->setFlash('Unable to delete user with id #' . $id . '.', 'flash_error');
+	}
     }
 
     public function restoreUsers($id)
     {
-        $Raduser = new Raduser();
-        $users = $this->Checks->getUserGroups($id);
-        if(!empty($users)){
-            $usersId = array();
-            foreach ($users as $usergroup) {
-                $u = $Raduser->findByUsername($usergroup['Radusergroup']['username']);
-                $usersId[]= $u['Raduser']['id'];
-            }
-            $this->set('users_selected', $usersId);
-        }
+	$usersRecords = $this->Checks->getUserGroups($id);
+	$users = array();
+
+	if( !empty($usersRecords) ){
+		foreach($usersRecords as $user) {
+			$users[]= $user['Radusergroup']['username'];
+		}
+	}
+	$this->set('selectedUsers', $users);
     }
 
     public function updateUsers($id, $request){
@@ -105,7 +105,7 @@ class RadgroupsController extends AppController
             if(!$found){
                 $usersToDelete[]= $raduser['Raduser']['id'];
             }
-        }
+	}
         $this->Checks->deleteUsersOrGroups($id, $usersToDelete);
 
         // add new users
@@ -124,7 +124,6 @@ class RadgroupsController extends AppController
             }
         }
         $this->Checks->addUsersOrGroups($id, $usersToAdd);
-
     }
 }
 

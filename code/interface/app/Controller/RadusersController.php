@@ -291,72 +291,30 @@ class RadusersController extends AppController
         $success = $this->Checks->delete($this->request, $id);
 
         if($success){
-            $this->Session->setFlash('The user with id:' . $id . ' has been deleted.');
+            $this->Session->setFlash('The user with id #' . $id . ' has been deleted.');
             $this->redirect(array('action' => 'index'));
         } else {
-            $this->Session->setFlash('Unable to delete user with id:' . $id . ' has been deleted.', 'flash_error');
+            $this->Session->setFlash('Unable to delete user with id #' . $id . '.', 'flash_error');
         }
     }
 
     public function restoreGroups($id)
     {
-        $Radgroup = new Radgroup();
-        $groups = $this->Checks->getUserGroups($id);
-        if(!empty($groups)){
-            $groupsId = array();
-            foreach ($groups as $usergroup) {
-                $g = $Radgroup->findByGroupname($usergroup['Radusergroup']['groupname']);
-                $groupsId[]= $g['Radgroup']['id'];
-            }
-            $this->set('groups_selected', $groupsId);
-        } else {
-            $this->set('groups_selected', array());
+	$groupsRecords = $this->Checks->getUserGroups($id, array( 'priority' => 'asc'));
+	$groups = array();
+
+	foreach ($groupsRecords as $group)
+	{
+		$groups[]= $group['Radusergroup']['groupname'];
 	}
+	print_r($groups);
+	$this->set('selectedGroups', $groups);
     }
 
-    public function updateGroups($id, $request){
-	/*
-        $Radgroup = new Radgroup();
-        $groups = $this->Checks->getUserGroups($id);
-        $groupsToAdd = array();
-        $groupsToDelete = array();
-
-        // remove deleted groups
-        foreach($groups as $group){
-            $found = false;
-            $radgroup = $Radgroup->findByGroupname($group['Radusergroup']['groupname']);
-            if(!empty($request->data['Raduser']['groups'])){
-                foreach($request->data['Raduser']['groups'] as $requestGroup){
-                    if($radgroup['Radgroup']['id'] == $requestGroup)
-                        $found = true;
-                }
-            }
-
-            if(!$found){
-                $groupsToDelete[]= $radgroup['Radgroup']['id'];
-            }
-        }
-        $this->Checks->deleteUsersOrGroups($id, $groupsToDelete);
-
-        // add new groups
-        if(!empty($request->data['Raduser']['groups'])){
-            foreach($request->data['Raduser']['groups'] as $requestGroup){
-                $found = false;
-                foreach($groups as $group){
-                    $radgroup = $Radgroup->findByGroupname($group['Radusergroup']['groupname']);
-                    if($radgroup['Radgroup']['id'] == $requestGroup)
-                        $found = true;
-                }
-
-                if(!$found){
-                    $groupsToAdd[]= $requestGroup;
-                }
-            }
-        }
-        $this->Checks->addUsersOrGroups($id, $groupsToAdd);
-        */
-        $this->Checks->deleteAllUsersOrGroups($id);
-        $this->Checks->addUsersOrGroups($id, $request->data['Raduser']['groups']);
+    public function updateGroups($id, $request)
+    {
+	$this->Checks->deleteAllUsersOrGroups($id);
+	$this->Checks->addUsersOrGroups($id, $request->data['Raduser']['groups']);
     }
 }
 
