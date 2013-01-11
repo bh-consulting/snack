@@ -10,6 +10,8 @@ class Raduser extends AppModel
     public $displayField = 'username';
     public $name = 'Raduser';
 
+    public $validationDomain = 'validation';
+    
     public $validate = array(
         'username' => array(
             'isUnique' => array(

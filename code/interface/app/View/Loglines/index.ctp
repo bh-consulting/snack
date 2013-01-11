@@ -10,7 +10,7 @@
 	);
 ?>
 
-<h1>Logs</h1>
+<h1><? echo __('Logs'); ?></h1>
 
 <?php
 	echo '<div id="openpan" onclick="logsToggleSearch()">';
@@ -39,7 +39,7 @@
 	echo $this->Form->input('dateto', array('label' => __('To'), 'class' => 'datetimepicker', 'id' => 'dateto'));
 	echo $this->Form->input('message', array('label' => __('Message contains (accept regex)'), 'id' => 'logmessage'));
 
-	echo $this->Form->end('Search');
+	echo $this->Form->end(__('Search'));
 ?>
 
 <table class="table loglinks">

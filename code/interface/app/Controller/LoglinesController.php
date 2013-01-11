@@ -12,14 +12,14 @@ class LoglinesController extends AppController {
 		$this->request->data['Logline'] = $this->params['url'];
 
 		$severities = array(
-			'debug' => 'Debug',
-			'info' => 'Info',
-			'notice' => 'Notice',
-			'warn' => 'Warning',
-			'err' => 'Error',
-			'crit' => 'Critical',
-			'alert' => 'Alert',
-			'emerg' => 'Emergency'
+			'debug' => __('Debug'),
+			'info' => __('Info'),
+			'notice' => __('Notice'),
+			'warn' => __('Warning'),
+			'err' => __('Error'),
+			'crit' => __('Critical'),
+			'alert' => __('Alert'),
+			'emerg' => __('Emergency')
 		);
 
 		// Search filter Severity

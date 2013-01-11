@@ -8,6 +8,8 @@ class Radgroupcheck extends AppModel
     public $displayField = 'groupname';
     public $name = 'Radgroupcheck';
 
+    public $validationDomain = 'validation';
+
     public $validate = array(
         'groupname' => array(
             'rule' => 'notEmpty',

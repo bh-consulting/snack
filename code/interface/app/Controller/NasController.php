@@ -22,7 +22,7 @@ class NasController extends AppController
     // method to display a warning field to restart the server after Nas changes
     public function alert_restart_server(){
         // TODO: add a link to the restart button in the message
-        $this->Session->setFlash('You HAVE to restart the Radius server to apply NAS changes!', 'flash_error');
+        $this->Session->setFlash(__('You HAVE to restart the Radius server to apply NAS changes!'), 'flash_error');
     }
 
     public function add(){
@@ -37,7 +37,7 @@ class NasController extends AppController
                 $this->alert_restart_server();
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash('Unable to add NAS.', 'flash_error');
+                $this->Session->setFlash(__('Unable to add NAS.'), 'flash_error');
             }
         }
     }
@@ -52,7 +52,7 @@ class NasController extends AppController
                 $this->alert_restart_server();
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash('Unable to update NAS', 'flash_error');
+                $this->Session->setFlash(__('Unable to update NAS'), 'flash_error');
             }
         }
     }
@@ -64,7 +64,7 @@ class NasController extends AppController
         }
 
         if($this->Nas->delete($id)){
-            $this->Session->setFlash('The NAS with id:' . $id . ' has been deleted.');
+            $this->Session->setFlash(__('The NAS with id:') . $id . ' ' . __('has been deleted') . '.');
             $this->redirect(array('action' => 'index'));
         }
     }

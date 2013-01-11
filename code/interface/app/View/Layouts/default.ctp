@@ -16,7 +16,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-$cakeDescription = __d('cake_dev', 'b.h. consulting');
+$cakeDescription = __('SNACK');
 ?>
 <!DOCTYPE html>
 <html>
@@ -68,9 +68,9 @@ $cakeDescription = __d('cake_dev', 'b.h. consulting');
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li class="active"><a href="/interface/radusers/">Radius</a></li>
-                    <li><a href="/interface/config/">Configuration</a></li>
-                    <li><a href="/interface/term/">Terminal</a></li>
+                    <li class="active"><a href="/interface/radusers/"><? echo __('Radius'); ?></a></li>
+                    <li><a href="/interface/config/"><? echo __('Configuration'); ?></a></li>
+                    <li><a href="/interface/term/"><? echo __('Terminal'); ?></a></li>
                 </ul>
             </div>
         </div>

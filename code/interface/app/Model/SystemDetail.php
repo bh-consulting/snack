@@ -29,10 +29,10 @@ class SystemDetail extends AppModel
 		$hours		= floor($time/3600)%24;
 		$days		= floor($time/86400);
 
-		$result =	$days		. (($days > 1) ? " days " : " day ");
-		$result .=	$hours		. (($hours > 1) ? " hours " : " hour ");
-		$result .=	$minutes	. (($minutes > 1) ? " minutes " : " minute ");
-		$result .=	$seconds	. (($seconds > 1) ? " seconds" : " second");
+		$result =	$days		. (($days > 1) ? __(" days ") : __(" day "));
+		$result .=	$hours		. (($hours > 1) ? __(" hours ") : __(" hour "));
+		$result .=	$minutes	. (($minutes > 1) ? __(" minutes ") : __(" minute "));
+		$result .=	$seconds	. (($seconds > 1) ? __(" seconds") : __(" second"));
 
 		return $result;
 	}

@@ -7,6 +7,7 @@ class Radcheck extends AppModel
     public $displayField = 'username';
     public $name = 'Radcheck';
 
+    public $validationDomain = 'validation';
     public $validate = array(
         'username' => array(
             'rule' => 'notEmpty',

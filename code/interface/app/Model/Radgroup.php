@@ -10,6 +10,7 @@ class Radgroup extends AppModel
     public $displayField = 'groupname';
     public $name = 'Radgroup';
 
+    public $validationDomain = 'validation';
     public $validate = array(
         'groupname' => array(
             'isUnique' => array(

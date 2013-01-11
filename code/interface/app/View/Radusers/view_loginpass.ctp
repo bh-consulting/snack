@@ -9,8 +9,8 @@ $this->assign('users_active', 'active');
 
 <? foreach($radchecks as $r){
     if($r['Radcheck']['attribute'] == 'Simultaneous-Use')
-        echo '<p><strong>Simultaneous use: </strong> ' . $r['Radcheck']['value'];
+        echo '<p><strong>' . __('Simultaneous use:') . '</strong> ' . $r['Radcheck']['value'];
     if($r['Radcheck']['attribute'] == 'Expiration')
-        echo '<p><strong>Expiration date: </strong> ' . $r['Radcheck']['value'];
+        echo '<p><strong>' . __('Expiration date:') . '</strong> ' . $r['Radcheck']['value'];
 }
 ?>

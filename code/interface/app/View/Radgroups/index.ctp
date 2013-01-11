@@ -2,17 +2,17 @@
 $this->extend('/Common/radius_sidebar');
 $this->assign('groups_active', 'active');
 ?>
-<h1>Groups</h1>
+<h1><? echo __('Groups'); ?></h1>
 <p>
 <?php
-echo $this->Html->link('Add a group',
+echo $this->Html->link(__('Add a group'),
 array('controller' => 'radgroups', 'action' => 'add'),
 array('class' => 'btn'));
 
 $columns = array(
-    'id' => 'Group ID',
-    'groupname' => 'Groupname',
-    'comment' => 'Comment'
+    'id' => __('ID'),
+    'groupname' => __('Name'),
+    'comment' => __('Comment')
 );
 
 ?>
@@ -30,8 +30,8 @@ $columns = array(
             echo "</th>";
         }
         ?>
-        <th>Edit</th>
-        <th>Delete</th>
+        <th><? echo __('Edit'); ?></th>
+        <th><? echo __('Delete'); ?></th>
     </tr>
     </thead>
 
@@ -52,20 +52,20 @@ $columns = array(
         </td>
         <td>
             <i class="icon-edit"></i>
-            <? echo $this->Html->link('Edit', array('action' => 'edit', $g['Radgroup']['id'])); ?>
+            <? echo $this->Html->link(__('Edit'), array('action' => 'edit', $g['Radgroup']['id'])); ?>
 
         </td>
         <td>
             <i class="icon-remove"></i>
-            <? echo $this->Form->postLink('Delete', array('action' => 'delete', $g['Radgroup']['id']),
-            array('confirm' => 'Are you sure?')); ?>
+            <? echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $g['Radgroup']['id']),
+            array('confirm' => __('Are you sure?'))); ?>
         </td>
     </tr>
         <? endforeach;
     } else {
         ?>
         <tr>
-            <td colspan="5">No groups yet.</td>
+            <td colspan="5"><? echo __('No groups yet'); ?>.</td>
         </tr>
     <?
     }

@@ -5,52 +5,52 @@ $this->assign('dashboard_active', 'active');
 
 <div class="pull-right">
 <?php
-	echo $this->Html->link('<i class="icon-refresh icon-white"></i> Refresh',
+	echo $this->Html->link('<i class="icon-refresh icon-white"></i> ' . __('Refresh'),
 		array('controller' => 'systemDetails', 'action' => 'refresh'),
 		array('class' => 'btn btn-success btn-large', 'escape' => false)
 		);
 ?>
 </div>
-<h1>Dashboard</h1>
+<h1><? echo __('Dashboard'); ?></h1>
 
-<h4>General information:</h4>
+<h4><? echo __('General information:'); ?></h4>
 <p style="padding: 0 0 0 20px;">
-	<strong>Date:</strong> <?php echo $curdate; ?></br>
-	<strong>Hostname:</strong> <?php echo $hostname; ?>
+	<strong><? echo __('Date:'); ?></strong> <?php echo $curdate; ?></br>
+	<strong><? echo __('Hostname:'); ?></strong> <?php echo $hostname; ?>
 </p>
 
-<h4>Services:</h4>
+<h4><? echo __('Services:'); ?></h4>
 <p style="padding: 0 0 0 20px;">
-	<strong>FreeRadius:</strong> <?php echo $radiusstate; ?></br>
-	<strong>MySql:</strong> <?php echo $mysqlstate; ?>
+	<strong><? echo __('FreeRadius:'); ?></strong> <?php echo $radiusstate; ?></br>
+	<strong><? echo __('MySQL:'); ?></strong> <?php echo $mysqlstate; ?>
 </p>
 
-<h4>Statistics:</h4>
+<h4><? echo __('Statistics:'); ?></h4>
 <p style="padding: 0 0 0 20px;">
-	<strong>Up time:</strong> <?php echo $uptime; ?></br>
-	<strong>Idle time:</strong> <?php echo $idletime; ?></br>
-	<strong>Load average:</strong> <?php echo $loadavg; ?></br>
-	<strong>Tasks:</strong> <?php echo $tasks; ?>
+	<strong><? echo __('Uptime:'); ?></strong> <?php echo $uptime; ?></br>
+	<strong><? echo __('Idle time:'); ?></strong> <?php echo $idletime; ?></br>
+	<strong><? echo __('Load average:') ?></strong> <?php echo $loadavg; ?></br>
+	<strong><? echo __('Tasks:'); ?></strong> <?php echo $tasks; ?>
 </p>
 
-<h4>Memory:</h4>
+<h4><? echo __('Memory:'); ?></h4>
 <p style="padding: 0 0 0 20px;">
-	<strong>Used memory:</strong> <?php echo $usedmem; ?></br>
-	<strong>Free memory:</strong> <?php echo $freemem; ?></br>
-	<strong>Total memory:</strong> <?php echo $totalmem; ?></br>
-	<strong>Used disk:</strong> <?php echo $useddisk; ?></br>
-	<strong>Free disk:</strong> <?php echo $freedisk; ?></br>
-	<strong>Total disk:</strong> <?php echo $totaldisk; ?>
+	<strong><? echo __('Used memory:'); ?></strong> <?php echo $usedmem; ?></br>
+	<strong><? echo __('Free memory:'); ?></strong> <?php echo $freemem; ?></br>
+	<strong><? echo __('Total memory:'); ?></strong> <?php echo $totalmem; ?></br>
+	<strong><? echo __('Used disk:'); ?></strong> <?php echo $useddisk; ?></br>
+	<strong><? echo __('Free disk:'); ?></strong> <?php echo $freedisk; ?></br>
+	<strong><? echo __('Total disk:'); ?></strong> <?php echo $totaldisk; ?>
 </p>
 
-<h4>Network:</h4>
+<h4><? echo __('Network:'); ?></h4>
 <table class="table">
     <thead>
     <tr>
-        <th>Interface</th>
-        <th>MAC address</th>
-        <th>IPv4 adresses</th>
-        <th>IPv6 adresses</th>
+        <th><? echo __('Interface'); ?></th>
+        <th><? echo __('MAC address'); ?></th>
+        <th><? echo __('IPv4 adresses'); ?></th>
+        <th><? echo __('IPv6 adresses'); ?></th>
     </tr>
     </thead>
 	<? if(!empty($ints)){ ?>
@@ -65,7 +65,7 @@ $this->assign('dashboard_active', 'active');
 						for($i=0; $i<count($int['ipv4']); ++$i)
 							echo $int['ipv4'][$i] . "</br>";
 					else
-						echo "No IPv4 address.";
+						echo __("No IPv4 address.");
 				?>
 				</td>
 				<td>
@@ -74,7 +74,7 @@ $this->assign('dashboard_active', 'active');
 						for($i=0; $i<count($int['ipv6']); ++$i)
 							echo $int['ipv6'][$i] . "</br>";
 					else
-						echo "No IPv6 address.";
+						echo __("No IPv6 address.");
 				?>
 				</td>
 			</tr>
@@ -86,7 +86,7 @@ $this->assign('dashboard_active', 'active');
 	<? }else{ ?>
 		<tbody>
     	<tr>
-				<td colspan="17">No interface</td>
+				<td colspan="17"><? echo __('No interface'); ?></td>
 			</tr>
 		</tbody>
 	<? } ?>
@@ -95,18 +95,18 @@ $this->assign('dashboard_active', 'active');
 <table class="table">
 	<thead>
 		<tr>
-			<th rowspan="2">Interface</th>
-			<th colspan="8" style="text-align:center;">Receive</th>
+			<th rowspan="2"><? echo __('Interface'); ?></th>
+			<th colspan="8" style="text-align:center;"><? echo __('Receive'); ?></th>
 		</tr>
 		<tr>
-			<th>bytes</th>
-			<th>packets</th>
-			<th>errors</th>
-			<th>drop</th>
-			<th>fifo</th>
-			<th>frame</th>
-			<th>compressed</th>
-			<th>multicast</th>
+			<th><? echo __('bytes'); ?></th>
+			<th><? echo __('packets'); ?></th>
+			<th><? echo __('errors'); ?></th>
+			<th><? echo __('drop'); ?></th>
+			<th><? echo __('fifo'); ?></th>
+			<th><? echo __('frame'); ?></th>
+			<th><? echo __('compressed'); ?></th>
+			<th><? echo __('multicast'); ?></th>
 		</tr>
 	</thead>
 	<? if(!empty($intstats)){ ?>
@@ -127,7 +127,7 @@ $this->assign('dashboard_active', 'active');
 	<? }else{ ?>
 	<tbody>
 		<tr>
-			<td colspan="9">No interface</td>
+			<td colspan="9"><? echo __('No interface'); ?></td>
 		</tr>
 	</tbody>
 	<? } ?>
@@ -135,18 +135,18 @@ $this->assign('dashboard_active', 'active');
 <table class="table">
 	<thead>
 		<tr>
-			<th rowspan="2">Interface</th>
-			<th colspan="8" style="text-align:center;">Transmit</th>
+			<th rowspan="2"><? echo __('Interface'); ?></th>
+			<th colspan="8" style="text-align:center;"><? echo __('Transmit'); ?></th>
 		</tr>
 		<tr>
-			<th>bytes</th>
-			<th>packets</th>
-			<th>errors</th>
-			<th>drop</th>
-			<th>fifo</th>
-			<th>collisions</th>
-			<th>carrier</th>
-			<th>compressed</th>
+			<th><? echo __('bytes'); ?></th>
+			<th><? echo __('packets'); ?></th>
+			<th><? echo __('errors'); ?></th>
+			<th><? echo __('drop'); ?></th>
+			<th><? echo __('fifo'); ?></th>
+			<th><? echo __('collisions'); ?></th>
+			<th><? echo __('carrier'); ?></th>
+			<th><? echo __('compressed'); ?></th>
 		</tr>
 	</thead>
 	<? if(!empty($intstats)){ ?>
@@ -167,7 +167,7 @@ $this->assign('dashboard_active', 'active');
 	<? }else{ ?>
 	<tbody>
 		<tr>
-			<td colspan="9">No interface</td>
+			<td colspan="9"><? echo __('No interface'); ?></td>
 		</tr>
 	</tbody>
 	<? } ?>

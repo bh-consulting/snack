@@ -33,10 +33,10 @@ class SystemDetailsController extends AppController
 		$this->set('ints', $this->SystemDetail->getInterfaces());
 
 		$radiusUptime = $this->SystemDetail->checkService("freeradius");
-		$this->set('radiusstate', ( $radiusUptime == -1) ? "Disabled" : "Enabled for " . $radiusUptime );
+		$this->set('radiusstate', ( $radiusUptime == -1) ? __("Disabled") : __("Enabled for ") . $radiusUptime );
 		
 		$mysqlUptime = $this->SystemDetail->checkService("mysqld");
-		$this->set('mysqlstate', ( $mysqlUptime == -1) ? "Disabled" : "Enabled for " . $mysqlUptime );
+		$this->set('mysqlstate', ( $mysqlUptime == -1) ? __("Disabled") : __("Enabled for ") . $mysqlUptime );
 	}
 
 	public function refresh()

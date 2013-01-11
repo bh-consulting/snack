@@ -53,13 +53,13 @@ class RadusersController extends AppController
         if($this->request->is('post')){
             if($success){
                 if(array_key_exists('cert_path', $this->request->data['Raduser']))
-                    $this->Session->setFlash('New user added. Certificate in ' . $this->request->data['Raduser']['cert_path']);
+                    $this->Session->setFlash(__('New user added. Certificate in ') . $this->request->data['Raduser']['cert_path']);
                 else
-                    $this->Session->setFlash('New user added.');
+                    $this->Session->setFlash(__('New user added.'));
 
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash('Unable to add user.', 'flash_error');
+                $this->Session->setFlash(__('Unable to add user.'), 'flash_error');
             }
         }
         $groups = new Radgroup();
@@ -273,10 +273,10 @@ class RadusersController extends AppController
     public function edit($result){
         if($this->request->is('post')){
             if($result){
-                $this->Session->setFlash('User has been updated.');
+                $this->Session->setFlash(__('User has been updated.'));
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash('Unable to update user.', 'flash_error');
+                $this->Session->setFlash(__('Unable to update user.'), 'flash_error');
             }
         } else{
             $this->request = $result;
@@ -292,10 +292,10 @@ class RadusersController extends AppController
         $success = $this->Checks->delete($this->request, $id);
 
         if($success){
-            $this->Session->setFlash('The user with id #' . $id . ' has been deleted.');
+            $this->Session->setFlash(__('The user with id #') . $id . __(' has been deleted.'));
             $this->redirect(array('action' => 'index'));
         } else {
-            $this->Session->setFlash('Unable to delete user with id #' . $id . '.', 'flash_error');
+            $this->Session->setFlash(__('Unable to delete user with id #') . $id . '.', 'flash_error');
         }
     }
 

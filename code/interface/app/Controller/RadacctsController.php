@@ -24,7 +24,7 @@ class RadacctsController extends AppController
 		}
 
 		if($this->Radacct->delete($id)){
-			$this->Radacct->setFlash('The Session with id:' . $id . ' has been deleted.');
+			$this->Radacct->setFlash(__('The Session with id:') . $id . __(' has been deleted.'));
 			$this->redirect(array('action' => 'index'));
 		}
 	}

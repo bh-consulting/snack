@@ -9,6 +9,8 @@ class Nas extends AppModel
 	public $displayField = 'nasname';
 	public $name = 'Nas';
 
+    public $validationDomain = 'validation';
+
 	public $validate = array(
 		'nasname' => array(
 			'notEmpty' => array(

@@ -31,10 +31,10 @@ class RadgroupsController extends AppController
             $success = $this->Checks->add($this->request, array());
 
             if($success){
-                $this->Session->setFlash('New group added.');
+                $this->Session->setFlash(__('New group added.'));
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash('Unable to add group.', 'flash_error');
+                $this->Session->setFlash(__('Unable to add group.'), 'flash_error');
             }
         }
         $Raduser = new Raduser();
@@ -50,10 +50,10 @@ class RadgroupsController extends AppController
             if ($this->Radgroup->save($this->request->data)) {
                 $this->Checks->update_radcheck_fields($id, $this->request);
                 $this->updateUsers($id, $this->request);
-                $this->Session->setFlash('Group has been updated.');
+                $this->Session->setFlash(__('Group has been updated.'));
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash('Unable to update group.', 'flash_error');
+                $this->Session->setFlash(__('Unable to update group.'), 'flash_error');
             }
         }
 
@@ -68,10 +68,10 @@ class RadgroupsController extends AppController
 	$success = $this->Checks->delete($this->request, $id);
 
 	if($success){
-		$this->Session->setFlash('The user with id #' . $id . ' has been deleted.');
+		$this->Session->setFlash(__('The user with id #') . $id . __(' has been deleted.'));
 		$this->redirect(array('action' => 'index'));
 	} else {
-		$this->Session->setFlash('Unable to delete user with id #' . $id . '.', 'flash_error');
+		$this->Session->setFlash(__('Unable to delete user with id #') . $id . '.', 'flash_error');
 	}
     }
 

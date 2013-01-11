@@ -21,10 +21,10 @@ $this->assign('users_active', 'active');
 
 <? 
 $columns = array(
-    'id' => 'ID',
-    'username' => 'Username',
-    'comment' => 'Comment',
-    'ntype' => 'Type'
+    'id' => __('ID'),
+    'username' => __('Username'),
+    'comment' => __('Comment'),
+    'ntype' => __('Type')
 );
 ?>
 
@@ -40,8 +40,8 @@ $columns = array(
             echo "</th>";
         }
         ?>
-        <th>Edit</th>
-        <th>Delete</th>
+        <th><? echo __('Edit'); ?></th>
+        <th><? echo __('Delete'); ?></th>
     </tr>
     </thead>
 
@@ -65,20 +65,20 @@ $columns = array(
             </td>
             <td>
                 <i class="icon-edit"></i>
-                <? echo $this->Html->link('Edit', array('action' => 'edit_' . $rad['Raduser']['type'], $rad['Raduser']['id'])); ?>
+                <? echo $this->Html->link(__('Edit'), array('action' => 'edit_' . $rad['Raduser']['type'], $rad['Raduser']['id'])); ?>
 
             </td>
             <td>
                 <i class="icon-remove"></i>
-                <? echo $this->Form->postLink('Delete', array('action' => 'delete', $rad['Raduser']['id']),
-                array('confirm' => 'Are you sure?')); ?>
+                <? echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $rad['Raduser']['id']),
+                array('confirm' => __('Are you sure?'))); ?>
             </td>
         </tr>
         <? endforeach;
     } else {
         ?>
         <tr>
-            <td colspan="5">No users yet.</td>
+            <td colspan="6"><? echo __('No users yet'); ?>.</td>
         </tr>
     <?
     }
