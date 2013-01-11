@@ -31,6 +31,7 @@ $cakeDescription = __('SNACK');
     echo $this->Html->meta('icon');
 
     echo $this->Html->css('bootstrap.min');
+    echo $this->Html->css('mybootstrap');
     echo $this->Html->css('bootstrap-responsive.min');
     echo $this->Html->css('bootstrap-datetimepicker.min');
     echo $this->Html->css('doubleListsSelector');
