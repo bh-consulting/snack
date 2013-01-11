@@ -33,6 +33,10 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller
 {
+    public function beforeFilter(){
+        Configure::write('Config.language', 'fre');
+    }
+    
     /*
     public $components = array(
         'Session',
