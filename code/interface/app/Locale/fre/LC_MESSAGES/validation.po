@@ -1,0 +1,76 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: SNACK\n"
+"POT-Creation-Date: 2013-01-11 16:11+0000\n"
+"PO-Revision-Date: 2013-01-11 17:37+0100\n"
+"Last-Translator: Julien Guépin <julien@guepin.fr>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Model/Nas.php:validation
+#: for field nasname
+msgid "You have to type the NAS IP"
+msgstr "Vous devez entrer l'IP du NAS"
+
+#: Model/Nas.php:validation
+#: for field nasname
+msgid "IP already in the database"
+msgstr "L'IP est déjà dans la base de données"
+
+#: Model/Nas.php:validation
+#: for field nasname
+msgid "This is not an IP address format."
+msgstr "Ceci n'est pas un format d'adresse IP valide."
+
+#: Model/Nas.php:validation
+#: for field secret
+msgid "You have to type the NAS secret"
+msgstr "Vous devez taper le NAS secret"
+
+#: Model/Radcheck.php:validation
+#: for field username
+#: Model/Raduser.php:validation
+msgid "Username cannot be empty"
+msgstr "Le nom d'utilisateur ne peut pas être vide"
+
+#: Model/Radgroup.php:validation
+#: for field groupname
+msgid "Groupname already used"
+msgstr "Nom de groupe déjà utilisé"
+
+#: Model/Radgroup.php:validation
+#: for field groupname
+msgid "Groupname cannot be empty"
+msgstr "Le nom de groupe ne peut pas être vide"
+
+#: Model/Radgroupcheck.php:validation
+#: for field groupname
+msgid "Group name cannot be empty"
+msgstr "Le nom de groupe ne peut pas être vide"
+
+#: Model/Raduser.php:validation
+#: for field username
+msgid "Username already used"
+msgstr "Nom d'utilisateur déjà utilisé"
+
+#: Model/Raduser.php:validation
+#: for field password
+msgid "You have to type a password"
+msgstr "Vous devez taper un mot de passe"
+
+#: Model/Raduser.php:validation
+#: for field password
+msgid "Please re-enter your password twice so that the values match"
+msgstr "Merci d'entrer votre mot de passe deux fois"
+
+#: Model/Raduser.php:validation
+#: for field mac
+msgid "This is not a MAC address format."
+msgstr "Ceci n'est pas un format d'adresse MAC valide."
+

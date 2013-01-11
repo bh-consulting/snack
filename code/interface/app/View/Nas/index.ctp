@@ -69,7 +69,7 @@ if(!empty($nas)){
     } else {
         ?>
         <tr>
-            <td colspan="8"><? echo __('No NAS yet'); ?>.</td>
+            <td colspan="10"><? echo __('No NAS yet'); ?>.</td>
         </tr>
     <?
     }

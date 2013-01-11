@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-01-11 01:59+0000\n"
+"POT-Creation-Date: 2013-01-11 16:11+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -169,10 +169,11 @@ msgstr ""
 #: View/Common/radius_sidebar.ctp:5
 #: View/Radgroups/add.ctp:10
 #: View/Radgroups/edit.ctp:9
+#: View/Radusers/index.ctp:5
 msgid "Users"
 msgstr ""
 
-#: View/Common/radius_sidebar.ctp:8
+#: View/Common/radius_sidebar.ctp:11
 #: View/Radgroups/index.ctp:5
 #: View/Radusers/add_cert.ctp:11
 #: View/Radusers/add_cisco.ctp:13
@@ -184,26 +185,26 @@ msgstr ""
 msgid "Groups"
 msgstr ""
 
-#: View/Common/radius_sidebar.ctp:11
+#: View/Common/radius_sidebar.ctp:17
 #: View/Nas/index.ctp:6
 #: View/Nas/view.ctp:5
 msgid "NAS"
 msgstr ""
 
-#: View/Common/radius_sidebar.ctp:14
+#: View/Common/radius_sidebar.ctp:23
 msgid "Monitoring"
 msgstr ""
 
-#: View/Common/radius_sidebar.ctp:17
+#: View/Common/radius_sidebar.ctp:29
 #: View/Loglines/index.ctp:13
 msgid "Logs"
 msgstr ""
 
-#: View/Common/radius_sidebar.ctp:20
+#: View/Common/radius_sidebar.ctp:35
 msgid "Server dashboard"
 msgstr ""
 
-#: View/Common/radius_sidebar.ctp:23
+#: View/Common/radius_sidebar.ctp:41
 msgid "Server parameters"
 msgstr ""
 
@@ -227,15 +228,15 @@ msgstr ""
 msgid "SNACK"
 msgstr ""
 
-#: View/Layouts/default.ctp:71
+#: View/Layouts/default.ctp:72
 msgid "Radius"
 msgstr ""
 
-#: View/Layouts/default.ctp:72
+#: View/Layouts/default.ctp:73
 msgid "Configuration"
 msgstr ""
 
-#: View/Layouts/default.ctp:73
+#: View/Layouts/default.ctp:74
 msgid "Terminal"
 msgstr ""
 
@@ -603,6 +604,7 @@ msgid "Add a user with MAC address"
 msgstr ""
 
 #: View/Radusers/add_mac.ctp:8
+#: View/Radusers/index.ctp:16
 #: View/SystemDetails/index.ctp:51
 msgid "MAC address"
 msgstr ""
@@ -629,6 +631,26 @@ msgstr ""
 
 #: View/Radusers/edit_mac.ctp:5
 msgid "(MAC user)"
+msgstr ""
+
+#: View/Radusers/index.ctp:9
+msgid "Add user"
+msgstr ""
+
+#: View/Radusers/index.ctp:13
+msgid "Cisco"
+msgstr ""
+
+#: View/Radusers/index.ctp:14
+msgid "Login / Password"
+msgstr ""
+
+#: View/Radusers/index.ctp:15
+msgid "Certificate"
+msgstr ""
+
+#: View/Radusers/index.ctp:17
+msgid "Upload CSV"
 msgstr ""
 
 #: View/Radusers/index.ctp:81

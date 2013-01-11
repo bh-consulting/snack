@@ -2,21 +2,21 @@
 $this->extend('/Common/radius_sidebar');
 $this->assign('users_active', 'active');
 ?>
-<h1>Users</h1>
+<h1><? echo __('Users'); ?></h1>
 <p>
     <div class="btn-group">
         <button class="btn dropdown-toggle" data-toggle="dropdown">
-        Add user
+        <? echo __('Add user'); ?>
         <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li><a href="/interface/radusers/add_cisco">Cisco</a></li>
-            <li><a href="/interface/radusers/add_loginpass">Login / Password</a></li>
-            <li><a href="/interface/radusers/add_cert">Certificate</a></li>
-            <li><a href="/interface/radusers/add_mac">MAC address</a></li>
-            <li><a href="/interface/radusers/add_csv">Upload CSV</a></li>
+            <li><a href="/interface/radusers/add_cisco"><? echo __('Cisco'); ?></a></li>
+            <li><a href="/interface/radusers/add_loginpass"><? echo __('Login / Password'); ?></a></li>
+            <li><a href="/interface/radusers/add_cert"><? echo __('Certificate'); ?></a></li>
+            <li><a href="/interface/radusers/add_mac"><? echo __('MAC address'); ?></a></li>
+            <li><a href="/interface/radusers/add_csv"><? echo __('Upload CSV'); ?></a></li>
         </ul>
-    </div>
+    </divvn 
 </p>
 
 <? 
