@@ -16,7 +16,7 @@ $this->assign('users_active', 'active');
             <li><a href="/interface/radusers/add_mac"><? echo __('MAC address'); ?></a></li>
             <li><a href="/interface/radusers/add_csv"><? echo __('Upload CSV'); ?></a></li>
         </ul>
-    </divvn 
+    </div>
 </p>
 
 <? 
