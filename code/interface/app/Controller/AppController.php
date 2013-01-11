@@ -34,7 +34,14 @@ App::uses('Controller', 'Controller');
 class AppController extends Controller
 {
     public function beforeFilter(){
-        Configure::write('Config.language', 'fre');
+        Configure::write('Config.language', $this->Session->read('Config.language'));
+    }
+
+    public function changeLang($lang){
+        $this->autoRender = false;
+        $this->Session->write('Config.language', $lang);
+        Configure::write('Config.language', $lang);
+        $this->redirect($this->referer());
     }
     
     /*

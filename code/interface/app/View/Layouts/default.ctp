@@ -88,6 +88,8 @@ $cakeDescription = __('SNACK');
     <hr/>
     <footer>
         <p><a href="http://bh-consulting.net">b.h. consulting 2013</a></p>
+        <? echo $this->Html->link(__('French'), array('controller' => 'app', 'action' => 'changeLang', 'fre')); ?>
+        <? echo $this->Html->link(__('English'), array('controller' => 'app', 'action' => 'changeLang', 'eng')); ?>
     </footer>
 </div>
 <?php

@@ -1,5 +1,5 @@
 <div class="span3">
-        <ul class="nav nav-list bs-sidenav affix">
+        <ul class="nav nav-list bs-sidenav">
             <li class="<? echo $this->fetch('users_active'); ?>">
                 <a href="/interface/radusers/">
                     <i class="icon-user"></i> <? echo __('Users'); ?>
