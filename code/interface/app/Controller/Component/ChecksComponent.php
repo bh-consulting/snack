@@ -67,7 +67,8 @@ class ChecksComponent extends Component
         $this->baseClass->id = $id;
         return array(
         	'base' => $this->baseClass->read(), 
-        	'checks' => $this->getChecks($id));
+		'checks' => $this->getChecks($id),
+		'groups' => $this->getUserGroups($id));
     }
 
     public function create_check($displayName, $attribute, $op, $value){

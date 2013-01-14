@@ -16,7 +16,23 @@ class NasController extends AppController
     public function view($id = null)
     {
         $this->Nas->id = $id;
-        $this->set('nas', $this->Nas->read());
+        $nas = $this->Nas->read();
+
+        $this->set('nas', $nas);
+
+	$attributes = array();
+
+	// Nas
+	$attributes['IP address'] = $nas['Nas']['nasname'];
+	$attributes['Short name'] = $nas['Nas']['shortname'];
+	$attributes['Description'] = $nas['Nas']['description'];
+	$attributes['Type'] = $nas['Nas']['type'];
+	$attributes['Ports'] = $nas['Nas']['ports'];
+	$attributes['Virtual server'] = $nas['Nas']['server'];
+	$attributes['Community'] = $nas['Nas']['community'];
+
+	$this->set('attributes', $attributes);
+        $this->set('showedAttr', array( 'IP address', 'Short name', 'Description', 'Type', 'Ports', 'Virtual server', 'Community' ));
     }
 
     // method to display a warning field to restart the server after Nas changes
@@ -68,8 +84,6 @@ class NasController extends AppController
             $this->redirect(array('action' => 'index'));
         }
     }
-
-
 }
 
 ?>

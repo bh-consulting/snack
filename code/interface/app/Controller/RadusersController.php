@@ -29,23 +29,58 @@ class RadusersController extends AppController
 
     public function view($id = null){
         $views = $this->Checks->view($id);
+        
+        $views['base']['Raduser']['ntype'] = $this->Checks->getType($views['base']['Raduser'], true);
+        $views['base']['Raduser']['type'] = $this->Checks->getType($views['base']['Raduser'], false);
+
         $this->set('raduser', $views['base']);
         $this->set('radchecks', $views['checks']);
+        $this->set('radgroups', $views['groups']);
+	
+	$attributes = array();
+
+	// Raduser
+	if( $views['base']['Raduser']['type'] == "mac" && strlen( $views['base']['Raduser']['username'] ) == 12 ) {
+		$attributes['MAC address'] = substr($views['base']['Raduser']['username'], 0, 2) . ':' . substr($views['base']['Raduser']['username'], 2, 2) . ':' . substr($views['base']['Raduser']['username'], 4, 2) . ':' . substr($views['base']['Raduser']['username'], 6, 2) . ':' . substr($views['base']['Raduser']['username'], 8, 2) . ':' . substr($views['base']['Raduser']['username'], 10, 2);
+	} else {
+		$attributes['Username'] = $views['base']['Raduser']['username'];
+	}
+	$attributes['Comment'] = $views['base']['Raduser']['comment'];
+	$attributes['Certificate path'] = $views['base']['Raduser']['cert_path'];
+
+	// Radchecks
+	foreach($views['checks'] as $check){
+		$attributes[ $check['Radcheck']['attribute'] ] = $check['Radcheck']['value'];
+	}
+
+	// Radgroups
+	$groups = array();
+	foreach($views['groups'] as $group){
+		$groups[] = $group['Radusergroup']['groupname'];
+	}
+
+	$attributes['Groups'] = $groups;
+
+	$this->set('attributes', $attributes);
     }
 
     public function view_cisco($id = null) {
+        $this->set('showedAttr', array( 'Username', 'Comment', 'NAS-Port-Type', 'Expiration', 'Simultaneous-Use', 'Groups' ));
         $this->view($id);
     }
 
     public function view_cert($id = null) {
+        $this->set('showedAttr', array( 'Username', 'Comment', 'Certificate path', 'EAP-Type', 'Expiration', 'Simultaneous-Use', 'Groups' ));
         $this->view($id);
     }
 
     public function view_loginpass($id = null) {
+        $this->set('showedAttr', array( 'Username', 'Comment', 'Expiration', 'Simultaneous-Use', 'Groups' ));
         $this->view($id);
     }
 
     public function view_mac($id = null) {
+        $this->set('showedAttr', array( 'MAC address', 'Comment', 'Expiration', 'Simultaneous-Use', 'Groups' ));
         $this->view($id);
     }
 
@@ -308,7 +343,7 @@ class RadusersController extends AppController
 	{
 		$groups[]= $group['Radusergroup']['groupname'];
 	}
-	print_r($groups);
+
 	$this->set('selectedGroups', $groups);
     }
 

@@ -24,6 +24,29 @@ class RadgroupsController extends AppController
         $views = $this->Checks->view($id);
         $this->set('radgroup', $views['base']);
         $this->set('radgroupchecks', $views['checks']);
+	
+	$attributes = array();
+
+	// Radgroup
+	$attributes['Groupname'] = $views['base']['Radgroup']['groupname'];
+	$attributes['Comment'] = $views['base']['Radgroup']['comment'];
+	$attributes['Certificate path'] = $views['base']['Radgroup']['cert_path'];
+
+	// Radchecks
+	foreach($views['checks'] as $check){
+		$attributes[ $check['Radgroupcheck']['attribute'] ] = $check['Radgroupcheck']['value'];
+	}
+
+	// Radusergroup
+	$users = array();
+	foreach($views['groups'] as $user){
+		$users[] = $user['Radusergroup']['username'];
+	}
+
+	$attributes['Users'] = $users;
+
+	$this->set('attributes', $attributes);
+        $this->set('showedAttr', array( 'Groupname', 'Comment', 'NAS-Port-Type', 'Expiration', 'Simultaneous-Use', 'Users' ));
     }
 
     public function add(){

@@ -20,6 +20,8 @@ $columns = array(
     'community' => __('Community'),
     'description' => __('Description')
 );
+
+echo $this->Form->create('Nas', array('action' => 'multi'));
 ?>
 
 <table class="table">
@@ -44,10 +46,7 @@ $columns = array(
 if(!empty($nas)){
     foreach ($nas as $n): ?>
     <tr>
-        <td>
-            <?php echo $this->Html->link($n['Nas']['id'],
-            array('controller' => 'nas', 'action' => 'view', $n['Nas']['id'])); ?>
-        </td>
+        <td><?php echo $this->Html->link($n['Nas']['id'], array('controller' => 'nas', 'action' => 'view', $n['Nas']['id'])); ?></td>
         <td><?php echo $n['Nas']['nasname']; ?></td>
         <td><?php echo $n['Nas']['shortname']; ?></td>
         <td><?php echo $n['Nas']['type']; ?></td>
@@ -77,4 +76,7 @@ if(!empty($nas)){
     ?>
     </tbody>
 </table>
-<? echo $this->element('paginator_footer');
+<?php
+echo $this->Form->end(__('Multi'));
+echo $this->element('paginator_footer');
+?>
