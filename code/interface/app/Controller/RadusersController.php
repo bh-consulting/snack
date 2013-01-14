@@ -31,7 +31,7 @@ class RadusersController extends AppController
         $this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
     }
 
-    public function view($id = null){
+    public function view($id = null, $type = array()){
         $views = $this->Checks->view($id);
         
         $views['base']['Raduser']['ntype'] = $this->Checks->getType($views['base']['Raduser'], true);
@@ -41,7 +41,7 @@ class RadusersController extends AppController
         $this->set('radchecks', $views['checks']);
         $this->set('radgroups', $views['groups']);
 	
-	$attributes = array();
+	$attributes = $type;
 
 	// Raduser
 	if( $views['base']['Raduser']['type'] == "mac" && strlen( $views['base']['Raduser']['username'] ) == 12 ) {
@@ -69,23 +69,23 @@ class RadusersController extends AppController
     }
 
     public function view_cisco($id = null) {
-        $this->set('showedAttr', array( 'Username', 'Comment', 'NAS-Port-Type', 'Expiration', 'Simultaneous-Use', 'Groups' ));
-        $this->view($id);
+        $this->set('showedAttr', array( 'Authentication type', 'Username', 'Comment', 'NAS-Port-Type', 'Expiration', 'Simultaneous-Use', 'Groups' ));
+        $this->view($id, array( 'Authentication type' => 'Cisco' ));
     }
 
     public function view_cert($id = null) {
-        $this->set('showedAttr', array( 'Username', 'Comment', 'Certificate path', 'EAP-Type', 'Expiration', 'Simultaneous-Use', 'Groups' ));
-        $this->view($id);
+        $this->set('showedAttr', array( 'Authentication type', 'Username', 'Comment', 'Certificate path', 'EAP-Type', 'Expiration', 'Simultaneous-Use', 'Groups' ));
+        $this->view($id, array( 'Authentication type' => 'Certificate' ));
     }
 
     public function view_loginpass($id = null) {
-        $this->set('showedAttr', array( 'Username', 'Comment', 'Expiration', 'Simultaneous-Use', 'Groups' ));
-        $this->view($id);
+        $this->set('showedAttr', array( 'Authentication type', 'Username', 'Comment', 'Expiration', 'Simultaneous-Use', 'Groups' ));
+        $this->view($id, array( 'Authentication type' => 'Login / Password' ));
     }
 
     public function view_mac($id = null) {
-        $this->set('showedAttr', array( 'MAC address', 'Comment', 'Expiration', 'Simultaneous-Use', 'Groups' ));
-        $this->view($id);
+        $this->set('showedAttr', array( 'Authentication type', 'MAC address', 'Comment', 'Expiration', 'Simultaneous-Use', 'Groups' ));
+        $this->view($id, array( 'Authentication type' => 'MAC address' ));
     }
 
     public function add($success){
