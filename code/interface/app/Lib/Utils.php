@@ -4,6 +4,7 @@
 */
 class Utils
 {
+
 	public static function isMAC($string)
 	{
 		return preg_match('/^(?:[[:xdigit:]]{2}([-:]?))(?:[[:xdigit:]]{2}\1){4}[[:xdigit:]]{2}$/', $string);
@@ -22,9 +23,6 @@ class Utils
 
 	//TODO
 	public function delete_certificate($username){}
-
-	//TODO
-	public function add_cisco_user($login, $password){}
 
     public function getType($id, $nice = false) {
         $types = array(
@@ -107,6 +105,19 @@ class Utils
 
     public function isMACAddress($string) {
         return preg_match('/^(?:[[:xdigit:]]{2}([-:]?))(?:?[[:xdigit:]]{2}\1){4}[[:xdigit:]]{2}$/', $string);
+    }
+
+    public static function getISOCode($httpAcceptLanguage){
+        $langs = array(
+            'fr-FR' => 'fre',
+            'en-US' => 'eng'
+        );
+
+        foreach ($langs as $key => $value) {
+            if(explode(',', $httpAcceptLanguage)[0] == $key)
+                return $value;
+        }
+        return 'eng';
     }
 
 }
