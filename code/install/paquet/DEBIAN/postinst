@@ -1,8 +1,13 @@
-{PAQUETNAME=snack
-
-
-
 #!/bin/bash
+PAQUETNAME=snack
+
+#Cleaning the stdin buffer
+read -t 1 -n 10000 discard
+
+{
+
+
+
 if [ 'root' != $USER ]
     then
     echo "This install script must be launched with sudo right";
