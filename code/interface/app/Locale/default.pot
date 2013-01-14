@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-01-14 13:30+0000\n"
+"POT-Creation-Date: 2013-01-14 15:54+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -72,7 +72,7 @@ msgstr ""
 
 #: Controller/RadacctsController.php:27
 #: Controller/RadgroupsController.php:94
-#: Controller/RadusersController.php:330
+#: Controller/RadusersController.php:336
 msgid " has been deleted."
 msgstr ""
 
@@ -93,32 +93,32 @@ msgid "Unable to update group."
 msgstr ""
 
 #: Controller/RadgroupsController.php:94
-#: Controller/RadusersController.php:330
+#: Controller/RadusersController.php:336
 msgid "The user with id #"
 msgstr ""
 
 #: Controller/RadgroupsController.php:97
-#: Controller/RadusersController.php:333
+#: Controller/RadusersController.php:339
 msgid "Unable to delete user with id #"
 msgstr ""
 
-#: Controller/RadusersController.php:91
+#: Controller/RadusersController.php:95
 msgid "New user added. Certificate in "
 msgstr ""
 
-#: Controller/RadusersController.php:93
+#: Controller/RadusersController.php:97
 msgid "New user added."
 msgstr ""
 
-#: Controller/RadusersController.php:97
+#: Controller/RadusersController.php:101
 msgid "Unable to add user."
 msgstr ""
 
-#: Controller/RadusersController.php:311
+#: Controller/RadusersController.php:317
 msgid "User has been updated."
 msgstr ""
 
-#: Controller/RadusersController.php:314
+#: Controller/RadusersController.php:320
 msgid "Unable to update user."
 msgstr ""
 
@@ -130,7 +130,7 @@ msgstr ""
 msgid "Enabled for "
 msgstr ""
 
-#: Controller/Component/ChecksComponent.php:295
+#: Controller/Component/ChecksComponent.php:301
 msgid "Invalid username or password, try again."
 msgstr ""
 
@@ -220,7 +220,7 @@ msgid "of"
 msgstr ""
 
 #: View/Elements/viewInfo.ctp:6
-#: View/Nas/index.ctp:39;59
+#: View/Nas/index.ctp:38;58
 #: View/Radgroups/edit.ctp:5
 #: View/Radgroups/index.ctp:33;55
 #: View/Radusers/edit_cert.ctp:5
@@ -232,7 +232,7 @@ msgid "Edit"
 msgstr ""
 
 #: View/Elements/viewInfo.ctp:7
-#: View/Nas/index.ctp:40;63
+#: View/Nas/index.ctp:39;62
 #: View/Radaccts/index.ctp:24
 #: View/Radgroups/index.ctp:34;60
 #: View/Radusers/index.ctp:44;73
@@ -240,7 +240,7 @@ msgid "Delete"
 msgstr ""
 
 #: View/Elements/viewInfo.ctp:7
-#: View/Nas/index.ctp:64
+#: View/Nas/index.ctp:63
 #: View/Radaccts/index.ctp:58
 #: View/Radgroups/index.ctp:61
 #: View/Radusers/index.ctp:74
@@ -414,12 +414,8 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: View/Nas/index.ctp:71
+#: View/Nas/index.ctp:70
 msgid "No NAS yet"
-msgstr ""
-
-#: View/Nas/index.ctp:80
-msgid "Multi"
 msgstr ""
 
 #: View/Radaccts/index.ctp:6
@@ -471,48 +467,48 @@ msgstr ""
 msgid "Session:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:7
+#: View/Radaccts/view.ctp:8
 msgid "User:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:9
+#: View/Radaccts/view.ctp:10
 msgid "Username:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:10
+#: View/Radaccts/view.ctp:11
 msgid "Groupname:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:11;23
+#: View/Radaccts/view.ctp:12;24
 msgid "IP:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:14
+#: View/Radaccts/view.ctp:15
 #: View/SystemDetails/index.ctp:28
 msgid "Statistics:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:16
+#: View/Radaccts/view.ctp:17
 msgid "Start:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:17
+#: View/Radaccts/view.ctp:18
 msgid "Stop:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:18
+#: View/Radaccts/view.ctp:19
 msgid "Period:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:21
+#: View/Radaccts/view.ctp:22
 msgid "Network Access Server:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:24
+#: View/Radaccts/view.ctp:25
 msgid "Port:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:25
+#: View/Radaccts/view.ctp:26
 msgid "Connection type:"
 msgstr ""
 
@@ -558,10 +554,12 @@ msgid "Add a Cisco user"
 msgstr ""
 
 #: View/Radusers/add_cisco.ctp:11
+#: View/Radusers/edit_cisco.ctp:11
 msgid "Console"
 msgstr ""
 
 #: View/Radusers/add_cisco.ctp:11
+#: View/Radusers/edit_cisco.ctp:11
 msgid "VTY"
 msgstr ""
 

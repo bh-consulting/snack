@@ -4,9 +4,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SNACK\n"
-"POT-Creation-Date: 2013-01-14 13:30+0000\n"
-"PO-Revision-Date: 2013-01-14 14:32+0100\n"
-"Last-Translator: Julien Guépin <julien@guepin.fr>\n"
+"POT-Creation-Date: 2013-01-14 15:54+0000\n"
+"PO-Revision-Date: 2013-01-14 17:03+0100\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -72,7 +72,7 @@ msgstr "La session d'id :"
 
 #: Controller/RadacctsController.php:27
 #: Controller/RadgroupsController.php:94
-#: Controller/RadusersController.php:330
+#: Controller/RadusersController.php:336
 msgid " has been deleted."
 msgstr "a été supprimé."
 
@@ -93,32 +93,32 @@ msgid "Unable to update group."
 msgstr "Impossible de mettre à jour le gorupe."
 
 #: Controller/RadgroupsController.php:94
-#: Controller/RadusersController.php:330
+#: Controller/RadusersController.php:336
 msgid "The user with id #"
 msgstr "L'utilisateur d'id #"
 
 #: Controller/RadgroupsController.php:97
-#: Controller/RadusersController.php:333
+#: Controller/RadusersController.php:339
 msgid "Unable to delete user with id #"
 msgstr "Impossible de supprimer l'utilisateur d'id #"
 
-#: Controller/RadusersController.php:91
+#: Controller/RadusersController.php:95
 msgid "New user added. Certificate in "
 msgstr "Nouvel utilisateur ajouté. Le certificat se trouve dans"
 
-#: Controller/RadusersController.php:93
+#: Controller/RadusersController.php:97
 msgid "New user added."
 msgstr "Nouvel utilisateur ajouté."
 
-#: Controller/RadusersController.php:97
+#: Controller/RadusersController.php:101
 msgid "Unable to add user."
 msgstr "Impossible d'ajouter l'utilisateur."
 
-#: Controller/RadusersController.php:311
+#: Controller/RadusersController.php:317
 msgid "User has been updated."
 msgstr "L'utilisateur a été mis à jour."
 
-#: Controller/RadusersController.php:314
+#: Controller/RadusersController.php:320
 msgid "Unable to update user."
 msgstr "Impossible de mettre à jour l'utilisateur."
 
@@ -128,9 +128,9 @@ msgstr "Désactivé"
 
 #: Controller/SystemDetailsController.php:36;39
 msgid "Enabled for "
-msgstr "Actif depuis"
+msgstr "Actif depuis "
 
-#: Controller/Component/ChecksComponent.php:295
+#: Controller/Component/ChecksComponent.php:301
 msgid "Invalid username or password, try again."
 msgstr "Nom d'utilisateur ou mot de passe invalide, veuillez réessayer."
 
@@ -220,7 +220,7 @@ msgid "of"
 msgstr "sur"
 
 #: View/Elements/viewInfo.ctp:6
-#: View/Nas/index.ctp:39;59
+#: View/Nas/index.ctp:38;58
 #: View/Radgroups/edit.ctp:5
 #: View/Radgroups/index.ctp:33;55
 #: View/Radusers/edit_cert.ctp:5
@@ -232,7 +232,7 @@ msgid "Edit"
 msgstr "Éditer"
 
 #: View/Elements/viewInfo.ctp:7
-#: View/Nas/index.ctp:40;63
+#: View/Nas/index.ctp:39;62
 #: View/Radaccts/index.ctp:24
 #: View/Radgroups/index.ctp:34;60
 #: View/Radusers/index.ctp:44;73
@@ -240,7 +240,7 @@ msgid "Delete"
 msgstr "Supprimer"
 
 #: View/Elements/viewInfo.ctp:7
-#: View/Nas/index.ctp:64
+#: View/Nas/index.ctp:63
 #: View/Radaccts/index.ctp:58
 #: View/Radgroups/index.ctp:61
 #: View/Radusers/index.ctp:74
@@ -414,13 +414,9 @@ msgstr "Communauté"
 msgid "Description"
 msgstr "Description"
 
-#: View/Nas/index.ctp:71
+#: View/Nas/index.ctp:70
 msgid "No NAS yet"
 msgstr "Pas encore de NAS"
-
-#: View/Nas/index.ctp:80
-msgid "Multi"
-msgstr ""
 
 #: View/Radaccts/index.ctp:6
 msgid "Session ID"
@@ -471,48 +467,48 @@ msgstr "Pas de session trouvée"
 msgid "Session:"
 msgstr "Session :"
 
-#: View/Radaccts/view.ctp:7
+#: View/Radaccts/view.ctp:8
 msgid "User:"
 msgstr "Utilisateur :"
 
-#: View/Radaccts/view.ctp:9
+#: View/Radaccts/view.ctp:10
 msgid "Username:"
 msgstr "Nom d'utilisateur :"
 
-#: View/Radaccts/view.ctp:10
+#: View/Radaccts/view.ctp:11
 msgid "Groupname:"
 msgstr "Nom du groupe :"
 
-#: View/Radaccts/view.ctp:11;23
+#: View/Radaccts/view.ctp:12;24
 msgid "IP:"
 msgstr "IP :"
 
-#: View/Radaccts/view.ctp:14
+#: View/Radaccts/view.ctp:15
 #: View/SystemDetails/index.ctp:28
 msgid "Statistics:"
 msgstr "Statistiques :"
 
-#: View/Radaccts/view.ctp:16
+#: View/Radaccts/view.ctp:17
 msgid "Start:"
 msgstr "Début :"
 
-#: View/Radaccts/view.ctp:17
+#: View/Radaccts/view.ctp:18
 msgid "Stop:"
 msgstr "Fin :"
 
-#: View/Radaccts/view.ctp:18
+#: View/Radaccts/view.ctp:19
 msgid "Period:"
 msgstr "Période :"
 
-#: View/Radaccts/view.ctp:21
+#: View/Radaccts/view.ctp:22
 msgid "Network Access Server:"
-msgstr ""
+msgstr "Network Access Server :"
 
-#: View/Radaccts/view.ctp:24
+#: View/Radaccts/view.ctp:25
 msgid "Port:"
 msgstr "Port :"
 
-#: View/Radaccts/view.ctp:25
+#: View/Radaccts/view.ctp:26
 msgid "Connection type:"
 msgstr "Type de connexion :"
 
@@ -558,16 +554,18 @@ msgid "Add a Cisco user"
 msgstr "Ajouter un utilisateur Cisco"
 
 #: View/Radusers/add_cisco.ctp:11
+#: View/Radusers/edit_cisco.ctp:11
 msgid "Console"
 msgstr "Console"
 
 #: View/Radusers/add_cisco.ctp:11
+#: View/Radusers/edit_cisco.ctp:11
 msgid "VTY"
 msgstr ""
 
 #: View/Radusers/add_cisco.ctp:11
 msgid "NAS Port Type"
-msgstr ""
+msgstr "Type de port (NAS)"
 
 #: View/Radusers/add_loginpass.ctp:5
 msgid "Add a user with login / password"
@@ -673,7 +671,7 @@ msgstr "MySQL :"
 
 #: View/SystemDetails/index.ctp:30
 msgid "Uptime:"
-msgstr ""
+msgstr "Temps de fonctionnement :"
 
 #: View/SystemDetails/index.ctp:31
 msgid "Idle time:"
@@ -761,7 +759,7 @@ msgstr "erreurs"
 
 #: View/SystemDetails/index.ctp:105;145
 msgid "drop"
-msgstr ""
+msgstr "supprimé"
 
 #: View/SystemDetails/index.ctp:106;146
 msgid "fifo"
