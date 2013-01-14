@@ -4,7 +4,7 @@ PAQUETNAME=snack
 #Cleaning the stdin buffer
 read -t 1 -n 10000 discard
 
-{
+
 
 
 
@@ -17,7 +17,8 @@ fi
 # Création de la base de donnée + création d'un utilisateur admin
 
 #echo -n "Mot de passe root MySQL : "
-stty -echo } <&-
+stty -echo 
+read -t 1 -n 10000 discard
 read -p "Enter MySQL root password : " mdp_root
 stty echo
 echo ""
@@ -39,28 +40,29 @@ do
     stty echo
     echo ""
 done
-{
+
 echo "	create database radius;\
 	grant all on radius.* to radius@localhost identified by '$mdp_radius';\
 	flush privileges;\
 " | mysql -uroot -p$mdp_root
-} <&-
+
 until [ $? -eq 0 ]
 do
 	#echo -n "Mot de passe root MySQL : "
 	stty -echo
+	read -t 1 -n 10000 discard
 	read -p "Mot de passe root MySQL : " mdp_root
 	stty echo
-	{
+	
 
 	echo "	create database radius;\
 		grant all on radius.* to radius@localhost identified by '$mdp_radius';\
 		flush privileges;\
 	" | mysql -uroot -p$mdp_root
-	} <&-
+	
 done
 
-{
+
 mysql -uroot -p$mdp_root radius < /etc/freeradius/sql/mysql/schema.sql
 mysql -uroot -p$mdp_root radius < /etc/freeradius/sql/mysql/nas.sql
 
@@ -126,7 +128,8 @@ EAPCONF=/etc/freeradius/eap.conf
 
 ############################################
 #Get the name of the client firm
-} <&-
+
+read -t 1 -n 10000 discard
 read -p "Enter the name of the client (CA common name): " CLIENTNAME
 
 
