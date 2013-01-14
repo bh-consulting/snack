@@ -111,6 +111,7 @@ CACERTVALIDITY=3650 #ten years
 PATHDIRMODE=0070
 ONLYRADIUSACCES=0700
 INTERFACEACCES=0770 #data-www must be able to read certificate and to generate them.
+INTERFACETHROUGH=0710
 
 INTERFACEUSER=www-data
 ONLYINTERFACEACCESS=0700
@@ -165,7 +166,7 @@ then
 	mkdir -p $DESTROOTPATH -m $PATHDIRMODE
 fi
 
-mkdir $DESTPATH -m $DIRMODE;
+mkdir $DESTPATH -m $INTERFACETHROUGH;
 #chown freerad $DESTPATH
 mkdir "${DESTPATH}/certs" -m $ONLYRADIUSACCES;
 #chown freerad $DESTPATH/certs
