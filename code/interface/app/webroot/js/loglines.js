@@ -1,9 +1,3 @@
-function logsToggleSearch() {
-	$('#logsSearchForm').slideToggle();
-	$('#openpan').find('i').toggleClass('icon-chevron-up');
-	$('#openpan').find('i').toggleClass('icon-chevron-down');
-}
-
 function logsSearchFromSeverity(link) {
 	var severity = link.text();
 

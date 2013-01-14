@@ -1,10 +1,4 @@
-#logsSearchForm { display: none }
 #logmessage { margin-top: 12px }
-
-#nofilters {
-	font-weight: bold;
-	color: #680e0e;
-}
 
 .loglinks td {
 	text-align: center;
@@ -59,38 +53,4 @@ tr.loglevelwarn {
 
 tr.loglevelwarn a {
 	color: #fff;
-}
-
-#openpan {
-	background-color: rgb(245, 245, 245);
-	padding: 5px 10px;
-	margin-bottom: 10px;
-}
-
-#openpan:hover {
-	background-color: rgb(238, 238, 238);
-}
-
-#openpan i {
-	display: block;
-	float: right;
-}
-
-.slider {
-	padding-top: 9px;
-}
-
-.slider div {
-	width: 200px;
-	float: left;
-}
-
-.slider span {
-	display: block;
-	font-weight: bold;
-	margin: -4px 0 0 213px;
-}
-
-a.ui-slider-handle {
-	outline: none;
 }

@@ -119,6 +119,5 @@ class Utils
         }
         return 'eng';
     }
-
 }
 ?>

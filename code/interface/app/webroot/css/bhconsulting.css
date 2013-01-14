@@ -1,0 +1,40 @@
+#filtersForm { display: none }
+
+#nofilters {
+	font-weight: bold;
+	color: #680e0e;
+}
+
+#filtersPan {
+	background-color: rgb(245, 245, 245);
+	padding: 5px 10px;
+	margin-bottom: 10px;
+}
+
+#filtersPan:hover {
+	background-color: rgb(238, 238, 238);
+}
+
+#filtersPan i {
+	display: block;
+	float: right;
+}
+
+.slider {
+	padding-top: 9px;
+}
+
+.slider div {
+	width: 200px;
+	float: left;
+}
+
+.slider span {
+	display: block;
+	font-weight: bold;
+	margin: -4px 0 0 213px;
+}
+
+a.ui-slider-handle {
+	outline: none;
+}

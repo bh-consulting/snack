@@ -36,6 +36,7 @@ $cakeDescription = __('SNACK');
     echo $this->Html->css('bootstrap-datetimepicker.min');
     echo $this->Html->css('doubleListsSelector');
     echo $this->Html->css('loglines');
+    echo $this->Html->css('bhconsulting');
     echo $this->Html->css('jquery-ui-bootstrap/jquery-ui-1.9.2.custom');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
     echo $this->Html->css('flags.css');
@@ -107,6 +108,7 @@ echo $this->Html->script('bootstrapify');
 echo $this->Html->script('bootstrap-datetimepicker.min');
 echo $this->Html->script('doubleListsSelector');
 echo $this->Html->script('loglines');
+echo $this->Html->script('bhconsulting');
 ?>
 </script>
 </body>

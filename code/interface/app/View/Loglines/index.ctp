@@ -13,33 +13,34 @@
 <h1><? echo __('Logs'); ?></h1>
 
 <?php
-	echo '<div id="openpan" onclick="logsToggleSearch()">';
-	echo $this->Html->link(__('Filters'), '#');
-
-	if(count($this->params['url']) > 0) {
-		echo ' - ';
-		echo $this->Html->link(__('No filters'), '.', array('id' => 'nofilters'));
-	}
-
-	echo '<i class="icon-chevron-down"></i>';
-	echo '</div>';
-
-	echo $this->Form->create(null, array(
-		'url' => array(
-			'controller' => 'loglines',
-			'action' => 'index'
-		),
-		'type' => 'get',
-		'id' => 'logsSearchForm',
-		'class' => 'well'
+	echo $this->element('filters_panel', array(
+		'controller' => 'loglines/index',
+		'method' => 'get',
+		'inputs' => array(
+			array(
+				'name' => 'severity',
+				'label' => __('Severity from'),
+				'type' => 'slidermax',
+				'options' => array('id' => 'severity')
+			),
+			array(
+				'name' => 'datefrom',
+				'label' => __('From'),
+				'type' => 'datetimepicker',
+				'options' => array('id' => 'datefrom')
+			),
+			array(
+				'name' => 'dateto',
+				'label' => __('To'),
+				'type' => 'datetimepicker',
+				'options' => array('id' => 'dateto')
+			),
+			array(
+				'name' => 'message',
+				'label' => __('Message contains (accept regex)'),
+				'options' => array('id' => 'logmessage')
+			))
 	));
-
-	echo $this->Form->input('severity', array('label' => __('Severity from'), 'id' => 'severity', 'class' => 'slidermax'));
-	echo $this->Form->input('datefrom', array('label' => __('From'), 'class' => 'datetimepicker', 'id' => 'datefrom'));
-	echo $this->Form->input('dateto', array('label' => __('To'), 'class' => 'datetimepicker', 'id' => 'dateto'));
-	echo $this->Form->input('message', array('label' => __('Message contains (accept regex)'), 'id' => 'logmessage'));
-
-	echo $this->Form->end(__('Search'));
 ?>
 
 <table class="table loglinks">
