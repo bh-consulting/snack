@@ -181,7 +181,7 @@ mkdir "${DESTPATH}/users" -m $INTERFACEACCESS;
 touch $DESTPATH/index.txt
 echo "01" > $DESTPATH/crlnumber
 chown freerad $DESTPATH/index.txt
-chmod $ONLYRADIUSACCESS
+chmod $ONLYRADIUSACCESS $DESTPATH/index.txt
 
 ############################################
 #Creation of the Authority Certificate (CA)
@@ -294,8 +294,8 @@ chown -R $INTERFACEUSER $USER_HOME/$PAQUETNAME/scripts
 chmod -R $ONLYINTERFACEACCESS $USER_HOME/$PAQUETNAME/scripts
 
 groupadd snack
-useradd -G snack freeradius
-useradd -G snack www-data
+usermod -a -G snack freerad
+usermod -a -G snack www-data
 chown -R :snack $USER_HOME/$PAQUETNAME
 
 exit 0
