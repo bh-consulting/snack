@@ -2,7 +2,7 @@
 $this->extend('/Common/radius_sidebar');
 $this->assign('users_active', 'active');
 
-echo '<h1>' . __('Edit') . ' ' . $this->data['Raduser']['username'] . ' ' . __('(MAC user)') . '</h1>';
+echo '<h2>' . __('Edit') . ' ' . $this->data['Raduser']['username'] . ' ' . __('(MAC user)') . '</h2>';
 
 echo $this->Form->create('Raduser', array('action' => 'edit_mac'));
 echo $this->element('check_common_fields');

@@ -21,7 +21,6 @@ $columns = array(
     'description' => __('Description')
 );
 
-echo $this->Form->create('Nas', array('action' => 'multi'));
 ?>
 
 <table class="table">
@@ -77,6 +76,5 @@ if(!empty($nas)){
     </tbody>
 </table>
 <?php
-echo $this->Form->end(__('Multi'));
 echo $this->element('paginator_footer');
 ?>

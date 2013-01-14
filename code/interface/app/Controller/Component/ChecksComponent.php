@@ -51,6 +51,12 @@ class ChecksComponent extends Component
         return "";
     }
 
+    public function formatMAC( $mac, $delimiter = ':' )
+    {
+	    return ( strlen( $mac ) == 12 ) ? substr($mac, 0, 2) . $delimiter . substr($mac, 2, 2) . $delimiter . substr($mac, 4, 2) . $delimiter . substr($mac, 6, 2) . $delimiter . substr($mac, 8, 2) . $delimiter . substr($mac, 10, 2) : $mac;
+    }
+
+
     public function index()
     {
         $rads = $this->baseClass->find('all');

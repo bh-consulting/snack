@@ -2,7 +2,7 @@
 $this->extend('/Common/radius_sidebar');
 $this->assign('users_active', 'active');
 
-echo '<h1>' . __('Edit') . ' ' . $this->data['Raduser']['username'] . ' ' . __('(login / password user)') . '</h1>';
+echo '<h2>' . __('Edit') . ' ' . $this->data['Raduser']['username'] . ' ' . __('(login / password user)') . '</h2>';
 
 echo $this->Form->create('Raduser', array('action' => 'edit_loginpass'));
 echo $this->Form->input('password');

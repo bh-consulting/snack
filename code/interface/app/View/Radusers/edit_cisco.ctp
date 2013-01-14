@@ -2,13 +2,13 @@
 $this->extend('/Common/radius_sidebar');
 $this->assign('users_active', 'active');
 
-echo '<h1>' . __('Edit') . ' ' . $this->data['Raduser']['username'] . ' ' . __('(Cisco user)') . '</h1>';
+echo '<h2>' . __('Edit') . ' ' . $this->data['Raduser']['username'] . ' ' . __('(Cisco user)') . '</h2>';
 
 echo $this->Form->create('Raduser', array('action' => 'edit_cisco'));
 echo $this->Form->input('password');
 echo $this->Form->input('confirm_password', array('type' => 'password', 'label' => __('Confirm password')));
 echo $this->Form->input('nas-port-type', array(
-    'options' => array(0 => 0, 5 => 5),
+    'options' => array(0 => __('Console'), 5 => __('VTY')),
     'empty' => false,
     'label' => 'NAS Port Type',
     'selected' => isset($this->data['Raduser']['nas-port-type']) ? $this->data['Raduser']['nas-port-type'] : '0'

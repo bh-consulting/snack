@@ -21,6 +21,10 @@ class RadusersController extends AppController
         foreach ($radusers as &$r) {
             $r['Raduser']['ntype'] = $this->Checks->getType($r['Raduser'], true);
             $r['Raduser']['type'] = $this->Checks->getType($r['Raduser'], false);
+
+	    if( $r['Raduser']['type'] == "mac" ) {
+		$r['Raduser']['username'] = $this->Checks->formatMAC( $r['Raduser']['username'] );
+	    }
         }
         $this->set('radusers', $radusers);
         // FIXME: should not be here, DRY
@@ -41,7 +45,7 @@ class RadusersController extends AppController
 
 	// Raduser
 	if( $views['base']['Raduser']['type'] == "mac" && strlen( $views['base']['Raduser']['username'] ) == 12 ) {
-		$attributes['MAC address'] = substr($views['base']['Raduser']['username'], 0, 2) . ':' . substr($views['base']['Raduser']['username'], 2, 2) . ':' . substr($views['base']['Raduser']['username'], 4, 2) . ':' . substr($views['base']['Raduser']['username'], 6, 2) . ':' . substr($views['base']['Raduser']['username'], 8, 2) . ':' . substr($views['base']['Raduser']['username'], 10, 2);
+		$attributes['MAC address'] = $this->Checks->formatMAC( $views['base']['Raduser']['username'] );
 	} else {
 		$attributes['Username'] = $views['base']['Raduser']['username'];
 	}
@@ -267,6 +271,8 @@ class RadusersController extends AppController
         $this->Raduser->id = $id;
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
+	    $this->request->data['Raduser']['username'] = $this->Checks->formatMAC( $this->request->data['Raduser']['username'] );
+
             $result = $this->request;
         } else {
 
