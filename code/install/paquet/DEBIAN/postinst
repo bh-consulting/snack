@@ -109,8 +109,8 @@ SSLCNF=/etc/ssl/openssl.cnf
 RADCERTVALIDITY=3650 #ten years
 CACERTVALIDITY=3650 #ten years
 PATHDIRMODE=0070
-ONLYRADIUSACCES=0700
-INTERFACEACCES=0770 #data-www must be able to read certificate and to generate them.
+ONLYRADIUSACCESS=0700
+INTERFACEACCESS=0770 #data-www must be able to read certificate and to generate them.
 INTERFACETHROUGH=0710
 
 INTERFACEUSER=www-data
@@ -168,7 +168,7 @@ fi
 
 mkdir $DESTPATH -m $INTERFACETHROUGH;
 #chown freerad $DESTPATH
-mkdir "${DESTPATH}/certs" -m $ONLYRADIUSACCES;
+mkdir "${DESTPATH}/certs" -m $ONLYRADIUSACCESS;
 #chown freerad $DESTPATH/certs
 mkdir "${DESTPATH}/crl" -m $INTERFACEACCESS ;
 #chown freerad $DESTPATH/crl
