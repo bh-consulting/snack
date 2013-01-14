@@ -100,4 +100,3 @@
 <?php
 echo $this->element('paginator_footer');
 ?>
-</div>

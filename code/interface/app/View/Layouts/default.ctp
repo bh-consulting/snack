@@ -38,6 +38,7 @@ $cakeDescription = __('SNACK');
     echo $this->Html->css('loglines');
     echo $this->Html->css('jquery-ui-bootstrap/jquery-ui-1.9.2.custom');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
+    echo $this->Html->css('flags.css');
 
     echo $this->fetch('meta');
     echo $this->fetch('css');
@@ -87,9 +88,14 @@ $cakeDescription = __('SNACK');
     </div>
     <hr/>
     <footer>
-        <p><a href="http://bh-consulting.net">b.h. consulting 2013</a></p>
-        <? echo $this->Html->link(__('French'), array('controller' => 'app', 'action' => 'changeLang', 'fre')); ?>
-        <? echo $this->Html->link(__('English'), array('controller' => 'app', 'action' => 'changeLang', 'eng')); ?>
+        <p>
+            <a href="http://bh-consulting.net">b.h. consulting 2013</a>
+            <!-- Flag sprites downloaded from http://flag-sprites.com/ (CC by-sa) -->
+            <span class="flags">
+                <? echo $this->Html->link('<img src="" class="flag flag-fr" alt="' . __('French') . '" />', array('controller' => 'app', 'action' => 'changeLang', 'fre'), array('escape' => false)); ?>
+                <? echo $this->Html->link('<img src="" class="flag flag-us" alt="' . __('English') . '" />', array('controller' => 'app', 'action' => 'changeLang', 'eng'), array('escape' => false)); ?>
+            </span>
+        </p>
     </footer>
 </div>
 <?php

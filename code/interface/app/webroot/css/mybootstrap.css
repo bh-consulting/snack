@@ -67,3 +67,8 @@
   top: auto;
   bottom: 270px;
 }
+
+.flags {
+  float: right;
+}
+

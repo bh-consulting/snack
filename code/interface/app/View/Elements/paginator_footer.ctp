@@ -14,6 +14,7 @@
 <br />
 <div style="float:right;">
 <?php
-    echo $this->Paginator->counter(array('format' => 'range'));
+    echo $this->Paginator->counter(array('format' => 'range', 'separator' => ' ' . __('of') . ' '));
     $this->Paginator->options(array('url' => $this->Paginator->params['pass']));
 ?>
+</div>

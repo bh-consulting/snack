@@ -75,5 +75,4 @@ $columns = array(
 </table>
 
 <? echo $this->element('paginator_footer'); ?>
-</div>
 

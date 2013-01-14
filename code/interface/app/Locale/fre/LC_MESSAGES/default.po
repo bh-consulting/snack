@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SNACK\n"
-"POT-Creation-Date: 2013-01-11 16:11+0000\n"
-"PO-Revision-Date: 2013-01-11 17:12+0100\n"
+"POT-Creation-Date: 2013-01-14 13:30+0000\n"
+"PO-Revision-Date: 2013-01-14 14:32+0100\n"
 "Last-Translator: Julien Guépin <julien@guepin.fr>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -46,23 +46,23 @@ msgstr ""
 msgid "Emergency"
 msgstr ""
 
-#: Controller/NasController.php:25
+#: Controller/NasController.php:41
 msgid "You HAVE to restart the Radius server to apply NAS changes!"
 msgstr "Vous DEVEZ redémarrer le serveur Radius pour appliquer les modifications du NAS !"
 
-#: Controller/NasController.php:40
+#: Controller/NasController.php:56
 msgid "Unable to add NAS."
 msgstr "Impossible d'ajouter le NAS."
 
-#: Controller/NasController.php:55
+#: Controller/NasController.php:71
 msgid "Unable to update NAS"
 msgstr "Impossible de mettre à jour le NAS."
 
-#: Controller/NasController.php:67
+#: Controller/NasController.php:83
 msgid "The NAS with id:"
 msgstr "Le NAS d'id :"
 
-#: Controller/NasController.php:67
+#: Controller/NasController.php:83
 msgid "has been deleted"
 msgstr "a été supprimé"
 
@@ -71,54 +71,54 @@ msgid "The Session with id:"
 msgstr "La session d'id :"
 
 #: Controller/RadacctsController.php:27
-#: Controller/RadgroupsController.php:71
-#: Controller/RadusersController.php:295
+#: Controller/RadgroupsController.php:94
+#: Controller/RadusersController.php:330
 msgid " has been deleted."
 msgstr "a été supprimé."
 
-#: Controller/RadgroupsController.php:34
+#: Controller/RadgroupsController.php:57
 msgid "New group added."
 msgstr "Nouveau groupe ajouté."
 
-#: Controller/RadgroupsController.php:37
+#: Controller/RadgroupsController.php:60
 msgid "Unable to add group."
 msgstr "Impossible d'ajouter le groupe."
 
-#: Controller/RadgroupsController.php:53
+#: Controller/RadgroupsController.php:76
 msgid "Group has been updated."
 msgstr "Le groupe a été mis à jour."
 
-#: Controller/RadgroupsController.php:56
+#: Controller/RadgroupsController.php:79
 msgid "Unable to update group."
 msgstr "Impossible de mettre à jour le gorupe."
 
-#: Controller/RadgroupsController.php:71
-#: Controller/RadusersController.php:295
+#: Controller/RadgroupsController.php:94
+#: Controller/RadusersController.php:330
 msgid "The user with id #"
 msgstr "L'utilisateur d'id #"
 
-#: Controller/RadgroupsController.php:74
-#: Controller/RadusersController.php:298
+#: Controller/RadgroupsController.php:97
+#: Controller/RadusersController.php:333
 msgid "Unable to delete user with id #"
 msgstr "Impossible de supprimer l'utilisateur d'id #"
 
-#: Controller/RadusersController.php:56
+#: Controller/RadusersController.php:91
 msgid "New user added. Certificate in "
 msgstr "Nouvel utilisateur ajouté. Le certificat se trouve dans"
 
-#: Controller/RadusersController.php:58
+#: Controller/RadusersController.php:93
 msgid "New user added."
 msgstr "Nouvel utilisateur ajouté."
 
-#: Controller/RadusersController.php:62
+#: Controller/RadusersController.php:97
 msgid "Unable to add user."
 msgstr "Impossible d'ajouter l'utilisateur."
 
-#: Controller/RadusersController.php:276
+#: Controller/RadusersController.php:311
 msgid "User has been updated."
 msgstr "L'utilisateur a été mis à jour."
 
-#: Controller/RadusersController.php:279
+#: Controller/RadusersController.php:314
 msgid "Unable to update user."
 msgstr "Impossible de mettre à jour l'utilisateur."
 
@@ -130,41 +130,41 @@ msgstr "Désactivé"
 msgid "Enabled for "
 msgstr "Actif depuis"
 
-#: Controller/Component/ChecksComponent.php:294
+#: Controller/Component/ChecksComponent.php:295
 msgid "Invalid username or password, try again."
 msgstr "Nom d'utilisateur ou mot de passe invalide, veuillez réessayer."
 
 #: Model/SystemDetail.php:32
 msgid " days "
-msgstr "jours"
+msgstr " jours "
 
 #: Model/SystemDetail.php:32
 msgid " day "
-msgstr "jour"
+msgstr " jour "
 
 #: Model/SystemDetail.php:33
 msgid " hours "
-msgstr "heures"
+msgstr " heures "
 
 #: Model/SystemDetail.php:33
 msgid " hour "
-msgstr "heure"
+msgstr " heure "
 
 #: Model/SystemDetail.php:34
 msgid " minutes "
-msgstr "minutes"
+msgstr " minutes "
 
 #: Model/SystemDetail.php:34
 msgid " minute "
-msgstr "minute"
+msgstr " minute "
 
 #: Model/SystemDetail.php:35
 msgid " seconds"
-msgstr "secondes"
+msgstr " secondes "
 
 #: Model/SystemDetail.php:35
 msgid " second"
-msgstr "seconde"
+msgstr " seconde "
 
 #: View/Common/radius_sidebar.ctp:5
 #: View/Radgroups/add.ctp:10
@@ -187,7 +187,6 @@ msgstr "Groupes"
 
 #: View/Common/radius_sidebar.ctp:17
 #: View/Nas/index.ctp:6
-#: View/Nas/view.ctp:5
 msgid "NAS"
 msgstr "NAS"
 
@@ -216,29 +215,65 @@ msgstr "Date d'expiration"
 msgid "Simultaneous Use"
 msgstr "Utilisations simultanées"
 
-#: View/Elements/paginator_footer.ctp:2
-msgid "Previous"
-msgstr "Précédent"
+#: View/Elements/paginator_footer.ctp:17
+msgid "of"
+msgstr "sur"
 
-#: View/Elements/paginator_footer.ctp:10
-msgid "Next"
-msgstr "Suivant"
+#: View/Elements/viewInfo.ctp:6
+#: View/Nas/index.ctp:39;59
+#: View/Radgroups/edit.ctp:5
+#: View/Radgroups/index.ctp:33;55
+#: View/Radusers/edit_cert.ctp:5
+#: View/Radusers/edit_cisco.ctp:5
+#: View/Radusers/edit_loginpass.ctp:5
+#: View/Radusers/edit_mac.ctp:5
+#: View/Radusers/index.ctp:43;68
+msgid "Edit"
+msgstr "Éditer"
+
+#: View/Elements/viewInfo.ctp:7
+#: View/Nas/index.ctp:40;63
+#: View/Radaccts/index.ctp:24
+#: View/Radgroups/index.ctp:34;60
+#: View/Radusers/index.ctp:44;73
+msgid "Delete"
+msgstr "Supprimer"
+
+#: View/Elements/viewInfo.ctp:7
+#: View/Nas/index.ctp:64
+#: View/Radaccts/index.ctp:58
+#: View/Radgroups/index.ctp:61
+#: View/Radusers/index.ctp:74
+msgid "Are you sure?"
+msgstr "Êtes-vous sûr ?"
+
+#: View/Elements/viewInfo.ctp:18;26
+msgid "Not defined"
+msgstr "Indéfini"
 
 #: View/Layouts/default.ctp:19
 msgid "SNACK"
 msgstr "SNACK"
 
-#: View/Layouts/default.ctp:72
+#: View/Layouts/default.ctp:73
 msgid "Radius"
 msgstr "Radius"
 
-#: View/Layouts/default.ctp:73
+#: View/Layouts/default.ctp:74
 msgid "Configuration"
 msgstr "Configuration"
 
-#: View/Layouts/default.ctp:74
+#: View/Layouts/default.ctp:75
 msgid "Terminal"
 msgstr "Terminal"
+
+#: View/Layouts/default.ctp:95
+msgid "French"
+msgstr "Français"
+
+#: View/Layouts/default.ctp:96
+msgid "English"
+msgstr "Anglais"
 
 #: View/Loglines/index.ctp:6
 msgid "Line"
@@ -379,58 +414,13 @@ msgstr "Communauté"
 msgid "Description"
 msgstr "Description"
 
-#: View/Nas/index.ctp:37;60
-#: View/Radgroups/edit.ctp:5
-#: View/Radgroups/index.ctp:33;55
-#: View/Radusers/edit_cert.ctp:5
-#: View/Radusers/edit_cisco.ctp:5
-#: View/Radusers/edit_loginpass.ctp:5
-#: View/Radusers/edit_mac.ctp:5
-#: View/Radusers/index.ctp:43;68
-msgid "Edit"
-msgstr "Éditer"
-
-#: View/Nas/index.ctp:38;64
-#: View/Radaccts/index.ctp:24
-#: View/Radgroups/index.ctp:34;60
-#: View/Radusers/index.ctp:44;73
-msgid "Delete"
-msgstr "Supprimer"
-
-#: View/Nas/index.ctp:65
-#: View/Radaccts/index.ctp:58
-#: View/Radgroups/index.ctp:61
-#: View/Radusers/index.ctp:74
-msgid "Are you sure?"
-msgstr "Êtes-vous sûr ?"
-
-#: View/Nas/index.ctp:72
+#: View/Nas/index.ctp:71
 msgid "No NAS yet"
 msgstr "Pas encore de NAS"
 
-#: View/Nas/view.ctp:8
-msgid "Short name:"
-msgstr "Alias:"
-
-#: View/Nas/view.ctp:12
-msgid "Type:"
-msgstr "Type :"
-
-#: View/Nas/view.ctp:16
-msgid "Ports:"
-msgstr "Ports :"
-
-#: View/Nas/view.ctp:20
-msgid "Server:"
-msgstr "Serveur :"
-
-#: View/Nas/view.ctp:24
-msgid "Community:"
-msgstr "Communauté :"
-
-#: View/Nas/view.ctp:28
-msgid "Description:"
-msgstr "Description :"
+#: View/Nas/index.ctp:80
+msgid "Multi"
+msgstr ""
 
 #: View/Radaccts/index.ctp:6
 msgid "Session ID"
@@ -549,30 +539,6 @@ msgstr "Commentaire"
 msgid "No groups yet"
 msgstr "Pas encore de groupe"
 
-#: View/Radgroups/view.ctp:7
-msgid "Comment:"
-msgstr "Commentaire :"
-
-#: View/Radgroups/view.ctp:12
-#: View/Radusers/view_cert.ctp:14
-msgid "EAP Type:"
-msgstr "Type EAP :"
-
-#: View/Radgroups/view.ctp:14
-#: View/Radusers/view_cert.ctp:16
-#: View/Radusers/view_cisco.ctp:14
-#: View/Radusers/view_loginpass.ctp:12
-#: View/Radusers/view_mac.ctp:12
-msgid "Simultaneous use:"
-msgstr "Utilisations simultanées :"
-
-#: View/Radgroups/view.ctp:16
-#: View/Radusers/view_cert.ctp:18
-#: View/Radusers/view_cisco.ctp:16
-#: View/Radusers/view_loginpass.ctp:14
-msgid "Expiration date:"
-msgstr "Date d'expiration"
-
 #: View/Radusers/add_cert.ctp:6
 msgid "Add a user with a certificate"
 msgstr "Ajouter un utilisateur avec un certificat"
@@ -590,6 +556,14 @@ msgstr "Groupes sélectionnés"
 #: View/Radusers/add_cisco.ctp:5
 msgid "Add a Cisco user"
 msgstr "Ajouter un utilisateur Cisco"
+
+#: View/Radusers/add_cisco.ctp:11
+msgid "Console"
+msgstr "Console"
+
+#: View/Radusers/add_cisco.ctp:11
+msgid "VTY"
+msgstr ""
 
 #: View/Radusers/add_cisco.ctp:11
 msgid "NAS Port Type"
@@ -664,10 +638,6 @@ msgstr "Merci d'entrer votre nom d'utilisateur et votre mot de passe"
 #: View/Radusers/login.ctp:14
 msgid "Login"
 msgstr "Identifiant"
-
-#: View/Radusers/view_mac.ctp:14
-msgid "Expiration date: "
-msgstr "Date d'expiration :"
 
 #: View/SystemDetails/index.ctp:8
 msgid "Refresh"
@@ -821,3 +791,41 @@ msgstr ""
 msgid "carrier"
 msgstr ""
 
+#~ msgid "Previous"
+#~ msgstr "Précédent"
+
+#~ msgid "Next"
+#~ msgstr "Suivant"
+
+#~ msgid "Short name:"
+#~ msgstr "Alias:"
+
+#~ msgid "Type:"
+#~ msgstr "Type :"
+
+#~ msgid "Ports:"
+#~ msgstr "Ports :"
+
+#~ msgid "Server:"
+#~ msgstr "Serveur :"
+
+#~ msgid "Community:"
+#~ msgstr "Communauté :"
+
+#~ msgid "Description:"
+#~ msgstr "Description :"
+
+#~ msgid "Comment:"
+#~ msgstr "Commentaire :"
+
+#~ msgid "EAP Type:"
+#~ msgstr "Type EAP :"
+
+#~ msgid "Simultaneous use:"
+#~ msgstr "Utilisations simultanées :"
+
+#~ msgid "Expiration date:"
+#~ msgstr "Date d'expiration"
+
+#~ msgid "Expiration date: "
+#~ msgstr "Date d'expiration :"
