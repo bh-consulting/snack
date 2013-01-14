@@ -112,6 +112,7 @@ PATHDIRMODE=0070
 ONLYRADIUSACCESS=0700
 INTERFACEACCESS=0770 #data-www must be able to read certificate and to generate them.
 INTERFACETHROUGH=0710
+READINGONLY=0440
 
 INTERFACEUSER=www-data
 ONLYINTERFACEACCESS=0700
@@ -174,7 +175,7 @@ mkdir "${DESTPATH}/crl" -m $INTERFACEACCESS ;
 #chown freerad $DESTPATH/crl
 mkdir "${DESTPATH}/newcerts" -m $INTERFACEACCESS;
 #chown freerad $DESTPATH/newcerts
-mkdir "${DESTPATH}/private" -m $ONLYRADIUSACCESS;
+mkdir "${DESTPATH}/private" -m $INTERFACETHROUGH;
 #chown freerad $DESTPATH/private
 mkdir "${DESTPATH}/users" -m $INTERFACEACCESS;
 #chown freerad $DESTPATH/users
@@ -206,8 +207,7 @@ openssl ca -config /etc/ssl/openssl.cnf \
 #$CAplPATH/CA.pl -newca
 
 #Even the radius should not acces the cakey file. 
-chown freerad $DESTPATH/private/$CACERT
-chmod $ONLYRADIUSACCESS $DESTPATH/private/$CACERT
+chmod $READINGONLY $DESTPATH/private/$CACERT
 
 
 
