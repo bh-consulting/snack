@@ -14,7 +14,7 @@ var Boostrapify = {
     load    : function(){
 
         // FORMS
-        $('form').addClass('form-horizontal');
+        $('form').not('#MultiSelectionIndexForm').addClass('form-horizontal');
         $('div.input').wrap('<div class="control-group"></div>');
         $('input').wrap('<div class="controls"></div>');
         $('textarea').wrap('<div class="controls"></div>');

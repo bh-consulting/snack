@@ -16,6 +16,40 @@ class RadusersController extends AppController
         'Session');
 
     public function index(){
+	if ($this->request->is('post') && isset($this->request->data['MultiSelection']['users']) && is_array($this->request->data['MultiSelection']['users'])) {
+		$success = false;
+		foreach( $this->request->data['MultiSelection']['users'] as $userId ) {
+			switch( $this->request->data['action'] ) {
+			case "delete":
+				$success = $this->Checks->delete($this->request, $userId);
+				break;
+			case "export":
+				//TODO: export CSV
+				break;
+			}
+
+			if($success){
+				switch( $this->request->data['action'] ) {
+				case "delete":
+					$this->Session->setFlash(__('Users have been deleted.'));
+					break;
+				case "export":
+					$this->Session->setFlash(__('Users have been exported.'));
+					break;
+				}
+			} else {
+				switch( $this->request->data['action'] ) {
+				case "delete":
+					$this->Session->setFlash(__('Unable to delete users.'), 'flash_error');
+					break;
+				case "export":
+					$this->Session->setFlash(__('Unable to export users.'), 'flash_error');
+					break;
+				}
+			}
+		}
+	}
+	
         $radusers = $this->paginate('Raduser');
 
         foreach ($radusers as &$r) {
