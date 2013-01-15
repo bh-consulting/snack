@@ -4,47 +4,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SNACK\n"
-"POT-Creation-Date: 2013-01-14 15:54+0000\n"
-"PO-Revision-Date: 2013-01-14 17:03+0100\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2013-01-15 17:08+0000\n"
+"PO-Revision-Date: 2013-01-15 18:10+0100\n"
+"Last-Translator: Julien Guépin <julien@guepin.fr>\n"
 "Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-
-#: Controller/LoglinesController.php:15
-msgid "Debug"
-msgstr ""
-
-#: Controller/LoglinesController.php:16
-msgid "Info"
-msgstr ""
-
-#: Controller/LoglinesController.php:17
-msgid "Notice"
-msgstr ""
-
-#: Controller/LoglinesController.php:18
-msgid "Warning"
-msgstr ""
-
-#: Controller/LoglinesController.php:19
-msgid "Error"
-msgstr ""
-
-#: Controller/LoglinesController.php:20
-msgid "Critical"
-msgstr ""
-
-#: Controller/LoglinesController.php:21
-msgid "Alert"
-msgstr ""
-
-#: Controller/LoglinesController.php:22
-msgid "Emergency"
-msgstr ""
 
 #: Controller/NasController.php:41
 msgid "You HAVE to restart the Radius server to apply NAS changes!"
@@ -130,7 +98,26 @@ msgstr "Désactivé"
 msgid "Enabled for "
 msgstr "Actif depuis "
 
-#: Controller/Component/ChecksComponent.php:301
+#: Controller/Component/ChecksComponent.php:39
+#: View/Radusers/index.ctp:25
+msgid "Cisco"
+msgstr "Cisco"
+
+#: Controller/Component/ChecksComponent.php:40
+#: View/Radusers/index.ctp:26
+msgid "Login / Password"
+msgstr "Identifiant / Mot de passe"
+
+#: Controller/Component/ChecksComponent.php:41
+msgid "MAC"
+msgstr ""
+
+#: Controller/Component/ChecksComponent.php:42
+#: View/Radusers/index.ctp:27
+msgid "Certificate"
+msgstr "Certificat"
+
+#: Controller/Component/ChecksComponent.php:303
 msgid "Invalid username or password, try again."
 msgstr "Nom d'utilisateur ou mot de passe invalide, veuillez réessayer."
 
@@ -169,7 +156,7 @@ msgstr " seconde "
 #: View/Common/radius_sidebar.ctp:5
 #: View/Radgroups/add.ctp:10
 #: View/Radgroups/edit.ctp:9
-#: View/Radusers/index.ctp:5
+#: View/Radusers/index.ctp:16
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -192,7 +179,7 @@ msgstr "NAS"
 
 #: View/Common/radius_sidebar.ctp:23
 msgid "Monitoring"
-msgstr "Monitoring"
+msgstr "Supervision"
 
 #: View/Common/radius_sidebar.ctp:29
 #: View/Loglines/index.ctp:13
@@ -215,6 +202,18 @@ msgstr "Date d'expiration"
 msgid "Simultaneous Use"
 msgstr "Utilisations simultanées"
 
+#: View/Elements/filters_panel.ctp:3
+msgid "Filters"
+msgstr "Filtres"
+
+#: View/Elements/filters_panel.ctp:7
+msgid "No filters"
+msgstr "Pas de filtres"
+
+#: View/Elements/filters_panel.ctp:38
+msgid "Search"
+msgstr "Chercher"
+
 #: View/Elements/paginator_footer.ctp:17
 msgid "of"
 msgstr "sur"
@@ -227,7 +226,7 @@ msgstr "sur"
 #: View/Radusers/edit_cisco.ctp:5
 #: View/Radusers/edit_loginpass.ctp:5
 #: View/Radusers/edit_mac.ctp:5
-#: View/Radusers/index.ctp:43;68
+#: View/Radusers/index.ctp:57;86
 msgid "Edit"
 msgstr "Éditer"
 
@@ -235,7 +234,7 @@ msgstr "Éditer"
 #: View/Nas/index.ctp:39;62
 #: View/Radaccts/index.ctp:24
 #: View/Radgroups/index.ctp:34;60
-#: View/Radusers/index.ctp:44;73
+#: View/Radusers/index.ctp:58;91
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -243,7 +242,7 @@ msgstr "Supprimer"
 #: View/Nas/index.ctp:63
 #: View/Radaccts/index.ctp:58
 #: View/Radgroups/index.ctp:61
-#: View/Radusers/index.ctp:74
+#: View/Radusers/index.ctp:91
 msgid "Are you sure?"
 msgstr "Êtes-vous sûr ?"
 
@@ -255,23 +254,23 @@ msgstr "Indéfini"
 msgid "SNACK"
 msgstr "SNACK"
 
-#: View/Layouts/default.ctp:73
+#: View/Layouts/default.ctp:74
 msgid "Radius"
 msgstr "Radius"
 
-#: View/Layouts/default.ctp:74
+#: View/Layouts/default.ctp:75
 msgid "Configuration"
 msgstr "Configuration"
 
-#: View/Layouts/default.ctp:75
+#: View/Layouts/default.ctp:76
 msgid "Terminal"
 msgstr "Terminal"
 
-#: View/Layouts/default.ctp:95
+#: View/Layouts/default.ctp:96
 msgid "French"
 msgstr "Français"
 
-#: View/Layouts/default.ctp:96
+#: View/Layouts/default.ctp:97
 msgid "English"
 msgstr "Anglais"
 
@@ -291,23 +290,15 @@ msgstr "Sévérité"
 msgid "Message"
 msgstr "Message"
 
-#: View/Loglines/index.ctp:17
-msgid "Filters"
-msgstr "Filtres"
-
-#: View/Loglines/index.ctp:21
-msgid "No filters"
-msgstr "Pas de filtres"
-
-#: View/Loglines/index.ctp:37
+#: View/Loglines/index.ctp:22
 msgid "Severity from"
 msgstr "Sévérité de"
 
-#: View/Loglines/index.ctp:38
+#: View/Loglines/index.ctp:28
 msgid "From"
 msgstr "De"
 
-#: View/Loglines/index.ctp:39
+#: View/Loglines/index.ctp:34
 msgid "To"
 msgstr "À"
 
@@ -315,27 +306,23 @@ msgstr "À"
 msgid "Message contains (accept regex)"
 msgstr "Le message contient (regex acceptées)"
 
-#: View/Loglines/index.ctp:42
-msgid "Search"
-msgstr "Chercher"
-
-#: View/Loglines/index.ctp:70
+#: View/Loglines/index.ctp:71
 msgid "Search from this date"
 msgstr "Chercher depuis cette date"
 
-#: View/Loglines/index.ctp:72
+#: View/Loglines/index.ctp:73
 msgid "Search from this severity"
 msgstr "Rechercher depuis cette sévérité"
 
-#: View/Loglines/index.ctp:86
+#: View/Loglines/index.ctp:87
 msgid "No logs found"
 msgstr "Pas de log trouvé"
 
-#: View/Loglines/index.ctp:89
+#: View/Loglines/index.ctp:90
 msgid "retry with no filters"
 msgstr "réessayer sans filtre"
 
-#: View/Loglines/index.ctp:91
+#: View/Loglines/index.ctp:92
 msgid "no filters"
 msgstr "pas de filtre"
 
@@ -385,7 +372,7 @@ msgstr "Mettre à jour"
 
 #: View/Nas/index.ctp:14
 #: View/Radgroups/index.ctp:13
-#: View/Radusers/index.ctp:24
+#: View/Radusers/index.ctp:36
 msgid "ID"
 msgstr "ID"
 
@@ -394,7 +381,7 @@ msgid "Short name"
 msgstr "Alias"
 
 #: View/Nas/index.ctp:17
-#: View/Radusers/index.ctp:27
+#: View/Radusers/index.ctp:39
 msgid "Type"
 msgstr "Type"
 
@@ -423,7 +410,7 @@ msgid "Session ID"
 msgstr "ID de la Session"
 
 #: View/Radaccts/index.ctp:7
-#: View/Radusers/index.ctp:25
+#: View/Radusers/index.ctp:37
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
@@ -527,7 +514,7 @@ msgid "group"
 msgstr "groupe"
 
 #: View/Radgroups/index.ctp:15
-#: View/Radusers/index.ctp:26
+#: View/Radusers/index.ctp:38
 msgid "Comment"
 msgstr "Commentaire"
 
@@ -576,7 +563,7 @@ msgid "Add a user with MAC address"
 msgstr "Ajouter un utilisateur avec une adresse MAC"
 
 #: View/Radusers/add_mac.ctp:8
-#: View/Radusers/index.ctp:16
+#: View/Radusers/index.ctp:28
 #: View/SystemDetails/index.ctp:51
 msgid "MAC address"
 msgstr "Adresse MAC"
@@ -605,27 +592,15 @@ msgstr "(utilisateur identifiant / mot de passe)"
 msgid "(MAC user)"
 msgstr "(utilisateur MAC)"
 
-#: View/Radusers/index.ctp:9
+#: View/Radusers/index.ctp:21
 msgid "Add user"
 msgstr "Ajouter un utilisateur"
 
-#: View/Radusers/index.ctp:13
-msgid "Cisco"
-msgstr "Cisco"
-
-#: View/Radusers/index.ctp:14
-msgid "Login / Password"
-msgstr "Identifiant / Mot de passe"
-
-#: View/Radusers/index.ctp:15
-msgid "Certificate"
-msgstr "Certificat"
-
-#: View/Radusers/index.ctp:17
+#: View/Radusers/index.ctp:29
 msgid "Upload CSV"
 msgstr "Envoyer un CSV"
 
-#: View/Radusers/index.ctp:81
+#: View/Radusers/index.ctp:98
 msgid "No users yet"
 msgstr "Pas encore d'utilisateurs"
 
@@ -788,6 +763,11 @@ msgstr ""
 #: View/SystemDetails/index.ctp:148
 msgid "carrier"
 msgstr ""
+
+#: Model/Logline.php:validation
+#: for field datefrom
+msgid "Format error with date from."
+msgstr "Erreur de format dans la date de début."
 
 #~ msgid "Previous"
 #~ msgstr "Précédent"

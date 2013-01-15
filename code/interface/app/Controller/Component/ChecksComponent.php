@@ -16,7 +16,8 @@ class ChecksComponent extends Component
 	private $baseClass;
 	private $baseClassName;
 
-	public function __construct($collection, $params){
+	public function __construct($collection, $params)
+    {
 		$this->displayName = $params['displayName'];
 		$this->checkClass = new $params['checkClass'];
 		$this->checkClassName = $params['checkClass'];
@@ -24,7 +25,8 @@ class ChecksComponent extends Component
 		$this->baseClassName = $params['baseClass'];
 	}
 
-    public function getChecks($id){
+    public function getChecks($id)
+    {
         $this->baseClass->id = $id;
 
         // sorry for that...
@@ -34,10 +36,10 @@ class ChecksComponent extends Component
 
     public function getType($rad, $nice = false) {
         $types = array(
-            array('cisco', 'Cisco'),
-            array('loginpass', 'Login / Password'),
-            array('mac', 'MAC'),
-            array('cert', 'Certificate')
+            array('cisco', __('Cisco')),
+            array('loginpass', __('Login / Password')),
+            array('mac', __('MAC')),
+            array('cert', __('Certificate'))
         );
 
         if($rad['is_cisco'])
