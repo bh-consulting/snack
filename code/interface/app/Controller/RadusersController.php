@@ -3,6 +3,7 @@
 App::import('Model', 'Radcheck');
 App::import('Model', 'Radgroup');
 App::import('Model', 'Radusergroup');
+
 class RadusersController extends AppController
 {
     public $helpers = array('Html', 'Form', 'JqueryEngine');
@@ -11,7 +12,8 @@ class RadusersController extends AppController
         'Checks' => array(
             'displayName' => 'username',
             'baseClass' => 'Raduser',
-            'checkClass' => 'Radcheck'
+            'checkClass' => 'Radcheck',
+            'replyClass' => 'Radreply',
             ),
         'Session');
 

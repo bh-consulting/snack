@@ -2,9 +2,8 @@
 
 class Radreply extends AppModel
 {
-    var $useTable = 'radreply';
-    var $primaryKey = 'id';
-    var $displayField = 'username';
-    var $name = 'Radreply';
-
+    public $useTable = 'radreply';
+    public $primaryKey = 'id';
+    public $displayField = 'username';
+    public $name = 'Radreply';
 }

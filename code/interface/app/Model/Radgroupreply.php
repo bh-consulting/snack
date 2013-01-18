@@ -3,9 +3,9 @@
 class Radgroupreply extends AppModel
 {
 
-    var $useTable = 'radgroupreply';
-    var $primaryKey = 'id';
-    var $displayField = 'groupname';
-    var $name = 'Radgroupreply';
+    public $useTable = 'radgroupreply';
+    public $primaryKey = 'id';
+    public $displayField = 'groupname';
+    public $name = 'Radgroupreply';
 
 }
