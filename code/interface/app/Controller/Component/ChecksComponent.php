@@ -360,7 +360,7 @@ class ChecksComponent extends Component
     /**
     * Update the check fields of a user or a group
     */
-    public function update_radcheck_fields($id, $request, $additionalFields = array()){
+    public function updateRadcheckFields($id, $request, $additionalFields = array()){
         // common fields
         $fields = array(
             'Expiration' => $request->data[$this->baseClassName]['expiration_date'],
@@ -391,6 +391,46 @@ class ChecksComponent extends Component
                 if($value != ""){
                     $this->checkClass->create();
                     $this->checkClass->save($r);
+                }
+            }
+        }
+    }
+
+    /**
+    * Update the reply fields of a user or a group
+    */
+    public function updateRadreplyFields($id, $request){
+        // common fields
+        $fields = array(
+            'Tunnel-Private-Group-Id' => $request->data[$this->baseClassName]['tunnel-private-group-id'],
+            'Reply-Message' => $request->data[$this->baseClassName]['reply-message'],
+            'Exec-Program-Wait' => $request->data[$this->baseClassName]['exec-program-wait'],
+            'Session-Timeout' => $request->data[$this->baseClassName]['session-timeout'],
+            );
+        $rads = $this->getReplies($id);
+
+        foreach($fields as $key=>$value){
+            $found = false;
+            foreach($rads as &$r){
+                if($r[$this->replyClassName]['attribute'] == $key){
+                    $found = true;
+                    if($r[$this->replyClassName]['value'] != ""){
+                        $r[$this->replyClassName]['value'] = $value;
+                        $this->replyClass->save($r);
+                        break;
+                    }
+                }
+            }
+            // FIXME: doesn't work for new check fields!
+            if(!$found){
+                $r = array($this->replyClassName => array(
+                    'attribute' => $key,
+                    'value' => $value,
+                    'op' => ':=',
+                    $this->displayName => $this->baseClass->field($this->displayName)));
+                if($value != ""){
+                    $this->replyClass->create();
+                    $this->replyClass->save($r);
                 }
             }
         }

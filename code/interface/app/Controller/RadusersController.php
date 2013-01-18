@@ -24,9 +24,10 @@ class RadusersController extends AppController
             $r['Raduser']['ntype'] = $this->Checks->getType($r['Raduser'], true);
             $r['Raduser']['type'] = $this->Checks->getType($r['Raduser'], false);
 
-	    if( $r['Raduser']['type'] == "mac" ) {
-		$r['Raduser']['username'] = $this->Checks->formatMAC( $r['Raduser']['username'] );
-	    }
+    	    if( $r['Raduser']['type'] == "mac" ) {
+        		$r['Raduser']['username'] = $this->Checks->formatMAC( $r['Raduser']['username'] );
+                $this->Checks->updateRadcheckFields($id, $this->request);
+    	    }
         }
         $this->set('radusers', $radusers);
         // FIXME: should not be here, DRY
@@ -235,7 +236,7 @@ class RadusersController extends AppController
                 $checkClassFields = array(
                     'NAS-Port-Type' => $this->request->data['Raduser']['nas-port-type'],
                     'Cleartext-Password' => $this->request->data['Raduser']['password']);
-                $this->Checks->update_radcheck_fields($id, $this->request, $checkClassFields);
+                $this->Checks->updateRadcheckFields($id, $this->request, $checkClassFields);
                 $this->updateGroups($this->Raduser->id, $this->request);
 
                 $result = true;
@@ -257,7 +258,7 @@ class RadusersController extends AppController
             if ($this->Raduser->save($this->request->data)) {
                 // update radchecks fields
                 $checkClassFields = array('Cleartext-Password' => $this->request->data['Raduser']['password']);
-                $this->Checks->update_radcheck_fields($id, $this->request, $checkClassFields);
+                $this->Checks->updateRadcheckFields($id, $this->request, $checkClassFields);
 
                 $this->updateGroups($this->Raduser->id, $this->request);
 
@@ -280,7 +281,7 @@ class RadusersController extends AppController
 
             if ($this->Raduser->save($this->request->data)) {
                 $this->updateGroups($this->Raduser->id, $this->request);
-                $this->Checks->update_radcheck_fields($id, $this->request);
+                $this->Checks->updateRadcheckFields($id, $this->request);
                 $result = true;
             } else {
                 $result = false;
@@ -300,7 +301,7 @@ class RadusersController extends AppController
                 $this->updateGroups($this->Raduser->id, $this->request);
                 $newCert = ($this->request->data['Raduser']['cert_gen'] == 1);
 
-                $this->Checks->update_radcheck_fields($id, $this->request);
+                $this->Checks->updateRadcheckFields($id, $this->request);
                 if($newCert){
                     // TODO: generate a new cert
                 }

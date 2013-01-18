@@ -27,28 +27,28 @@ class RadgroupsController extends AppController
         $this->set('radgroup', $views['base']);
         $this->set('radgroupchecks', $views['checks']);
 	
-	$attributes = array();
+    	$attributes = array();
 
-	// Radgroup
-	$attributes['Groupname'] = $views['base']['Radgroup']['groupname'];
-	$attributes['Comment'] = $views['base']['Radgroup']['comment'];
-	$attributes['Certificate path'] = $views['base']['Radgroup']['cert_path'];
+    	// Radgroup
+    	$attributes['Groupname'] = $views['base']['Radgroup']['groupname'];
+    	$attributes['Comment'] = $views['base']['Radgroup']['comment'];
+    	$attributes['Certificate path'] = $views['base']['Radgroup']['cert_path'];
 
-	// Radchecks
-	foreach($views['checks'] as $check){
-		$attributes[ $check['Radgroupcheck']['attribute'] ] = $check['Radgroupcheck']['value'];
-	}
+    	// Radchecks
+    	foreach($views['checks'] as $check){
+    		$attributes[ $check['Radgroupcheck']['attribute'] ] = $check['Radgroupcheck']['value'];
+    	}
 
-	// Radusergroup
-	$users = array();
-	foreach($views['groups'] as $user){
-		$users[] = $user['Radusergroup']['username'];
-	}
+    	// Radusergroup
+    	$users = array();
+    	foreach($views['groups'] as $user){
+    		$users[] = $user['Radusergroup']['username'];
+    	}
 
-	$attributes['Users'] = $users;
+    	$attributes['Users'] = $users;
 
-	$this->set('attributes', $attributes);
-        $this->set('showedAttr', array( 'Groupname', 'Comment', 'NAS-Port-Type', 'Expiration', 'Simultaneous-Use', 'Users' ));
+    	$this->set('attributes', $attributes);
+            $this->set('showedAttr', array( 'Groupname', 'Comment', 'NAS-Port-Type', 'Expiration', 'Simultaneous-Use', 'Users' ));
     }
 
     public function add(){
@@ -74,6 +74,7 @@ class RadgroupsController extends AppController
         } else {
             if ($this->Radgroup->save($this->request->data)) {
                 $this->Checks->update_radcheck_fields($id, $this->request);
+                $this->Checks->updateRadreplyFields($id, $this->request);
                 $this->updateUsers($id, $this->request);
                 $this->Session->setFlash(__('Group has been updated.'));
                 $this->redirect(array('action' => 'index'));
@@ -90,27 +91,27 @@ class RadgroupsController extends AppController
 
     public function delete($id = null)
     {
-	$success = $this->Checks->delete($this->request, $id);
+    	$success = $this->Checks->delete($this->request, $id);
 
-	if($success){
-		$this->Session->setFlash(__('The user with id #') . $id . __(' has been deleted.'));
-		$this->redirect(array('action' => 'index'));
-	} else {
-		$this->Session->setFlash(__('Unable to delete user with id #') . $id . '.', 'flash_error');
-	}
+    	if($success){
+    		$this->Session->setFlash(__('The user with id #') . $id . __(' has been deleted.'));
+    		$this->redirect(array('action' => 'index'));
+    	} else {
+    		$this->Session->setFlash(__('Unable to delete user with id #') . $id . '.', 'flash_error');
+    	}
     }
 
     public function restoreUsers($id)
     {
-	$usersRecords = $this->Checks->getUserGroups($id);
-	$users = array();
+    	$usersRecords = $this->Checks->getUserGroups($id);
+    	$users = array();
 
-	if( !empty($usersRecords) ){
-		foreach($usersRecords as $user) {
-			$users[]= $user['Radusergroup']['username'];
-		}
-	}
-	$this->set('selectedUsers', $users);
+    	if( !empty($usersRecords) ){
+    		foreach($usersRecords as $user) {
+    			$users[]= $user['Radusergroup']['username'];
+    		}
+    	}
+    	$this->set('selectedUsers', $users);
     }
 
     public function updateUsers($id, $request){
