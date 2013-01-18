@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SNACK\n"
-"POT-Creation-Date: 2013-01-15 17:08+0000\n"
-"PO-Revision-Date: 2013-01-15 18:10+0100\n"
+"POT-Creation-Date: 2013-01-18 14:23+0000\n"
+"PO-Revision-Date: 2013-01-18 15:25+0100\n"
 "Last-Translator: Julien Guépin <julien@guepin.fr>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -162,10 +162,10 @@ msgstr "Utilisateurs"
 
 #: View/Common/radius_sidebar.ctp:11
 #: View/Radgroups/index.ctp:5
-#: View/Radusers/add_cert.ctp:11
-#: View/Radusers/add_cisco.ctp:13
-#: View/Radusers/add_loginpass.ctp:12
-#: View/Radusers/add_mac.ctp:10
+#: View/Radusers/add_cert.ctp:10
+#: View/Radusers/add_cisco.ctp:11
+#: View/Radusers/add_loginpass.ctp:11
+#: View/Radusers/add_mac.ctp:9
 #: View/Radusers/edit_cert.ctp:10
 #: View/Radusers/edit_cisco.ctp:17
 #: View/Radusers/edit_loginpass.ctp:11
@@ -217,6 +217,26 @@ msgstr "Chercher"
 #: View/Elements/paginator_footer.ctp:17
 msgid "of"
 msgstr "sur"
+
+#: View/Elements/reply_common_fields.ctp:2
+msgid "VLAN number (if using a VLAN)"
+msgstr "Numéro VLAN (si utilisation de VLAN)"
+
+#: View/Elements/reply_common_fields.ctp:3
+msgid "Message displayed to user"
+msgstr "Message affiché à l'utilisateur"
+
+#: View/Elements/reply_common_fields.ctp:3
+msgid "Hello, %User-Name"
+msgstr "Bonjour, %User-Name"
+
+#: View/Elements/reply_common_fields.ctp:4
+msgid "Run a program and wait its end"
+msgstr "Exécuter un programme et attendre sa fin"
+
+#: View/Elements/reply_common_fields.ctp:5
+msgid "Session timeout (time in seconds)"
+msgstr "Expiration de session (temps en secondes)"
 
 #: View/Elements/viewInfo.ctp:6
 #: View/Nas/index.ctp:38;58
@@ -350,10 +370,10 @@ msgstr "Clé secrete"
 
 #: View/Nas/add.ctp:15
 #: View/Radgroups/add.ctp:12
-#: View/Radusers/add_cert.ctp:13
-#: View/Radusers/add_cisco.ctp:15
-#: View/Radusers/add_loginpass.ctp:14
-#: View/Radusers/add_mac.ctp:12
+#: View/Radusers/add_cert.ctp:22
+#: View/Radusers/add_cisco.ctp:25
+#: View/Radusers/add_loginpass.ctp:24
+#: View/Radusers/add_mac.ctp:22
 msgid "Create"
 msgstr "Créer"
 
@@ -526,31 +546,54 @@ msgstr "Pas encore de groupe"
 msgid "Add a user with a certificate"
 msgstr "Ajouter un utilisateur avec un certificat"
 
-#: View/Radusers/add_cert.ctp:11
-#: View/Radusers/add_cisco.ctp:13
-#: View/Radusers/add_loginpass.ctp:12
-#: View/Radusers/add_mac.ctp:10
+#: View/Radusers/add_cert.ctp:10
+#: View/Radusers/add_cisco.ctp:11
+#: View/Radusers/add_loginpass.ctp:11
+#: View/Radusers/add_mac.ctp:9
 #: View/Radusers/edit_cert.ctp:10
 #: View/Radusers/edit_cisco.ctp:17
 #: View/Radusers/edit_loginpass.ctp:11
 msgid "Selected groups"
 msgstr "Groupes sélectionnés"
 
+#: View/Radusers/add_cert.ctp:14
+#: View/Radusers/add_cisco.ctp:15
+#: View/Radusers/add_loginpass.ctp:15
+#: View/Radusers/add_mac.ctp:13
+msgid "Checks"
+msgstr "Vérifications"
+
+#: View/Radusers/add_cert.ctp:19
+#: View/Radusers/add_cisco.ctp:21
+#: View/Radusers/add_loginpass.ctp:20
+#: View/Radusers/add_mac.ctp:18
+msgid "Replies"
+msgstr "Réponses"
+
 #: View/Radusers/add_cisco.ctp:5
 msgid "Add a Cisco user"
 msgstr "Ajouter un utilisateur Cisco"
 
-#: View/Radusers/add_cisco.ctp:11
+#: View/Radusers/add_cisco.ctp:9
+msgid "Password"
+msgstr "Mot de passe"
+
+#: View/Radusers/add_cisco.ctp:10
+#: View/Radusers/edit_cisco.ctp:9
+msgid "Confirm password"
+msgstr "Confirmez le mot de passe"
+
+#: View/Radusers/add_cisco.ctp:16
 #: View/Radusers/edit_cisco.ctp:11
 msgid "Console"
 msgstr "Console"
 
-#: View/Radusers/add_cisco.ctp:11
+#: View/Radusers/add_cisco.ctp:16
 #: View/Radusers/edit_cisco.ctp:11
 msgid "VTY"
 msgstr ""
 
-#: View/Radusers/add_cisco.ctp:11
+#: View/Radusers/add_cisco.ctp:16
 msgid "NAS Port Type"
 msgstr "Type de port (NAS)"
 
@@ -579,10 +622,6 @@ msgstr "Générer un nouveau certificat"
 #: View/Radusers/edit_cisco.ctp:5
 msgid "(Cisco user)"
 msgstr "(utilisateur Cisco)"
-
-#: View/Radusers/edit_cisco.ctp:9
-msgid "Confirm password"
-msgstr "Confirmez le mot de passe"
 
 #: View/Radusers/edit_loginpass.ctp:5
 msgid "(login / password user)"
