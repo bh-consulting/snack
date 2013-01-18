@@ -1,0 +1,278 @@
+\section{Radius}
+L'implémentation de SNACK se base sur l'utilisation de Freeradius.
+\subsection{Installation de FreeRadius}
+\subsubsection{Paquets Debian/Ubuntu}
+
+Installer les paquets correspondants, en root~:
+\begin{verbatim}
+# apt-get install freeradius freeradius-utils
+\end{verbatim}
+
+\subsubsection{Lien avec une base MySQL}
+
+Installer MySQL et le paquet FreeRadius permettant de faire le lien entre le serveur d'authentification et la base de données~:
+\begin{verbatim}
+# apt-get install freeradius-mysql mysql-server mysql-client
+\end{verbatim}
+
+Penser à retenir le password root de la base mysql (nous prendrons pour la suite \emph{passrootsql}).
+
+Créer les bases de données nécessaires pour FreeRadius à l'aide des schémas mis à disposition dans le paquet~:
+\begin{alltt}
+# echo "create database radius;" | mysql -u root -p
+# echo "grant all on radius.* to radius@'\%' identified by '\emph{passrootsql}'; flush privileges;" | mysql -u root -p
+# mysql -uroot -p radius < /etc/freeradius/sql/mysql/schema.sql
+# mysql -uroot -p radius < /etc/freeradius/sql/mysql/nas.sql
+\end{alltt}
+Pour chacune de ces lignes, le mot de passe défini à l'étape précédente est demandé.
+
+Création d'un utilisateur simple \emph{user1}, avec une authentification via un mot de passe non-chiffré (\emph{motdepasse})~:
+\begin{alltt}
+# echo "INSERT INTO radcheck(UserName,Attribute,op,Value) VALUES ('user1',\\'Cleartext-Password',':=','motdepasse');" | mysql -u root -p radius
+\end{alltt}
+
+Adapter le fichier \emph{/etc/freeradius/sql.conf}~:
+\begin{alltt}
+sql {
+        database = "mysql"
+        driver = "rlm_sql_\$\{database\}"
+        server = "localhost"
+        login = "root"
+        password = "\emph{passrootsql}"
+        radius_db = "radius"
+        acct_table1 = "radacct"
+        acct_table2 = "radacct"
+        postauth_table = "radpostauth"
+        authcheck_table = "radcheck"
+        authreply_table = "radreply"
+        groupcheck_table = "radgroupcheck"
+        groupreply_table = "radgroupreply"
+        usergroup_table = "radusergroup"
+        deletestalesessions = yes
+        sqltrace = no
+        sqltracefile = \$\{logdir\}/sqltrace.sql
+        num_sql_socks = 5
+        connect_failure_retry_delay = 60
+        readclients = yes
+        nas_table = "nas"
+        \$INCLUDE sql/\$\{database\}/dialup.conf
+}
+\end{alltt}
+
+Dans le fichier \emph{/etc/freeradius/radiusd.conf}, décommenter les 2 lignes suivantes~:
+\begin{verbatim}
+$INCLUDE sql.conf
+$INCLUDE sql/mysql/counter.conf
+\end{verbatim}
+
+Créer un virtualhost Radius~:
+\begin{verbatim}
+# cd /etc/freeradius/sites-available
+# cp default radius.bh-consulting.net
+# ln -s /etc/freeradius/sites-available/radius.bh-consulting.net\
+  /etc/freeradius/sites-enabled/
+\end{verbatim}
+
+Modifier le virtualhost en éditant le fichier \emph{/etc/freeradius/sites-available/radius.bh-consulting.net}~:
+\begin{verbatim}
+authorize {
+        preprocess
+        chap
+	mschap
+        suffix
+        sql
+        expiration
+        logintime
+        pap
+}
+
+authenticate {
+        Auth-Type PAP {
+                pap
+        }
+
+        Auth-Type CHAP {
+                chap
+        }
+
+	Auth-Type MS-CHAP {
+		mschap
+	}
+
+        eap
+}
+
+preacct {
+        preprocess
+        acct_unique
+        suffix
+}
+
+accounting {
+        detail
+        radutmp
+        sql
+}
+
+session {
+        radutmp
+        sql
+}
+
+post-auth {
+        sql
+        # sql_log
+        exec
+
+        Post-Auth-Type REJECT {
+                attr_filter.access_reject
+        }
+}
+
+...
+\end{verbatim}
+
+\subsection{Test d'authentification}
+Pour ce test, il nous faut ajouter le client dans la table des NAS admis. Soit l'IP du client : 192.168.1.2.
+\begin{alltt}
+# echo "insert into nas(nasname,shortname,secret) values ('\emph{192.168.1.2}','client',\\'poil'); " | mysql -uroot -p radius
+\end{alltt}
+
+Lancer le serveur Radius en mode debug sur la machine serveur (avec l'adresse IP \texttt{192.168.1.10})~:
+\begin{verbatim}
+# freeradius -X
+\end{verbatim}
+Si le serveur se plaint que le port est 'already in use', verifier qu'une instance de radius n'est pas déjà en train de tourner.
+
+Côté client (avec \emph{freeradius-utils} d'installé et l'IP \texttt{192.168.1.2}), tenter une authentification avec l'utilisateur créé dans la base de données.\\
+Pour rappel, l'IP du serveur radius: 192.168.1.10~:
+\begin{verbatim}
+# radtest user1 motdepasse 192.168.1.10 0 poil
+\end{verbatim}
+
+Si l'authentification est réussie, le Radius est prêt à être utilisé dans le cadre des deux sections suivantes.
+\begin{comment}
+\subsection{Contrôle d'accès au réseau}
+\subsubsection{Protocole 802.1x}
+
+Le contrôle d'accès au réseau permet de déterminer si un utilisateur a le droit de relier sa machine au réseau ou non. Concrétement, le port du commutateur correspondant sera bloqué par défaut, et ne commencera à laisser passer le trafic qu'en cas d'authentification réussie. Il déterminera le VLAN à utiliser pour le port avant de l'ouvrir, en fonction de l'utilisateur reconnu. Ce mode de fonctionnement est permis par le protocole 802.1x décrit dans la section \ref{dot1x} page \pageref{dot1x}, qui décrit les interactions avec le serveur Radius.
+
+\subsubsection{Configurer le commutateur}
+
+Enregistrer le serveur Radius (avec le secret comme clé)~:
+\begin{verbatim}
+Switch# conf t
+Switch(config)# aaa new-model
+Switch(config)# radius-server host 192.168.1.1 auth-port 1812 key poil
+\end{verbatim}
+
+Configurer un port en dot1x, en suivant la procédure décrite dans la section \ref{dot1x} page \pageref{dot1x}.
+
+Ajouter une règle d'authentification via le Radius pour le dot1x~:
+\begin{verbatim}
+Switch(config)# aaa authentication dot1x poil group radius
+\end{verbatim}
+
+\subsubsection{Configurer le client}
+
+Le supplicant permet au client de s'authentifier auprès du commutateur, pour que celui-ci puisse interroger le serveur Radius au moment de la connexion physique.
+
+Installer un supplicant~:
+\begin{verbatim}
+# apt-get install wpa_supplicant
+\end{verbatim}
+
+Créer le fichier \emph{/etc/wpa\_supplicant/dot1x.conf}~:
+\begin{verbatim}
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=0
+eapol_version=1
+ap_scan=0
+
+network={
+        key_mgmt=IEEE8021X
+        eap=MD5
+        identity="user1"
+        password="motdepasse"
+}
+\end{verbatim}
+
+\subsubsection{Test du 802.1x via Radius}
+
+Après avoir lancé Radius sur le serveur, lancer le supplicant sur le client~:
+\begin{verbatim}
+# wpa_supplicant -c /etc/wpa_supplicant/dot1x.conf -D wired -i eth0
+\end{verbatim}
+
+Relier physiquement le client au commutateur au port configuré en dot1x, et vérifier que le port passe en autorisé.
+
+\subsubsection{Assigner un numéro de VLAN à la volée}
+
+TODO: Ajouts dans radreply
+
+\subsection{Authentification sur les équipements actifs}
+\subsubsection{Configuration du commutateur}
+
+Enregistrer le serveur Radius~:
+\begin{verbatim}
+Switch# conf t
+Switch(config)# aaa new-model
+Switch(config)# radius-server host 192.168.1.1 auth-port 1812 key poil
+\end{verbatim}
+
+Ajouter une règle d'authentification via le Radius pour le login en telnet~:
+\begin{verbatim}
+Switch(config)# aaa authentication login poil group radius local
+\end{verbatim}
+
+Activer l'authentification en telnet~:
+\begin{verbatim}
+Switch(config)# line vty 0 15
+Switch(config-line)# login authentication poil
+\end{verbatim}
+
+Créer un utilisateur local au cas où le serveur Radius ne soit pas accessible~:
+\begin{verbatim}
+Switch(config)# username user1 password pass1
+\end{verbatim}
+
+Ajouter une règle d'authentification via le Radius pour le login en console~:
+\begin{verbatim}
+Switch(config)# aaa authentication enable poil group radius enable
+\end{verbatim}
+
+Activer l'authentification en console~:
+\begin{verbatim}
+Switch(config)# line console 0
+Switch(config-line)# login authentication poil
+\end{verbatim}
+
+Créer un mot de passe local au cas où le serveur Radius ne soit pas accessible~:
+\begin{verbatim}
+Switch(config)# enable password pass1
+\end{verbatim}
+
+\subsubsection{Configuration du serveur Radius}
+
+Pour le mode enable, il faut autoriser des caractères spéciaux dans le fichier \textit{sql.conf} :
+\begin{verbatim}
+safe-characters = "@0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_: /$"
+\end{verbatim}
+
+Pour le mode enable, il faut ajouter un utilisateur particulier dans la base de donnée :
+\begin{verbatim}
+insert into radcheck (username,attribute,value) values ('$enab15$','Cleartext-Password','pass1');
+\end{verbatim}
+
+\subsubsection{Test d'authentification sur le commutateur}
+
+Accéder au commutateur en telnet depuis le client~:
+\begin{verbatim}
+$ telnet user1@192.168.1.20
+\end{verbatim}
+
+Saisir \emph{motdepasse} en guise de mot de passe.
+
+(TODO: test en console)
+
+\end{comment}

@@ -1,0 +1,250 @@
+\section{Certificats}
+
+\subsection{Installation des certificats}
+
+\subsubsection{Adaptation du fichier de configuration}
+Ce paquet s'appuie sur openssl pour la gestion des certificat.
+Pour l'installer, en root~:
+\begin{verbatim}
+# apt-get install openssl
+\end{verbatim}
+On suppose un dossier pour les certificat de chemin : \emph{path\_to\_certs}\\
+Modifiez le fichier de configuration \emph{/etc/ssl/openssl.cnf}~:
+\begin{alltt}
+   [ CA\_default ]
+
+    dir             = \emph{path\_to\_certs}              # Where everything is kept
+    certs           = $dir/certs            # Where the issued certs are kept
+    crl_dir         = $dir/crl              # Where the issued crl are kept
+    database        = $dir/index.txt        # database index file.
+    #unique_subject = no                    # Set to 'no' to allow creation of
+                                            # several ctificates with same subject.
+    new_certs_dir   = $dir/newcerts         # default place for new certs.
+
+    certificate     = $dir/\textbf{private}/cacert.pem       # The CA certificate
+    serial          = $dir/serial           # The current serial number
+    crlnumber       = $dir/crlnumber        # the current crl number
+					    # must be commented out to leave a V1 CRL
+    crl             = $dir/crl.pem          # The current CRL
+    private\_key     = \$dir/private/cakey.pem# The private key
+
+\end{alltt}
+
+\subsubsection{Mise en place de l'environement}
+Se placer dans le repertoire ou seront stoqués les certificats: \emph{path\_to\_certs}
+Créer les dossiers suivants~:
+\begin{alltt}
+\$ mkdir "\emph{path\_to\_certs}/certs"
+\$ mkdir "\emph{path\_to\_certs}/crl"
+\$ mkdir "\emph{path\_to\_certs}/private"
+\$ mkdir "\emph{path\_to\_certs}/users"
+\$ mkdir "\emph{path\_to\_certs}/newcerts"
+\end{alltt}
+Ainsi que les fichiers~:
+\begin{alltt}
+\$ touch \emph{path\_to\_certs}/index.txt
+\$ echo "01" > \emph{path\_to\_certs}/crlnumber
+\end{alltt}
+
+\subsubsection{Gérération du certificat racine}
+
+Créer le certificat racine sans passphrase avec openssl~:
+\begin{alltt}
+\$ openssl genrsa -out \emph{path\_to\_certs}/private/cakey.pem 4096 
+
+\$ openssl req -new -key \emph{path\_to\_certs}/private/cakey.pem \textbackslash\\
+	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/\\organizationName=BHConsulting/commonName=\emph{Nom\_de\_la\_société\_cliente}/ \textbackslash\\
+	-out \emph{path\_to\_certs}/private/careq.pem
+
+
+\$ openssl ca -config /etc/ssl/openssl.cnf \textbackslash\\
+	-create\_serial -out \emph{path\_to\_certs}/private/cacert.pem -days 3650 -batch \textbackslash\\
+	-keyfile \emph{path\_to\_certs}/private/cakey.pem -selfsign \textbackslash\\
+	-extensions v3\_ca \textbackslash\\
+	-infiles \emph{path\_to\_certs}/private/careq.pem
+\end{alltt}
+
+Pensez ensuite à génerer la liste des CRL \emph{dès à présent} et après \textbf{chaque creation/revocation} de certificat! Une seule génération peut être faite pour plusieurs modifications. 
+
+\subsubsection{Génération/mise à jours de la CRL}
+Première génération de la Certificate Revocation List~:
+\begin{alltt}
+\$ openssl ca -config /etc/ssl/openssl.cnf -gencrl -out \emph{path\_to\_certs}/crl/crl.pem
+\end{alltt}
+
+\subsubsection{Architecture nécessaire pour la CRL}
+
+Pour mettre en place l'architecture nécessaire à la lecture de CRL par radius~:
+\begin{alltt}
+
+\$ export HASH=`openssl x509 -noout -hash -in \emph{path\_to\_certs}/private/cacert.pem`
+\$ ln -s \emph{path\_to\_certs}/private/cacert.pem \emph{path\_to\_certs}/certs/$HASH.0
+\$ ln -s \emph{path\_to\_certs}/crl/crl.pem \emph{path\_to\_certs}/certs/$HASH.r0
+
+\end{alltt}
+NB: Prenez garde à utiliser des \textbf{chemins absolus} pour ces liens.
+
+
+\subsection{Utilisation des certificats (Création/révocation)}
+\subsubsection{Génération et signature d'un certificat}
+Créer un certificat pour l'utilisateur identifé par 'userName'. Le champs commonName doit coorespondre au champs 'username' du radius.
+\begin{alltt}
+\$ openssl genrsa -out \emph{path\_to\_certs}/users/\emph{userName\_key.pem} 4096
+
+\$ openssl req -config /etc/ssl/openssl.cnf -new -key \emph{path\_to\_certs}/users/\emph{userName\_key.pem} \textbackslash\\
+        -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/\\organizationName=BHConsulting/commonName=userName/ \textbackslash\\
+	-out \emph{path\_to\_certs}/users/\emph{userName\_req.pem} -days 3650\\
+
+\$ openssl ca -config /etc/ssl/openssl.cnf -policy policy\_anything \textbackslash\\
+	-out \emph{path\_to\_certs}/users/\emph{userName\_cert.pem} -batch \textbackslash\\
+	-infiles \emph{path\_to\_certs}/users/\emph{userName\_req.pem}
+\end{alltt}
+Penser à mettre a jours la CRL.
+
+
+
+\subsubsection{Révocation des certificats}
+Pour révoquer un certificat~: 
+\begin{alltt}
+
+\$ openssl ca -config /etc/ssl/openssl.cnf -revoke \emph{path\_to\_certs}/users/userName\_cert.pem
+
+\end{alltt}
+
+Penser à mettre a jours la CRL.
+NB: La révocation est \textbf{irréversible}!
+
+Pour verifier qu'un certificat a bien été révoqué~:
+\begin{alltt}
+
+\$ openssl verify  -CApath \emph{path\_to\_certs}/certs/ \\-crl\_check \emph{path\_to\_certs}/users/userName\_cert.pem
+
+\end{alltt}
+
+\subsection{Certificats et radius}
+\subsubsection{Configuration du radius}
+Pour mettre en place les certificat pour radius~: 
+\begin{alltt}
+\$ dd if=/dev/urandom of=\emph{path\_to\_certs}/random count=2
+\$ openssl dhparam -check -text -5 1024 -out \emph{path\_to\_certs}/dh
+\end{alltt}
+Puis générer une clé et un certificat pour le radius (supposé dans \emph{path\_to\_certs}/private, et non dans \emph{path\_to\_certs}/users).\\
+Le commonName du radius \textbf{doit} être le hostname de la machine qui héberge le radius.\\
+Adapter ensuite le fichier \emph{/etc/freeradius/eap.conf}~:
+\begin{alltt}
+tls \{
+	confdir = \emph{path\_to\_certs} 
+	certdir = \$\{confdir\}
+	cadir = \$\{confdir\}/private
+
+	private_key_password =
+	private_key_file = \$\{cadir\}/radius_key.pem
+	certificate_file = \$\{cadir\}/radius_cert.pem
+	CA_file = \$\{cadir\}/cacert.pem
+	dh_file = \$\{certdir\}/dh
+	random_file = /dev/urandom
+	fragment_size = 1024
+
+	include_length = yes
+	check_crl = yes
+	CA_path = \$\{certdir\}/certs
+	check_cert_cn = \%\{User-Name\}
+	.
+	.
+	.
+\}
+\end{alltt}
+\subsubsection{Permissions}
+Le radius dois pouvoir lire plusieurs fichiers: la CRL, le certificat racine, son propre certificat...\\
+A titre d'exemple, avec 'snack' un groupe incluant les utilisateurs 'freeradius' et 'www-data', voici les permissions utilisées~:
+\begin{alltt}
+snack
++-- [drwx--x--- root     snack   ]  cert
+|   +-- [drwx------ root     snack   ]  certs
+|   |   +-- [lrwxrwxrwx root     snack   ]  15661b30.0 -> /home/pi/snack/cert/private/
+									    cacert.pem
+|   |   +-- [lrwxrwxrwx root     snack   ]  15661b30.r0 -> /home/pi/snack/cert/crl/crl.pem
+|   +-- [drwxrwx--- root     snack   ]  crl
+|   |   +-- [-rwxrwx--- freerad  snack   ]  crl.pem
+|   +-- [-rw-r--r-- root     snack   ]  crlnumber
+|   +-- [-rw-r--r-- root     snack   ]  crlnumber.old
+|   +-- [-rwx------ freerad  snack   ]  dh
+|   +-- [-rw-r--r-- root     snack   ]  index.txt
+|   +-- [-rw-r--r-- root     snack   ]  index.txt.attr
+|   +-- [-rw-r--r-- root     snack   ]  index.txt.attr.old
+|   +-- [-rw-r--r-- root     snack   ]  index.txt.old
+|   +-- [drwxrwx--- root     snack   ]  newcerts
+|   |   +-- [-rw-r--r-- root     snack   ]  EDA9703A91A8EE1B.pem
+|   |   +-- [-rw-r--r-- root     snack   ]  EDA9703A91A8EE1C.pem
+|   +-- [drwx--x--- root     snack   ]  private
+|   |   +-- [-rwx------ freerad  snack   ]  cacert.pem
+|   |   +-- [-rwx------ root     snack   ]  cakey.pem
+|   |   +-- [-rw-r--r-- root     snack   ]  careq.pem
+|   |   +-- [-rwx------ freerad  snack   ]  radius_cert.pem
+|   |   +-- [-rwx------ freerad  snack   ]  radius_key.pem
+|   |   +-- [-rw-r--r-- root     snack   ]  radius_req.pem
+|   +-- [-rwx------ freerad  snack   ]  random
+|   +-- [-rw-r--r-- root     snack   ]  serial
+|   +-- [-rw-r--r-- root     snack   ]  serial.old
+|   +-- [drwxrwx--- root     snack   ]  users
++-- [drwx------ www-data snack   ]  scripts
+    +-- [-rwx------ www-data snack   ]  createCertificate
+    +-- [-rwx------ www-data snack   ]  revocationCheck
+    +-- [-rwx------ www-data snack   ]  revokeClient
+\end{alltt}
+
+
+
+\subsection{Mise en place coté client}
+Voici 3 exemples de configurations fonctionnelles pour wpa\_supplicant sous linux. 
+Pour tls~:
+\begin{alltt}
+network=\{
+    eap=TLS
+    eapol_flags=0
+    key_mgmt=IEEE8021X
+    identity="\textit{userlogin}"
+    ca_cert="path/to/authority/certificate/cacert.pem"
+    client_cert="path/to/client/cert/cert.pem"
+    private_key="path/to/client/key/key.pem"
+\}
+\end{alltt}
+Pour ttls avec un encryptage MD5 dans le tunnel~:
+\begin{alltt}
+network=\{
+    eap=TTLS
+    eapol_flags=0
+    key_mgmt=IEEE8021X
+    identity="\textit{userlogin}"
+    password="\textit{userpassword}"
+    ca_cert="path/to/authority/certificate/cacert.pem"
+    phase2="auth=MD5"
+\}
+\end{alltt}
+Pour peap~:
+\begin{alltt}
+network=\{
+    eap=PEAP
+    eapol_flags=0
+    key_mgmt=IEEE8021X
+    identity="\textit{userlogin}"
+    password="\textit{userpassword}"
+    ca_cert="path/to/authority/certificate/cacert.pem"
+    phase2="auth=MSCHAPV2"
+\}
+\end{alltt}
+
+On peut alors appeler wpa\_supplicant avec la commande:
+\begin{verbatim}
+$ wpa_supplicant -ieth0 -c eapol_test.conf.tls -Dwired
+\end{verbatim}
+L'option -B permet de lancer wpa\_supplicant en background.\\
+Rappel: Relancer radius pour prendre en compte les modifications avant de tester.
+
+
+
+
+
+
+
+

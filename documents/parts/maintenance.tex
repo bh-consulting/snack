@@ -1,0 +1,29 @@
+\section{Maintenance}
+
+\subsection{Ajouter un client NAS}
+
+Pour ajouter un client'nas' (Switch ou autre équipement), qui pourra dès lors interroger le radius~:
+
+\begin{alltt}
+\$ echo "INSERT INTO nas VALUES (nasname, shortname, secret) VALUES \\('192.168.0.254','switch','poil');" | mysql -uroot -p radius
+\end{alltt}
+
+\textbf{Note:} Pour spécifier un netmask, utiliser la valeur 192.168.0.0/24
+
+Pour supprimer un NAS~:
+\begin{alltt}
+\$ echo "DELETE FROM nas WHERE nasname='192.168.0.254' AND shortname='switch' \\AND secret='poil';" | mysql -uroot -p radius
+\end{alltt}
+
+
+Pour ajouter un utilisateur~:
+\begin{alltt}
+\$ echo "INSERT INTO radcheck(username,attribute,op,value) VALUES ('userName',\\'Cleartext-Password',':=','userPassword');" | mysql -uroot -p radius
+\end{alltt}
+Puis lui générer un certificat.
+
+Pour supprimer un utilisateur~:
+\begin{alltt}
+\$ echo "DELETE FROM radcheck WHERE username='userName' AND attribute='Cleartext-Password'\\ AND op=':=' AND value='userPassword';" | mysql -uroot -p radius
+\end{alltt}
+

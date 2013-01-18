@@ -193,20 +193,21 @@ openssl genrsa -out $DESTPATH/private/$CAKEY 4096
 
 openssl req -new -key $DESTPATH/private/$CAKEY \
 	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=$CLIENTNAME/ \
-	-out $DESTPATH/$CAREQ
+	-out $DESTPATH/private/$CAREQ
 
 
 openssl ca -config /etc/ssl/openssl.cnf \
 	-create_serial -out $DESTPATH/private/$CACERT -days $CACERTVALIDITY -batch \
 	-keyfile $DESTPATH/private/$CAKEY -selfsign \
 	-extensions v3_ca \
-	-infiles $DESTPATH/$CAREQ
+	-infiles $DESTPATH/private/$CAREQ
 
 
 #This instruction is replaced by the tree above instructions.
 #$CAplPATH/CA.pl -newca
 
 #Even the radius should not acces the cakey file. 
+chmod $ONLYRADIUSACCESS $DESTPATH/private/$CAKEY
 chmod $READINGONLY $DESTPATH/private/$CACERT
 
 
