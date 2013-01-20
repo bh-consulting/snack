@@ -299,4 +299,11 @@ usermod -a -G snack freerad
 usermod -a -G snack www-data
 chown -R :snack $USER_HOME/$PAQUETNAME
 
+# Syslog avec Freeradius
+service syslog-ng restart
+sed -e 's/\(destination\s*=\s*\).*$/\1syslog/'\
+	 -e 's/\(syslog_facility\s*=\s*\).*$/\1local2/'\
+	 -i /etc/freeradius/radiusd.conf
+service freeradius restart
+
 exit 0

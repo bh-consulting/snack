@@ -1,0 +1,13 @@
+filter f_freeradius { facility(local2); };
+
+destination d_mysql {
+        sql(type(mysql)
+        host("localhost") username("logsfreeradius") password("logsfreeradius")
+        database("raddb")
+        table("logs")
+        columns("host", "facility", "priority", "level", "tag", "datetime", "program", "msg")
+        values("$HOST_FROM", "$FACILITY", "$PRIORITY", "$LEVEL", "$TAG", "$YEAR-$MONTH-$DAY $HOUR:$MIN:$SEC", "$PROGRAM", "$MSG")
+        indexes("host", "facility", "priority", "datetime", "program"));
+};
+
+log { source(s_src); filter(f_freeradius); destination(d_mysql); };
