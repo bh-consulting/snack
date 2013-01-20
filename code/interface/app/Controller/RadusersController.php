@@ -17,22 +17,75 @@ class RadusersController extends AppController
             ),
         'Session');
 
-    public function index(){
-        $radusers = $this->paginate('Raduser');
+	public function index(){
+		if ($this->request->is('post')) {
+			if (isset($this->request->data['MultiSelection']['users']) &&
+				is_array($this->request->data['MultiSelection']['users'])
+			) {
+				$success = false;
+				foreach( $this->request->data['MultiSelection']['users'] as $userId ) {
+					switch( $this->request->data['action'] ) {
+					case "delete":
+						$success = $this->Checks->delete($this->request, $userId);
+						break;
+					case "export":
+						//TODO: export CSV
+						break;
+					}
 
-        foreach ($radusers as &$r) {
-            $r['Raduser']['ntype'] = $this->Checks->getType($r['Raduser'], true);
-            $r['Raduser']['type'] = $this->Checks->getType($r['Raduser'], false);
+					if($success){
+						switch( $this->request->data['action'] ) {
+						case "delete":
+							$this->Session->setFlash(
+								__('Users have been deleted.'),
+								'flash_success'
+							);
+							break;
+						case "export":
+							$this->Session->setFlash(
+								__('Users have been exported.'),
+								'flash_success'
+							);
+							break;
+						}
+					} else {
+						switch( $this->request->data['action'] ) {
+						case "delete":
+							$this->Session->setFlash(
+								__('Unable to delete users.'),
+								'flash_error'
+							);
+							break;
+						case "export":
+							$this->Session->setFlash(
+								__('Unable to export users.'),
+								'flash_error'
+							);
+							break;
+						}
+					}
+				}
+			} else {
+				$this->Session->setFlash(__('Please, select at least one user !'), 'flash_warning');
+			}
+		}
 
-    	    if( $r['Raduser']['type'] == "mac" ) {
+		$radusers = $this->paginate('Raduser');
+
+		foreach ($radusers as &$r) {
+			$r['Raduser']['ntype'] = $this->Checks->getType($r['Raduser'], true);
+			$r['Raduser']['type'] = $this->Checks->getType($r['Raduser'], false);
+			
+			if( $r['Raduser']['type'] == "mac" ) {
         		$r['Raduser']['username'] = $this->Checks->formatMAC( $r['Raduser']['username'] );
                 $this->Checks->updateRadcheckFields($id, $this->request);
     	    }
         }
-        $this->set('radusers', $radusers);
-        // FIXME: should not be here, DRY
-        $this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
-    }
+
+		$this->set('radusers', $radusers);
+		// FIXME: should not be here, DRY
+		$this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
+	}
 
     public function view($id = null, $type = array()){
         $views = $this->Checks->view($id);
@@ -95,9 +148,9 @@ class RadusersController extends AppController
         if($this->request->is('post')){
             if($success){
                 if(array_key_exists('cert_path', $this->request->data['Raduser']))
-                    $this->Session->setFlash(__('New user added. Certificate in ') . $this->request->data['Raduser']['cert_path']);
+                    $this->Session->setFlash(__('New user added. Certificate in ') . $this->request->data['Raduser']['cert_path'], 'flash_success');
                 else
-                    $this->Session->setFlash(__('New user added.'));
+                    $this->Session->setFlash(__('New user added.'), 'flash_success');
 
                 $this->redirect(array('action' => 'index'));
             } else {
@@ -317,7 +370,7 @@ class RadusersController extends AppController
     public function edit($result){
         if($this->request->is('post')){
             if($result){
-                $this->Session->setFlash(__('User has been updated.'));
+                $this->Session->setFlash(__('User has been updated.'), 'flash_success');
                 $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(__('Unable to update user.'), 'flash_error');
@@ -332,15 +385,22 @@ class RadusersController extends AppController
         $this->Checks->restore_common_check_fields($this->Raduser->id, $this->request);
     }
 
-    public function delete($id = null){
-        $success = $this->Checks->delete($this->request, $id);
+    public function delete ($id = null) {
+		$success = $this->Checks->delete($this->request, $id);
 
-        if($success){
-            $this->Session->setFlash(__('The user with id #') . $id . __(' has been deleted.'));
-            $this->redirect(array('action' => 'index'));
-        } else {
-            $this->Session->setFlash(__('Unable to delete user with id #') . $id . '.', 'flash_error');
-        }
+		if ($success) {
+			$this->Session->setFlash(
+				__('The user with id #') . $id . __(' has been deleted.'),
+				'flash_success'
+			);
+		} else {
+			$this->Session->setFlash(
+				__('Unable to delete user with id #') . $id . '.',
+				'flash_error'
+			);
+		}
+
+		$this->redirect(array('action' => 'index'));
     }
 
     public function restoreGroups($id)

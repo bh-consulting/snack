@@ -43,6 +43,10 @@ class Raduser extends AppModel
         )
     );
 
+    public $virtualFields = array(
+        'ntype' => 'is_mac' //TODO Revoir conception user type
+    );
+
     function identicalFieldValues( $field=array(), $compare_field=null )  
     { 
         foreach( $field as $key => $value ){ 

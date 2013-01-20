@@ -16,11 +16,49 @@ class RadgroupsController extends AppController
             ),
         'Session');
 
-    public function index(){
-        $this->set('radgroups', $this->paginate('Radgroup'));
-        // FIXME: should not be here, DRY
-        $this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
-    }
+	public function index(){
+		if ($this->request->is('post')) {
+			if (isset($this->request->data['MultiSelection']['groups']) &&
+				is_array($this->request->data['MultiSelection']['groups'])
+			) {
+				$success = false;
+				foreach( $this->request->data['MultiSelection']['groups'] as $groupId ) {
+					switch( $this->request->data['action'] ) {
+					case "delete":
+						$success = $this->Checks->delete($this->request, $userId);
+						break;
+					}
+
+					if($success){
+						switch( $this->request->data['action'] ) {
+						case "delete":
+							$this->Session->setFlash(
+								__('Groups have been deleted.'),
+								'flash_success'
+							);
+							break;
+						}
+					} else {
+						switch( $this->request->data['action'] ) {
+						case "delete":
+							$this->Session->setFlash(
+								__('Unable to delete groups.'),
+								'flash_error'
+							);
+							break;
+						}
+					}
+				}
+			} else {
+				$this->Session->setFlash(__('Please, select at least one group !'), 'flash_warning');
+			}
+		}
+
+		$this->set('radgroups', $this->paginate('Radgroup'));
+
+		// FIXME: should not be here, DRY
+		$this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
+	}
 
     public function view($id = null){
         $views = $this->Checks->view($id);
@@ -89,17 +127,23 @@ class RadgroupsController extends AppController
         $this->Checks->restore_common_check_fields($id, $this->request);
     }
 
-    public function delete($id = null)
-    {
-    	$success = $this->Checks->delete($this->request, $id);
+	public function delete ($id = null) {
+		$success = $this->Checks->delete($this->request, $id);
 
-    	if($success){
-    		$this->Session->setFlash(__('The user with id #') . $id . __(' has been deleted.'));
-    		$this->redirect(array('action' => 'index'));
-    	} else {
-    		$this->Session->setFlash(__('Unable to delete user with id #') . $id . '.', 'flash_error');
-    	}
-    }
+		if ($success) {
+			$this->Session->setFlash(
+				__('The group with id #') . $id . __(' has been deleted.'),
+				'flash_success'
+			);
+		} else {
+			$this->Session->setFlash(
+				__('Unable to delete group with id #') . $id . '.',
+				'flash_error'
+			);
+		}
+		
+		$this->redirect(array('action' => 'index'));
+	}
 
     public function restoreUsers($id)
     {

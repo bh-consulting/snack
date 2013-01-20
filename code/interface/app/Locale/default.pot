@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-01-18 14:23+0000\n"
+"POT-Creation-Date: 2013-01-20 21:53+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -39,55 +39,93 @@ msgid "The Session with id:"
 msgstr ""
 
 #: Controller/RadacctsController.php:27
-#: Controller/RadgroupsController.php:94
-#: Controller/RadusersController.php:336
+#: Controller/RadgroupsController.php:135
+#: Controller/RadusersController.php:393
 msgid " has been deleted."
 msgstr ""
 
-#: Controller/RadgroupsController.php:57
-msgid "New group added."
+#: Controller/RadgroupsController.php:36
+msgid "Groups have been deleted."
 msgstr ""
 
-#: Controller/RadgroupsController.php:60
-msgid "Unable to add group."
+#: Controller/RadgroupsController.php:45
+msgid "Unable to delete groups."
 msgstr ""
 
-#: Controller/RadgroupsController.php:76
-msgid "Group has been updated."
-msgstr ""
-
-#: Controller/RadgroupsController.php:79
-msgid "Unable to update group."
-msgstr ""
-
-#: Controller/RadgroupsController.php:94
-#: Controller/RadusersController.php:336
-msgid "The user with id #"
+#: Controller/RadgroupsController.php:53
+msgid "Please, select at least one group !"
 msgstr ""
 
 #: Controller/RadgroupsController.php:97
-#: Controller/RadusersController.php:339
-msgid "Unable to delete user with id #"
+msgid "New group added."
 msgstr ""
 
-#: Controller/RadusersController.php:95
+#: Controller/RadgroupsController.php:100
+msgid "Unable to add group."
+msgstr ""
+
+#: Controller/RadgroupsController.php:117
+msgid "Group has been updated."
+msgstr ""
+
+#: Controller/RadgroupsController.php:120
+msgid "Unable to update group."
+msgstr ""
+
+#: Controller/RadgroupsController.php:135
+msgid "The group with id #"
+msgstr ""
+
+#: Controller/RadgroupsController.php:140
+msgid "Unable to delete group with id #"
+msgstr ""
+
+#: Controller/RadusersController.php:40
+msgid "Users have been deleted."
+msgstr ""
+
+#: Controller/RadusersController.php:46
+msgid "Users have been exported."
+msgstr ""
+
+#: Controller/RadusersController.php:55
+msgid "Unable to delete users."
+msgstr ""
+
+#: Controller/RadusersController.php:61
+msgid "Unable to export users."
+msgstr ""
+
+#: Controller/RadusersController.php:69
+msgid "Please, select at least one user !"
+msgstr ""
+
+#: Controller/RadusersController.php:151
 msgid "New user added. Certificate in "
 msgstr ""
 
-#: Controller/RadusersController.php:97
+#: Controller/RadusersController.php:153
 msgid "New user added."
 msgstr ""
 
-#: Controller/RadusersController.php:101
+#: Controller/RadusersController.php:157
 msgid "Unable to add user."
 msgstr ""
 
-#: Controller/RadusersController.php:317
+#: Controller/RadusersController.php:373
 msgid "User has been updated."
 msgstr ""
 
-#: Controller/RadusersController.php:320
+#: Controller/RadusersController.php:376
 msgid "Unable to update user."
+msgstr ""
+
+#: Controller/RadusersController.php:393
+msgid "The user with id #"
+msgstr ""
+
+#: Controller/RadusersController.php:398
+msgid "Unable to delete user with id #"
 msgstr ""
 
 #: Controller/SystemDetailsController.php:36;39
@@ -98,26 +136,26 @@ msgstr ""
 msgid "Enabled for "
 msgstr ""
 
-#: Controller/Component/ChecksComponent.php:39
-#: View/Radusers/index.ctp:25
+#: Controller/Component/ChecksComponent.php:63
+#: View/Radusers/index.ctp:43
 msgid "Cisco"
 msgstr ""
 
-#: Controller/Component/ChecksComponent.php:40
-#: View/Radusers/index.ctp:26
+#: Controller/Component/ChecksComponent.php:64
+#: View/Radusers/index.ctp:48
 msgid "Login / Password"
 msgstr ""
 
-#: Controller/Component/ChecksComponent.php:41
+#: Controller/Component/ChecksComponent.php:65
 msgid "MAC"
 msgstr ""
 
-#: Controller/Component/ChecksComponent.php:42
-#: View/Radusers/index.ctp:27
+#: Controller/Component/ChecksComponent.php:66
+#: View/Radusers/index.ctp:53
 msgid "Certificate"
 msgstr ""
 
-#: Controller/Component/ChecksComponent.php:303
+#: Controller/Component/ChecksComponent.php:464
 msgid "Invalid username or password, try again."
 msgstr ""
 
@@ -155,13 +193,13 @@ msgstr ""
 
 #: View/Common/radius_sidebar.ctp:5
 #: View/Radgroups/add.ctp:10
-#: View/Radgroups/edit.ctp:9
-#: View/Radusers/index.ctp:16
+#: View/Radgroups/edit.ctp:10
+#: View/Radusers/index.ctp:33
 msgid "Users"
 msgstr ""
 
 #: View/Common/radius_sidebar.ctp:11
-#: View/Radgroups/index.ctp:5
+#: View/Radgroups/index.ctp:21
 #: View/Radusers/add_cert.ctp:10
 #: View/Radusers/add_cisco.ctp:11
 #: View/Radusers/add_loginpass.ctp:11
@@ -238,59 +276,65 @@ msgstr ""
 msgid "Session timeout (time in seconds)"
 msgstr ""
 
-#: View/Elements/viewInfo.ctp:6
+#: View/Elements/viewInfo.ctp:10
 #: View/Nas/index.ctp:38;58
-#: View/Radgroups/edit.ctp:5
-#: View/Radgroups/index.ctp:33;55
+#: View/Radgroups/edit.ctp:6
+#: View/Radgroups/index.ctp:71;112
 #: View/Radusers/edit_cert.ctp:5
 #: View/Radusers/edit_cisco.ctp:5
 #: View/Radusers/edit_loginpass.ctp:5
 #: View/Radusers/edit_mac.ctp:5
-#: View/Radusers/index.ctp:57;86
+#: View/Radusers/index.ctp:110;161
 msgid "Edit"
 msgstr ""
 
-#: View/Elements/viewInfo.ctp:7
+#: View/Elements/viewInfo.ctp:15
 #: View/Nas/index.ctp:39;62
 #: View/Radaccts/index.ctp:24
-#: View/Radgroups/index.ctp:34;60
-#: View/Radusers/index.ctp:58;91
+#: View/Radgroups/index.ctp:72;119
+#: View/Radusers/index.ctp:111;170
 msgid "Delete"
 msgstr ""
 
-#: View/Elements/viewInfo.ctp:7
+#: View/Elements/viewInfo.ctp:17
 #: View/Nas/index.ctp:63
 #: View/Radaccts/index.ctp:58
-#: View/Radgroups/index.ctp:61
-#: View/Radusers/index.ctp:91
+#: View/Radgroups/index.ctp:12;122
+#: View/Radusers/index.ctp:15;173
 msgid "Are you sure?"
 msgstr ""
 
-#: View/Elements/viewInfo.ctp:18;26
+#: View/Elements/viewInfo.ctp:30;39
 msgid "Not defined"
 msgstr ""
 
 #: View/Layouts/default.ctp:19
+#: View/Layouts/.svn/tmp/default.ctp:19
 msgid "SNACK"
 msgstr ""
 
 #: View/Layouts/default.ctp:74
+#: View/Layouts/.svn/tmp/default.ctp:74
 msgid "Radius"
 msgstr ""
 
 #: View/Layouts/default.ctp:75
+#: View/Layouts/.svn/tmp/default.ctp:75
 msgid "Configuration"
 msgstr ""
 
 #: View/Layouts/default.ctp:76
+#: View/Layouts/.svn/tmp/default.ctp:76
 msgid "Terminal"
 msgstr ""
 
 #: View/Layouts/default.ctp:96
+#: View/Layouts/.svn/tmp/default.ctp:96
 msgid "French"
 msgstr ""
 
 #: View/Layouts/default.ctp:97
+#: View/Layouts/.svn/tmp/default.ctp:97
 msgid "English"
 msgstr ""
 
@@ -310,39 +354,39 @@ msgstr ""
 msgid "Message"
 msgstr ""
 
-#: View/Loglines/index.ctp:22
+#: View/Loglines/index.ctp:21
 msgid "Severity from"
 msgstr ""
 
-#: View/Loglines/index.ctp:28
+#: View/Loglines/index.ctp:27
 msgid "From"
 msgstr ""
 
-#: View/Loglines/index.ctp:34
+#: View/Loglines/index.ctp:33
 msgid "To"
 msgstr ""
 
-#: View/Loglines/index.ctp:40
+#: View/Loglines/index.ctp:39
 msgid "Message contains (accept regex)"
 msgstr ""
 
-#: View/Loglines/index.ctp:71
+#: View/Loglines/index.ctp:70
 msgid "Search from this date"
 msgstr ""
 
-#: View/Loglines/index.ctp:73
+#: View/Loglines/index.ctp:72
 msgid "Search from this severity"
 msgstr ""
 
-#: View/Loglines/index.ctp:87
+#: View/Loglines/index.ctp:86
 msgid "No logs found"
 msgstr ""
 
-#: View/Loglines/index.ctp:90
+#: View/Loglines/index.ctp:89
 msgid "retry with no filters"
 msgstr ""
 
-#: View/Loglines/index.ctp:92
+#: View/Loglines/index.ctp:91
 msgid "no filters"
 msgstr ""
 
@@ -359,7 +403,8 @@ msgstr ""
 #: View/Nas/add.ctp:11
 #: View/Nas/edit.ctp:9
 #: View/Nas/index.ctp:15
-#: View/Radgroups/index.ctp:14
+#: View/Radgroups/add.ctp:9
+#: View/Radgroups/index.ctp:34
 msgid "Name"
 msgstr ""
 
@@ -369,7 +414,7 @@ msgid "Secret key"
 msgstr ""
 
 #: View/Nas/add.ctp:15
-#: View/Radgroups/add.ctp:12
+#: View/Radgroups/add.ctp:23
 #: View/Radusers/add_cert.ctp:22
 #: View/Radusers/add_cisco.ctp:25
 #: View/Radusers/add_loginpass.ctp:24
@@ -382,7 +427,7 @@ msgid "Edit NAS"
 msgstr ""
 
 #: View/Nas/edit.ctp:13
-#: View/Radgroups/edit.ctp:13
+#: View/Radgroups/edit.ctp:26
 #: View/Radusers/edit_cert.ctp:14
 #: View/Radusers/edit_cisco.ctp:21
 #: View/Radusers/edit_loginpass.ctp:15
@@ -391,8 +436,8 @@ msgid "Update"
 msgstr ""
 
 #: View/Nas/index.ctp:14
-#: View/Radgroups/index.ctp:13
-#: View/Radusers/index.ctp:36
+#: View/Radgroups/index.ctp:33
+#: View/Radusers/index.ctp:73
 msgid "ID"
 msgstr ""
 
@@ -401,7 +446,7 @@ msgid "Short name"
 msgstr ""
 
 #: View/Nas/index.ctp:17
-#: View/Radusers/index.ctp:39
+#: View/Radusers/index.ctp:76
 msgid "Type"
 msgstr ""
 
@@ -430,7 +475,7 @@ msgid "Session ID"
 msgstr ""
 
 #: View/Radaccts/index.ctp:7
-#: View/Radusers/index.ctp:37
+#: View/Radusers/index.ctp:74
 msgid "Username"
 msgstr ""
 
@@ -519,27 +564,50 @@ msgstr ""
 msgid "Connection type:"
 msgstr ""
 
-#: View/Radgroups/add.ctp:5
-#: View/Radgroups/index.ctp:8
+#: View/Radgroups/add.ctp:6
+#: View/Radgroups/index.ctp:26
 msgid "Add a group"
 msgstr ""
 
 #: View/Radgroups/add.ctp:10
-#: View/Radgroups/edit.ctp:9
+#: View/Radgroups/edit.ctp:10
 msgid "Selected users"
 msgstr ""
 
-#: View/Radgroups/edit.ctp:5
+#: View/Radgroups/add.ctp:14
+#: View/Radgroups/edit.ctp:14
+#: View/Radusers/add_cert.ctp:14
+#: View/Radusers/add_cisco.ctp:15
+#: View/Radusers/add_loginpass.ctp:15
+#: View/Radusers/add_mac.ctp:13
+msgid "Checks"
+msgstr ""
+
+#: View/Radgroups/add.ctp:19
+#: View/Radgroups/edit.ctp:19
+#: View/Radusers/add_cert.ctp:19
+#: View/Radusers/add_cisco.ctp:21
+#: View/Radusers/add_loginpass.ctp:20
+#: View/Radusers/add_mac.ctp:18
+msgid "Replies"
+msgstr ""
+
+#: View/Radgroups/edit.ctp:6
 msgid "group"
 msgstr ""
 
-#: View/Radgroups/index.ctp:15
-#: View/Radusers/index.ctp:38
+#: View/Radgroups/index.ctp:7
+#: View/Radusers/index.ctp:11
+msgid "Delete selected"
+msgstr ""
+
+#: View/Radgroups/index.ctp:35
+#: View/Radusers/index.ctp:75
 msgid "Comment"
 msgstr ""
 
-#: View/Radgroups/index.ctp:68
-msgid "No groups yet"
+#: View/Radgroups/index.ctp:136
+msgid "No groups yet."
 msgstr ""
 
 #: View/Radusers/add_cert.ctp:6
@@ -554,20 +622,6 @@ msgstr ""
 #: View/Radusers/edit_cisco.ctp:17
 #: View/Radusers/edit_loginpass.ctp:11
 msgid "Selected groups"
-msgstr ""
-
-#: View/Radusers/add_cert.ctp:14
-#: View/Radusers/add_cisco.ctp:15
-#: View/Radusers/add_loginpass.ctp:15
-#: View/Radusers/add_mac.ctp:13
-msgid "Checks"
-msgstr ""
-
-#: View/Radusers/add_cert.ctp:19
-#: View/Radusers/add_cisco.ctp:21
-#: View/Radusers/add_loginpass.ctp:20
-#: View/Radusers/add_mac.ctp:18
-msgid "Replies"
 msgstr ""
 
 #: View/Radusers/add_cisco.ctp:5
@@ -606,7 +660,7 @@ msgid "Add a user with MAC address"
 msgstr ""
 
 #: View/Radusers/add_mac.ctp:8
-#: View/Radusers/index.ctp:28
+#: View/Radusers/index.ctp:58
 #: View/SystemDetails/index.ctp:51
 msgid "MAC address"
 msgstr ""
@@ -632,15 +686,19 @@ msgid "(MAC user)"
 msgstr ""
 
 #: View/Radusers/index.ctp:21
+msgid "Export selected"
+msgstr ""
+
+#: View/Radusers/index.ctp:39
 msgid "Add user"
 msgstr ""
 
-#: View/Radusers/index.ctp:29
+#: View/Radusers/index.ctp:63
 msgid "Upload CSV"
 msgstr ""
 
-#: View/Radusers/index.ctp:98
-msgid "No users yet"
+#: View/Radusers/index.ctp:189
+msgid "No users yet."
 msgstr ""
 
 #: View/Radusers/login.ctp:8
@@ -649,6 +707,22 @@ msgstr ""
 
 #: View/Radusers/login.ctp:14
 msgid "Login"
+msgstr ""
+
+#: View/Radusers/view_cert.ctp:8
+msgid "Certificate user"
+msgstr ""
+
+#: View/Radusers/view_cisco.ctp:8
+msgid "Cisco User"
+msgstr ""
+
+#: View/Radusers/view_loginpass.ctp:8
+msgid "Login / Password User"
+msgstr ""
+
+#: View/Radusers/view_mac.ctp:8
+msgid "MAC User"
 msgstr ""
 
 #: View/SystemDetails/index.ctp:8
@@ -805,5 +879,13 @@ msgstr ""
 
 #: Model/Logline.php:validation for field datefrom
 msgid "Format error with date from."
+msgstr ""
+
+#: Model/Logline.php:validation for field dateto
+msgid "Format error with date to."
+msgstr ""
+
+#: Model/Logline.php:validation for field severity
+msgid "Format error with severity."
 msgstr ""
 

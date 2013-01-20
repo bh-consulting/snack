@@ -1,12 +1,24 @@
-<h2><?php echo __( $title ); ?></h2>
-<div class="btn-group">
-	<? echo $this->Html->link('<i class="' . $icon . ' icon-white"></i> ' . h( $name ), array('action' => $editAction, $id), array('class' => 'btn btn-primary', 'escape' => false)); ?>
-	<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
-	<ul class="dropdown-menu">
-		<li><? echo $this->Html->link('<i class="icon-edit"></i> ' . __('Edit'), array('action' => $editAction, $id), array('escape' => false)); ?></li>
-                <li><? echo $this->Form->postLink('<i class="icon-remove"></i> ' . __('Delete'), array('action' => 'delete', $id), array('confirm' => __('Are you sure?'), 'escape' => false)); ?>
-	</ul>
-</div>
+<h2><?php echo $title; ?></h2>
+<?php
+echo $this->element('dropdownButton', array(
+	'buttonCount' => 2,
+	'title' => h($name),
+	'icon' => 'icon-user',
+	'linkOptions' => array('action' => $editAction, $id),
+	'items' => array(
+		$this->Html->link(
+			'<i class="icon-edit"></i> ' . __('Edit'),
+			array('action' => $editAction, $id),
+			array('escape' => false)
+		),
+		$this->Form->postLink(
+			'<i class="icon-remove"></i> ' . __('Delete'),
+			array('action' => 'delete', $id),
+			array('confirm' => __('Are you sure?'), 'escape' => false)
+		),
+	)
+));
+?>
 
 <dl class="well dl-horizontal">
 	<?php
@@ -23,7 +35,8 @@
 				}
 				echo '</dd>';
 			} else {
-				echo '<dt>' . __($attr) . '</dt><dd>' . ( ( !empty($value) ) ? $value : __('Not defined') ) . '</dd>';
+				echo '<dt>' . __($attr) . '</dt>'
+					. '<dd>' . ( ( !empty($value) ) ? $value : __('Not defined') ) . '</dd>';
 			}
 		}
 	}
