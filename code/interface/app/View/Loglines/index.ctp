@@ -15,10 +15,9 @@
 <?php
 	echo $this->element('filters_panel', array(
 		'controller' => 'loglines/index',
-		'method' => 'get',
 		'inputs' => array(
 			array(
-				'name' => 'severity',
+				'name' => 'level',
 				'label' => __('Severity from'),
 				'type' => 'slidermax',
 				'options' => array('id' => 'severity')
@@ -36,7 +35,7 @@
 				'options' => array('id' => 'dateto')
 			),
 			array(
-				'name' => 'message',
+				'name' => 'msg',
 				'label' => __('Message contains (accept regex)'),
 				'options' => array('id' => 'logmessage')
 			))

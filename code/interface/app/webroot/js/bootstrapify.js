@@ -45,11 +45,11 @@ var Boostrapify = {
 	$('div.pagination li.disabled').wrapInner('<a href="#"></a>');
 
 	// DATETIMEPICKER
-		$('.datetimepicker').wrap('<div class="input-append date datetimepickerwrap" />');
-		$('.datetimepicker').attr('data-format', 'dd/MM/yyyy hh:mm:ss');
-		$('<span class="add-on datetimepickeradd" />').insertAfter('.datetimepicker');
-		$('.datetimepickeradd').append('<i data-time-icon="icon-time" data-date-icon="icon-calendar" />');
-		$('.datetimepickerwrap').datetimepicker({
+	$('.datetimepicker').wrap('<div class="input-append date datetimepickerwrap" />');
+	$('.datetimepicker').attr('data-format', 'dd/MM/yyyy hh:mm:ss');
+	$('<span class="add-on datetimepickeradd" />').insertAfter('.datetimepicker');
+	$('.datetimepickeradd').append('<i data-time-icon="icon-time" data-date-icon="icon-calendar" />');
+	$('.datetimepickerwrap').datetimepicker({
 		language: 'fr'
 	});
 

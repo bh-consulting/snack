@@ -1,14 +1,12 @@
 <?php
 
-App::uses('Utils', 'Lib');
-
 class Logline extends AppModel {
 	var $useTable = 'logs';
 	var $primaryKey = 'id';
 	var $displayField = 'msg';
 	var $name = 'Logline';
 
-	public $severities = array(
+	public $levels = array(
 		'debug' => 'Debug',
 		'info' => 'Info',
 		'notice' => 'Notice',
@@ -21,8 +19,19 @@ class Logline extends AppModel {
 
 	public $validate = array(
 		'datefrom' => array(
-			'rule' => 'date', /* HEEEERRRE */
-			'message' => 'Format error with date from.'
+			'rule' => array('datetime', 'dmy'),
+			'message' => 'Format error with date from.',
+			'allowEmpty' => true,
+		),
+		'dateto' => array(
+			'rule' => array('datetime', 'dmy'),
+			'message' => 'Format error with date to.',
+			'allowEmpty' => true,
+		),
+		'severity' => array(
+			'rule' => array('inList', array('debug', 'info', 'notice', 'warn', 'err', 'crit', 'alert', 'emerg')),
+			'message' => 'Format error with severity.',
+			'allowEmpty' => true,
 		)
 	);
 }

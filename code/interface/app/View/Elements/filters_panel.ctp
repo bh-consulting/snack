@@ -17,7 +17,7 @@
 			'controller' => $controller[0],
 			'action' => $controller[1]
 		),
-		'type' => $method,
+		'type' => isset($method) ? $method : 'get',
 		'id' => 'filtersForm',
 		'class' => 'well',
 		'style' => $filtersPanOpen ? 'display: block' : null
