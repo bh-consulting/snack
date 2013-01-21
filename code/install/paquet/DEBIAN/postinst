@@ -85,7 +85,6 @@ sed\
 #Certificats
 
 
-#CAplPATH=/usr/lib/ssl/misc
 #Guess the home path; 
 if [ -n "$SUDO_USER" ];
     then
@@ -101,7 +100,6 @@ else
 fi
 
 
-CAplPATH=install/files/usr/lib/ssl/misc
 DESTROOTPATH=$USER_HOME/$PAQUETNAME
 DESTFOLDER=cert
 DESTPATH=$DESTROOTPATH/$DESTFOLDER
@@ -204,7 +202,6 @@ openssl ca -config /etc/ssl/openssl.cnf \
 
 
 #This instruction is replaced by the tree above instructions.
-#$CAplPATH/CA.pl -newca
 
 #Even the radius should not acces the cakey file. 
 chmod $ONLYRADIUSACCESS $DESTPATH/private/$CAKEY
