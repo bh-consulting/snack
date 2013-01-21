@@ -78,7 +78,6 @@ class RadusersController extends AppController
 			
 			if( $r['Raduser']['type'] == "mac" ) {
         		$r['Raduser']['username'] = $this->Checks->formatMAC( $r['Raduser']['username'] );
-                //$this->Checks->updateRadcheckFields($r['Raduser']['id'], $this->request);
     	    }
         }
 
