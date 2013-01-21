@@ -5,14 +5,14 @@
 Pour ajouter un client'nas' (Switch ou autre équipement), qui pourra dès lors interroger le radius~:
 
 \begin{alltt}
-\$ echo "INSERT INTO nas VALUES (nasname, shortname, secret) VALUES \\('192.168.0.254','switch','poil');" | mysql -uroot -p radius
+\$ echo "INSERT INTO nas VALUES (nasname, shortname, secret) VALUES \\('192.168.0.254','switch','mysecret');" | mysql -uroot -p radius
 \end{alltt}
 
 \textbf{Note:} Pour spécifier un netmask, utiliser la valeur 192.168.0.0/24
 
 Pour supprimer un NAS~:
 \begin{alltt}
-\$ echo "DELETE FROM nas WHERE nasname='192.168.0.254' AND shortname='switch' \\AND secret='poil';" | mysql -uroot -p radius
+\$ echo "DELETE FROM nas WHERE nasname='192.168.0.254' AND shortname='switch' \\AND secret='mysecret';" | mysql -uroot -p radius
 \end{alltt}
 
 

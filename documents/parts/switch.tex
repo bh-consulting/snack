@@ -55,7 +55,7 @@ Switch(config-if)# switchport mode access
 puis,
 
 \begin{verbatim}
-Switch(config-if)# dot1x port-control {auto | force-authorized | force-unauthorized}
+Switch(config-if)# dot1x port-control auto
 \end{verbatim}
 
 \subsubsection{Incompatibilités}
@@ -69,6 +69,15 @@ La fonctionnalité 802.1X ne peut être activée sur les ports :
 \item Secure
 \item Switch Port Analyzer (SPAN)
 \end{enumerate}
+
+
+\subsubsection{Configurer un serveur radius}
+Pour configurer un serveur radius~:
+\begin{verbatim}
+Switch(config)# aaa new-model
+Switch(config)# radius-server host 192.168.1.10 auth-port 1812 key mysecret 
+\end{verbatim}
+L'ip du radius est suposée être 192.168.1.10 et le secret 'mysecret'.
 
 \subsubsection{Authentification périodique}
 
