@@ -78,7 +78,7 @@ class RadusersController extends AppController
 			
 			if( $r['Raduser']['type'] == "mac" ) {
         		$r['Raduser']['username'] = $this->Checks->formatMAC( $r['Raduser']['username'] );
-                $this->Checks->updateRadcheckFields($id, $this->request);
+                //$this->Checks->updateRadcheckFields($r['Raduser']['id'], $this->request);
     	    }
         }
 
@@ -97,31 +97,31 @@ class RadusersController extends AppController
         $this->set('radchecks', $views['checks']);
         $this->set('radgroups', $views['groups']);
 	
-	$attributes = $type;
+    	$attributes = $type;
 
-	// Raduser
-	if( $views['base']['Raduser']['type'] == "mac" && strlen( $views['base']['Raduser']['username'] ) == 12 ) {
-		$attributes['MAC address'] = $this->Checks->formatMAC( $views['base']['Raduser']['username'] );
-	} else {
-		$attributes['Username'] = $views['base']['Raduser']['username'];
-	}
-	$attributes['Comment'] = $views['base']['Raduser']['comment'];
-	$attributes['Certificate path'] = $views['base']['Raduser']['cert_path'];
+    	// Raduser
+    	if( $views['base']['Raduser']['type'] == "mac" && strlen( $views['base']['Raduser']['username'] ) == 12 ) {
+    		$attributes['MAC address'] = $this->Checks->formatMAC( $views['base']['Raduser']['username'] );
+    	} else {
+    		$attributes['Username'] = $views['base']['Raduser']['username'];
+    	}
+    	$attributes['Comment'] = $views['base']['Raduser']['comment'];
+    	$attributes['Certificate path'] = $views['base']['Raduser']['cert_path'];
 
-	// Radchecks
-	foreach($views['checks'] as $check){
-		$attributes[ $check['Radcheck']['attribute'] ] = $check['Radcheck']['value'];
-	}
+    	// Radchecks
+    	foreach($views['checks'] as $check){
+    		$attributes[ $check['Radcheck']['attribute'] ] = $check['Radcheck']['value'];
+    	}
 
-	// Radgroups
-	$groups = array();
-	foreach($views['groups'] as $group){
-		$groups[] = $group['Radusergroup']['groupname'];
-	}
+    	// Radgroups
+    	$groups = array();
+    	foreach($views['groups'] as $group){
+    		$groups[] = $group['Radusergroup']['groupname'];
+    	}
 
-	$attributes['Groups'] = $groups;
+    	$attributes['Groups'] = $groups;
 
-	$this->set('attributes', $attributes);
+    	$this->set('attributes', $attributes);
     }
 
     public function view_cisco($id = null) {

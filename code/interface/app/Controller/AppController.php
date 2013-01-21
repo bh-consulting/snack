@@ -21,7 +21,7 @@
  */
 
 App::uses('Controller', 'Controller');
-//App::uses('Utils', 'Lib');
+App::uses('Utils', 'Lib');
 
 /**
  * Application Controller
@@ -36,8 +36,7 @@ class AppController extends Controller
 {
     public function beforeFilter(){
         if(!$this->Session->check('Config.language')){
-//            $lang = Utils::getISOCode($_SERVER['HTTP_ACCEPT_LANGUAGE']);
-	    $lang = 'fr';
+            $lang = Utils::getISOCode($_SERVER['HTTP_ACCEPT_LANGUAGE']);
             $this->Session->write('Config.language', $lang);
         }
 
