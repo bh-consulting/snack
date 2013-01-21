@@ -125,6 +125,7 @@ RADIUSREQ=radius_req.pem
 RADIUSCERT=radius_cert.pem
 
 EAPCONF=/etc/freeradius/eap.conf
+DEFAULTVIRTUALSERVER=/etc/freeradius/sites-available/default
 
 ############################################
 #Get the name of the client firm
@@ -268,7 +269,18 @@ sed\
         -e "/check_crl =/c \\\t\t\tcheck_crl = yes"\
         -e "/^\s*#*CA_path =/c \\\t\t\tCA_path = \${certdir}/certs"\
         -e "/^\s*#*\s*check_cert_cn =/c \\\t\t\tcheck_cert_cn = %{User-Name}"\
+	-e "/virtual_server/c \\\t\t\tvirtual_server=\"bh.consulting.net\""\
         -i $EAPCONF
+
+#By the way, changes for default virtual server. Used by EAP-MD5 authentication.
+sed\ 
+	-e "{N 
+	    s/\s*#  Read the 'users' file\n\s*files/\\t#  Read the 'users' file\n#\\tfiles/
+	    }" \
+	-e "{N
+	    s/\s*#  See \"Authorization Queries\" in sql.conf\n\s*#\s*sql/\\t#  See \"Authorization Queries\" in sql.conf\n\\tsql/
+	    }" \
+	-i $DEFAULTVIRTUALSERVER
 
 
 
