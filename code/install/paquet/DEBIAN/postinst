@@ -31,11 +31,13 @@ do
 	echo "Password not corresponding! "
     fi
     stty -echo
+    read -t 1 -n 10000 discard
     read -p "Enter administrator password : " mdp_radius
     stty echo
     echo ""
     stty -echo
     
+    read -t 1 -n 10000 discard
     read -p "Re enter administrator password : " mdp_radius_bis
     stty echo
     echo ""
@@ -205,7 +207,8 @@ openssl ca -config /etc/ssl/openssl.cnf \
 #This instruction is replaced by the tree above instructions.
 
 #Even the radius should not acces the cakey file. 
-chmod $ONLYRADIUSACCESS $DESTPATH/private/$CAKEY
+chown www-data $DESTPATH/private/$CAKEY
+chmod $INTERFACEACCESS $DESTPATH/private/$CAKEY
 chmod $READINGONLY $DESTPATH/private/$CACERT
 
 
