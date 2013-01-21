@@ -168,7 +168,7 @@ then
 	mkdir -p $DESTROOTPATH -m $PATHDIRMODE
 fi
 
-mkdir $DESTPATH -m $INTERFACETHROUGH;
+mkdir $DESTPATH -m $INTERFACEACCESS;
 #chown freerad $DESTPATH
 mkdir "${DESTPATH}/certs" -m $ONLYRADIUSACCESS;
 #chown freerad $DESTPATH/certs
@@ -181,9 +181,30 @@ mkdir "${DESTPATH}/private" -m $INTERFACETHROUGH;
 mkdir "${DESTPATH}/users" -m $INTERFACEACCESS;
 #chown freerad $DESTPATH/users
 touch $DESTPATH/index.txt
+#touch $DESTPATH/index.txt.new
+#touch $DESTPATH/index.txt.attr
+#touch $DESTPATH/index.txt.attr.new
+#touch $DESTPATH/serial
+#touch $DESTPATH/serial.new
+#touch $DESTPATH/serial.old
 echo "01" > $DESTPATH/crlnumber
-chown freerad $DESTPATH/index.txt
-chmod $ONLYRADIUSACCESS $DESTPATH/index.txt
+#chown freerad $DESTPATH/index.txt
+#chmod $ONLYRADIUSACCESS $DESTPATH/index.txt
+#chown www-data $DESTPATH/index.txt.new
+#chmod $INTERFACEACCESS $DESTPATH/index.txt.new
+#chown www-data $DESTPATH/index.txt.attr
+#chmod $INTERFACEACCESS $DESTPATH/index.txt.attr
+#chown www-data $DESTPATH/index.txt.attr.new
+#chmod $INTERFACEACCESS $DESTPATH/index.txt.attr.new
+#chown www-data $DESTPATH/serial
+#chmod $INTERFACEACCESS $DESTPATH/serial
+#chown www-data $DESTPATH/serial.new
+#chmod $INTERFACEACCESS $DESTPATH/serial.new
+#chown www-data $DESTPATH/serial.old
+#chmod $INTERFACEACCESS $DESTPATH/serial.old
+#chown www-data $DESTPATH/crlnumber
+#chmod $INTERFACEACCESS $DESTPATH/crlnumber
+
 
 ############################################
 #Creation of the Authority Certificate (CA)
@@ -206,7 +227,6 @@ openssl ca -config /etc/ssl/openssl.cnf \
 
 #This instruction is replaced by the tree above instructions.
 
-#Even the radius should not acces the cakey file. 
 chown www-data $DESTPATH/private/$CAKEY
 chmod $INTERFACEACCESS $DESTPATH/private/$CAKEY
 chmod $READINGONLY $DESTPATH/private/$CACERT
@@ -238,10 +258,10 @@ HASH=`openssl x509 -noout -hash -in $DESTPATH/private/$CACERT`
 ln -s $DESTPATH/private/$CACERT $DESTPATH/certs/$HASH.0
 ln -s $DESTPATH/crl/crl.pem $DESTPATH/certs/$HASH.r0
 
-chown freerad $DESTPATH/certs/$HASH.0
-chown freerad $DESTPATH/certs/$HAST.r0
-chmod $ONLYRADIUSACCESS $DESTPATH/certs/$HASH.0
-chmod $ONLYRADIUSACCESS $DESTPATH/certs/$HASH.r0
+#chown freerad $DESTPATH/certs/$HASH.0
+#chown freerad $DESTPATH/certs/$HAST.r0
+#chmod $ONLYRADIUSACCESS $DESTPATH/certs/$HASH.0
+#chmod $ONLYRADIUSACCESS $DESTPATH/certs/$HASH.r0
 
 chown freerad $DESTPATH/crl/crl.pem
 chmod $INTERFACEACCESS $DESTPATH/crl/crl.pem
