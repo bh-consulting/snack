@@ -273,8 +273,7 @@ sed\
         -i $EAPCONF
 
 #By the way, changes for default virtual server. Used by EAP-MD5 authentication.
-sed\ 
-	-e "{N 
+sed -e "{N 
 	    s/\s*#  Read the 'users' file\n\s*files/\\t#  Read the 'users' file\n#\\tfiles/
 	    }" \
 	-e "{N
