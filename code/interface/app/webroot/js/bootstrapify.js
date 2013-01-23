@@ -21,8 +21,11 @@ var Boostrapify = {
         $('textarea').wrap('<div class="controls"></div>');
         $('select').wrap('<div class="controls"></div>');
         $('label').addClass('control-label');
-        //All submit forms converted to primary button
+        // All submit forms converted to primary button
         $('input[type="submit"]').addClass('btn btn-primary');
+	// Special inputs
+	$('input.email').wrap('<div class="input-append"></div>');
+	$('input.email').after('<span class="add-on">@</span>');
 
         // FORM ERROR MESSAGES
 		$('div.error-message').replaceWith(function() { 

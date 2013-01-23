@@ -1,4 +1,4 @@
-<? 
+<?php
 $this->extend('/Common/radius_sidebar'); 
 $this->assign('dashboard_active', 'active');
 ?>
