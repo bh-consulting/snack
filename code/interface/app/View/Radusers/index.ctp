@@ -1,41 +1,13 @@
 <? 
 $this->extend('/Common/radius_sidebar');
 $this->assign('users_active', 'active');
-
-$actionButton = $this->element('dropdownButton', array(
-	'buttonCount' => 1,
-	'title' => 'Action',
-	'icon' => '',
-	'items' => array(
-		$this->Html->link(
-			'<i class="icon-remove"></i> ' . __('Delete selected'),
-			'#',
-			array(
-				'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
-				. "if (confirm('" . __('Are you sure?') . "')) {"
-				. "$('#MultiSelectionIndexForm').submit();}",
-				'escape' => false,
-			)
-		),
-		$this->Html->link(
-			'<i class="icon-share"></i> ' . __('Export selected'),
-			'#',
-			array(
-				'onClick' =>	"$('#selectionAction').attr('value', 'export');"
-				. "$('#MultiSelectionIndexForm').submit();",
-				'escape' => false,
-			)
-		),
-	)
-));
 ?>
 
 <h1><? echo __('Users'); ?></h1>
 <?php
-echo $actionButton;
 echo $this->element('dropdownButton', array(
 	'buttonCount' => 1,
-	'class' => 'btn-info',
+	'class' => 'btn-primary',
 	'title' => __('Add user'),
 	'icon' => 'icon-user',
 	'items' => array(
@@ -59,13 +31,14 @@ echo $this->element('dropdownButton', array(
 			array('action' => 'add_mac'),
 			array('escape' => false)
 		),
-		$this->Html->link(
-			'<i class="icon-plus"></i> ' . __('Upload CSV'), 
-			array('action' => 'add_csv'),
-			array('escape' => false)
-		),
 	)
 ));
+
+echo $this->Html->link(
+	'<i class="icon-upload icon-white"></i> ' . __('Import CSV'), 
+	array('action' => 'add_csv'),
+	array('escape' => false, 'class' => 'btn btn-primary')
+);
 ?>
 
 <?php
@@ -196,7 +169,32 @@ if (!empty($radusers)) {
 	</tbody>
 </table>
 <?php
-echo $actionButton;
+echo $this->element('dropdownButton', array(
+	'buttonCount' => 1,
+	'title' => 'Action',
+	'icon' => '',
+	'items' => array(
+		$this->Html->link(
+			'<i class="icon-remove"></i> ' . __('Delete selected'),
+			'#',
+			array(
+				'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
+				. "if (confirm('" . __('Are you sure?') . "')) {"
+				. "$('#MultiSelectionIndexForm').submit();}",
+				'escape' => false,
+			)
+		),
+		$this->Html->link(
+			'<i class="icon-share"></i> ' . __('Export selected'),
+			'#',
+			array(
+				'onClick' =>	"$('#selectionAction').attr('value', 'export');"
+				. "$('#MultiSelectionIndexForm').submit();",
+				'escape' => false,
+			)
+		),
+	)
+));
 echo $this->Form->end(array('id' => 'selectionAction', 'name' => 'action', 'type' => 'hidden'));
 echo $this->element('paginator_footer');
 unset($rad);

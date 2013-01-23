@@ -6,8 +6,43 @@ class NasController extends AppController
     public $paginate = array('limit' => 10, 'order' => array('Nas.id' => 'asc'));
     public $uses = array('Nas');
 
-    public function index()
-    {
+    public function index() {
+		if ($this->request->is('post')) {
+			if (isset($this->request->data['MultiSelection']['nas'])
+				&& is_array($this->request->data['MultiSelection']['nas'])
+			) {
+				$success = false;
+				foreach( $this->request->data['MultiSelection']['nas'] as $nasId ) {
+					switch( $this->request->data['action'] ) {
+					case "delete":
+						$success = $this->Nas->delete($nasId);
+						break;
+					}
+
+					if($success){
+						switch( $this->request->data['action'] ) {
+						case "delete":
+							$this->Session->setFlash(
+								__('NAS have been deleted.'),
+								'flash_success'
+							);
+							break;
+						}
+					} else {
+						switch( $this->request->data['action'] ) {
+						case "delete":
+							$this->Session->setFlash(
+								__('Unable to delete NAS.'),
+								'flash_error'
+							);
+							break;
+						}
+					}
+				}
+			} else {
+				$this->Session->setFlash(__('Please, select at least one NAS !'), 'flash_warning');
+			}
+		}
         $this->set('nas', $this->paginate('Nas'));
         // FIXME: should not be here, DRY
         $this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));

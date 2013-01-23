@@ -1,42 +1,22 @@
 <? 
 $this->extend('/Common/radius_sidebar');
 $this->assign('groups_active', 'active');
-
-$deleteButton = '<div class="btn-group">'
-	. $this->Html->link(
-		'<i class="icon-remove icon-white"></i> ' . __('Delete selected'),
-		'#',
-		array(
-			'class' => 'btn btn-primary',
-			'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
-			. "if (confirm('" . __('Are you sure?') . "')) {"
-			. "$('#MultiSelectionIndexForm').submit();}",
-			'escape' => false
-		)
-	)
-	. '</div>';
-
 ?>
 
 <h1><? echo __('Groups'); ?></h1>
 <?php
-echo $deleteButton;
-echo '<div class="btn-group">'
-	. $this->Html->link(
-		__('Add a group'),
+echo $this->Html->link(
+		'<i class="icon-list icon-white"></i> ' . __('Add a group'),
 		array('controller' => 'radgroups', 'action' => 'add'),
-		array('class' => 'btn btn-info')
-	)
-	. '</div>';
+		array('escape' => false, 'class' => 'btn btn-primary')
+	);
 
 $columns = array(
     'id' => array('text' => __('ID'), 'width' => '40px'),
     'groupname' => array('text' => __('Name')),
     'comment' => array('text' => __('Comment'))
 );
-?>
 
-<?php
 echo $this->Form->create('Radgroups', array('action' => 'delete'));
 echo $this->Form->end();
 
@@ -82,7 +62,7 @@ if (!empty($radgroups)) {
 			<td>
 <?php
 		echo $this->Form->select(
-			'users',
+			'groups',
 			array($g['Radgroup']['id'] => ''),
 			array('class' => 'checkbox range', 'multiple' => 'checkbox', 'hiddenField' => false)
 		);
@@ -142,7 +122,23 @@ if (!empty($radgroups)) {
 </table>
 
 <?php
-echo $deleteButton;
+echo $this->element('dropdownButton', array(
+	'buttonCount' => 1,
+	'title' => 'Action',
+	'icon' => '',
+	'items' => array(
+		$this->Html->link(
+			'<i class="icon-remove"></i> ' . __('Delete selected'),
+			'#',
+			array(
+				'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
+				. "if (confirm('" . __('Are you sure?') . "')) {"
+				. "$('#MultiSelectionIndexForm').submit();}",
+				'escape' => false,
+			)
+		),
+	)
+));
 echo $this->Form->end(array(
 	'id' => 'selectionAction',
 	'name' => 'action',

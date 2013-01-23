@@ -28,8 +28,20 @@ if (isset($buttonCount) && $buttonCount == 1) {
 
 	<ul class="dropdown-menu">
 <?php
-foreach ($items as $item) {
-    echo '<li>' . $item . '</i>';
+foreach ($items as $key=>$item) {
+	if (is_array($item)) {
+		echo '<li class="dropdown-submenu">'
+			. $key
+			. '<ul class="dropdown-menu">';
+
+		foreach ($item as $subItem) {
+			echo '<li>' . $subItem . '</li>';
+		}
+
+		echo '</ul>';
+	} else {
+		echo '<li>' . $item . '</i>';
+	}
 }
 ?>
 	</ul>

@@ -25,7 +25,7 @@ class RadgroupsController extends AppController
 				foreach( $this->request->data['MultiSelection']['groups'] as $groupId ) {
 					switch( $this->request->data['action'] ) {
 					case "delete":
-						$success = $this->Checks->delete($this->request, $userId);
+						$success = $this->Checks->delete($this->request, $groupId);
 						break;
 					}
 

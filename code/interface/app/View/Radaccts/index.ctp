@@ -3,16 +3,19 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('monitoring_active', 'active');
 
 $columns = array(
-	'acctuniqueid'		=> __('Session ID'),
-	'username'		=> __('Username'),
-	'callingstationid'	=> __('IP'),
-	'acctstarttime'		=> __('Start'),
-	'acctstoptime'		=> __('Stop'),
-	'nasipaddress'		=> __('NAS IP'),
-	'nasportid'		=> __('NAS Port'),
+	'acctuniqueid' => __('Session ID'),
+	'username' => __('Username'),
+	'callingstationid' => __('IP'),
+	'acctstarttime' => __('Start'),
+	'acctstoptime' => __('Stop'),
+	'nasipaddress' => __('NAS IP'),
+	'nasportid' => __('NAS Port'),
 );
 ?>
+
 <h1><? echo __('Sessions'); ?></h1>
+<?php
+?>
 
 <table class="table">
     <thead>

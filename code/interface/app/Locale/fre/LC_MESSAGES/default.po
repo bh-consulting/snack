@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SNACK\n"
 "POT-Creation-Date: 2013-01-20 21:53+0000\n"
-"PO-Revision-Date: 2013-01-20 23:00+0100\n"
+"PO-Revision-Date: 2013-01-21 17:53+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: \n"
@@ -28,7 +28,7 @@ msgstr "Impossible de mettre à jour le NAS."
 
 #: Controller/NasController.php:83
 msgid "The NAS with id:"
-msgstr "Le NAS d'id :"
+msgstr "Le NAS d'id #"
 
 #: Controller/NasController.php:83
 msgid "has been deleted"
@@ -36,7 +36,7 @@ msgstr "a été supprimé"
 
 #: Controller/RadacctsController.php:27
 msgid "The Session with id:"
-msgstr "La session d'id :"
+msgstr "La session d'id #"
 
 #: Controller/RadacctsController.php:27
 #: Controller/RadgroupsController.php:135
@@ -46,11 +46,11 @@ msgstr " a été supprimé."
 
 #: Controller/RadgroupsController.php:36
 msgid "Groups have been deleted."
-msgstr "Le groupe a été supprimé."
+msgstr "Les groupes ont été supprimés."
 
 #: Controller/RadgroupsController.php:45
 msgid "Unable to delete groups."
-msgstr "Impossible de supprimer le groupe."
+msgstr "Impossible de supprimer les groupes."
 
 #: Controller/RadgroupsController.php:53
 msgid "Please, select at least one group !"
