@@ -11,25 +11,29 @@ echo $this->element('dropdownButton', array(
 	'title' => __('Add user'),
 	'icon' => 'icon-user',
 	'items' => array(
-		$this->Html->link(
-			'<i class="icon-plus-sign"></i> ' . __('Cisco'), 
-			array('action' => 'add_cisco'),
-			array('escape' => false)
+		_('Active') => array(
+			$this->Html->link(
+				'<i class="icon-plus-sign"></i> ' . __('Certificate'), 
+				array('action' => 'add_cert'),
+				array('escape' => false, 'class' => 'secure_auth')
+			),
+			$this->Html->link(
+				'<i class="icon-plus-sign"></i> ' . __('Login / Password'), 
+				array('action' => 'add_loginpass'),
+				array('escape' => false, 'class' => 'warning_auth')
+			),
+			$this->Html->link(
+				'<i class="icon-plus-sign"></i> ' . __('MAC address'), 
+				array('action' => 'add_mac_active'),
+				array('escape' => false, 'class' => 'dangerous_auth')
+			),
 		),
-		$this->Html->link(
-			'<i class="icon-plus-sign"></i> ' . __('Login / Password'), 
-			array('action' => 'add_loginpass'),
-			array('escape' => false)
-		),
-		$this->Html->link(
-			'<i class="icon-plus-sign"></i> ' . __('Certificate'), 
-			array('action' => 'add_cert'),
-			array('escape' => false)
-		),
-		$this->Html->link(
-			'<i class="icon-plus-sign"></i> ' . __('MAC address'), 
-			array('action' => 'add_mac'),
-			array('escape' => false)
+		_('Passive') => array(
+			$this->Html->link(
+				'<i class="icon-plus-sign"></i> ' . __('MAC address'), 
+				array('action' => 'add_mac_passive'),
+				array('escape' => false)
+			)
 		),
 	)
 ));

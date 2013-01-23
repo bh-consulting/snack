@@ -2,7 +2,7 @@
 
 <?php
 $color = (isset($color)) ? $color : 'icon-white';
-$color = (isset($icon) && !empty($icon)) ? $color : '';
+$icon = (isset($icon) && !empty($icon)) ? $icon : '';
 $class = (isset($class)) ? $class : 'btn-primary';
 
 if (isset($buttonCount) && $buttonCount == 1) {
@@ -31,7 +31,7 @@ if (isset($buttonCount) && $buttonCount == 1) {
 foreach ($items as $key=>$item) {
 	if (is_array($item)) {
 		echo '<li class="dropdown-submenu">'
-			. $key
+			. '<a tabindex="-1" href="#">' . $key . '</a>'
 			. '<ul class="dropdown-menu">';
 
 		foreach ($item as $subItem) {

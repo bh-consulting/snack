@@ -207,18 +207,6 @@ class ChecksComponent extends Component
             );
             $replies[]= array(
                 $name,
-                'Reply-Message',
-                '=',
-                $request->data[$this->baseClassName]['reply-message']
-            );
-            $replies[]= array(
-                $name,
-                'Exec-Program-Wait',
-                '=',
-                $request->data[$this->baseClassName]['exec-program-wait']
-            );
-            $replies[]= array(
-                $name,
                 'Session-Timeout',
                 '=',
                 $request->data[$this->baseClassName]['session-timeout']
@@ -403,8 +391,6 @@ class ChecksComponent extends Component
         // common fields
         $fields = array(
             'Tunnel-Private-Group-Id' => $request->data[$this->baseClassName]['tunnel-private-group-id'],
-            'Reply-Message' => $request->data[$this->baseClassName]['reply-message'],
-            'Exec-Program-Wait' => $request->data[$this->baseClassName]['exec-program-wait'],
             'Session-Timeout' => $request->data[$this->baseClassName]['session-timeout'],
             );
         $rads = $this->getReplies($id);

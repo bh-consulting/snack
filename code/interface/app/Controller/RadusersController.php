@@ -160,6 +160,7 @@ class RadusersController extends AppController
         $this->set('groups', $groups->find('list', array('fields' => array('groupname'))));
     }
 
+    // FIXME dead code
     public function add_cisco(){
         $success = false;
         if ($this->request->is('post')) {
@@ -189,6 +190,43 @@ class RadusersController extends AppController
         $this->add($success);
     }
 
+    /**
+    * Add check lines if cisco checkbox is checked
+    * Allows the user to connect to cisco
+    */
+    private function ciscoFields(){
+        $checks = array();
+
+        if($this->request->data['Raduser']['cisco'] == 1){
+            $name = $this->request->data['Raduser']['username'];
+            $this->request->data['Raduser']['is_cisco'] = 1;
+            $nasPortType = $this->request->data['Raduser']['nas-port-type'];
+
+            if($nasPortType == 10){
+                $nasPortTypeRegexp = '0|5|15';
+            } else {
+                $nasPortTypeRegexp = $nasPortType . '|15';
+            }
+
+            $checks[]= array(
+                $name,
+                'NAS-Port-Type',
+                '=~',
+                $nasPortTypeRegexp,
+            );
+
+            if(isset($this->request->data['Raduser']['is_mac'])){
+                $checks[]= array(
+                    $name,
+                    'Cleartext-Password',
+                    ':=',
+                    $this->request->data['Raduser']['password'],
+                );
+            }
+        }
+        return $checks;
+    }
+
     public function add_loginpass(){
         $success = false;
         if ($this->request->is('post')) {
@@ -210,14 +248,83 @@ class RadusersController extends AppController
                     'EAP-Type',
                     ':=',
                     'MD5-CHALLENGE'
+                    // TODO ou 'EAP-TTLS si checkbox cert serveur cochee
                 )
             );
+            $rads = array_merge($rads, $this->ciscoFields());
             $success = $this->Checks->add($this->request, $rads);
         }
         $this->add($success);
     }
 
-    public function add_mac(){
+
+    public function add_mac_active(){
+        $success = false;
+        if ($this->request->is('post')) {
+
+            $this->request->data['Raduser']['mac'] = str_replace(':', '', $this->request->data['Raduser']['mac']);
+            $this->request->data['Raduser']['mac'] = str_replace('-', '', $this->request->data['Raduser']['mac']);
+            $name = $this->request->data['Raduser']['username'];
+            $this->request->data['Raduser']['is_mac'] = 1;
+            $rads = array(
+                array(
+                    $name,
+                    'NAS-Port-Type',
+                    '==',
+                    '15'
+                ),
+                // array($name,
+                //     'Cleartext-Password',
+                //     ':=',
+                //     $this->request->data['Raduser']['mac']
+                // ),
+                // array($name,
+                //     'EAP-Type',
+                //     ':=',
+                //     'MD5-CHALLENGE'
+                // ),
+                array(
+                    $name,
+                    'Calling-Station-Id',
+                    '==',
+                    $this->request->data['Raduser']['mac'],
+                ),
+            );
+
+            $rads = array_merge($rads, $this->ciscoFields());
+            $success = $this->Checks->add($this->request, $rads);
+        }
+        $this->add($success);
+    }
+
+    public function add_cert(){
+        $success = false;
+        if ($this->request->is('post')) {
+
+            $name = $this->request->data['Raduser']['username'];
+            $this->request->data['Raduser']['is_cert'] = 1;
+            $this->request->data['Raduser']['cert_path'] = '/var/www/cert/newcerts/' . $name . '.pem';
+            $rads = array(
+                array($name,
+                    'NAS-Port-Type',
+                    '==',
+                    '15'
+                ),
+                array($name,
+                    'EAP-Type',
+                    ':=',
+                    'TLS'
+                )
+            );
+            $rads = array_merge($rads, $this->ciscoFields());
+            $success = $this->Checks->add($this->request, $rads);
+
+            // TODO: generate a certificate
+        }
+        $this->add($success);
+    }
+
+    public function add_mac_passive(){
         $success = false;
         if ($this->request->is('post')) {
 
@@ -244,32 +351,6 @@ class RadusersController extends AppController
                 )
             );
             $success = $this->Checks->add($this->request, $rads);
-        }
-        $this->add($success);
-    }
-
-    public function add_cert(){
-        $success = false;
-        if ($this->request->is('post')) {
-
-            $name = $this->request->data['Raduser']['username'];
-            $this->request->data['Raduser']['is_cert'] = 1;
-            $this->request->data['Raduser']['cert_path'] = '/var/www/cert/newcerts/' . $name . '.pem';
-            $rads = array(
-                array($name,
-                    'NAS-Port-Type',
-                    '==',
-                    '15'
-                ),
-                array($name,
-                    'EAP-Type',
-                    ':=',
-                    'EAP-TTLS'
-                )
-            );
-            $success = $this->Checks->add($this->request, $rads);
-
-            // TODO: generate a certificate
         }
         $this->add($success);
     }
