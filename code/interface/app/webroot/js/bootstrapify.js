@@ -30,9 +30,10 @@ var Boostrapify = {
 			$(this).replaceWith("<span class='help-inline'>" + content + "</span>");
 		});
 		helps = $('.help-inline');
-		for(el in helps){
-			prev = $(helps[el]).prev();
-			prev.append(helps[el]);
+		console.log(helps);
+		for(var i = 0; i < helps.length; i++){
+			prev = $(helps[i]).prev();
+			prev.append(helps[i]);
 		}
 
         // FLASH MESSAGES
