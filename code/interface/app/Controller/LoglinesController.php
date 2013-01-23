@@ -3,38 +3,73 @@
 App::uses('Sanitize', 'Utility');
 
 class LoglinesController extends AppController {
-	public $helpers = array('Html', 'Form');
-	public $paginate = array('limit' => 10, 'order' => array('id' => 'desc'));
-	public $components = array(
-		'Filters' => array('model' => 'Logline')
-	);
-	
-	public function index() {
-		$this->set('levels', $this->Logline->levels);
+    public $helpers = array('Html', 'Form');
+    public $paginate = array('limit' => 10, 'order' => array('id' => 'desc'));
+    public $components = array(
+	'Filters' => array('model' => 'Logline')
+    );
 
-		$this->Filters->addListConstraint(array(
-			'column' => 'level', 
-			'default' => 'info',
-			'list' => array_reverse($this->Logline->levels),
-		));
+    public function index() {
+	if ($this->request->is('post')) {
+	    if (isset($this->request->data['MultiSelection']['logs'])
+		&& is_array($this->request->data['MultiSelection']['logs'])
+	    ) {
+		$success = false;
+		foreach( $this->request->data['MultiSelection']['logs'] as $logId ) {
+		    switch( $this->request->data['action'] ) {
+		    case "delete":
+			$success = $this->Logline->delete($logId);
+			break;
+		    }
 
-		$this->Filters->addDatesConstraint(array(
-			'column' => 'datetime', 
-			'from' => 'datefrom',
-			'to' => 'dateto',
-		));
-
-		$this->Filters->addStringConstraint(array(
-			'column' => 'msg', 
-		));
-
-		$this->Filters->paginate();
+		    if($success){
+			switch( $this->request->data['action'] ) {
+			case "delete":
+			    $this->Session->setFlash(
+				__('Log lines have been deleted.'),
+				'flash_success'
+			    );
+			    break;
+			}
+		    } else {
+			switch( $this->request->data['action'] ) {
+			case "delete":
+			    $this->Session->setFlash(
+				__('Unable to delete log lines.'),
+				'flash_error'
+			    );
+			    break;
+			}
+		    }
+		}
+	    } else {
+		$this->Session->setFlash(__('Please, select at least one log line !'), 'flash_warning');
+	    }
 	}
+	$this->set('levels', $this->Logline->levels);
 
-	public function view($id = null) {
-		$this->Logline->id = $id;
-		$this->set('loglines', $this->Logline->read());
-	}
+	$this->Filters->addListConstraint(array(
+	    'column' => 'level', 
+	    'default' => 'info',
+	    'list' => array_reverse($this->Logline->levels),
+	));
+
+	$this->Filters->addDatesConstraint(array(
+	    'column' => 'datetime', 
+	    'from' => 'datefrom',
+	    'to' => 'dateto',
+	));
+
+	$this->Filters->addStringConstraint(array(
+	    'column' => 'msg', 
+	));
+
+	$this->Filters->paginate();
+    }
+
+    public function view($id = null) {
+	$this->Logline->id = $id;
+	$this->set('loglines', $this->Logline->read());
+    }
 }
-
 ?>

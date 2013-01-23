@@ -3,7 +3,7 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('nas_active', 'active');
 ?>
 
-<h1><? echo __('NAS'); ?></h1>
+<h1><?php echo __('NAS'); ?></h1>
 <?php
 echo $this->Html->link(
 	'<i class="icon-list icon-white"></i> ' . __('Add a NAS'),
@@ -24,7 +24,6 @@ $columns = array(
 
 echo $this->Form->create('Nas', array('action' => 'delete'));
 echo $this->Form->end();
-
 
 echo $this->Form->create('MultiSelection', array('class' => 'form-inline'));
 ?>
