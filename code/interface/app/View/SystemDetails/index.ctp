@@ -5,170 +5,222 @@ $this->assign('dashboard_active', 'active');
 
 <div class="pull-right">
 <?php
-	echo $this->Html->link('<i class="icon-refresh icon-white"></i> ' . __('Refresh'),
-		array('controller' => 'systemDetails', 'action' => 'refresh'),
-		array('class' => 'btn btn-success btn-large', 'escape' => false)
-		);
+echo $this->Html->link(
+    '<i class="icon-refresh icon-white"></i> ' . __('Refresh'),
+    array('controller' => 'systemDetails', 'action' => 'refresh'),
+    array('class' => 'btn btn-success btn-large', 'escape' => false)
+);
 ?>
 </div>
-<h1><? echo __('Dashboard'); ?></h1>
 
-<h4><? echo __('General information:'); ?></h4>
-<p style="padding: 0 0 0 20px;">
-	<strong><? echo __('Date:'); ?></strong> <?php echo $curdate; ?></br>
-	<strong><? echo __('Hostname:'); ?></strong> <?php echo $hostname; ?>
-</p>
+<h1><?php echo __('Dashboard'); ?></h1>
 
-<h4><? echo __('Services:'); ?></h4>
-<p style="padding: 0 0 0 20px;">
-	<strong><? echo __('FreeRadius:'); ?></strong> <?php echo $radiusstate; ?></br>
-	<strong><? echo __('MySQL:'); ?></strong> <?php echo $mysqlstate; ?>
-</p>
+<h4><?php echo __('General information:'); ?></h4>
+<dl class="well dl-horizontal">
+    <dt><?php echo __('Date'); ?></dt>
+    <dd><?php echo $curdate; ?></dd>
+    <dt><?php echo __('Hostname'); ?></dt>
+    <dd><?php echo $hostname; ?></dd>
+</dl>
 
-<h4><? echo __('Statistics:'); ?></h4>
-<p style="padding: 0 0 0 20px;">
-	<strong><? echo __('Uptime:'); ?></strong> <?php echo $uptime; ?></br>
-	<strong><? echo __('Idle time:'); ?></strong> <?php echo $idletime; ?></br>
-	<strong><? echo __('Load average:') ?></strong> <?php echo $loadavg; ?></br>
-	<strong><? echo __('Tasks:'); ?></strong> <?php echo $tasks; ?>
-</p>
+<h4><?php echo __('Services:'); ?></h4>
+<dl class="well dl-horizontal">
+    <dt><?php echo __('Freeradius'); ?></dt>
+    <dd><?php echo $radiusstate; ?></dd>
+    <dt><?php echo __('MySQL'); ?></dt>
+    <dd><?php echo $mysqlstate; ?></dd>
+</dl>
 
-<h4><? echo __('Memory:'); ?></h4>
-<p style="padding: 0 0 0 20px;">
-	<strong><? echo __('Used memory:'); ?></strong> <?php echo $usedmem; ?></br>
-	<strong><? echo __('Free memory:'); ?></strong> <?php echo $freemem; ?></br>
-	<strong><? echo __('Total memory:'); ?></strong> <?php echo $totalmem; ?></br>
-	<strong><? echo __('Used disk:'); ?></strong> <?php echo $useddisk; ?></br>
-	<strong><? echo __('Free disk:'); ?></strong> <?php echo $freedisk; ?></br>
-	<strong><? echo __('Total disk:'); ?></strong> <?php echo $totaldisk; ?>
-</p>
+<h4><?php echo __('Statistics:'); ?></h4>
+<dl class="well dl-horizontal">
+    <dt><?php echo __('Uptime'); ?></dt>
+    <dd><?php echo $uptime; ?></dd>
+    <dt><?php echo __('Idle time'); ?></dt>
+    <dd><?php echo $idletime; ?></dd>
+    <dt><?php echo __('Load average') ?></dt>
+    <dd><?php echo $loadavg; ?></dd>
+    <dt><?php echo __('Tasks'); ?></dt>
+    <dd><?php echo $tasks; ?></dd>
+</dl>
 
-<h4><? echo __('Network:'); ?></h4>
+<h4><?php echo __('Memory:'); ?></h4>
+<dl class="well dl-horizontal">
+    <dt><?php echo __('Used memory'); ?></dt>
+    <dd><?php echo $usedmem; ?></dd>
+    <dt><?php echo __('Free memory'); ?></dt>
+    <dd><?php echo $freemem; ?></dd>
+    <dt><?php echo __('Total memory'); ?></dt>
+    <dd><?php echo $totalmem; ?></dd>
+    <dt><?php echo __('Used disk'); ?></dt>
+    <dd><?php echo $useddisk; ?></dd>
+    <dt><?php echo __('Free disk'); ?></dt>
+    <dd><?php echo $freedisk; ?></dd>
+    <dt><?php echo __('Total disk'); ?></dt>
+    <dd><?php echo $totaldisk; ?></dd>
+</dl>
+
+<h4><?php echo __('Network:'); ?></h4>
 <table class="table">
     <thead>
-    <tr>
-        <th><? echo __('Interface'); ?></th>
-        <th><? echo __('MAC address'); ?></th>
-        <th><? echo __('IPv4 adresses'); ?></th>
-        <th><? echo __('IPv6 adresses'); ?></th>
-    </tr>
+	<tr>
+	    <th><?php echo __('Interface'); ?></th>
+	    <th><?php echo __('MAC address'); ?></th>
+	    <th><?php echo __('IPv4 adresses'); ?></th>
+	    <th><?php echo __('IPv6 adresses'); ?></th>
+	</tr>
     </thead>
-	<? if(!empty($ints)){ ?>
-		<tbody>
-		<? foreach ($ints as $int): ?>
-			<tr>
-				<th><? echo $int['name']; ?></th>
-				<td><? echo $int['mac']; ?></td>
-				<td>
-				<?
-					if( array_key_exists( "ipv4", $int) )
-						for($i=0; $i<count($int['ipv4']); ++$i)
-							echo $int['ipv4'][$i] . "</br>";
-					else
-						echo __("No IPv4 address.");
-				?>
-				</td>
-				<td>
-				<?
-					if( array_key_exists( "ipv6", $int) )
-						for($i=0; $i<count($int['ipv6']); ++$i)
-							echo $int['ipv6'][$i] . "</br>";
-					else
-						echo __("No IPv6 address.");
-				?>
-				</td>
-			</tr>
-		<?
-			endforeach;
-			unset($ints);
-		?>
-		</tbody>
-	<? }else{ ?>
-		<tbody>
-    	<tr>
-				<td colspan="17"><? echo __('No interface'); ?></td>
-			</tr>
-		</tbody>
-	<? } ?>
+<?php
+if (!empty($ints)) {
+?>
+    <tbody>
+<?php
+    foreach ($ints as $int) {
+?>
+	<tr>
+	    <th><?php echo $int['name']; ?></th>
+	    <td><?php echo $int['mac']; ?></td>
+	    <td>
+<?php
+	if( array_key_exists( "ipv4", $int) ) {
+	    for($i=0; $i<count($int['ipv4']); ++$i) {
+		echo $int['ipv4'][$i] . "</br>";
+	    }
+	} else {
+	    echo __("No IPv4 address.");
+	}
+?>
+	    </td>
+	    <td>
+<?php
+	if( array_key_exists( "ipv6", $int) ) {
+	    for($i=0; $i<count($int['ipv6']); ++$i) {
+		echo $int['ipv6'][$i] . "</br>";
+	    }
+	} else {
+	    echo __("No IPv6 address.");
+	}
+?>
+	    </td>
+	</tr>
+<?php
+    }
+    unset($ints);
+?>
+    </tbody>
+<?php
+} else {
+?>
+    <tbody>
+	<tr>
+	    <td colspan="17"><?php echo __('No interface'); ?></td>
+	</tr>
+    </tbody>
+<?php
+}
+?>
 </table>
 
 <table class="table">
-	<thead>
-		<tr>
-			<th rowspan="2"><? echo __('Interface'); ?></th>
-			<th colspan="8" style="text-align:center;"><? echo __('Receive'); ?></th>
-		</tr>
-		<tr>
-			<th><? echo __('bytes'); ?></th>
-			<th><? echo __('packets'); ?></th>
-			<th><? echo __('errors'); ?></th>
-			<th><? echo __('drop'); ?></th>
-			<th><? echo __('fifo'); ?></th>
-			<th><? echo __('frame'); ?></th>
-			<th><? echo __('compressed'); ?></th>
-			<th><? echo __('multicast'); ?></th>
-		</tr>
-	</thead>
-	<? if(!empty($intstats)){ ?>
-	<tbody>
-		<? foreach ($intstats as $int): ?>
-		<tr>
-			<?
-			echo "<th>" . $int[0] . "</th>"; 
-			
-			for($i=1; $i<9; ++$i)
-				echo "<td>" . $int[$i] . "</td>"; 
-			?>
-		</tr>
-		<?
-		endforeach;
-		?>
-	</tbody>
-	<? }else{ ?>
-	<tbody>
-		<tr>
-			<td colspan="9"><? echo __('No interface'); ?></td>
-		</tr>
-	</tbody>
-	<? } ?>
+    <thead>
+	<tr>
+	    <th rowspan="2"><?php echo __('Interface'); ?></th>
+	    <th colspan="8" style="text-align:center;">
+<?php
+echo __('Receive');
+?>
+	    </th>
+	</tr>
+	<tr>
+	    <th><?php echo __('bytes'); ?></th>
+	    <th><?php echo __('packets'); ?></th>
+	    <th><?php echo __('errors'); ?></th>
+	    <th><?php echo __('drop'); ?></th>
+	    <th><?php echo __('fifo'); ?></th>
+	    <th><?php echo __('frame'); ?></th>
+	    <th><?php echo __('compressed'); ?></th>
+	    <th><?php echo __('multicast'); ?></th>
+	</tr>
+    </thead>
+<?php
+if (!empty($intstats)) {
+?>
+    <tbody>
+<?php
+    foreach ($intstats as $int) {
+?>
+	<tr>
+<?php
+	echo "<th>" . $int[0] . "</th>"; 
+
+	for($i=1; $i<9; ++$i)
+	    echo "<td>" . $int[$i] . "</td>"; 
+?>
+	</tr>
+<?php
+    }
+?>
+    </tbody>
+<?php
+} else {
+?>
+    <tbody>
+	<tr>
+	    <td colspan="9"><?php echo __('No interface'); ?></td>
+	</tr>
+    </tbody>
+<?php
+}
+?>
 </table>
 <table class="table">
-	<thead>
-		<tr>
-			<th rowspan="2"><? echo __('Interface'); ?></th>
-			<th colspan="8" style="text-align:center;"><? echo __('Transmit'); ?></th>
-		</tr>
-		<tr>
-			<th><? echo __('bytes'); ?></th>
-			<th><? echo __('packets'); ?></th>
-			<th><? echo __('errors'); ?></th>
-			<th><? echo __('drop'); ?></th>
-			<th><? echo __('fifo'); ?></th>
-			<th><? echo __('collisions'); ?></th>
-			<th><? echo __('carrier'); ?></th>
-			<th><? echo __('compressed'); ?></th>
-		</tr>
-	</thead>
-	<? if(!empty($intstats)){ ?>
-	<tbody>
-		<? foreach ($intstats as $int): ?>
-		<tr>
-			<?
-			echo "<th>" . $int[0] . "</th>"; 
-			
-			for($i=9; $i<17; ++$i)
-				echo "<td>" . $int[$i] . "</td>"; 
-			?>
-		</tr>
-		<?
-		endforeach;
-		?>
-	</tbody>
-	<? }else{ ?>
-	<tbody>
-		<tr>
-			<td colspan="9"><? echo __('No interface'); ?></td>
-		</tr>
-	</tbody>
-	<? } ?>
+    <thead>
+	<tr>
+	    <th rowspan="2"><?php echo __('Interface'); ?></th>
+	    <th colspan="8" style="text-align:center;">
+<?php
+echo __('Transmit');
+?>
+	    </th>
+	</tr>
+	<tr>
+	    <th><?php echo __('bytes'); ?></th>
+	    <th><?php echo __('packets'); ?></th>
+	    <th><?php echo __('errors'); ?></th>
+	    <th><?php echo __('drop'); ?></th>
+	    <th><?php echo __('fifo'); ?></th>
+	    <th><?php echo __('collisions'); ?></th>
+	    <th><?php echo __('carrier'); ?></th>
+	    <th><?php echo __('compressed'); ?></th>
+	</tr>
+    </thead>
+<?php
+if (!empty($intstats)) {
+?>
+    <tbody>
+<?php
+    foreach ($intstats as $int) {
+?>
+	<tr>
+<?php
+	echo "<th>" . $int[0] . "</th>"; 
+
+	for($i=9; $i<17; ++$i)
+	    echo "<td>" . $int[$i] . "</td>"; 
+?>
+	</tr>
+<?php
+    }
+?>
+    </tbody>
+<?php
+} else {
+?>
+    <tbody>
+	<tr>
+	    <td colspan="9"><?php echo __('No interface'); ?></td>
+	</tr>
+    </tbody>
+<?php
+}
+?>
 </table>
