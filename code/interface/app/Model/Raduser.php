@@ -20,14 +20,14 @@ class Raduser extends AppModel {
             'notEmpty' => array(
                 'rule' => 'notEmpty',
                 'message' => 'Username cannot be empty',
-                'allowEmpty' => false
-            )
+                'allowEmpty' => false,
+            ),
         ),
         'password' => array(
-            'notEmpty' => array(
+            'notEmpty2' => array(
                 'rule' => 'notEmpty',
                 'message' => 'You have to type a password',
-                'allowEmpty' => false
+                'allowEmpty' => false,
             ),
             'identicalFieldValues' => array(
                 'rule' => array('identicalFieldValues', 'confirm_password'),
@@ -39,14 +39,14 @@ class Raduser extends AppModel {
                 'rule' => array('isMACFormat'),
                 'message' => 'This is not a MAC address format.'
             ),
-            'notEmpty' => array(
+            'notEmpty3' => array(
                 'rule' => 'notEmpty',
                 'message' => 'You have to type a MAC address',
                 'allowEmpty' => false
             ),
             'isUnique' => array(
-                'rule' => 'isUnique',
-                'message' => 'MAC already used'
+                'rule' => array('isUniqueMAC'),
+                'message' => 'MAC already used',
             ),
         ),
         'mac_active' => array(
@@ -77,14 +77,22 @@ class Raduser extends AppModel {
 
     public function isMACFormat($field=array()) {
         foreach( $field as $key => $value ){ 
-            $v1 = $value; 
-            if(!Utils::isMAC($v1) && !empty($v1)) { 
+            if(!Utils::isMAC($value) && !empty($value)) { 
                 return false; 
             } else { 
                 continue; 
             } 
         } 
         return true; 
+    }
+
+    public function isUniqueMAC($field=array()) {
+        foreach ($field as $key => $value) {
+            if($this->exists($value)){
+                return false;
+            }
+        }
+        return true;
     }
 
     public function beforeValidate($options = array()){

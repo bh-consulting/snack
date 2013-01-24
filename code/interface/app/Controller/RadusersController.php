@@ -162,36 +162,6 @@ class RadusersController extends AppController {
     	$this->set('groups', $groups->find('list', array('fields' => array('groupname'))));
     }
 
-    // FIXME dead code
-    public function add_cisco(){
-    	$success = false;
-    	if ($this->request->is('post')) {
-    	    $name = $this->request->data['Raduser']['username'];
-    	    $this->request->data['Raduser']['is_cisco'] = 1;
-    	    $checks = array(
-    		array($name,
-    		'NAS-Port-Type',
-    		'==',
-    		$this->request->data['Raduser']['nas-port-type']
-    	    ),
-    	    array($name,
-    	    'Cleartext-Password',
-    	    ':=',
-    	    $this->request->data['Raduser']['password']
-    	),
-    	array($name,
-    	'EAP-Type',
-    	':=',
-    	'MD5-CHALLENGE'
-        )
-        );
-
-	    $success = $this->Checks->add($this->request, $checks);
-
-    	}
-    	$this->add($success);
-    }
-
     /**
      * Add check lines if cisco checkbox is checked or MAC address typed
      * @param array $checks array of radchecks lines
