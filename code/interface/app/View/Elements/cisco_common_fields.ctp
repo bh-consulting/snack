@@ -12,17 +12,10 @@ echo $this->Form->input(
 );
 
 if($type != 'loginpass'){
-    echo $this->Form->input(
-	'password',
-	array('label' => __('Password'))
-    );
-    echo $this->Form->input(
-	'confirm_password',
-	array(
-	    'type' => 'password',
-	    'label' => __('Confirm password')
-	)
-    );
+    echo $this->Form->input('passwd', array('type' => 'password',
+    	'label' => __('Password')));
+    echo $this->Form->input('confirm_password',	array('type' => 'password',
+	    'label' => __('Confirm password')));
 }
 
 echo $this->Form->input('nas-port-type', array(

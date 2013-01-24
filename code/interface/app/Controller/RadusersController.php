@@ -4,6 +4,9 @@ App::import('Model', 'Radcheck');
 App::import('Model', 'Radgroup');
 App::import('Model', 'Radusergroup');
 
+/**
+ * Controller to handle user management: add, update, remove users
+ */
 class RadusersController extends AppController {
     public $helpers = array('Html', 'Form', 'JqueryEngine');
     public $paginate = array(
@@ -97,6 +100,12 @@ class RadusersController extends AppController {
     	$this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
     }
 
+    /**
+     * Display a user and its attributes, depending on its type
+     * @param  int $id   id of the user
+     * @param  array  $type type of the user to display
+     * @return [type]
+     */
     public function view($id = null, $type = array()){
     	$views = $this->Checks->view($id);
 
@@ -134,6 +143,11 @@ class RadusersController extends AppController {
     	$this->set('attributes', $attributes);
     }
 
+    /**
+     * View a cisco user
+     * @param  [type] $id [description]
+     * @return [type]
+     */
     public function view_cisco($id = null) {
     	$this->set('showedAttr', array( 'Authentication type', 'Username', 'Comment', 'NAS-Port-Type', 'Expiration', 'Simultaneous-Use', 'Groups' ));
     	$this->view($id, array( 'Authentication type' => 'Cisco' ));
@@ -157,14 +171,14 @@ class RadusersController extends AppController {
     public function add($success){
     	if($this->request->is('post')){
     	    if($success){
-    		if(array_key_exists('cert_path', $this->request->data['Raduser']))
-    		    $this->Session->setFlash(__('New user added. Certificate in ') . $this->request->data['Raduser']['cert_path'], 'flash_success');
-    		else
-    		    $this->Session->setFlash(__('New user added.'), 'flash_success');
+        		if(array_key_exists('cert_path', $this->request->data['Raduser']))
+        		    $this->Session->setFlash(__('New user added. Certificate in ') . $this->request->data['Raduser']['cert_path'], 'flash_success');
+        		else
+        		    $this->Session->setFlash(__('New user added.'), 'flash_success');
 
-    		$this->redirect(array('action' => 'index'));
+        		$this->redirect(array('action' => 'index'));
     	    } else {
-    		$this->Session->setFlash(__('Unable to add user.'), 'flash_error');
+        		$this->Session->setFlash(__('Unable to add user.'), 'flash_error');
     	    }
     	}
     	$groups = new Radgroup();
@@ -177,7 +191,6 @@ class RadusersController extends AppController {
      */
     private function addCommonCiscoMacFields(&$checks){
         $name = $this->request->data['Raduser']['username'];
-        $mac = $this->request->data['Raduser']['mac_active'];
 
         // add radchecks for cisco user
         if($this->request->data['Raduser']['cisco'] == 1){
@@ -192,6 +205,8 @@ class RadusersController extends AppController {
             }
 
             $this->request->data['Raduser']['is_cisco'] = 1;
+            $this->Raduser->data['Raduser']['is_cisco'] = 1;
+
             $nasPortType = $this->request->data['Raduser']['nas-port-type'];
 
             if($nasPortType == 10){
@@ -207,18 +222,20 @@ class RadusersController extends AppController {
                 $nasPortTypeRegexp,
             );
 
-            if(isset($this->request->data['Raduser']['is_mac'])){
+            if(isset($this->request->data['Raduser']['is_mac'])
+                || isset($this->request->data['Raduser']['is_cert'])){
                 $checks[]= array(
                     $name,
                     'Cleartext-Password',
                     ':=',
-                    $this->request->data['Raduser']['password'],
+                    $this->request->data['Raduser']['passwd'],
                 );
             }
         }
 
         // add radchecks for mac auth
-        if(isset($mac)) {
+        if(isset($this->request->data['Raduser']['mac_active'])) {
+            $mac = $this->request->data['Raduser']['mac_active'];
             $mac = str_replace(':', '', $mac);
             $mac = str_replace('-', '', $mac);
             $checks[]= array(
@@ -236,6 +253,8 @@ class RadusersController extends AppController {
 
             $name = $this->request->data['Raduser']['username'];
             $this->request->data['Raduser']['is_loginpass'] = 1;
+            $this->Raduser->data['Raduser']['is_loginpass'] = 1;
+
             $rads = array(
                 array($name,
                     'NAS-Port-Type',
@@ -245,7 +264,7 @@ class RadusersController extends AppController {
                 array($name,
                     'Cleartext-Password',
                     ':=',
-                    $this->request->data['Raduser']['password']
+                    $this->request->data['Raduser']['passwd']
                 ),
                 array($name,
                     'EAP-Type',
@@ -372,7 +391,7 @@ class RadusersController extends AppController {
 		// update radchecks fields
 		$checkClassFields = array(
 		    'NAS-Port-Type' => $this->request->data['Raduser']['nas-port-type'],
-		    'Cleartext-Password' => $this->request->data['Raduser']['password']);
+		    'Cleartext-Password' => $this->request->data['Raduser']['passwd']);
 		$this->Checks->updateRadcheckFields($id, $this->request, $checkClassFields);
 		$this->updateGroups($this->Raduser->id, $this->request);
 
@@ -394,7 +413,7 @@ class RadusersController extends AppController {
 
 	    if ($this->Raduser->save($this->request->data)) {
 		// update radchecks fields
-		$checkClassFields = array('Cleartext-Password' => $this->request->data['Raduser']['password']);
+		$checkClassFields = array('Cleartext-Password' => $this->request->data['Raduser']['passwd']);
 		$this->Checks->updateRadcheckFields($id, $this->request, $checkClassFields);
 
 		$this->updateGroups($this->Raduser->id, $this->request);

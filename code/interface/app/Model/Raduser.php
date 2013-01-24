@@ -1,6 +1,6 @@
 <?php
 
-App::uses('AuthComponent', 'Controller/Component');
+//App::uses('AuthComponent', 'Controller/Component');
 App::uses('Utils', 'Lib');
 
 class Raduser extends AppModel {
@@ -21,37 +21,36 @@ class Raduser extends AppModel {
                 'rule' => 'notEmpty',
                 'message' => 'Username cannot be empty',
                 'allowEmpty' => false,
+                'required' => true,
             ),
         ),
-        'password' => array(
-            'notEmpty2' => array(
-                'rule' => 'notEmpty',
+        'passwd' => array(
+                'rule' => 'notEmptyIfCiscoOrLoginpass',
                 'message' => 'You have to type a password',
-                'allowEmpty' => false,
-            ),
-            'identicalFieldValues' => array(
-                'rule' => array('identicalFieldValues', 'confirm_password'),
-                'message' => 'Please re-enter your password twice so that the values match'
-            )
+                'on' => 'create',
+        ),
+        'confirm_password' => array(
+            'rule' => array('identicalFieldValues', 'passwd'),
+            'message' => 'Please re-enter your password twice so that the values match'
         ),
         'mac' => array(
             'macFormat' => array(
-                'rule' => array('isMACFormat'),
+                'rule' => 'isMACFormat',
                 'message' => 'This is not a MAC address format.'
             ),
-            'notEmpty3' => array(
+            'notEmpty' => array(
                 'rule' => 'notEmpty',
                 'message' => 'You have to type a MAC address',
-                'allowEmpty' => false
+                'allowEmpty' => false,
             ),
             'isUnique' => array(
-                'rule' => array('isUniqueMAC'),
+                'rule' => 'isUniqueMAC',
                 'message' => 'MAC already used',
             ),
         ),
         'mac_active' => array(
             'macFormat' => array(
-                'rule' => array('isMACFormat'),
+                'rule' => 'isMACFormat',
                 'message' => 'This is not a MAC address format.'
             )
         ),
@@ -64,33 +63,49 @@ class Raduser extends AppModel {
     public function identicalFieldValues( $field=array(), $compare_field=null )  
     { 
         foreach( $field as $key => $value ){ 
+            if(!isset($this->data[$this->name][$compare_field])){
+                continue;
+            }
+
             $v1 = $value; 
-            $v2 = $this->data[$this->name][ $compare_field ];                  
+            $v2 = $this->data[$this->name][ $compare_field ];
             if($v1 !== $v2) { 
                 return false; 
-            } else { 
-                continue; 
-            } 
+            }
         } 
         return true; 
     } 
 
     public function isMACFormat($field=array()) {
-        foreach( $field as $key => $value ){ 
-            if(!Utils::isMAC($value) && !empty($value)) { 
-                return false; 
-            } else { 
-                continue; 
-            } 
-        } 
+        $value = array_shift($field);
+        if(!Utils::isMAC($value) && !empty($value)) { 
+            return false; 
+        }
         return true; 
     }
 
     public function isUniqueMAC($field=array()) {
-        foreach ($field as $key => $value) {
-            if($this->exists($value)){
-                return false;
-            }
+        $value = array_shift($field);
+        $value = str_replace(':', '', $value);
+        $value = str_replace('-', '', $value);
+        if($this->find('count', array(
+            'conditions' => array('username' => $value)
+        ))){
+            return false;
+        }
+        return true;
+    }
+
+    public function notEmptyIfCiscoOrLoginpass($field=array()) {
+        $value = array_shift($field);
+        $this->log('empty value:' . empty($value));
+        $this->log($this->data[$this->name]['is_cisco']);
+        $this->log($this->data[$this->name]['is_loginpass']);
+        
+        if($value == "" && ($this->data[$this->name]['is_cisco'] == 1
+            || $this->data[$this->name]['is_loginpass'] == 1)
+        ){
+            return false;
         }
         return true;
     }

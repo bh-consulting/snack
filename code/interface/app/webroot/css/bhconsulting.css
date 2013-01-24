@@ -39,16 +39,29 @@ a.ui-slider-handle {
 	outline: none;
 }
 
+/* Security colors in dropdown menu */
 .dropdown-menu li > a.secure_auth {
 	color: #468847;
+}
+
+.dropdown-menu li > a.secure_auth:hover {
+	color: #ffffff;
 }
 
 .dropdown-menu li > a.warning_auth {
 	color: #df4b00;
 }
 
+.dropdown-menu li > a.warning_auth:hover {
+	color: #ffffff;
+}
+
 .dropdown-menu li > a.dangerous_auth {
 	color: #c00;
+}
+
+.dropdown-menu li > a.dangerous_auth:hover {
+	color: #ffffff;
 }
 
 .fit {

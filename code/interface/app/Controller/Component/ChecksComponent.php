@@ -152,12 +152,14 @@ class ChecksComponent extends Component
     }
 
     /**
-    * Create a new user or group with all its settings: checks and replies config
-    */
+     * Create a new user or group with all its settings: checks and replies 
+     * config
+     * @param array $request content of the request
+     * @param array $checks checks lines to add 
+     */
     public function add($request, $checks){
-        if($request->is('post')){
-                
-            // add common checks values (expiration date and simultaneous uses) 
+        if($request->is('post')){ 
+            // add common checks values (expiration date and simultaneous uses)
             $name = $request->data[$this->baseClassName][$this->displayName];
             $checks = array_merge($checks, array(
                 array($name,
@@ -250,8 +252,11 @@ class ChecksComponent extends Component
     }
 
     /**
-    * Delete the user(s) of a group, or group(s) of a user
-    */
+     * Delete the user(s) of a group, or group(s) of a user 
+     * @param  int $id         id of the base class
+     * @param  int $idToDelete id of the class to delete
+     * @return [type]
+     */
     public function deleteUsersOrGroups($id, $idToDelete)
     {
         $success = true;
