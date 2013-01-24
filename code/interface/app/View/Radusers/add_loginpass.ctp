@@ -15,8 +15,25 @@ echo $this->Form->input('confirm_password', array('type' => 'password'));
 echo $this->Form->input('mac_active', array('label' => __('MAC address')));
 echo $this->element('check_common_fields');
 
-echo $this->element('doubleListsSelector', array('leftTitle' => __('Groups'), 'rightTitle' => __('Selected groups'), 'contents' => $groups, 'selectedContents' => array()));
-echo $this->Form->input('groups', array('type' => 'select', 'id' => 'select-right', 'label' => '', 'class' => 'hidden', 'multiple' => 'multiple'));
+echo $this->element(
+    'doubleListsSelector',
+    array(
+	'leftTitle' => __('Groups'),
+	'rightTitle' => __('Selected groups'),
+	'contents' => $groups,
+	'selectedContents' => array()
+    )
+);
+echo $this->Form->input(
+    'groups',
+    array(
+	'type' => 'select',
+	'id' => 'select-right',
+	'label' => '',
+	'class' => 'hidden',
+	'multiple' => 'multiple'
+    )
+);
 echo '</fieldset>';
 
 echo $this->element('cisco_common_fields', array('type' => 'loginpass'));
