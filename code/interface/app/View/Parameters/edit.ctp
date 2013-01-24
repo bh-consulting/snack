@@ -15,6 +15,13 @@ echo $this->Form->input(
     )
 );
 echo $this->Form->input(
+    $scriptPath['id'],
+    array(
+	'label' => $scriptPath['label'],
+	'value' => $scriptPath['value'],
+    )
+);
+echo $this->Form->input(
     $countryName['id'],
     array(
 	'label' => $countryName['label'],

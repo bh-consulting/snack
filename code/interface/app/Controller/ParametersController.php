@@ -37,6 +37,7 @@ class ParametersController extends AppController {
     private function getDefinitions() {
 	return array(
 	    'contactEmail' => __('Contact email'),
+	    'scriptPath' => __('Scripts path'),
 	    'countryName' => __('Country'),
 	    'stateOrProvinceName' => __('State or province'),
 	    'localityName' => __('Locality'),

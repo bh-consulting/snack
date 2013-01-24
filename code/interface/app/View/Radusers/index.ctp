@@ -54,6 +54,11 @@ echo $this->element('dropdownButton', array(
 	    array('action' => 'export_csv'),
 	    array('escape' => false)
 	),
+	$this->Html->link(
+	    '<i class="icon-refresh"></i> ' . __('New certificate'),
+	    array('action' => 'test'),
+	    array('escape' => false)
+	),
     ),
 ));
 

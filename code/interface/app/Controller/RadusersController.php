@@ -17,8 +17,17 @@ class RadusersController extends AppController {
     	    'checkClass' => 'Radcheck',
     	    'replyClass' => 'Radreply',
     	),
-	'Session');
+	'Session'
+    );
 
+    public function test() {
+	    $this->Session->setFlash(
+		Utils::generate_certificate("bouh"),
+		'flash_success'
+	    );
+	$this->redirect(array('action' => 'index'));
+    }
+    
     public function index() {
     	if ($this->request->is('post')) {
     	    if (isset($this->request->data['MultiSelection']['users']) &&

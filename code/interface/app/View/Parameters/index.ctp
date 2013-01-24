@@ -21,6 +21,12 @@ echo $this->Html->link(
 echo empty($contactEmail['value']) ? __('Not set.') : $contactEmail['value'];
 ?>
     </dd>
+    <dt><?php echo $scriptPath['label']; ?></dt>
+    <dd>
+<?php
+echo empty($scriptPath['value']) ? __('Not set.') : $scriptPath['value'];
+?>
+    </dd>
 </dl>
 
 <h4><?php echo __('Certificates configuration:'); ?></h4>
