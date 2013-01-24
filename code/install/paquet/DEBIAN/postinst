@@ -139,7 +139,7 @@ read -p "Enter the name of the client (CA common name): " CLIENTNAME
 ############################################
 #Modification of the configuration openssl.cnf
 sed\
-	-e "s|./demoCA|$DESTPATH|"\
+	-e "s|./demoCA|$DESTPATH |"\
 	-e "/\s*certificate\s*=/c certificate = \$dir/private/cacert.pem\t"\
 #	-e '/countryName_default/c countryName_default		= FR'\
 #	-e '/stateOrProvinceName_default/c stateOrProvinceName_default	= France'\
