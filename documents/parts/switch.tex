@@ -1,19 +1,17 @@
-\section{Switch}
+\section{Commutateur}
 \subsection{Configuration Cisco}
+\subsubsection{Réinitialisation et paramètres par défaut}
 
+Pour réinitialiser la configuration du 802.1x sur le commutateur~:
 
-\subsubsection{Reset et paramètres par défaut}
-
-Pour réinitialiser la configuration du 802.1X sur le switch :
-
-\begin{verbatim}
+\begin{lstlisting}
 Switch(config)# dot1x default
-\end{verbatim}
+\end{lstlisting}
 
-La configuration par défaut est :
+La configuration par défaut est~:
+
 \begin{itemize}
-\item Authentication, authorization, and accounting (AAA) authentication <-> Disable
-Disabled. 
+\item Authentication, authorization, and accounting (AAA) authentication <-> Disable Disabled. 
 \item RADIUS server : IP address <-> None specified
 \item RADIUS server : UDP authentication port <-> 1812
 \item RADIUS server : Key <-> None specified
@@ -26,41 +24,46 @@ Disabled.
 \item Multiple host support <-> Disabled
 \end{itemize}
 
+\subsubsection{Attribuer une adresse IP}
 
+Exemple en IPv4~:
 
-\subsubsection{Donner une IP au Switch}
-\begin{alltt}
+\begin{lstlisting}
 Switch(config)# interface vlan 1
-Switch(config-if)# ip addr \emph{192.168.0.10} 255.255.255.0
+Switch(config-if)# ip addr §\emph{192.168.0.10}§ §\emph{255.255.255.0}§
 Switch(config-if)# no shutdown
 Switch(config-if)# exit
-\end{alltt}
+\end{lstlisting}
 
-\subsubsection{Activer le 802.1X sur le switch}
+\subsubsection{Activer le 802.1x}
 
-\begin{verbatim}
+Activation du protocole~:
+
+\begin{lstlisting}
 Switch(config)# aaa new-model
 Switch(config)# aaa authentication dot1x default group radius
 Switch(config)# dot1x system-auth-control
-\end{verbatim}
+\end{lstlisting}
+
 \subsubsection{Configurer une interface}
 
-L'interface dois être en mode 'access'. 
-Si ce n'est pas le cas,
-\begin{verbatim}
-Switch(config)# interface fastethernet0/1
+L'interface dois être en mode \emph{access}~:
+
+\begin{lstlisting}
+Switch(config)# interface §\emph{fastethernet0/1}§
 Switch(config-if)# switchport mode access
-\end{verbatim}
+\end{lstlisting}
 
-puis,
+Activer sur le 802.1x pour cette interface~:
 
-\begin{verbatim}
+\begin{lstlisting}
 Switch(config-if)# dot1x port-control auto
-\end{verbatim}
+\end{lstlisting}
 
 \subsubsection{Incompatibilités}
 
-La fonctionnalité 802.1X ne peut être activée sur les ports :
+Le protocole 802.1x ne peut pas être activé sur les ports suivants~:
+
 \begin{enumerate}
 \item Trunk
 \item Dynamic
@@ -70,106 +73,95 @@ La fonctionnalité 802.1X ne peut être activée sur les ports :
 \item Switch Port Analyzer (SPAN)
 \end{enumerate}
 
+\subsubsection{Lier à un serveur Radius}
 
-\subsubsection{Configurer un serveur radius}
-Pour configurer un serveur radius~:
-\begin{verbatim}
+Ajouter la définition d'un serveur Radius (\emph{192.168.1.10})~:
+
+\begin{lstlisting}
 Switch(config)# aaa new-model
-Switch(config)# radius-server host 192.168.1.10 auth-port 1812 key mysecret 
-\end{verbatim}
-L'ip du radius est suposée être 192.168.1.10 et le secret 'mysecret'.
+Switch(config)# radius-server host §\emph{192.168.1.10}§ auth-port 1812 key §\emph{mysecret}§
+\end{lstlisting}
 
 \subsubsection{Authentification périodique}
 
-\begin{verbatim}
+Activer la réauthentification périodique~:
+
+\begin{lstlisting}
 Switch(config)# dot1x re-authentication
 Switch(config)# dot1x timeout re-authperiod 4000
-\end{verbatim}
+\end{lstlisting}
 
-\subsubsection{Période entre 2 tentatives de connexions}
+\subsubsection{Déboguer}
 
-\begin{verbatim}
-Switch(config)# dot1x timeout quiet-period 30
-\end{verbatim}
+Pour obtenir des informations concernant le fonctionnement actuel du 802.1x sur le commutateur~:
 
-\subsubsection{Période entre 2 paquets EAP Request/Identity}
-
-\begin{verbatim}
-Switch(config)# dot1x timeout tx-period 60
-\end{verbatim}
-
-\subsubsection{Nombre maximum de paquets EAP Request/Identity}
-
-\begin{verbatim}
-Switch(config)# dot1x max-req 5
-\end{verbatim}
-
-\subsubsection{Plusieurs 'Host' sur une seule interface}
-
-\begin{verbatim}
-Switch(config-if)# dot1x multiple-hosts
-\end{verbatim}
-
-Note : Un host identifié donne accès au réseau à tous les autres. Un host qui se déconnecte bloque l'accès à tous les autres.
-
-\subsubsection{Débuguer}
-
-\begin{verbatim}
+\begin{lstlisting}
 Switch(config)# show dot1x
 Switch(config)# show dot1x statistics
 Switch# debug dot1x all
-\end{verbatim}
+\end{lstlisting}
 
 \subsubsection{VLAN invité}
 
-\begin{verbatim}
-Switch(config-if)# dot1x guest-vlan { vlan-id }
-\end{verbatim}
+Pour définir un réseau virtuel par défaut~:
 
+\begin{lstlisting}
+Switch(config-if)# dot1x guest-vlan { §\emph{vlan\_id}§ }
+\end{lstlisting}
 
-
-\subsection{Authentification sur le port Console et les VTY}
-
+\subsection{Authentification sur le port console et les VTY}
 \subsubsection{Identifiants Radius}
 
-Pour permettre à quelqu'un de configurer le switch grâce à ses identifiants Radius, il faut procéder comme ceci :
+Commencer par ajouter le mode d'authentification~:
 
-\begin{verbatim}
+\begin{lstlisting}
 Swicth>enable
 Switch#configure terminal
 Switch(config)#aaa authentication login default group radius
 Switch(config)#aaa authentication enable default group radius
+\end{lstlisting}
+
+Pour l'activer sur le port console~:
+
+\begin{lstlisting}
 Switch(config)#line console 0
 Switch(config-line)#login authentication default
-Switch(config-line)#line vty 0 15
+\end{lstlisting}
+
+Pour l'activer sur les connexions Telnet~:
+
+\begin{lstlisting}
+Switch(config)#line vty 0 15
 Switch(config-line)#login authentication default
-\end{verbatim}
+\end{lstlisting}
 
-Les identifiants utilisés pour la connexion au port console sont lus dans la base de donnée, il suffit d'ajouter un utilisateur. Cependant, l'accès au mode \textit{enable} requiert une action supplémentaire sur le serveur Radius.
+L'accès au mode \textit{enable} requiert une action supplémentaire sur le serveur Radius.
 
-En effet, il faut ajouter une ligne au fichier \textit{sql.conf} :
+Pour l'activer, ajouter cette ligne au fichier \textit{sql.conf}~:
 
-\begin{verbatim}
+\begin{lstlisting}
 safe-characters = "@0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_: /$"
-\end{verbatim}
+\end{lstlisting}
 
-Et ajouter un utilisateur particulier :
+Puis ajouter un utilisateur particulier~:
 
-\begin{verbatim}
-insert into radcheck (username,attribute,value) values ('$enab15$','Cleartext-Password','plop');
-\end{verbatim}
+\begin{lstlisting}
+# echo "INSERT INTO radcheck (username,attribute,value) VALUES ('$enab15$','Cleartext-Password','§\emph{motdepasse\_enable}§')" | mysql -uroot -p radius
+\end{lstlisting}
 
 \subsubsection{Identifiants de secours}
 
-Si jamais le serveur Radius n'est pas joignable, personne ne pourra se connecter au switch pour le configurer. Or, lorsqu'un réseau tombe en panne, il est probable qu'il faille configurer le switch alors que le serveur Radius n'est plus accessible. C'est pourquoi on va installer des identifiants de secours qui ne seront utilisés uniquement dans le cas où le server Radius ne répond pas. Pour ce faire, il faut suivre la procédure suivante :
+Si jamais le serveur Radius n'est pas joignable, personne ne pourra se connecter au commutateur pour le configurer. Lorsqu'un réseau tombe en panne, il est probable qu'il faille configurer le commutateur alors que le serveur Radius n'est plus accessible. C'est pourquoi il faut faut installer des identifiants de secours qui ne seront utilisés que dans le cas où le server Radius ne répond pas.
 
-\begin{verbatim}
+Suivre la procédure suivante~:
+
+\begin{lstlisting}
 Swicth>enable
 Switch#configure terminal
 Switch(config)#aaa authentication login default group radius local
 Switch(config)#aaa authentication enable default group radius enable
-Switch(config)#enable password plop
-Switch(config)#username bla password plop
-\end{verbatim}
+Switch(config)#enable password §\emph{motdepasse\_enable\_secours}§
+Switch(config)#username §\emph{utilisateur\_secours}§ password §\emph{motdepasse\_secours}§
+\end{lstlisting}
 
-Dans notre cas, si le serveur ne répond pas, il faudra utiliser les identifants (bla, plop) pour se connecter sur le port console et le mot de passe (plop) pour accéder au mode \textit{enable}.
+Si le serveur ne répond pas, il faudra utiliser l'utilisateur \emph{utilisateur\_secours} et le mot de passe \emph{motdepasse\_secours} pour se connecter sur le port console. Le mot de passe \emph{motdepasse\_enable\_secours} pourra être utilisé pour passer en mode privilégié.

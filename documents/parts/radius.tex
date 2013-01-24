@@ -1,44 +1,48 @@
 \section{Radius}
-L'implémentation de SNACK se base sur l'utilisation de Freeradius.
-\subsection{Installation de FreeRadius}
+\subsection{Installation de Freeradius}
 \subsubsection{Paquets Debian/Ubuntu}
 
-Installer les paquets correspondants, en root~:
-\begin{verbatim}
+Installer les paquets correspondants, en super-utilisateur~:
+
+\begin{lstlisting}
 # apt-get install freeradius freeradius-utils
-\end{verbatim}
+\end{lstlisting}
 
 \subsubsection{Lien avec une base MySQL}
 
-Installer MySQL et le paquet FreeRadius permettant de faire le lien entre le serveur d'authentification et la base de données~:
-\begin{verbatim}
+Installer MySQL et le paquet Freeradius permettant de faire le lien entre le serveur d'authentification et la base de données~:
+
+\begin{lstlisting}
 # apt-get install freeradius-mysql mysql-server mysql-client
-\end{verbatim}
+\end{lstlisting}
 
-Penser à retenir le password root de la base mysql (nous prendrons pour la suite \emph{passrootsql}).
+Penser à retenir le mot de passe super-utilisateur de la base MySQL (\emph{passrootsql}).
 
-Créer les bases de données nécessaires pour FreeRadius à l'aide des schémas mis à disposition dans le paquet~:
-\begin{alltt}
-# echo "create database radius;" | mysql -u root -p
-# echo "grant all on radius.* to radius@localhost identified by '\emph{passradiussql}'; \textbackslash \\flush privileges;" | mysql -u root -p
+Créer les bases de données nécessaires pour Freeradius à l'aide des schémas mis à disposition dans le paquet~:
+
+\begin{lstlisting}
+# echo "create database radius" | mysql -u root -p
+# echo "grant all on radius.* to radius@localhost identified by '§\emph{passradiussql}§'; flush privileges" | mysql -u root -p
 # mysql -uroot -p radius < /etc/freeradius/sql/mysql/schema.sql
 # mysql -uroot -p radius < /etc/freeradius/sql/mysql/nas.sql
-\end{alltt}
+\end{lstlisting}
+
 Pour chacune de ces lignes, le mot de passe défini à l'étape précédente est demandé.
 
 Création d'un utilisateur simple \emph{user1}, avec une authentification via un mot de passe non-chiffré (\emph{motdepasse})~:
-\begin{alltt}
-# echo "INSERT INTO radcheck(UserName,Attribute,op,Value) VALUES ('user1',\\'Cleartext-Password',':=','motdepasse');" | mysql -u root -p radius
-\end{alltt}
+
+\begin{lstlisting}
+# echo "INSERT INTO radcheck(UserName,Attribute,op,Value) VALUES ('§\emph{user1}§','Cleartext-Password',':=','§\emph{motdepasse}§')" | mysql -u root -p radius
+\end{lstlisting}
 
 Adapter le fichier \emph{/etc/freeradius/sql.conf}~:
-\begin{alltt}
+\begin{lstlisting}
 sql {
         database = "mysql"
-        driver = "rlm_sql_\$\{database\}"
+        driver = "rlm_sql_${database}"
         server = "localhost"
         login = "radius"
-        password = "\emph{passradiussql}"
+        password = "§\emph{passradiussql}§"
         radius_db = "radius"
         acct_table1 = "radacct"
         acct_table2 = "radacct"
@@ -50,32 +54,34 @@ sql {
         usergroup_table = "radusergroup"
         deletestalesessions = yes
         sqltrace = no
-        sqltracefile = \$\{logdir\}/sqltrace.sql
+        sqltracefile = ${logdir}/sqltrace.sql
         num_sql_socks = 5
         connect_failure_retry_delay = 60
         readclients = yes
         nas_table = "nas"
-        \$INCLUDE sql/\$\{database\}/dialup.conf
+        $INCLUDE sql/${database}/dialup.conf
 }
-\end{alltt}
+\end{lstlisting}
 
-Dans le fichier \emph{/etc/freeradius/radiusd.conf}, décommenter les 2 lignes suivantes~:
-\begin{verbatim}
+Dans le fichier \emph{/etc/freeradius/radiusd.conf}, décommenter les deux lignes suivantes~:
+
+\begin{lstlisting}
 $INCLUDE sql.conf
 $INCLUDE sql/mysql/counter.conf
-\end{verbatim}
+\end{lstlisting}
 
 Créer un virtualhost Radius~:
-\begin{verbatim}
+\begin{lstlisting}
 # cd /etc/freeradius/sites-available
 # cp default radius.bh-consulting.net
-# ln -s /etc/freeradius/sites-available/radius.bh-consulting.net\
-  /etc/freeradius/sites-enabled/
-\end{verbatim}
+# ln -s /etc/freeradius/sites-available/radius.bh-consulting.net /etc/freeradius/sites-enabled/
+\end{lstlisting}
 
 Modifier le virtualhost en éditant le fichier \emph{/etc/freeradius/sites-available/radius.bh-consulting.net}~:
-\begin{verbatim}
+
+\begin{lstlisting}
 server radius.bh-consulting.net{
+
 authorize {
         preprocess
         chap
@@ -133,13 +139,15 @@ post-auth {
         }
 }
 
-...
+§\emph{[...]}§
 }
-\end{verbatim}
-Attention a bien ajouter "server radius.bh-consulting.net\{", section qui englobe le reste du fichier.
+\end{lstlisting}
 
-De la même façon, dans la section 'authorize' du fichier \emph{/etc/freeradius/sites-enabled/default}, commenter 'files' et décommenter 'sql'.
-\begin{verbatim}
+Attention à ne pas oublier la première ligne \emph{server radius.bh-consulting.net\{}.
+
+De la même façon, dans la section \emph{authorize} du fichier \emph{/etc/freeradius/sites-enabled/default}, commenter \emph{files} et décommenter \emph{sql} de cette façon~:
+
+\begin{lstlisting}
 authorize {
         preprocess
         chap
@@ -154,38 +162,54 @@ authorize {
         logintime
         pap
 }
-...
-\end{verbatim}
 
+§\emph{[...]}§
+\end{lstlisting}
 
 \subsection{Test d'authentification}
 \subsubsection{Test local}
-Pour ce test, il nous faut ajouter le client dans la table des NAS admis. Soit l'IP du client : 192.168.1.2.
-\begin{alltt}
-# echo "insert into nas(nasname,shortname,secret) values ('\emph{192.168.1.2}','client',\\'mysecret'); " | mysql -uroot -p radius
-\end{alltt}
 
-Lancer le serveur Radius en mode debug sur la machine serveur (avec l'adresse IP \texttt{192.168.1.10})~:
-\begin{verbatim}
+Pour ce test, il nous faut ajouter le client (\emph{192.168.1.2}) dans la table des NAS admis~:
+
+\begin{lstlisting}
+# echo "INSERT INTO nas(nasname,shortname,secret) VALUES ('§\emph{192.168.1.2}§','client','§\emph{mysecret}§')" | mysql -uroot -p radius
+\end{lstlisting}
+
+Lancer le serveur Radius (\emph{192.168.1.10}) en mode debogue, et sans détachement, sur la machine serveur~:
+
+\begin{lstlisting}
 # freeradius -X
-\end{verbatim}
-Si le serveur se plaint que le port est 'already in use', verifier qu'une instance de radius n'est pas déjà en train de tourner.
+\end{lstlisting}
 
-Côté client (avec \emph{freeradius-utils} d'installé et l'IP \texttt{192.168.1.2}), tenter une authentification avec l'utilisateur créé dans la base de données.\\
-Pour rappel, l'IP du serveur radius: 192.168.1.10~:
-\begin{verbatim}
-# radtest user1 motdepasse 192.168.1.10 0 mysecret
-\end{verbatim}
+Si le serveur répond que le est \emph{already in use}, vérifier qu'une instance de Radius n'est pas déjà en train de tourner (par exemple à cause d'un service~: \texttt{service freeradius stop}).
+
+Côté client, installer le paquet suivant~:
+
+\begin{lstlisting}
+# apt-get install freeradius-utils
+\end{lstlisting}
+
+Puis tenter une authentification avec l'utilisateur créé dans la base de données~:
+
+\begin{lstlisting}
+# radtest §\emph{user1}§ §\emph{motdepasse}§ §\emph{192.168.1.10}§ 0 §\emph{mysecret}§
+\end{lstlisting}
 
 Si l'authentification est réussie, le Radius est prêt à être utilisé dans le cadre des sections suivantes.
 
 \subsubsection{Test distant}
-Il est possible de simuler la présence d'un NAS pour tester le bon fonctionnement du radius avec le programme 'eapol', livré comme une partie de la suite wpa\_supplicant. Le client utilisé pour ce test dois bien sur être connu du serveur (cf ci-dessus). L'appel est fait avec la commande : 
-\begin{verbatim}
-$ eapol_test -c dot1x.conf.eap -a192.168.1.10 -p1812 -smysecret -r0
-\end{verbatim} 
-Le fichier de configuration, ici \emph{dot1x.conf.eap} est au format wpa\_supplicant. A titre d'exemple, pour EAP-MD5~:
-\begin{verbatim}
+
+Il est possible de simuler la présence d'un NAS pour tester le bon fonctionnement de Radius avec le programme \emph{eapol}, livré comme une partie de la suite \emph{wpa\_supplicant}. Le client utilisé pour ce test doit bien sûr être connu du serveur (cf. ci-dessus)~:
+
+\begin{lstlisting}
+$ eapol_test -c dot1x.conf.eap -a§\emph{192.168.1.10}§ -p1812 -s§\emph{mysecret}§ -r0
+\end{lstlisting} 
+
+Le fichier de configuration (\emph{dot1x.conf.eap}) est au format \emph{wpa\_supplicant}.
+
+À titre d'exemple, pour EAP-MD5~:
+
+\begin{lstlisting}
 ctrl_interface=/var/run/wpa_supplicant
 ctrl_interface_group=0
 eapol_version=1
@@ -194,11 +218,7 @@ ap_scan=0
 network={
         key_mgmt=IEEE8021X
         eap=MD5
-        identity="user1"
-        password="motdepasse"
+        identity="§\emph{user1}§"
+        password="§\emph{motdepasse}§"
 }
-\end{verbatim}
-
-
-
-
+\end{lstlisting}

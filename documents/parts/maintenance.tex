@@ -1,29 +1,30 @@
 \section{Maintenance}
-
 \subsection{Ajouter un client NAS}
 
-Pour ajouter un client'nas' (Switch ou autre équipement), qui pourra dès lors interroger le radius~:
+Pour ajouter un client NAS (en général un commutateur), qui pourra dès lors interroger le Radius~:
 
-\begin{alltt}
-\$ echo "INSERT INTO nas VALUES (nasname, shortname, secret) VALUES \\('192.168.0.254','switch','mysecret');" | mysql -uroot -p radius
-\end{alltt}
+\begin{lstlisting}
+$ echo "INSERT INTO nas VALUES (nasname, shortname, secret) VALUES ('192.168.0.254','switch','§\emph{mysecret}§')" | mysql -uroot -p radius
+\end{lstlisting}
 
-\textbf{Note:} Pour spécifier un netmask, utiliser la valeur 192.168.0.0/24
+Pour spécifier un masque de sous-réseau, utiliser la notation CIDR.
 
 Pour supprimer un NAS~:
-\begin{alltt}
-\$ echo "DELETE FROM nas WHERE nasname='192.168.0.254' AND shortname='switch' \\AND secret='mysecret';" | mysql -uroot -p radius
-\end{alltt}
 
+\begin{lstlisting}
+$ echo "DELETE FROM nas WHERE nasname='192.168.0.254' AND shortname='switch' AND secret='§\emph{mysecret}§'" | mysql -uroot -p radius
+\end{lstlisting}
 
 Pour ajouter un utilisateur~:
-\begin{alltt}
-\$ echo "INSERT INTO radcheck(username,attribute,op,value) VALUES ('userName',\\'Cleartext-Password',':=','userPassword');" | mysql -uroot -p radius
-\end{alltt}
-Puis lui générer un certificat.
+
+\begin{lstlisting}
+$ echo "INSERT INTO radcheck(username,attribute,op,value) VALUES ('§\emph{userName}§','Cleartext-Password',':=','§\emph{userPassword}§')" | mysql -uroot -p radius
+\end{lstlisting}
+
+Penser à lui générer un certificat.
 
 Pour supprimer un utilisateur~:
-\begin{alltt}
-\$ echo "DELETE FROM radcheck WHERE username='userName' AND attribute='Cleartext-Password'\\ AND op=':=' AND value='userPassword';" | mysql -uroot -p radius
-\end{alltt}
 
+\begin{lstlisting}
+$ echo "DELETE FROM radcheck WHERE username='§\emph{userName}§' AND attribute='Cleartext-Password' AND op=':=' AND value='§\emph{userPassword}§'" | mysql -uroot -p radius
+\end{lstlisting}
