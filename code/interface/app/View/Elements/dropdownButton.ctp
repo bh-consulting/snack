@@ -2,7 +2,8 @@
 
 <?php
 $color = (isset($color)) ? $color : 'icon-white';
-$icon = (isset($icon) && !empty($icon)) ? $icon : '';
+$color = (isset($icon) && !empty($icon)) ? $color : '';
+
 $class = (isset($class)) ? $class : 'btn-primary';
 
 if (isset($buttonCount) && $buttonCount == 1) {

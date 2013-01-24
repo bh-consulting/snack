@@ -38,11 +38,25 @@ echo $this->element('dropdownButton', array(
 	)
 ));
 
-echo $this->Html->link(
-	'<i class="icon-upload icon-white"></i> ' . __('Import CSV'), 
-	array('action' => 'add_csv'),
-	array('escape' => false, 'class' => 'btn btn-primary')
-);
+echo $this->element('dropdownButton', array(
+	'buttonCount' => 1,
+	'class' => 'btn-primary',
+	'title' => __('CSV'),
+	'icon' => 'icon-file',
+	'items' => array(
+		$this->Html->link(
+			'<i class="icon-upload"></i> ' . __('Import users'),
+			array('action' => 'import_csv'),
+			array('escape' => false)
+		),
+		$this->Html->link(
+			'<i class="icon-download"></i> ' . __('Export users'),
+			array('action' => 'export_csv'),
+			array('escape' => false)
+		),
+	),
+));
+
 ?>
 
 <?php
@@ -50,7 +64,10 @@ $columns = array(
 	'id' => array('text' => __('ID'), 'width' => '40px'),
 	'username' => array('text' => __('Username')),
 	'comment' => array('text' => __('Comment')),
-	'ntype' => array('text' => __('Type'))
+	'is_cert' => array('text' => __('Certificate')),
+	'is_loginpass' => array('text' => __('Login / Password')),
+	'is_mac' => array('text' => __('MAC')),
+	'is_cisco' => array('text' => __('Cisco')),
 );
 
 echo $this->Form->create('Radusers', array('action' => 'delete'));
@@ -128,7 +145,22 @@ if (!empty($radusers)) {
 			</td>
 			<td>
 <?php
-		echo $rad['Raduser']['ntype'];
+		echo $rad['Raduser']['is_cert'] ? '<i class="icon-ok"></i>' : '';
+?>
+			</td>
+			<td>
+<?php
+		echo $rad['Raduser']['is_loginpass'] ? '<i class="icon-ok"></i>' : '';
+?>
+			</td>
+			<td>
+<?php
+		echo $rad['Raduser']['is_mac'] ? '<i class="icon-ok"></i>' : '';
+?>
+			</td>
+			<td>
+<?php
+		echo $rad['Raduser']['is_cisco'] ? '<i class="icon-ok"></i>' : '';
 ?>
 			</td>
 			<td>
@@ -189,7 +221,7 @@ echo $this->element('dropdownButton', array(
 			)
 		),
 		$this->Html->link(
-			'<i class="icon-share"></i> ' . __('Export selected'),
+			'<i class="icon-download"></i> ' . __('Export selected'),
 			'#',
 			array(
 				'onClick' =>	"$('#selectionAction').attr('value', 'export');"

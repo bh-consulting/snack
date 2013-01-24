@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-01-20 21:53+0000\n"
+"POT-Creation-Date: 2013-01-24 01:08+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -59,7 +59,15 @@ msgstr ""
 msgid "Please re-enter your password twice so that the values match"
 msgstr ""
 
-#: Model/Raduser.php:validation for field mac
+#: Model/Raduser.php:validation for field mac;validation for field mac_active
 msgid "This is not a MAC address format."
+msgstr ""
+
+#: Model/Raduser.php:validation for field mac
+msgid "You have to type a MAC address"
+msgstr ""
+
+#: Model/Raduser.php:validation for field mac
+msgid "MAC already used"
 msgstr ""
 

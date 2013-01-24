@@ -1,10 +1,9 @@
-<?
+<?php
 
 App::uses('AuthComponent', 'Controller/Component');
 App::uses('Utils', 'Lib');
 
-class Raduser extends AppModel
-{
+class Raduser extends AppModel {
     public $useTable = 'raduser';
     public $primaryKey = 'id';
     public $displayField = 'username';
@@ -39,15 +38,30 @@ class Raduser extends AppModel
             'macFormat' => array(
                 'rule' => array('isMACFormat'),
                 'message' => 'This is not a MAC address format.'
+            ),
+            'notEmpty' => array(
+                'rule' => 'notEmpty',
+                'message' => 'You have to type a MAC address',
+                'allowEmpty' => false
+            ),
+            'isUnique' => array(
+                'rule' => 'isUnique',
+                'message' => 'MAC already used'
+            ),
+        ),
+        'mac_active' => array(
+            'macFormat' => array(
+                'rule' => array('isMACFormat'),
+                'message' => 'This is not a MAC address format.'
             )
-        )
+        ),
     );
 
     public $virtualFields = array(
         'ntype' => 'is_mac' //TODO Revoir conception user type
     );
 
-    function identicalFieldValues( $field=array(), $compare_field=null )  
+    public function identicalFieldValues( $field=array(), $compare_field=null )  
     { 
         foreach( $field as $key => $value ){ 
             $v1 = $value; 
@@ -64,7 +78,7 @@ class Raduser extends AppModel
     public function isMACFormat($field=array()) {
         foreach( $field as $key => $value ){ 
             $v1 = $value; 
-            if(!Utils::isMAC($v1)) { 
+            if(!Utils::isMAC($v1) && !empty($v1)) { 
                 return false; 
             } else { 
                 continue; 
