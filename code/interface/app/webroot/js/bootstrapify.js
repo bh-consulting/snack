@@ -29,12 +29,12 @@ var Boostrapify = {
 	$('select').wrap('<div class="controls"/>');
 	$('label').addClass('control-label');
 	$('div.checkbox').wrapInner('<label class="checkbox"/>');
-	$('label.checkbox label').replaceWith(function() { 
-	    var content = $(this).html();
-	    $(this).replaceWith(content);
+	$('div.checkbox').removeClass('checkbox');
+	$('label.checkbox').before(function() {
+	    return $(this).children('label');
 	});
-	$('label.checkbox').unwrap();
 	$('label.checkbox').wrap('<div class="controls"/>');
+	$('label:empty').remove();
 	
 	// All submit forms converted to primary button
 	$('input[type="submit"]').addClass('btn btn-primary');

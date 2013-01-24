@@ -50,3 +50,8 @@ a.ui-slider-handle {
 .dropdown-menu li > a.dangerous_auth {
 	color: #c00;
 }
+
+.fit {
+    white-space:nowrap;
+    width: 1px;
+}
