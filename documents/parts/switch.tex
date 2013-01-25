@@ -79,7 +79,7 @@ Ajouter la définition d'un serveur Radius (\emph{192.168.1.10})~:
 
 \begin{lstlisting}
 Switch(config)# aaa new-model
-Switch(config)# radius-server host 192.168.1.10 auth-port 1812 key mysecret
+Switch(config)# radius-server host 192.168.1.10 auth-port 1812 key radius_secret
 \end{lstlisting}
 
 \subsubsection{Authentification périodique}
@@ -146,7 +146,7 @@ safe-characters = "@0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 Puis ajouter un utilisateur particulier~:
 
 \begin{lstlisting}
-$ sudo echo "INSERT INTO radcheck (username,attribute,value) VALUES ('$enab15$','Cleartext-Password','motdepasse_enable')" | mysql -uroot -p radius
+$ sudo echo "INSERT INTO radcheck (username,attribute,value) VALUES ('$enab15$','Cleartext-Password','pass_enable')" | mysql -uroot -p radius
 \end{lstlisting}
 
 \subsubsection{Identifiants de secours}
@@ -160,8 +160,8 @@ Swicth>enable
 Switch#configure terminal
 Switch(config)#aaa authentication login default group radius local
 Switch(config)#aaa authentication enable default group radius enable
-Switch(config)#enable password motdepasse_enable_secours
-Switch(config)#username utilisateur_secours password motdepasse_secours
+Switch(config)#enable password pass_enable_secours
+Switch(config)#username utilisateur_secours password pass_utilisateur_secours
 \end{lstlisting}
 
-Si le serveur ne répond pas, il faudra utiliser l'utilisateur \emph{utilisateur\_secours} et le mot de passe \emph{motdepasse\_secours} pour se connecter sur le port console. Le mot de passe \emph{motdepasse\_enable\_secours} pourra être utilisé pour passer en mode privilégié.
+Si le serveur ne répond pas, il faudra utiliser l'utilisateur \emph{utilisateur\_secours} et le mot de passe \emph{pass\_secours} pour se connecter sur le port console. Le mot de passe \emph{pass\_enable\_secours} pourra être utilisé pour passer en mode privilégié.

@@ -1,149 +1,159 @@
 \section{Certificats}
 \subsection{Installation des certificats}
-\subsubsection{Adaptation du fichier de configuration}
+\subsubsection{Openssl}
 
-Ce paquet s'appuie sur \emph{openssl} pour la gestion des certificats.
+Pour l'instant, les utilisateurs ne peuvent s'authentifier qu'en utilisant un nom d'utilisateur et un mot de passe, avec du MD5. Pour pouvoir proposer des solutions qui apportent plus de sécurité, Openssl peut être utilisé pour générer des certificats.
 
-Pour l'installer, en super-utilisateur~:
+Pour l'installer, en super-utilisateur sur le serveur~:
 
 \begin{lstlisting}
 $ sudo apt-get install openssl
 \end{lstlisting}
 
-On suppose un dossier pour les certificat de chemin~: \emph{path\_to\_certs}\\
-
-Modifier le fichier de configuration \emph{/etc/ssl/openssl.cnf}~:
+Modifier le fichier de configuration \emph{/etc/ssl/openssl.cnf} pour changer le chemin par défaut des certificats créés (\emph{dossier\_certs}), ainsi que la valeur de la clé \emph{certificate} (ligne 10)~:
 
 \begin{lstlisting}
    [ CA_default ]
 
-    dir             = path_to_certs              # Where everything is kept
+    dir             = dossier_certs              # Where everything is kept
     certs           = $dir/certs            # Where the issued certs are kept
     crl_dir         = $dir/crl              # Where the issued crl are kept
     database        = $dir/index.txt        # database index file.
     #unique_subject = no                    # Set to 'no' to allow creation of several ctificates with same subject.
     new_certs_dir   = $dir/newcerts         # default place for new certs.
 
-    certificate     = $dir/private/cacert.pem       # The CA certificate
+    certificate     = $dir/users/ca_cert.pem       # The CA certificate
     serial          = $dir/serial           # The current serial number
     crlnumber       = $dir/crlnumber        # the current crl number must be commented out to leave a V1 CRL
     crl             = $dir/crl.pem          # The current CRL
-    private_key     = $dir/private/cakey.pem# The private key
+    private_key     = $dir/private/ca_key.pem# The private key
 \end{lstlisting}
 
-\subsubsection{Mise en place de l'environement}
-
-Se placer dans le repertoire où seront stockés les certificats (\emph{path\_to\_certs}).
+\subsubsection{Création de l'environnement}
 
 Créer les dossiers suivants~:
 
 \begin{lstlisting}
-$ mkdir "path_to_certs/certs"
-$ mkdir "path_to_certs/crl"
-$ mkdir "path_to_certs/private"
-$ mkdir "path_to_certs/users"
-$ mkdir "path_to_certs/newcerts"
+$ mkdir -p dossier_certs/{certs,crl,private,users,newcerts}
 \end{lstlisting}
 
 Ainsi que les fichiers~:
 
 \begin{lstlisting}
-$ touch path_to_certs/index.txt
-$ echo "01" > path_to_certs/crlnumber
+$ touch dossier_certs/index.txt
+$ echo 01 > dossier_certs/crlnumber
 \end{lstlisting}
 
 \subsubsection{Génération du certificat racine}
 
-Créer le certificat racine sans passphrase avec openssl~:
+Créer le certificat racine sans passphrase avec Openssl~:
 
 \begin{lstlisting}
-$ openssl genrsa -out path_to_certs/private/cakey.pem 4096 
-$ openssl req -new -key path_to_certs/private/cakey.pem \
-	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=nom_entreprise/ \
-	-out path_to_certs/private/careq.pem
-
-$ openssl ca -config /etc/ssl/openssl.cnf \
-	-create_serial -out path_to_certs/private/cacert.pem -days 3650 -batch \
-	-keyfile path_to_certs/private/cakey.pem -selfsign \
-	-extensions v3_ca \
-	-infiles path_to_certs/private/careq.pem
+$ openssl genrsa -out dossier_certs/private/ca_key.pem 4096 
+$ openssl req -new -key dossier_certs/private/ca_key.pem -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=nom_entreprise/ -out dossier_certs/private/ca_req.pem
+$ openssl ca -config /etc/ssl/openssl.cnf -create_serial -out dossier_certs/users/ca_cert.pem -days 3650 -batch -keyfile dossier_certs/private/ca_key.pem -selfsign -extensions v3_ca -infiles dossier_certs/private/ca_req.pem
 \end{lstlisting}
 
-Générer la liste des CRL (\emph{Certificate Revocation List}) dès à présent et \textbf{après chaque création/révocation} de certificat. Une seule génération peut être faite pour plusieurs modifications. La procédure est expliquée dans la section suivante.
+Ignorer les éventuels messages \og{}\emph{unable to write 'random state'}\fg.
+
+Générer la liste des CRL (\emph{Certificate Revocation List}) \textbf{dès à présent et après chaque création/révocation} de certificat. Une seule génération peut être faite pour plusieurs modifications. La procédure est expliquée dans la section suivante.
 
 \subsubsection{Génération et mise à jour de la CRL}
+\label{gen-crl}
 
-Première génération de la CRL~:
+Première génération ou mise à jour de la CRL~:
 
 \begin{lstlisting}
-$ openssl ca -config /etc/ssl/openssl.cnf -gencrl -out path_to_certs/crl/crl.pem
+$ openssl ca -config /etc/ssl/openssl.cnf -gencrl -out dossier_certs/crl/crl.pem
 \end{lstlisting}
 
 \subsubsection{Architecture nécessaire pour la CRL}
 
-Pour mettre en place l'architecture nécessaire à la lecture de CRL par Radius (prendre garde à utiliser des \textbf{chemins absolus} pour ces liens)~:
+Mettre en place l'architecture nécessaire à la lecture de CRL par Radius (les chemins doivent être obligatoirement absolus)~:
 
 \begin{lstlisting}
-$ export HASH=$(openssl x509 -noout -hash -in path_to_certs/private/cacert.pem)
-$ ln -s path_to_certs/private/cacert.pem path_to_certs/certs/$HASH.0
-$ ln -s path_to_certs/crl/crl.pem path_to_certs/certs/$HASH.r0
+$ export HASH=$(openssl x509 -noout -hash -in dossier_certs/users/ca_cert.pem)
+$ ln -s dossier_certs/users/ca_cert.pem dossier_certs/certs/$HASH.0
+$ ln -s dossier_certs/crl/crl.pem dossier_certs/certs/$HASH.r0
 \end{lstlisting}
 
 \subsection{Utilisation des certificats}
 \subsubsection{Génération et signature}
 
-Créer un certificat pour l'utilisateur identifié par \emph{userName} (le champ \emph{commonName} doit correspondre au champ \emph{username} du Radius)~:
+Génération d'une clé pour un utilisateur (\emph{utilisateur1})~:
 
 \begin{lstlisting}
-$ openssl genrsa -out path_to_certs/users/userName_key.pem 4096
-
-$ openssl req -config /etc/ssl/openssl.cnf -new -key path_to_certs/users/userName_key.pem \
-        -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=userName/ \
-	-out path_to_certs/users/\emph{userName\_req.pem} -days 3650
-
-$ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything \
-	-out path_to_certs/users/\emph{userName\_cert.pem} -batch \
-	-infiles path_to_certs/users/\emph{userName\_req.pem}
+$ openssl genrsa -out dossier_certs/users/utilisateur1_key.pem 4096
 \end{lstlisting}
 
-Penser à mettre à jour la CRL.
+Génération d'une requête pour faire signer le certificat, en prenant soin de définir le champ \emph{commonName} à l'aide de l'identifiant de l'utilisateur~:
+
+\begin{lstlisting}
+$ openssl req -config /etc/ssl/openssl.cnf -new -key dossier_certs/users/utilisateur1_key.pem -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=utilisateur1/ -out dossier_certs/users/§§utilisateur1§§_req.pem -days 3650
+\end{lstlisting}
+
+Signature du certificat, avec le certificat racine créé précédemment~:
+
+\begin{lstlisting}
+$ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out dossier_certs/users/§§utilisateur1§§_cert.pem -batch -infiles dossier_certs/users/§§utilisateur1§§_req.pem
+\end{lstlisting}
+
+Penser à mettre à jour la CRL (cf. section~\ref{gen-crl} page~\pageref{gen-crl}).
+
+Une erreur de ce type à la signature signifie que la valeur donnée pour le \emph{commonName} a déjà été utilisée par le passé (même si le certificat a été supprimé)~:
+
+\begin{lstlisting}
+failed to update database
+TXT_DB error number 2
+\end{lstlisting}
+
+En cas d'erreur, il faut donc éditer le fichier \emph{dossier\_certs/index.txt} pour supprimer les reliquats des anciens certificats.
 
 \subsubsection{Révocation}
 
 Pour révoquer un certificat (irréversible)~: 
 
 \begin{lstlisting}
-$ openssl ca -config /etc/ssl/openssl.cnf -revoke path_to_certs/users/userName_cert.pem
+$ openssl ca -config /etc/ssl/openssl.cnf -revoke dossier_certs/users/utilisateur1_cert.pem
 \end{lstlisting}
 
-Penser à mettre à jour la CRL.
+Penser à mettre à jour la CRL (cf. section~\ref{gen-crl} page~\pageref{gen-crl}).
 
 Pour vérifier qu'un certificat a bien été révoqué~:
 
 \begin{lstlisting}
-$ openssl verify  -CApath path_to_certs/certs/ \
-    -crl_check path_to_certs/users/userName_cert.pem
+$ openssl verify -CApath dossier_certs/certs/ -crl_check dossier_certs/users/utilisateur1_cert.pem
 \end{lstlisting}
 
-\subsection{Certificats et radius}
-\subsubsection{Configuration du radius}
+\subsection{Certificats et Radius}
+\subsubsection{Configuration}
 
-Pour mettre en place les certificats de Radius~: 
+Pour mettre en place les certificats de Radius, commencer par créer un fichier aléatoire~: 
 
 \begin{lstlisting}
-$ dd if=/dev/urandom of=path_to_certs/random count=2
-$ openssl dhparam -check -text -5 1024 -out path_to_certs/dh
+$ dd if=/dev/urandom of=dossier_certs/random count=2
+$ openssl dhparam -check -text -5 1024 -out dossier_certs/dh
 \end{lstlisting}
 
-Puis générer une clé et un certificat (dans \emph{path\_to\_certs/private} et non dans \emph{path\_to\_certs/users}).
+Récupérer le nom de la machine (\emph{nom\_serveur\_radius}) qui héberge le serveur Radius en exécutant la commande suivante~:
 
-Le \emph{commonName} du Radius \textbf{doit} être le hostname de la machine qui héberge le Radius.
+\begin{lstlisting}
+$ hostname
+\end{lstlisting}
 
-Adapter ensuite le fichier \emph{/etc/freeradius/eap.conf}~:
+Générer et signer un certificat pour le Radius, en prenant soin de définir le champ \emph{commonName} à l'aide du nom de la machine du serveur~:
+
+\begin{lstlisting}
+$ openssl genrsa -out dossier_certs/private/radius_key.pem 4096
+$ openssl req -config /etc/ssl/openssl.cnf -new -key dossier_certs/private/radius_key.pem -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=nom_serveur_radius/ -out dossier_certs/private/radius_req.pem -days 3650
+$ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out dossier_certs/private/radius_cert.pem -batch -infiles dossier_certs/private/radius_req.pem
+\end{lstlisting}
+
+Modifier ou décommenter l'ensemble des paramètres de la section TLS du fichier \emph{/etc/freeradius/eap.conf} de la façon suivante (laisser la valeur par défaut pour les autres)~:
 
 \begin{lstlisting}
 tls {
-	confdir = path_to_certs 
+	confdir = dossier_certs 
 	certdir = ${confdir}
 	cadir = ${confdir}/private
 
@@ -164,50 +174,38 @@ tls {
 }
 \end{lstlisting}
 
-\subsubsection{Permissions}
-
-Le Radius dois pouvoir lire plusieurs fichiers, comme la CRL, le certificat racine, son propre certificat, etc.
-
-À titre d'exemple, voici les permissions utilisées (\emph{snack} est un groupe incluant les utilisateurs)~:
+Décommenter la ligne \emph{sql} et commenter la ligne \emph{files} de la section \emph{authorize} du fichier \emph{/etc/freeradius/sites-available/inner-tunnel}~:
 
 \begin{lstlisting}
-snack
-+-- [drwx--x--- root     snack   ]  cert
-|   +-- [drwx------ root     snack   ]  certs
-|   |   +-- [lrwxrwxrwx root     snack   ]  15661b30.0 -> /home/pi/snack/cert/private/cacert.pem
-|   |   +-- [lrwxrwxrwx root     snack   ]  15661b30.r0 -> /home/pi/snack/cert/crl/crl.pem
-|   +-- [drwxrwx--- root     snack   ]  crl
-|   |   +-- [-rwxrwx--- freerad  snack   ]  crl.pem
-|   +-- [-rw-r--r-- root     snack   ]  crlnumber
-|   +-- [-rw-r--r-- root     snack   ]  crlnumber.old
-|   +-- [-rwx------ freerad  snack   ]  dh
-|   +-- [-rw-r--r-- root     snack   ]  index.txt
-|   +-- [-rw-r--r-- root     snack   ]  index.txt.attr
-|   +-- [-rw-r--r-- root     snack   ]  index.txt.attr.old
-|   +-- [-rw-r--r-- root     snack   ]  index.txt.old
-|   +-- [drwxrwx--- root     snack   ]  newcerts
-|   |   +-- [-rw-r--r-- root     snack   ]  EDA9703A91A8EE1B.pem
-|   |   +-- [-rw-r--r-- root     snack   ]  EDA9703A91A8EE1C.pem
-|   +-- [drwx--x--- root     snack   ]  private
-|   |   +-- [-rwx------ freerad  snack   ]  cacert.pem
-|   |   +-- [-rwx------ root     snack   ]  cakey.pem
-|   |   +-- [-rw-r--r-- root     snack   ]  careq.pem
-|   |   +-- [-rwx------ freerad  snack   ]  radius_cert.pem
-|   |   +-- [-rwx------ freerad  snack   ]  radius_key.pem
-|   |   +-- [-rw-r--r-- root     snack   ]  radius_req.pem
-|   +-- [-rwx------ freerad  snack   ]  random
-|   +-- [-rw-r--r-- root     snack   ]  serial
-|   +-- [-rw-r--r-- root     snack   ]  serial.old
-|   +-- [drwxrwx--- root     snack   ]  users
-+-- [drwx------ www-data snack   ]  scripts
-    +-- [-rwx------ www-data snack   ]  createCertificate
-    +-- [-rwx------ www-data snack   ]  revocationCheck
-    +-- [-rwx------ www-data snack   ]  revokeClient
+authorize {
+    chap
+    mschap
+    suffix
+    update control {
+        Proxy-To-Realm := LOCAL
+    }
+    eap {
+        ok = return
+    }
+    #files
+    sql
+    expiration
+    logintime
+    pap
+}
 \end{lstlisting}
 
-\subsection{Mise en place coté client}
+\subsection{Utilisation des certificats côté client}
 
-Voici trois exemples de configuration fonctionnelle pour \emph{wpa\_supplicant} sous GNU/Linux. 
+Créer un répertoire pour les certificats (\emph{dossier\_certs\_utilisateur}) de l'utilisateur sur la machine cliente, pour y copier directement trois des fichiers qui ont été générés précédemment~:
+
+\begin{enumerate}
+\item \emph{dossier\_certs/users/ca\_cert.pem} (certificat publique de l'autorité de certification)
+\item \emph{dossier\_certs/utilisateur1\_cert.pem} (certificat publique de l'utilisateur)
+\item \emph{dossier\_certs/utilisateur1\_key.pem} (certificat privé de l'utilisateur)
+\end{enumerate}
+
+La configuration du serveur actuelle permet à l'utilisateur de choisir entre un tunnel TLS, TTLS avec MD5 ou PEAP, selon ses exigences de sécurité. Les trois fichiers ciè-dessous permettent de tester chacun des modes pour vérifier leur bon fonctionnement.
 
 Pour TLS~:
 
@@ -216,45 +214,51 @@ network={
     eap=TLS
     eapol_flags=0
     key_mgmt=IEEE8021X
-    identity="user_login"
-    ca_cert="path/to/authority/certificate/cacert.pem"
-    client_cert="path/to/client/cert/cert.pem"
-    private_key="path/to/client/key/key.pem"
+    identity="utilisateur1"
+    ca_cert="dossier_certs_utilisateur/cacert.pem"
+    client_cert="dossier_certs_utilisateur/utilisateur1§§_cert.pem"
+    private_key="dossier_certs_utilisateur/utilisateur1§§_key.pem"
 }
 \end{lstlisting}
 
-Pour TTLS avec un encryptage MD5 dans le tunnel~:
+TTLS avec un chiffrement MD5 dans le tunnel~:
 
 \begin{lstlisting}
 network={
     eap=TTLS
     eapol_flags=0
     key_mgmt=IEEE8021X
-    identity="user_login"
-    password="user_password"
-    ca_cert="path/to/authority/certificate/cacert.pem"
+    identity="utilisateur1"
+    password="pass_utilisateur1"
+    ca_cert="dossier_certs_utilisateur/cacert.pem"
     phase2="auth=MD5"
 }
 \end{lstlisting}
 
-Pour PEAP~:
+PEAP~:
 
 \begin{lstlisting}
 network={
     eap=PEAP
     eapol_flags=0
     key_mgmt=IEEE8021X
-    identity="user_login"
-    password="user_password"
-    ca_cert="path/to/authority/certificate/cacert.pem"
+    identity="utilisateur1"
+    password="pass_utilisateur1"
+    ca_cert="dossier_certs_utilisateur/cacert.pem"
     phase2="auth=MSCHAPV2"
 }
 \end{lstlisting}
 
-Pour utiliser les configurations avec \emph{wpa\_supplicant}~:
+Côté serveur, démarrer Freeradius en mode test (il faudra le relancer à chaque modification de sa configuration, en cas de problème)~:
 
 \begin{lstlisting}
-$ wpa_supplicant -ieth0 -c eapol_test.conf.tls -Dwired
+$ sudo freeradius -X
 \end{lstlisting}
 
-L'option \texttt{-B} permet de lancer \emph{wpa\_supplicant} en tâche de fond. Il faut toujours relancer Radius pour prendre en compte les modifications avant de tester.
+Côté client, à l'aide de l'outil \emph{eapol\_test} (cf. section~\ref{eapol-test} page~\pageref{eapol-test}) et des fichiers de configuration indiqués ci-dessus, tester chacun des modes d'authentification~:
+
+\begin{lstlisting}
+$ ./eapol_test -c test.conf.eap -a§§192.168.1.10 -p1812 -s§§secret_radius -r0
+\end{lstlisting}
+
+La dernière ligne devrait, cette fois-ci, être \emph{SUCCESS} dans les trois cas.
