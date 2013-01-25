@@ -6,24 +6,22 @@ read -t 1 -n 10000 discard
 
 
 
-
-
 if [ 'root' != $USER ]
     then
     echo "This install script must be launched with sudo right";
     exit
 fi
 
-# Création de la base de donnée + création d'un utilisateur admin
 
-#echo -n "Mot de passe root MySQL : "
+
+# Création de la base de donnée + création d'un utilisateur admin
+# Database creation and new user definition. This mysql user will be used by freeradius.
 stty -echo 
 read -t 1 -n 10000 discard
 read -p "Enter MySQL root password : " mdp_root
 stty echo
 echo ""
 
-#echo -n "Mot de passe de l'administrateur : "
 while [ -z "$mdp_radius" -o $mdp_radius != $mdp_radius_bis ] 
 do
     if [ -n "$mdp_radius" ]
@@ -32,13 +30,13 @@ do
     fi
     stty -echo
     read -t 1 -n 10000 discard
-    read -p "Enter administrator password : " mdp_radius
+    read -p "Define password for mysql user used by freeradius : " mdp_radius
     stty echo
     echo ""
     stty -echo
     
     read -t 1 -n 10000 discard
-    read -p "Re enter administrator password : " mdp_radius_bis
+    read -p "Re enter this password : " mdp_radius_bis
     stty echo
     echo ""
 done
@@ -50,7 +48,6 @@ echo "	create database radius;\
 
 until [ $? -eq 0 ]
 do
-	#echo -n "Mot de passe root MySQL : "
 	stty -echo
 	read -t 1 -n 10000 discard
 	read -p "Mot de passe root MySQL : " mdp_root
@@ -71,6 +68,7 @@ mysql -uroot -p$mdp_root radius < /etc/freeradius/sql/mysql/nas.sql
 echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cleartext-Password', ':=', '$mdp_radius');" | mysql -uroot -p$mdp_root radius
 
 # Configuration de Radius pour intéragir avec la base de donnée
+# Radius configuration in order to interact with our database.
 
 sed\
 	-e "s/radpass/$mdp_radius/"\
@@ -87,7 +85,7 @@ sed\
 #Certificats
 
 
-#Guess the home path; 
+#Guess and set the home path; 
 if [ -n "$SUDO_USER" ];
     then
 	USER_HOME=/home/$SUDO_USER
@@ -110,7 +108,7 @@ RADCERTVALIDITY=3650 #ten years
 CACERTVALIDITY=3650 #ten years
 PATHDIRMODE=0070
 ONLYRADIUSACCESS=0700
-INTERFACEACCESS=0770 #data-www must be able to read certificate and to generate them.
+INTERFACEACCESS=0770 
 INTERFACETHROUGH=0710
 READINGONLY=0440
 
@@ -142,23 +140,7 @@ read -p "Enter the name of the client (CA common name): " CLIENTNAME
 sed\
 	-e "s|./demoCA|$DESTPATH |"\
 	-e "/\s*certificate\s*=/c certificate = \$dir/private/cacert.pem\t"\
-#	-e '/countryName_default/c countryName_default		= FR'\
-#	-e '/stateOrProvinceName_default/c stateOrProvinceName_default	= France'\
 	-i $SSLCNF
-#if grep -qs "localityName_default" $SSLCNF 
-#then
-#	sed\
-#		-e '/localityName_default/c localityName_default		= Nancy'\
-#		-i $SSLCNF
-#else
-#	sed\
-#		-e '/Locality Name/a localityName_default		= Nancy'\
-#		-i $SSLCNF
-#fi
-#sed\
-#	-e '/0.organizationName_default/c 0.organizationName_default	= BHConsulting'\
-#	-i $SSLCNF
-#
 
 
 ############################################
@@ -170,47 +152,18 @@ then
 fi
 
 mkdir $DESTPATH -m $INTERFACEACCESS;
-#chown freerad $DESTPATH
 mkdir "${DESTPATH}/certs" -m $INTERFACETHROUGH;
-#chown freerad $DESTPATH/certs
 mkdir "${DESTPATH}/crl" -m $INTERFACEACCESS ;
-#chown freerad $DESTPATH/crl
 mkdir "${DESTPATH}/newcerts" -m $INTERFACEACCESS;
-#chown freerad $DESTPATH/newcerts
 mkdir "${DESTPATH}/private" -m $INTERFACETHROUGH;
-#chown freerad $DESTPATH/private
 mkdir "${DESTPATH}/users" -m $INTERFACEACCESS;
-#chown freerad $DESTPATH/users
 touch $DESTPATH/index.txt
-#touch $DESTPATH/index.txt.new
-#touch $DESTPATH/index.txt.attr
-#touch $DESTPATH/index.txt.attr.new
-#touch $DESTPATH/serial
-#touch $DESTPATH/serial.new
-#touch $DESTPATH/serial.old
 echo "01" > $DESTPATH/crlnumber
-#chown freerad $DESTPATH/index.txt
-#chmod $ONLYRADIUSACCESS $DESTPATH/index.txt
-#chown www-data $DESTPATH/index.txt.new
-#chmod $INTERFACEACCESS $DESTPATH/index.txt.new
-#chown www-data $DESTPATH/index.txt.attr
-#chmod $INTERFACEACCESS $DESTPATH/index.txt.attr
-#chown www-data $DESTPATH/index.txt.attr.new
-#chmod $INTERFACEACCESS $DESTPATH/index.txt.attr.new
-#chown www-data $DESTPATH/serial
-#chmod $INTERFACEACCESS $DESTPATH/serial
-#chown www-data $DESTPATH/serial.new
-#chmod $INTERFACEACCESS $DESTPATH/serial.new
-#chown www-data $DESTPATH/serial.old
-#chmod $INTERFACEACCESS $DESTPATH/serial.old
-#chown www-data $DESTPATH/crlnumber
-#chmod $INTERFACEACCESS $DESTPATH/crlnumber
 
 
 ############################################
 #Creation of the Authority Certificate (CA)
 
-#openssl req -config /etc/ssl/openssl.cnf -new -keyout $DESTPATH/private/$CAKEY -out $DESTPATH/$CAREQ
 
 openssl genrsa -out $DESTPATH/private/$CAKEY 4096 
 
@@ -226,8 +179,7 @@ openssl ca -config /etc/ssl/openssl.cnf \
 	-infiles $DESTPATH/private/$CAREQ
 
 
-#This instruction is replaced by the tree above instructions.
-
+# Setting approriates permissions
 chown www-data $DESTPATH/private/$CAKEY
 chmod $INTERFACEACCESS $DESTPATH/private/$CAKEY
 chmod $READINGONLY $DESTPATH/private/$CACERT
@@ -259,11 +211,8 @@ HASH=`openssl x509 -noout -hash -in $DESTPATH/private/$CACERT`
 ln -s $DESTPATH/private/$CACERT $DESTPATH/certs/$HASH.0
 ln -s $DESTPATH/crl/crl.pem $DESTPATH/certs/$HASH.r0
 
-#chown freerad $DESTPATH/certs/$HASH.0
-#chown freerad $DESTPATH/certs/$HAST.r0
-#chmod $ONLYRADIUSACCESS $DESTPATH/certs/$HASH.0
-#chmod $ONLYRADIUSACCESS $DESTPATH/certs/$HASH.r0
 
+# Setting approriates permissions
 chown freerad $DESTPATH/crl/crl.pem
 chmod $INTERFACEACCESS $DESTPATH/crl/crl.pem
 
@@ -274,11 +223,17 @@ chmod $INTERFACEACCESS $DESTPATH/crl/crl.pem
 dd if=/dev/urandom of=$DESTPATH/random count=2
 openssl dhparam -check -text -5 1024 -out $DESTPATH/dh
 
+
+# Setting approriates permissions
 chown freerad $DESTPATH/random
 chown freerad $DESTPATH/dh
 chmod $ONLYRADIUSACCESS $DESTPATH/random
 chmod $ONLYRADIUSACCESS $DESTPATH/dh
-#Then we change the eap.conf file
+
+
+
+############################################
+#Setting the eap.conf file
 
 #changes for TLS section
 sed\
@@ -326,17 +281,22 @@ sed -e "s|USER_HOME_TO_SED|$USER_HOME|"\
 
 mkdir $USER_HOME/$PAQUETNAME/scripts -m $ONLYINTERFACEACCESS
 cp -r scripts/* $USER_HOME/$PAQUETNAME/scripts
-#chmod +x $USER_HOME/$PAQUETNAME/scripts/createCertificate
-#chmod +x $USER_HOME/$PAQUETNAME/scripts/revokeClient
-#chmod +x $USER_HOME/$PAQUETNAME/scripts/revocationCheck
+
+
+# Setting approriates permissions
 chown -R $INTERFACEUSER $USER_HOME/$PAQUETNAME/scripts
 chmod -R $ONLYINTERFACEACCESS $USER_HOME/$PAQUETNAME/scripts
 
+
+
+# Setting access groups
 groupadd snack
 usermod -a -G snack freerad
 usermod -a -G snack www-data
 chown -R :snack $USER_HOME/$PAQUETNAME
 
+
+############################################
 # Syslog avec Freeradius
 service syslog-ng restart
 sed -e 's/\(destination\s*=\s*\).*$/\1syslog/'\
