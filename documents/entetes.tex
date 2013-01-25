@@ -10,7 +10,9 @@
 \addtolength{\parskip}{10pt}
 \pagestyle{fancy}
 
-\lstset{language=bash,
+\definecolor{lightgray}{gray}{0.9}
+\definecolor{darkgray}{gray}{0.4}
+\lstset{language=,
     basicstyle=\sffamily\footnotesize,
     xleftmargin=20pt,
     xrightmargin=20pt,
@@ -24,10 +26,15 @@
     showstringspaces=false
     inputencoding=utf8, %put1 d'utf8 dans listing
     extendedchars=true, %put1 d'utf8 dans listing
-    literate={à}{{\`a}}1 {é}{{\'e}}1 {è}{{\`e}}1 {ê}{{\^e}}1 {â}{{\^a}}1 {î}{{\^i}}1 {ê}{{\^e}}1 {É}{{\'E}}1 {À}{{\`A}}1 {«}{{\og}}1 {»}{{\fg{}}}1 {ô}{{\^o}}1 {ù}{{\`u}}1 {û}{{\^u}}1 {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1, %put1 d'utf8 dans listing
+    literate={à}{{\`a}}1 {é}{{\'e}}1 {è}{{\`e}}1 {ê}{{\^e}}1 {â}{{\^a}}1 {î}{{\^i}}1 {ê}{{\^e}}1 {É}{{\'E}}1 {À}{{\`A}}1 {«}{{\og}}1 {»}{{\fg{}}}1 {ô}{{\^o}}1 {ù}{{\`u}}1 {û}{{\^u}}1 {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {--}{{-\,-}}1 {-}{{-}}1, %put1 d'utf8 dans listing
     columns=fullflexible, % suppression des espaces autour des deux-points
     escapechar=§, % permet d'insérer du §code latex§
-    commentstyle=
+    commentstyle=,
+    backgroundcolor=\color{lightgray},
+    keywords={path_to_certs, user_login, user_password, nom_entreprise, userName, passradiussql, user1, motdepasse, 192.168.1.2, mysecret, 192.168.1.10, 255.255.255.0, fastethernet0/1, vlan_id, motdepasse_enable, motdepasse_enable_secours, utilisateur_secours, motdepasse_secours},
+    keywordstyle=\color{purple},
+    morecomment=[l]{\#}, % commentaires shell en ligne
+    commentstyle=\itshape\color{darkgray},
 }
 
 \renewcommand{\headrulewidth}{1pt}

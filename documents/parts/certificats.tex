@@ -7,24 +7,24 @@ Ce paquet s'appuie sur \emph{openssl} pour la gestion des certificats.
 Pour l'installer, en super-utilisateur~:
 
 \begin{lstlisting}
-# apt-get install openssl
+$ sudo apt-get install openssl
 \end{lstlisting}
 
-On suppose un dossier pour les certificat de chemin~: §\emph{path\_to\_certs}§\\
+On suppose un dossier pour les certificat de chemin~: \emph{path\_to\_certs}\\
 
 Modifier le fichier de configuration \emph{/etc/ssl/openssl.cnf}~:
 
 \begin{lstlisting}
    [ CA_default ]
 
-    dir             = §\emph{path\_to\_certs}§              # Where everything is kept
+    dir             = path_to_certs              # Where everything is kept
     certs           = $dir/certs            # Where the issued certs are kept
     crl_dir         = $dir/crl              # Where the issued crl are kept
     database        = $dir/index.txt        # database index file.
     #unique_subject = no                    # Set to 'no' to allow creation of several ctificates with same subject.
     new_certs_dir   = $dir/newcerts         # default place for new certs.
 
-    certificate     = $dir/§\textbf{private}§/cacert.pem       # The CA certificate
+    certificate     = $dir/private/cacert.pem       # The CA certificate
     serial          = $dir/serial           # The current serial number
     crlnumber       = $dir/crlnumber        # the current crl number must be commented out to leave a V1 CRL
     crl             = $dir/crl.pem          # The current CRL
@@ -38,18 +38,18 @@ Se placer dans le repertoire où seront stockés les certificats (\emph{path\_to
 Créer les dossiers suivants~:
 
 \begin{lstlisting}
-$ mkdir "§\emph{path\_to\_certs}§/certs"
-$ mkdir "§\emph{path\_to\_certs}§/crl"
-$ mkdir "§\emph{path\_to\_certs}§/private"
-$ mkdir "§\emph{path\_to\_certs}§/users"
-$ mkdir "§\emph{path\_to\_certs}§/newcerts"
+$ mkdir "path_to_certs/certs"
+$ mkdir "path_to_certs/crl"
+$ mkdir "path_to_certs/private"
+$ mkdir "path_to_certs/users"
+$ mkdir "path_to_certs/newcerts"
 \end{lstlisting}
 
 Ainsi que les fichiers~:
 
 \begin{lstlisting}
-$ touch §\emph{path\_to\_certs}§/index.txt
-$ echo "01" > §\emph{path\_to\_certs}§/crlnumber
+$ touch path_to_certs/index.txt
+$ echo "01" > path_to_certs/crlnumber
 \end{lstlisting}
 
 \subsubsection{Génération du certificat racine}
@@ -57,16 +57,16 @@ $ echo "01" > §\emph{path\_to\_certs}§/crlnumber
 Créer le certificat racine sans passphrase avec openssl~:
 
 \begin{lstlisting}
-$ openssl genrsa -out §\emph{path\_to\_certs}§/private/cakey.pem 4096 
-$ openssl req -new -key §\emph{path\_to\_certs}§/private/cakey.pem \
-	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=§\emph{Nom\_de\_la\_société\_cliente}§/ \
-	-out §\emph{path\_to\_certs}§/private/careq.pem
+$ openssl genrsa -out path_to_certs/private/cakey.pem 4096 
+$ openssl req -new -key path_to_certs/private/cakey.pem \
+	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=nom_entreprise/ \
+	-out path_to_certs/private/careq.pem
 
 $ openssl ca -config /etc/ssl/openssl.cnf \
-	-create_serial -out §\emph{path\_to\_certs}§/private/cacert.pem -days 3650 -batch \
-	-keyfile §\emph{path\_to\_certs}§/private/cakey.pem -selfsign \
+	-create_serial -out path_to_certs/private/cacert.pem -days 3650 -batch \
+	-keyfile path_to_certs/private/cakey.pem -selfsign \
 	-extensions v3_ca \
-	-infiles §\emph{path\_to\_certs}§/private/careq.pem
+	-infiles path_to_certs/private/careq.pem
 \end{lstlisting}
 
 Générer la liste des CRL (\emph{Certificate Revocation List}) dès à présent et \textbf{après chaque création/révocation} de certificat. Une seule génération peut être faite pour plusieurs modifications. La procédure est expliquée dans la section suivante.
@@ -76,7 +76,7 @@ Générer la liste des CRL (\emph{Certificate Revocation List}) dès à présent
 Première génération de la CRL~:
 
 \begin{lstlisting}
-$ openssl ca -config /etc/ssl/openssl.cnf -gencrl -out §\emph{path\_to\_certs}§/crl/crl.pem
+$ openssl ca -config /etc/ssl/openssl.cnf -gencrl -out path_to_certs/crl/crl.pem
 \end{lstlisting}
 
 \subsubsection{Architecture nécessaire pour la CRL}
@@ -84,9 +84,9 @@ $ openssl ca -config /etc/ssl/openssl.cnf -gencrl -out §\emph{path\_to\_certs}�
 Pour mettre en place l'architecture nécessaire à la lecture de CRL par Radius (prendre garde à utiliser des \textbf{chemins absolus} pour ces liens)~:
 
 \begin{lstlisting}
-$ export HASH=$(openssl x509 -noout -hash -in §\emph{path\_to\_certs}§/private/cacert.pem)
-$ ln -s §\emph{path\_to\_certs}§/private/cacert.pem §\emph{path\_to\_certs}§/certs/$HASH.0
-$ ln -s §\emph{path\_to\_certs}§/crl/crl.pem §\emph{path\_to\_certs}§/certs/$HASH.r0
+$ export HASH=$(openssl x509 -noout -hash -in path_to_certs/private/cacert.pem)
+$ ln -s path_to_certs/private/cacert.pem path_to_certs/certs/$HASH.0
+$ ln -s path_to_certs/crl/crl.pem path_to_certs/certs/$HASH.r0
 \end{lstlisting}
 
 \subsection{Utilisation des certificats}
@@ -95,15 +95,15 @@ $ ln -s §\emph{path\_to\_certs}§/crl/crl.pem §\emph{path\_to\_certs}§/certs/
 Créer un certificat pour l'utilisateur identifié par \emph{userName} (le champ \emph{commonName} doit correspondre au champ \emph{username} du Radius)~:
 
 \begin{lstlisting}
-$ openssl genrsa -out §\emph{path\_to\_certs}§/users/§\emph{userName\_key.pem}§ 4096
+$ openssl genrsa -out path_to_certs/users/userName_key.pem 4096
 
-$ openssl req -config /etc/ssl/openssl.cnf -new -key §\emph{path\_to\_certs}§/users/§\emph{userName\_key.pem}§ \
+$ openssl req -config /etc/ssl/openssl.cnf -new -key path_to_certs/users/userName_key.pem \
         -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=userName/ \
-	-out §\emph{path\_to\_certs}§/users/\emph{userName\_req.pem} -days 3650
+	-out path_to_certs/users/\emph{userName\_req.pem} -days 3650
 
 $ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything \
-	-out §\emph{path\_to\_certs}§/users/\emph{userName\_cert.pem} -batch \
-	-infiles §\emph{path\_to\_certs}§/users/\emph{userName\_req.pem}
+	-out path_to_certs/users/\emph{userName\_cert.pem} -batch \
+	-infiles path_to_certs/users/\emph{userName\_req.pem}
 \end{lstlisting}
 
 Penser à mettre à jour la CRL.
@@ -113,7 +113,7 @@ Penser à mettre à jour la CRL.
 Pour révoquer un certificat (irréversible)~: 
 
 \begin{lstlisting}
-$ openssl ca -config /etc/ssl/openssl.cnf -revoke §\emph{path\_to\_certs}§/users/userName_cert.pem
+$ openssl ca -config /etc/ssl/openssl.cnf -revoke path_to_certs/users/userName_cert.pem
 \end{lstlisting}
 
 Penser à mettre à jour la CRL.
@@ -121,8 +121,8 @@ Penser à mettre à jour la CRL.
 Pour vérifier qu'un certificat a bien été révoqué~:
 
 \begin{lstlisting}
-$ openssl verify  -CApath §\emph{path\_to\_certs}§/certs/ \
-    -crl_check §\emph{path\_to\_certs}§/users/userName_cert.pem
+$ openssl verify  -CApath path_to_certs/certs/ \
+    -crl_check path_to_certs/users/userName_cert.pem
 \end{lstlisting}
 
 \subsection{Certificats et radius}
@@ -131,8 +131,8 @@ $ openssl verify  -CApath §\emph{path\_to\_certs}§/certs/ \
 Pour mettre en place les certificats de Radius~: 
 
 \begin{lstlisting}
-$ dd if=/dev/urandom of=§\emph{path\_to\_certs}§/random count=2
-$ openssl dhparam -check -text -5 1024 -out §\emph{path\_to\_certs}§/dh
+$ dd if=/dev/urandom of=path_to_certs/random count=2
+$ openssl dhparam -check -text -5 1024 -out path_to_certs/dh
 \end{lstlisting}
 
 Puis générer une clé et un certificat (dans \emph{path\_to\_certs/private} et non dans \emph{path\_to\_certs/users}).
@@ -143,7 +143,7 @@ Adapter ensuite le fichier \emph{/etc/freeradius/eap.conf}~:
 
 \begin{lstlisting}
 tls {
-	confdir = §\emph{path\_to\_certs}§ 
+	confdir = path_to_certs 
 	certdir = ${confdir}
 	cadir = ${confdir}/private
 
@@ -216,7 +216,7 @@ network={
     eap=TLS
     eapol_flags=0
     key_mgmt=IEEE8021X
-    identity="§\emph{userlogin}§"
+    identity="user_login"
     ca_cert="path/to/authority/certificate/cacert.pem"
     client_cert="path/to/client/cert/cert.pem"
     private_key="path/to/client/key/key.pem"
@@ -230,8 +230,8 @@ network={
     eap=TTLS
     eapol_flags=0
     key_mgmt=IEEE8021X
-    identity="§\emph{userlogin}§"
-    password="§\emph{userpassword}§"
+    identity="user_login"
+    password="user_password"
     ca_cert="path/to/authority/certificate/cacert.pem"
     phase2="auth=MD5"
 }
@@ -244,8 +244,8 @@ network={
     eap=PEAP
     eapol_flags=0
     key_mgmt=IEEE8021X
-    identity="§\textit{userlogin}§"
-    password="§\textit{userpassword}§"
+    identity="user_login"
+    password="user_password"
     ca_cert="path/to/authority/certificate/cacert.pem"
     phase2="auth=MSCHAPV2"
 }

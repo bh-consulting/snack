@@ -5,7 +5,7 @@
 Installer les paquets correspondants, en super-utilisateur~:
 
 \begin{lstlisting}
-# apt-get install freeradius freeradius-utils
+$ sudo apt-get install freeradius freeradius-utils
 \end{lstlisting}
 
 \subsubsection{Lien avec une base MySQL}
@@ -13,7 +13,7 @@ Installer les paquets correspondants, en super-utilisateur~:
 Installer MySQL et le paquet Freeradius permettant de faire le lien entre le serveur d'authentification et la base de données~:
 
 \begin{lstlisting}
-# apt-get install freeradius-mysql mysql-server mysql-client
+$ sudo apt-get install freeradius-mysql mysql-server mysql-client
 \end{lstlisting}
 
 Penser à retenir le mot de passe super-utilisateur de la base MySQL (\emph{passrootsql}).
@@ -21,10 +21,10 @@ Penser à retenir le mot de passe super-utilisateur de la base MySQL (\emph{pass
 Créer les bases de données nécessaires pour Freeradius à l'aide des schémas mis à disposition dans le paquet~:
 
 \begin{lstlisting}
-# echo "create database radius" | mysql -u root -p
-# echo "grant all on radius.* to radius@localhost identified by '§\emph{passradiussql}§'; flush privileges" | mysql -u root -p
-# mysql -uroot -p radius < /etc/freeradius/sql/mysql/schema.sql
-# mysql -uroot -p radius < /etc/freeradius/sql/mysql/nas.sql
+$ sudo echo "create database radius" | mysql -u root -p
+$ sudo echo "grant all on radius.* to radius@localhost identified by 'passradiussql'; flush privileges" | mysql -u root -p
+$ sudo mysql -uroot -p radius < /etc/freeradius/sql/mysql/schema.sql
+$ sudo mysql -uroot -p radius < /etc/freeradius/sql/mysql/nas.sql
 \end{lstlisting}
 
 Pour chacune de ces lignes, le mot de passe défini à l'étape précédente est demandé.
@@ -32,7 +32,7 @@ Pour chacune de ces lignes, le mot de passe défini à l'étape précédente est
 Création d'un utilisateur simple \emph{user1}, avec une authentification via un mot de passe non-chiffré (\emph{motdepasse})~:
 
 \begin{lstlisting}
-# echo "INSERT INTO radcheck(UserName,Attribute,op,Value) VALUES ('§\emph{user1}§','Cleartext-Password',':=','§\emph{motdepasse}§')" | mysql -u root -p radius
+$ sudo echo "INSERT INTO radcheck(UserName,Attribute,op,Value) VALUES ('user1','Cleartext-Password',':=','motdepasse')" | mysql -u root -p radius
 \end{lstlisting}
 
 Adapter le fichier \emph{/etc/freeradius/sql.conf}~:
@@ -42,7 +42,7 @@ sql {
         driver = "rlm_sql_${database}"
         server = "localhost"
         login = "radius"
-        password = "§\emph{passradiussql}§"
+        password = "passradiussql"
         radius_db = "radius"
         acct_table1 = "radacct"
         acct_table2 = "radacct"
@@ -72,9 +72,9 @@ $INCLUDE sql/mysql/counter.conf
 
 Créer un virtualhost Radius~:
 \begin{lstlisting}
-# cd /etc/freeradius/sites-available
-# cp default radius.bh-consulting.net
-# ln -s /etc/freeradius/sites-available/radius.bh-consulting.net /etc/freeradius/sites-enabled/
+$ sudo cd /etc/freeradius/sites-available
+$ sudo cp default radius.bh-consulting.net
+$ sudo ln -s /etc/freeradius/sites-available/radius.bh-consulting.net /etc/freeradius/sites-enabled/
 \end{lstlisting}
 
 Modifier le virtualhost en éditant le fichier \emph{/etc/freeradius/sites-available/radius.bh-consulting.net}~:
@@ -172,13 +172,13 @@ authorize {
 Pour ce test, il nous faut ajouter le client (\emph{192.168.1.2}) dans la table des NAS admis~:
 
 \begin{lstlisting}
-# echo "INSERT INTO nas(nasname,shortname,secret) VALUES ('§\emph{192.168.1.2}§','client','§\emph{mysecret}§')" | mysql -uroot -p radius
+$ sudo echo "INSERT INTO nas(nasname,shortname,secret) VALUES ('192.168.1.2','client','mysecret')" | mysql -uroot -p radius
 \end{lstlisting}
 
 Lancer le serveur Radius (\emph{192.168.1.10}) en mode debogue, et sans détachement, sur la machine serveur~:
 
 \begin{lstlisting}
-# freeradius -X
+$ sudo freeradius -X
 \end{lstlisting}
 
 Si le serveur répond que le est \emph{already in use}, vérifier qu'une instance de Radius n'est pas déjà en train de tourner (par exemple à cause d'un service~: \texttt{service freeradius stop}).
@@ -186,13 +186,13 @@ Si le serveur répond que le est \emph{already in use}, vérifier qu'une instanc
 Côté client, installer le paquet suivant~:
 
 \begin{lstlisting}
-# apt-get install freeradius-utils
+$ sudo apt-get install freeradius-utils
 \end{lstlisting}
 
 Puis tenter une authentification avec l'utilisateur créé dans la base de données~:
 
 \begin{lstlisting}
-# radtest §\emph{user1}§ §\emph{motdepasse}§ §\emph{192.168.1.10}§ 0 §\emph{mysecret}§
+$ sudo radtest user1 motdepasse 192.168.1.10 0 mysecret
 \end{lstlisting}
 
 Si l'authentification est réussie, le Radius est prêt à être utilisé dans le cadre des sections suivantes.
@@ -202,7 +202,7 @@ Si l'authentification est réussie, le Radius est prêt à être utilisé dans l
 Il est possible de simuler la présence d'un NAS pour tester le bon fonctionnement de Radius avec le programme \emph{eapol}, livré comme une partie de la suite \emph{wpa\_supplicant}. Le client utilisé pour ce test doit bien sûr être connu du serveur (cf. ci-dessus)~:
 
 \begin{lstlisting}
-$ eapol_test -c dot1x.conf.eap -a§\emph{192.168.1.10}§ -p1812 -s§\emph{mysecret}§ -r0
+$ eapol_test -c dot1x.conf.eap -a192.168.1.10 -p1812 -smysecret -r0
 \end{lstlisting} 
 
 Le fichier de configuration (\emph{dot1x.conf.eap}) est au format \emph{wpa\_supplicant}.
@@ -218,7 +218,7 @@ ap_scan=0
 network={
         key_mgmt=IEEE8021X
         eap=MD5
-        identity="§\emph{user1}§"
-        password="§\emph{motdepasse}§"
+        identity="user1"
+        password="motdepasse"
 }
 \end{lstlisting}
