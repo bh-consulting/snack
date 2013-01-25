@@ -1,6 +1,7 @@
 <?php 
 $this->extend('/Common/radius_sidebar');
 $this->assign('users_active', 'active');
+Configure::load('parameters');
 ?>
 
 <h1><?php echo __('Add a user with a certificate'); ?></h1>
@@ -8,9 +9,31 @@ $this->assign('users_active', 'active');
 echo $this->Form->create('Raduser');
 
 echo '<fieldset>';
-echo '<legend>' . __('Checks') . '</legend>';
+echo '<legend>' . __('Certificate') . '</legend>';
 
 echo $this->Form->input('username');
+echo $this->Form->input(
+    'country',
+    array('default' => Configure::read('Parameters.countryName'))
+);
+echo $this->Form->input(
+    'province',
+    array('default' => Configure::read('Parameters.stateOrProvinceName'))
+);
+echo $this->Form->input(
+    'locality',
+    array('default' => Configure::read('Parameters.localityName'))
+);
+echo $this->Form->input(
+    'organization',
+    array('default' => Configure::read('Parameters.organizationName'))
+);
+
+echo '</fieldset>';
+
+echo '<fieldset>';
+echo '<legend>' . __('Checks') . '</legend>';
+
 echo $this->Form->input('mac_active', array('label' => __('MAC address')));
 echo $this->element('check_common_fields');
 echo $this->element('doubleListsSelector', array('leftTitle' => __('Groups'), 'rightTitle' => __('Selected groups'), 'contents' => $groups, 'selectedContents' => array()));

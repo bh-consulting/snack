@@ -9,45 +9,41 @@ App::import('Model', 'Radusergroup');
 App::import('Model', 'Radreply');
 App::import('Model', 'Radgroupreply');
 
-class ChecksComponent extends Component
-{
+class ChecksComponent extends Component {
 
-	private $displayName;
-	private $checkClass;
-	private $checkClassName;
-	private $baseClass;
-	private $baseClassName;
+    private $displayName;
+    private $checkClass;
+    private $checkClassName;
+    private $baseClass;
+    private $baseClassName;
     private $replyClass;
     private $replyClassName;
 
-	public function __construct($collection, $params)
-    {
-		$this->displayName = $params['displayName'];
-		$this->checkClass = new $params['checkClass'];
-		$this->checkClassName = $params['checkClass'];
-		$this->baseClass = new $params['baseClass'];
-		$this->baseClassName = $params['baseClass'];
-        $this->replyClass = new $params['replyClass'];
-        $this->replyClassName = $params['replyClass'];
-	}
+    public function __construct($collection, $params) {
+	$this->displayName = $params['displayName'];
+	$this->checkClass = new $params['checkClass'];
+	$this->checkClassName = $params['checkClass'];
+	$this->baseClass = new $params['baseClass'];
+	$this->baseClassName = $params['baseClass'];
+	$this->replyClass = new $params['replyClass'];
+	$this->replyClassName = $params['replyClass'];
+    }
 
     /**
-    * Get the checks (radcheck or radgroupcheck) lines linked to this entity
-    */
-    public function getChecks($id)
-    {
-        $this->baseClass->id = $id;
+     * Get the checks (radcheck or radgroupcheck) lines linked to this entity
+     */
+    public function getChecks($id) {
+	$this->baseClass->id = $id;
 
-        // sorry for that...
-        $findAllFunc = 'findAllBy' . ucfirst($this->displayName);
-        return $this->checkClass->$findAllFunc($this->baseClass->field($this->displayName));
+	// sorry for that...
+	$findAllFunc = 'findAllBy' . ucfirst($this->displayName);
+	return $this->checkClass->$findAllFunc($this->baseClass->field($this->displayName));
     }
 
     /**
     * Get the replies (radreply or radgroupreply) lines linked to this entity
     */
-    public function getReplies($id)
-    {
+    public function getReplies($id) {
         $this->baseClass->id = $id;
 
         // sorry for that...
@@ -217,7 +213,7 @@ class ChecksComponent extends Component
                 $success = $success && $this->createReply($reply[0], $reply[1], $reply[2], $reply[3]);
             }
 
-            return $success;
+            return ($success) ? Utils::NO_ERROR : Utils::E_ADDUSER;
         }
     }
 
@@ -332,7 +328,7 @@ class ChecksComponent extends Component
         $this->baseClass->id = $id;
 
         // delete matching radchecks
-        $rads = $this->getChecks($id)   ;
+        $rads = $this->getChecks($id);
         foreach($rads as $r)
             $this->checkClass->delete($r[$this->checkClassName]['id']);
 
@@ -341,11 +337,17 @@ class ChecksComponent extends Component
         $Radusergroup = new Radusergroup();
         $Radusergroup->deleteAll(array('Radusergroup.' . $this->displayName => $username));
 
-        if ($this->baseClass->delete($id)) {
-            return true;
-        } else {
-            return false;
-        }
+	$result = Utils::delete_certificate($username);
+
+	if ($result == Utils::NO_ERROR) {
+	    if ($this->baseClass->delete($id)) {
+		return Utils::NO_ERROR;
+	    } else {
+		return Utils::E_DELUSER;
+	    }
+	} else {
+	    return $result;
+	}
 
         // TODO: delete certificate on filesystem if necessary
     }

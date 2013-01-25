@@ -15,10 +15,17 @@ echo $this->Form->input(
     )
 );
 echo $this->Form->input(
-    $scriptPath['id'],
+    $scriptsPath['id'],
     array(
-	'label' => $scriptPath['label'],
-	'value' => $scriptPath['value'],
+	'label' => $scriptsPath['label'],
+	'value' => $scriptsPath['value'],
+    )
+);
+echo $this->Form->input(
+    $certsPath['id'],
+    array(
+	'label' => $certsPath['label'],
+	'value' => $certsPath['value'],
     )
 );
 echo $this->Form->input(

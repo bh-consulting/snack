@@ -21,10 +21,16 @@ echo $this->Html->link(
 echo empty($contactEmail['value']) ? __('Not set.') : $contactEmail['value'];
 ?>
     </dd>
-    <dt><?php echo $scriptPath['label']; ?></dt>
+    <dt><?php echo $scriptsPath['label']; ?></dt>
     <dd>
 <?php
-echo empty($scriptPath['value']) ? __('Not set.') : $scriptPath['value'];
+echo empty($scriptsPath['value']) ? __('Not set.') : $scriptsPath['value'];
+?>
+    </dd>
+    <dt><?php echo $certsPath['label']; ?></dt>
+    <dd>
+<?php
+echo empty($certsPath['value']) ? __('Not set.') : $certsPath['value'];
 ?>
     </dd>
 </dl>

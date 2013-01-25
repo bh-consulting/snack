@@ -10,94 +10,133 @@ App::import('Model', 'Radusergroup');
 class RadusersController extends AppController {
     public $helpers = array('Html', 'Form', 'JqueryEngine');
     public $paginate = array(
-    	'limit' => 10,
-    	'order' => array('Raduser.id' => 'asc')
-        );
+	'limit' => 10,
+	'order' => array('Raduser.id' => 'asc')
+    );
     public $components = array(
-    	'Checks' => array(
-    	    'displayName' => 'username',
-    	    'baseClass' => 'Raduser',
-    	    'checkClass' => 'Radcheck',
-    	    'replyClass' => 'Radreply',
-    	),
+	'Checks' => array(
+	    'displayName' => 'username',
+	    'baseClass' => 'Raduser',
+	    'checkClass' => 'Radcheck',
+	    'replyClass' => 'Radreply',
+	),
 	'Session'
     );
 
     public function test() {
+	$result = Utils::generate_certificate("bouh");
+
+	switch ($result) {
+	case 0:
 	    $this->Session->setFlash(
-		Utils::generate_certificate("bouh"),
+		__('Certificate has been generate.'),
 		'flash_success'
 	    );
+	    break;
+	case 1:
+	    $this->Session->setFlash(
+		__('Certificate generation failed.') . ' '
+		. __('RSA key generation failed.'),
+		    'flash_error'
+		);
+	    break;
+	case 2:
+	    $this->Session->setFlash(
+		__('Certificate generation failed.'),
+		'flash_error'
+	    );
+	    break;
+	case 3:
+	    $this->Session->setFlash(
+		__('Certificate generation failed.') . ' '
+		. __('Certificate authentification failed.'),
+		    'flash_error'
+		);
+	    break;
+	case 4:
+	    $this->Session->setFlash(
+		__('Certificate generation failed.') . ' '
+		. __('Revocation list update failed.'),
+		    'flash_error'
+		);
+	    break;
+	}
 	$this->redirect(array('action' => 'index'));
     }
-    
+
     public function index() {
-    	if ($this->request->is('post')) {
-    	    if (isset($this->request->data['MultiSelection']['users']) &&
-        		is_array($this->request->data['MultiSelection']['users'])
-    	    ) {
-        		$success = false;
-        		foreach( $this->request->data['MultiSelection']['users'] as $userId ) {
-        		    switch( $this->request->data['action'] ) {
-        		    case "delete":
-            			$success = $this->Checks->delete($this->request, $userId);
-            			break;
-        		    case "export":
-            			//TODO: export CSV
-            			break;
-        		    }
+	if ($this->request->is('post')) {
+	    if (isset($this->request->data['MultiSelection']['users']) &&
+		is_array($this->request->data['MultiSelection']['users'])
+	    ) {
+		$success = false;
+		foreach( $this->request->data['MultiSelection']['users'] as $userId ) {
+		    switch( $this->request->data['action'] ) {
+		    case "delete":
+			$success = $this->Checks->delete($this->request, $userId);
+			break;
+		    case "export":
+			//TODO: export CSV
+			break;
+		    }
 
-        		    if($success){
-            			switch( $this->request->data['action'] ) {
-            			case "delete":
-            			    $this->Session->setFlash(
-                				__('Users have been deleted.'),
-                				'flash_success'
-            			    );
-            			    break;
-            			case "export":
-            			    $this->Session->setFlash(
-                				__('Users have been exported.'),
-                				'flash_success'
-            			    );
-            			    break;
-            			}
-        		    } else {
-        			switch( $this->request->data['action'] ) {
-            			case "delete":
-            			    $this->Session->setFlash(
-                				__('Unable to delete users.'),
-                				'flash_error'
-            			    );
-            			    break;
-            			case "export":
-            			    $this->Session->setFlash(
-                				__('Unable to export users.'),
-                				'flash_error'
-            			    );
-            			    break;
-            			}
-        		    }
-        		}
-    	    } else {
-    		$this->Session->setFlash(__('Please, select at least one user !'), 'flash_warning');
-    	    }
-    	}
+		    if($success){
+			switch( $this->request->data['action'] ) {
+			case "delete":
+			    $this->Session->setFlash(
+				__('Users have been deleted.'),
+				'flash_success'
+			    );
+			    break;
+			case "export":
+			    $this->Session->setFlash(
+				__('Users have been exported.'),
+				'flash_success'
+			    );
+			    break;
+			}
+		    } else {
+			switch( $this->request->data['action'] ) {
+			case "delete":
+			    $this->Session->setFlash(
+				__('Unable to delete users.'),
+				'flash_error'
+			    );
+			    break;
+			case "export":
+			    $this->Session->setFlash(
+				__('Unable to export users.'),
+				'flash_error'
+			    );
+			    break;
+			}
+		    }
+		}
+	    } else {
+		$this->Session->setFlash(
+		    __('Please, select at least one user !'),
+		    'flash_warning'
+		);
+	    }
+	}
 
-    	$radusers = $this->paginate('Raduser');
+	$radusers = $this->paginate('Raduser');
 
-    	foreach ($radusers as &$r) {
-    	    $r['Raduser']['ntype'] = $this->Checks->getType($r['Raduser'], true);
-    	    $r['Raduser']['type'] = $this->Checks->getType($r['Raduser'], false);
+	foreach ($radusers as &$r) {
+	    $r['Raduser']['ntype'] = $this->Checks->getType($r['Raduser'], true);
+	    $r['Raduser']['type'] = $this->Checks->getType($r['Raduser'], false);
 
-    	    if( $r['Raduser']['type'] == "mac" ) {
-        		$r['Raduser']['username'] = $this->Checks->formatMAC( $r['Raduser']['username'] );
-    	    }
-    	}
+	    if( $r['Raduser']['type'] == "mac" ) {
+		$r['Raduser']['username'] = $this->Checks->formatMAC( $r['Raduser']['username'] );
+	    }
+	}
 
-    	$this->set('radusers', $radusers);
-    	// FIXME: should not be here, DRY
-    	$this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
+	$this->set('radusers', $radusers);
+	// FIXME: should not be here, DRY
+	$this->set('sortIcons', array(
+	    'asc' => 'icon-chevron-down',
+	    'desc' => 'icon-chevron-up')
+	);
     }
 
     /**
@@ -107,40 +146,41 @@ class RadusersController extends AppController {
      * @return [type]
      */
     public function view($id = null, $type = array()){
-    	$views = $this->Checks->view($id);
+	$views = $this->Checks->view($id);
 
-    	$views['base']['Raduser']['ntype'] = $this->Checks->getType($views['base']['Raduser'], true);
-    	$views['base']['Raduser']['type'] = $this->Checks->getType($views['base']['Raduser'], false);
+	$views['base']['Raduser']['ntype'] = $this->Checks->getType($views['base']['Raduser'], true);
+	$views['base']['Raduser']['type'] = $this->Checks->getType($views['base']['Raduser'], false);
 
-    	$this->set('raduser', $views['base']);
-    	$this->set('radchecks', $views['checks']);
-    	$this->set('radgroups', $views['groups']);
+	$this->set('raduser', $views['base']);
+	$this->set('radchecks', $views['checks']);
+	$this->set('radgroups', $views['groups']);
 
-    	$attributes = $type;
+	$attributes = $type;
 
-    	// Raduser
-    	if( $views['base']['Raduser']['type'] == "mac" && strlen( $views['base']['Raduser']['username'] ) == 12 ) {
-    	    $attributes['MAC address'] = $this->Checks->formatMAC( $views['base']['Raduser']['username'] );
-    	} else {
-    	    $attributes['Username'] = $views['base']['Raduser']['username'];
-    	}
-    	$attributes['Comment'] = $views['base']['Raduser']['comment'];
-    	$attributes['Certificate path'] = $views['base']['Raduser']['cert_path'];
+	// Raduser
+	if( $views['base']['Raduser']['type'] == "mac"
+	    && strlen( $views['base']['Raduser']['username'] ) == 12 ) {
+	    $attributes['MAC address'] = $this->Checks->formatMAC( $views['base']['Raduser']['username'] );
+	} else {
+	    $attributes['Username'] = $views['base']['Raduser']['username'];
+	}
+	$attributes['Comment'] = $views['base']['Raduser']['comment'];
+	$attributes['Certificate path'] = $views['base']['Raduser']['cert_path'];
 
-    	// Radchecks
-    	foreach($views['checks'] as $check){
-    	    $attributes[ $check['Radcheck']['attribute'] ] = $check['Radcheck']['value'];
-    	}
+	// Radchecks
+	foreach($views['checks'] as $check){
+	    $attributes[ $check['Radcheck']['attribute'] ] = $check['Radcheck']['value'];
+	}
 
-    	// Radgroups
-    	$groups = array();
-    	foreach($views['groups'] as $group){
-    	    $groups[] = $group['Radusergroup']['groupname'];
-    	}
+	// Radgroups
+	$groups = array();
+	foreach($views['groups'] as $group){
+	    $groups[] = $group['Radusergroup']['groupname'];
+	}
 
-    	$attributes['Groups'] = $groups;
+	$attributes['Groups'] = $groups;
 
-    	$this->set('attributes', $attributes);
+	$this->set('attributes', $attributes);
     }
 
     /**
@@ -149,40 +189,96 @@ class RadusersController extends AppController {
      * @return [type]
      */
     public function view_cisco($id = null) {
-    	$this->set('showedAttr', array( 'Authentication type', 'Username', 'Comment', 'NAS-Port-Type', 'Expiration', 'Simultaneous-Use', 'Groups' ));
-    	$this->view($id, array( 'Authentication type' => 'Cisco' ));
+	$this->set(
+	    'showedAttr',
+	    array(
+		'Authentication type',
+		'Username',
+		'Comment',
+		'NAS-Port-Type',
+		'Expiration',
+		'Simultaneous-Use',
+		'Groups',
+	    )
+	);
+	$this->view($id, array( 'Authentication type' => 'Cisco' ));
     }
 
     public function view_cert($id = null) {
-    	$this->set('showedAttr', array( 'Authentication type', 'Username', 'Comment', 'Certificate path', 'EAP-Type', 'Expiration', 'Simultaneous-Use', 'Groups' ));
-    	$this->view($id, array( 'Authentication type' => 'Certificate' ));
+	$this->set(
+	    'showedAttr',
+	    array(
+		'Authentication type',
+		'Username',
+		'Comment',
+		'Certificate path',
+		'EAP-Type',
+		'Expiration',
+		'Simultaneous-Use', 
+		'Groups',
+	    )
+	);
+	$this->view($id, array( 'Authentication type' => 'Certificate' ));
     }
 
     public function view_loginpass($id = null) {
-    	$this->set('showedAttr', array( 'Authentication type', 'Username', 'Comment', 'Expiration', 'Simultaneous-Use', 'Groups' ));
-    	$this->view($id, array( 'Authentication type' => 'Login / Password' ));
+	$this->set(
+	    'showedAttr',
+	    array(
+		'Authentication type',
+		'Username',
+		'Comment',
+		'Expiration',
+		'Simultaneous-Use',
+		'Groups',
+	    )
+	);
+	$this->view($id, array( 'Authentication type' => 'Login / Password' ));
     }
 
     public function view_mac($id = null) {
-    	$this->set('showedAttr', array( 'Authentication type', 'MAC address', 'Comment', 'Expiration', 'Simultaneous-Use', 'Groups' ));
-    	$this->view($id, array( 'Authentication type' => 'MAC address' ));
+	$this->set(
+	    'showedAttr',
+	    array(
+		'Authentication type',
+		'MAC address',
+		'Comment',
+		'Expiration',
+		'Simultaneous-Use',
+		'Groups',
+	    )
+	);
+	$this->view($id, array( 'Authentication type' => 'MAC address' ));
     }
 
     public function add($success){
-    	if($this->request->is('post')){
-    	    if($success){
-        		if(array_key_exists('cert_path', $this->request->data['Raduser']))
-        		    $this->Session->setFlash(__('New user added. Certificate in ') . $this->request->data['Raduser']['cert_path'], 'flash_success');
-        		else
-        		    $this->Session->setFlash(__('New user added.'), 'flash_success');
+	if($this->request->is('post')){
+	    if ($success) {
+		$this->Session->setFlash(
+		    Utils::getErrorMsg($success),
+		    'flash_error'
+		);
+	    } else {
+		if(array_key_exists('cert_path', $this->request->data['Raduser']))
+		    $this->Session->setFlash(
+			__('New user added. Certificate in ')
+			. $this->request->data['Raduser']['cert_path']
+			, 'flash_success'
+		    );
+		else
+		    $this->Session->setFlash(
+			__('New user added.'),
+			'flash_success'
+		    );
 
-        		$this->redirect(array('action' => 'index'));
-    	    } else {
-        		$this->Session->setFlash(__('Unable to add user.'), 'flash_error');
-    	    }
-    	}
-    	$groups = new Radgroup();
-    	$this->set('groups', $groups->find('list', array('fields' => array('groupname'))));
+		$this->redirect(array('action' => 'index'));
+	    }
+	}
+	$groups = new Radgroup();
+	$this->set(
+	    'groups',
+	    $groups->find('list', array('fields' => array('groupname')))
+	);
     }
 
     /**
@@ -190,192 +286,214 @@ class RadusersController extends AppController {
      * @param array $checks array of radchecks lines
      */
     private function addCommonCiscoMacFields(&$checks){
-        $name = $this->request->data['Raduser']['username'];
+	$name = $this->request->data['Raduser']['username'];
 
-        // add radchecks for cisco user
-        if($this->request->data['Raduser']['cisco'] == 1){
+	// add radchecks for cisco user
+	if($this->request->data['Raduser']['cisco'] == 1){
 
-            // retrieve nas-port-type check
-            $nasPortTypeIndex = -1;
-            for($i = 0; $i < count($checks); $i++){
-                if($checks[$i][1] == 'NAS-Port-Type'){
-                    $nasPortTypeIndex = $i;
-                    break;
-                }
-            }
+	    // retrieve nas-port-type check
+	    $nasPortTypeIndex = -1;
+	    for($i = 0; $i < count($checks); $i++){
+		if($checks[$i][1] == 'NAS-Port-Type'){
+		    $nasPortTypeIndex = $i;
+		    break;
+		}
+	    }
 
-            $this->request->data['Raduser']['is_cisco'] = 1;
-            $this->Raduser->data['Raduser']['is_cisco'] = 1;
+	    $this->request->data['Raduser']['is_cisco'] = 1;
+	    $this->Raduser->data['Raduser']['is_cisco'] = 1;
 
-            $nasPortType = $this->request->data['Raduser']['nas-port-type'];
+	    $nasPortType = $this->request->data['Raduser']['nas-port-type'];
 
-            if($nasPortType == 10){
-                $nasPortTypeRegexp = '0|5|15';
-            } else {
-                $nasPortTypeRegexp = $nasPortType . '|15';
-            }
+	    if($nasPortType == 10){
+		$nasPortTypeRegexp = '0|5|15';
+	    } else {
+		$nasPortTypeRegexp = $nasPortType . '|15';
+	    }
 
-            $checks[$nasPortTypeIndex]= array(
-                $name,
-                'NAS-Port-Type',
-                '=~',
-                $nasPortTypeRegexp,
-            );
+	    $checks[$nasPortTypeIndex]= array(
+		$name,
+		'NAS-Port-Type',
+		'=~',
+		$nasPortTypeRegexp,
+	    );
 
-            if(isset($this->request->data['Raduser']['is_mac'])
-                || isset($this->request->data['Raduser']['is_cert'])){
-                $checks[]= array(
-                    $name,
-                    'Cleartext-Password',
-                    ':=',
-                    $this->request->data['Raduser']['passwd'],
-                );
-            }
-        }
+	    if(isset($this->request->data['Raduser']['is_mac'])
+		|| isset($this->request->data['Raduser']['is_cert'])){
+		    $checks[]= array(
+			$name,
+			'Cleartext-Password',
+			':=',
+			$this->request->data['Raduser']['passwd'],
+		    );
+		}
+	}
 
-        // add radchecks for mac auth
-        if(isset($this->request->data['Raduser']['mac_active'])) {
-            $mac = $this->request->data['Raduser']['mac_active'];
-            $mac = str_replace(':', '', $mac);
-            $mac = str_replace('-', '', $mac);
-            $checks[]= array(
-                $name,
-                'Calling-Station-Id',
-                '==',
-                $mac,
-            );
-        }
+	// add radchecks for mac auth
+	if(isset($this->request->data['Raduser']['mac_active'])) {
+	    $mac = $this->request->data['Raduser']['mac_active'];
+	    $mac = str_replace(':', '', $mac);
+	    $mac = str_replace('-', '', $mac);
+	    $checks[]= array(
+		$name,
+		'Calling-Station-Id',
+		'==',
+		$mac,
+	    );
+	}
     }
 
     public function add_loginpass(){
-    	$success = false;
-    	if ($this->request->is('post')) {
+	$success = Utils::NO_ERROR;
+	if ($this->request->is('post')) {
 
-            $name = $this->request->data['Raduser']['username'];
-            $this->request->data['Raduser']['is_loginpass'] = 1;
-            $this->Raduser->data['Raduser']['is_loginpass'] = 1;
+	    $name = $this->request->data['Raduser']['username'];
+	    $this->request->data['Raduser']['is_loginpass'] = 1;
+	    $this->Raduser->data['Raduser']['is_loginpass'] = 1;
 
-            $rads = array(
-                array($name,
-                    'NAS-Port-Type',
-                    '==',
-                    '15'
-                ),
-                array($name,
-                    'Cleartext-Password',
-                    ':=',
-                    $this->request->data['Raduser']['passwd']
-                ),
-                array($name,
-                    'EAP-Type',
-                    ':=',
-                    'MD5-CHALLENGE'
-                    // TODO ou 'EAP-TTLS si checkbox cert serveur cochee
-                )
-            );
-            $this->addCommonCiscoMacFields($rads);
-            $success = $this->Checks->add($this->request, $rads);
-        }
-        $this->add($success);
+	    $rads = array(
+		array(
+		    $name,
+		    'NAS-Port-Type',
+		    '==',
+		    '15'
+		),
+		array(
+		    $name,
+		    'Cleartext-Password',
+		    ':=',
+		    $this->request->data['Raduser']['passwd']
+		),
+		array(
+		    $name,
+		    'EAP-Type',
+		    ':=',
+		    'MD5-CHALLENGE'
+		    // TODO ou 'EAP-TTLS si checkbox cert serveur cochee
+		)
+	    );
+	    $this->addCommonCiscoMacFields($rads);
+	    $success = $this->Checks->add($this->request, $rads);
+	}
+	$this->add($success);
     }
 
 
     public function add_mac_active(){
-    	$success = false;
-    	if ($this->request->is('post')) {
+	$success = Utils::NO_ERROR;
+	if ($this->request->is('post')) {
 
-            $this->request->data['Raduser']['mac'] = str_replace(':', '', $this->request->data['Raduser']['mac']);
-            $this->request->data['Raduser']['mac'] = str_replace('-', '', $this->request->data['Raduser']['mac']);
-            $name = $this->request->data['Raduser']['username'];
-            $this->request->data['Raduser']['is_mac'] = 1;
-            $rads = array(
-                array(
-                    $name,
-                    'NAS-Port-Type',
-                    '==',
-                    '15'
-                ),
-                // FIXME to test
-                // array($name,
-                //     'Cleartext-Password',
-                //     ':=',
-                //     $this->request->data['Raduser']['mac']
-                // ),
-                // array($name,
-                //     'EAP-Type',
-                //     ':=',
-                //     'MD5-CHALLENGE'
-                // ),
-                array(
-                    $name,
-                    'Calling-Station-Id',
-                    '==',
-                    $this->request->data['Raduser']['mac'],
-                ),
-            );
+	    $this->request->data['Raduser']['mac'] = str_replace(':', '', $this->request->data['Raduser']['mac']);
+	    $this->request->data['Raduser']['mac'] = str_replace('-', '', $this->request->data['Raduser']['mac']);
+	    $name = $this->request->data['Raduser']['username'];
+	    $this->request->data['Raduser']['is_mac'] = 1;
+	    $rads = array(
+		array(
+		    $name,
+		    'NAS-Port-Type',
+		    '==',
+		    '15'
+		),
+		// FIXME to test
+		// array($name,
+		//     'Cleartext-Password',
+		//     ':=',
+		//     $this->request->data['Raduser']['mac']
+		// ),
+		// array($name,
+		//     'EAP-Type',
+		//     ':=',
+		//     'MD5-CHALLENGE'
+		// ),
+		array(
+		    $name,
+		    'Calling-Station-Id',
+		    '==',
+		    $this->request->data['Raduser']['mac'],
+		),
+	    );
 
-            $this->addCommonCiscoMacFields($rads);
-            $success = $this->Checks->add($this->request, $rads);
-        }
-        $this->add($success);
+	    $this->addCommonCiscoMacFields($rads);
+	    $success = $this->Checks->add($this->request, $rads);
+	}
+	$this->add($success);
     }
 
     public function add_cert(){
-    	$success = false;
-    	if ($this->request->is('post')) {
+	$success = Utils::NO_ERROR;
+	if ($this->request->is('post')) {
 
-            $name = $this->request->data['Raduser']['username'];
-            $this->request->data['Raduser']['is_cert'] = 1;
-            $this->request->data['Raduser']['cert_path'] = '/var/www/cert/newcerts/' . $name . '.pem';
-            $rads = array(
-                array($name,
-                    'NAS-Port-Type',
-                    '==',
-                    '15'
-                ),
-                array($name,
-                    'EAP-Type',
-                    ':=',
-                    'TLS'
-                )
-            );
-            $this->addCommonCiscoMacFields($rads);
-            $success = $this->Checks->add($this->request, $rads);
+	    $name = $this->request->data['Raduser']['username'];
+	    $this->request->data['Raduser']['is_cert'] = 1;
+	    $success = Utils::generate_certificate($name);
 
-	    // TODO: generate a certificate
-    	}
-    	$this->add($success);
+	    if ($success == Utils::NO_ERROR) {
+		$this->request->data['Raduser']['cert_path'] = 
+		    Configure::read('Parameters.certsPath')
+		    . '/users/' . $name . '_cert.pem';
+
+		$rads = array(
+		    array(
+			$name,
+			'NAS-Port-Type',
+			'==',
+			'15'
+		    ),
+		    array(
+			$name,
+			'EAP-Type',
+			':=',
+			'TLS'
+		    )
+		);
+		$this->addCommonCiscoMacFields($rads);
+		$success = $this->Checks->add($this->request, $rads);
+	    }
+	}
+	$this->add($success);
     }
 
     public function add_mac_passive(){
-        $success = false;
-        if ($this->request->is('post')) {
+	$success = Utils::NO_ERROR;
+	if ($this->request->is('post')) {
 
-            $this->request->data['Raduser']['mac'] = str_replace(':', '', $this->request->data['Raduser']['mac']);
-            $this->request->data['Raduser']['mac'] = str_replace('-', '', $this->request->data['Raduser']['mac']);
-            $name = $this->request->data['Raduser']['mac'];
-            $this->request->data['Raduser']['is_mac'] = 1;
-            $this->request->data['Raduser']['username'] = $this->request->data['Raduser']['mac'];
-            $rads = array(
-                array($name,
-                    'NAS-Port-Type',
-                    '==',
-                    '15'
-                ),
-                array($name,
-                    'Cleartext-Password',
-                    ':=',
-                    $this->request->data['Raduser']['mac']
-                ),
-                array($name,
-                    'EAP-Type',
-                    ':=',
-                    'MD5-CHALLENGE'
-                )
-            );
-            $success = $this->Checks->add($this->request, $rads);
-        }
-        $this->add($success);
+	    $this->request->data['Raduser']['mac'] = str_replace(
+		':',
+		'',
+		$this->request->data['Raduser']['mac']
+	    );
+	    $this->request->data['Raduser']['mac'] = str_replace(
+		'-',
+		'',
+		$this->request->data['Raduser']['mac']
+	    );
+	    $name = $this->request->data['Raduser']['mac'];
+	    $this->request->data['Raduser']['is_mac'] = 1;
+	    $this->request->data['Raduser']['username'] = $this->request->data['Raduser']['mac'];
+	    $rads = array(
+		array(
+		    $name,
+		    'NAS-Port-Type',
+		    '==',
+		    '15',
+		),
+		array(
+		    $name,
+		    'Cleartext-Password',
+		    ':=',
+		    $this->request->data['Raduser']['mac'],
+		),
+		array(
+		    $name,
+		    'EAP-Type',
+		    ':=',
+		    'MD5-CHALLENGE',
+		)
+	    );
+
+	    $success = $this->Checks->add($this->request, $rads);
+	}
+	$this->add($success);
     }
 
     public function edit_cisco($id = null){
@@ -392,13 +510,17 @@ class RadusersController extends AppController {
 		$checkClassFields = array(
 		    'NAS-Port-Type' => $this->request->data['Raduser']['nas-port-type'],
 		    'Cleartext-Password' => $this->request->data['Raduser']['passwd']);
-		$this->Checks->updateRadcheckFields($id, $this->request, $checkClassFields);
+		$this->Checks->updateRadcheckFields(
+		    $id,
+		    $this->request,
+		    $checkClassFields
+		);
 		$this->updateGroups($this->Raduser->id, $this->request);
 
-		$result = true;
+		$result = Utils::NO_ERROR;
 
 	    } else {
-		$result = false;
+		$result = Utils::E_EDITUSER;
 	    }
 	}
 	$this->edit($result);
@@ -413,14 +535,20 @@ class RadusersController extends AppController {
 
 	    if ($this->Raduser->save($this->request->data)) {
 		// update radchecks fields
-		$checkClassFields = array('Cleartext-Password' => $this->request->data['Raduser']['passwd']);
-		$this->Checks->updateRadcheckFields($id, $this->request, $checkClassFields);
+		$checkClassFields = array(
+		    'Cleartext-Password' => $this->request->data['Raduser']['passwd']
+		);
+		$this->Checks->updateRadcheckFields(
+		    $id,
+		    $this->request,
+		    $checkClassFields
+		);
 
 		$this->updateGroups($this->Raduser->id, $this->request);
 
-		$result = true;
+		$result = Utils::NO_ERROR;
 	    } else {
-		$result = false;
+		$result = Utils::E_EDITUSER;
 	    }
 	}
 	$this->edit($result);
@@ -430,17 +558,19 @@ class RadusersController extends AppController {
 	$this->Raduser->id = $id;
 	if ($this->request->is('get')) {
 	    $this->request->data = $this->Raduser->read();
-	    $this->request->data['Raduser']['username'] = $this->Checks->formatMAC( $this->request->data['Raduser']['username'] );
+	    $this->request->data['Raduser']['username'] =
+		$this->Checks->formatMAC(
+		    $this->request->data['Raduser']['username']
+		);
 
 	    $result = $this->request;
 	} else {
-
 	    if ($this->Raduser->save($this->request->data)) {
 		$this->updateGroups($this->Raduser->id, $this->request);
 		$this->Checks->updateRadcheckFields($id, $this->request);
-		$result = true;
+		$result = Utils::NO_ERROR;
 	    } else {
-		$result = false;
+		$result = Utils::E_EDITUSER;
 	    }
 	}
 	$this->edit($result);
@@ -455,16 +585,17 @@ class RadusersController extends AppController {
 
 	    if ($this->Raduser->save($this->request->data)) {
 		$this->updateGroups($this->Raduser->id, $this->request);
-		$newCert = ($this->request->data['Raduser']['cert_gen'] == 1);
-
 		$this->Checks->updateRadcheckFields($id, $this->request);
-		if($newCert){
-		    // TODO: generate a new cert
-		}
-		$result = true;
 
+		// If user asks for a new certificate
+		$result = Utils::NO_ERROR;
+		if ($this->request->data['Raduser']['cert_gen'] == 1) {
+		    $result = Utils::renew_certificate(
+			$this->Raduser->field('username')
+		    );
+		}
 	    } else {
-		$result = false;
+		$result = Utils::E_EDITUSER;
 	    }
 	}
 	$this->edit($result);
@@ -473,19 +604,31 @@ class RadusersController extends AppController {
     public function edit($result){
 	if($this->request->is('post')){
 	    if($result){
-		$this->Session->setFlash(__('User has been updated.'), 'flash_success');
-		$this->redirect(array('action' => 'index'));
+		$this->Session->setFlash(
+		    Utils::getErrorMsg($result),
+		    'flash_error'
+		);
 	    } else {
-		$this->Session->setFlash(__('Unable to update user.'), 'flash_error');
+		$this->Session->setFlash(
+		    __('User has been updated.'),
+		    'flash_success');
+		$this->redirect(array('action' => 'index'));
 	    }
+		    
 	} else{
 	    $this->request = $result;
 	}
 
 	$groups = new Radgroup();
-	$this->set('groups', $groups->find('list', array('fields' => array('id', 'groupname'))));
+	$this->set(
+	    'groups',
+	    $groups->find('list', array('fields' => array('id', 'groupname')))
+	);
 	$this->restoreGroups($this->Raduser->id);
-	$this->Checks->restore_common_check_fields($this->Raduser->id, $this->request);
+	$this->Checks->restore_common_check_fields(
+	    $this->Raduser->id,
+	    $this->request
+	);
     }
 
     public function delete ($id = null) {
@@ -493,13 +636,13 @@ class RadusersController extends AppController {
 
 	if ($success) {
 	    $this->Session->setFlash(
-		__('The user with id #') . $id . __(' has been deleted.'),
-		'flash_success'
+		Utils::getErrorMsg($success),
+		'flash_error'
 	    );
 	} else {
 	    $this->Session->setFlash(
-		__('Unable to delete user with id #') . $id . '.',
-		'flash_error'
+		__('The user with id #') . $id . __(' has been deleted.'),
+		'flash_success'
 	    );
 	}
 

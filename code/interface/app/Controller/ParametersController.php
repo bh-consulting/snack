@@ -13,6 +13,15 @@ class ParametersController extends AppController {
 	if($this->request->is('post')){
 	    print_r($this->request->data);
 	    foreach($this->getDefinitions() as $key => $label) {
+		if (($key == "scriptsPath" || $key == "certsPath")
+		    && substr($this->request->data[$key], -1) == '/') {
+			$this->request->data[$key] = substr(
+			    $this->request->data[$key],
+			    0,
+			    strlen($this->request->data[$key])-1
+			);
+		    }
+
 		Configure::write(
 		    'Parameters.' . $key,
 		    $this->request->data[$key]
@@ -23,7 +32,7 @@ class ParametersController extends AppController {
 		'default',
 		array('Parameters')
 	    );
-	    
+
 	    $this->Session->setFlash(
 		__('Parameters have been updated.'),
 		'flash_success'
@@ -37,7 +46,8 @@ class ParametersController extends AppController {
     private function getDefinitions() {
 	return array(
 	    'contactEmail' => __('Contact email'),
-	    'scriptPath' => __('Scripts path'),
+	    'scriptsPath' => __('Scripts path'),
+	    'certsPath' => __('Certificates path'),
 	    'countryName' => __('Country'),
 	    'stateOrProvinceName' => __('State or province'),
 	    'localityName' => __('Locality'),

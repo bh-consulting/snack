@@ -54,14 +54,37 @@ class Raduser extends AppModel {
                 'message' => 'This is not a MAC address format.'
             )
         ),
+        'country' => array(
+            'notEmpty' => array(
+                'rule' => 'notEmpty',
+                'message' => 'You have to specify a country.',
+                'allowEmpty' => false,
+            ),
+	),
+        'province' => array(
+            'notEmpty' => array(
+                'rule' => 'notEmpty',
+                'message' => 'You have to specify a state or province.',
+                'allowEmpty' => false,
+            ),
+	),
+        'locality' => array(
+            'notEmpty' => array(
+                'rule' => 'notEmpty',
+                'message' => 'You have to specify a locality.',
+                'allowEmpty' => false,
+            ),
+	),
+        'organization' => array(
+            'notEmpty' => array(
+                'rule' => 'notEmpty',
+                'message' => 'You have to specify an organization.',
+                'allowEmpty' => false,
+            ),
+	),
     );
 
-    public $virtualFields = array(
-        'ntype' => 'is_mac' //TODO Revoir conception user type
-    );
-
-    public function identicalFieldValues( $field=array(), $compare_field=null )  
-    { 
+    public function identicalFieldValues($field=array(), $compare_field=null) {
         foreach( $field as $key => $value ){ 
             if(!isset($this->data[$this->name][$compare_field])){
                 continue;
@@ -113,6 +136,33 @@ class Raduser extends AppModel {
     public function beforeValidate($options = array()){
         if(empty($this->data['Raduser']['password']))
             unset($this->data['Raduser']['password']);
+    }
+
+    public function delete($id=null, $cascade=true) {
+	$result = Utils::delete_certificate($username);
+
+	switch ($result) {
+	case 0:
+	    $this->Session->setFlash(
+		__('Certificate has been revoke.'),
+		'flash_success'
+	    );
+	    break;
+	case 1:
+	    $this->Session->setFlash(
+		__('Certificate revocation failed.'),
+	        'flash_error'
+	    );
+	    break;
+	case 2:
+	    $this->Session->setFlash(
+		__('Certificate revocation list update failed.'),
+		'flash_error'
+	    );
+	    break;
+	}
+
+	return parent::delete($id, $cascade) && !$result;
     }
 }
 

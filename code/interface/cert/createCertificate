@@ -1,0 +1,63 @@
+#!/bin/sh
+
+# Check parameters.
+# We need the path where create the certificate and also some information to put in the certificate.
+if [ ! $# -eq 6 ]
+then
+	echo "Usage: createCertificate CertsDirectory Username Country Province Locality Organization"
+	exit 1
+else
+        CERTS_DIR=$1
+        USERNAME=$2
+        COUNTRY=$3
+        PROVINCE=$4
+        LOCALITY=$5
+        ORGANIZATION=$6
+fi
+
+USERFILESPATH=${CERTS_DIR}/users
+USERKEY=${USERNAME}_key.pem
+USERCERT=${USERNAME}_cert.pem
+USERREQ=${USERNAME}_req.pem
+USERCERTVALIDITY=3650  # 10 years
+KEY_LENGTH = 4096
+
+# Generate RSA key (private certificate part)
+openssl genrsa -out ${USERFILESPATH}/${USERKEY} ${KEY_LENGTH}
+
+if [ ! $? -eq 0 ]
+then
+	echo "RSA key" ${KEY_LENGTH} "generation failed!"
+	exit 1
+fi
+
+# Generate public certificate
+openssl req -config /etc/ssl/openssl.cnf -new -key $USERFILESPATH/$USERKEY \
+        -subj /countryName=${COUNTRY}/stateOrProvinceName=${PROVINCE}/localityName=${LOCALITY}/organizationName=${ORGANIZATION}/commonName=${USERNAME}/ \
+        -out ${USERFILESPATH}/${USERREQ} -days ${USERCERTVALIDITY}
+
+if [ ! $? -eq 0 ]
+then
+	echo "Certificate generation failed!"
+	exit 2
+fi
+
+# Sign public certificate
+openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out ${USERFILESPATH}/${USERCERT} -batch -infiles ${USERFILESPATH}/${USERREQ}
+
+if [ ! $? -eq 0 ]
+then
+	echo "Authority certification failed!"
+	exit 3
+fi
+
+# Update certificate revocation list to authorize this certificate
+openssl ca -config /etc/ssl/openssl.cnf -gencrl -out ${CERTS_DIR}/crl/crl.pem
+
+if [ ! $? -eq 0 ]
+then
+	echo "Revocation list update failed!"
+	exit 4
+fi
+
+exit 0
