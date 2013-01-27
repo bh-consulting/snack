@@ -32,18 +32,20 @@ App::uses('Utils', 'Lib');
  * @package       app.Controller
  * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
-class AppController extends Controller
-{
-    public function beforeFilter(){
-        if(!$this->Session->check('Config.language')){
+class AppController extends Controller {
+    public function beforeFilter() {
+        if (!$this->Session->check('Config.language')) {
             $lang = Utils::getISOCode($_SERVER['HTTP_ACCEPT_LANGUAGE']);
             $this->Session->write('Config.language', $lang);
         }
 
-        Configure::write('Config.language', $this->Session->read('Config.language'));
+        Configure::write(
+            'Config.language',
+            $this->Session->read('Config.language')
+        );
     }
 
-    public function changeLang($lang){
+    public function changeLang($lang) {
         $this->autoRender = false;
         $this->Session->write('Config.language', $lang);
         Configure::write('Config.language', $lang);

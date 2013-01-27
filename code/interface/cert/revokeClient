@@ -22,7 +22,7 @@ then
 fi
 
 # Certificate revocation list update.
-openssl ca -config /etc/ssl/openssl.cnf -gencrl -out ${DESTPATH}/crl/crl.pem
+openssl ca -config /etc/ssl/openssl.cnf -gencrl -out ${CERTSPATH}/crl/crl.pem
 
 if [ ! $? -eq 0 ]
 then

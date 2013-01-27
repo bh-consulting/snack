@@ -17,48 +17,52 @@ class RadgroupsController extends AppController
         'Session');
 
 	public function index(){
-		if ($this->request->is('post')) {
-			if (isset($this->request->data['MultiSelection']['groups']) &&
-				is_array($this->request->data['MultiSelection']['groups'])
-			) {
-				$success = false;
-				foreach( $this->request->data['MultiSelection']['groups'] as $groupId ) {
-					switch( $this->request->data['action'] ) {
-					case "delete":
-						$success = $this->Checks->delete($this->request, $groupId);
-						break;
-					}
-
-					if($success){
-						switch( $this->request->data['action'] ) {
-						case "delete":
-							$this->Session->setFlash(
-								__('Groups have been deleted.'),
-								'flash_success'
-							);
-							break;
-						}
-					} else {
-						switch( $this->request->data['action'] ) {
-						case "delete":
-							$this->Session->setFlash(
-								__('Unable to delete groups.'),
-								'flash_error'
-							);
-							break;
-						}
-					}
-				}
-			} else {
-				$this->Session->setFlash(__('Please, select at least one group !'), 'flash_warning');
-			}
-		}
+        // Multiple delete/export
+        if ($this->request->is('post')) {
+            switch ($this->request->data['action']) {
+            case "delete":
+                $this->multipleDelete(
+                    $this->request->data['MultiSelection']['groups']
+                );
+                break;
+            }
+        }
 
 		$this->set('radgroups', $this->paginate('Radgroup'));
 
 		// FIXME: should not be here, DRY
 		$this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
 	}
+
+    /**
+     * Delete severals groups.
+     *
+     * @param ids - array of group ID.
+     */
+    private function multipleDelete($ids=array()) {
+        if (isset($ids) && is_array($ids)) {
+            try {
+                foreach ($ids as $userId) {
+                    $this->Checks->delete($this->request, $userId);
+                }
+
+                $this->Session->setFlash(
+                    __('Groups have been deleted.'),
+                    'flash_success'
+                );
+            } catch (UserGroupException $e) {
+                $this->Session->setFlash(
+                    $e->getMessage(),
+                    'flash_error'
+                );
+            }
+        } else {
+            $this->Session->setFlash(
+                __('Please, select at least one group !'),
+                'flash_warning'
+            );
+        }
+    }
 
     public function view($id = null){
         $views = $this->Checks->view($id);
@@ -86,22 +90,43 @@ class RadgroupsController extends AppController
     	$attributes['Users'] = $users;
 
     	$this->set('attributes', $attributes);
-            $this->set('showedAttr', array( 'Groupname', 'Comment', 'NAS-Port-Type', 'Expiration', 'Simultaneous-Use', 'Users' ));
+        $this->set(
+            'showedAttr',
+            array(
+                'Groupname',
+                'Comment',
+                'NAS-Port-Type',
+                'Expiration',
+                'Simultaneous-Use',
+                'Users'
+            )
+        );
     }
 
     public function add(){
         if($this->request->is('post')){
-            $success = $this->Checks->add($this->request, array());
+            try {
+                $this->Checks->add($this->request, array());
 
-            if($success){
-                $this->Session->setFlash(__('New group added.'));
+                $this->Session->setFlash(
+                    __('New group added.'),
+                    'flash_success'
+                );
+
                 $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash(__('Unable to add group.'), 'flash_error');
+            } catch (UserGroupException $uge) {
+                $this->Session->setFlash(
+                    $uge->getMessage(),
+                    'flash_error'
+                );
             }
         }
+
         $Raduser = new Raduser();
-        $this->set('users', $Raduser->find('list', array('fields' => array('username'))));
+        $this->set(
+            'users',
+            $Raduser->find('list', array('fields' => array('username')))
+        );
     }
 
     public function edit($id = null){
@@ -110,34 +135,46 @@ class RadgroupsController extends AppController
             $this->request->data = $this->Radgroup->read();
 
         } else {
-            if ($this->Radgroup->save($this->request->data)) {
-                $this->Checks->update_radcheck_fields($id, $this->request);
+            try {
+                $this->Radgroup->save($this->request->data);
+                $this->Checks->updateRadcheckFields($id, $this->request);
                 $this->Checks->updateRadreplyFields($id, $this->request);
                 $this->updateUsers($id, $this->request);
-                $this->Session->setFlash(__('Group has been updated.'));
+
+                $this->Session->setFlash(
+                    __('Group has been updated.'),
+                    'flash_success'
+                );
+
                 $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash(__('Unable to update group.'), 'flash_error');
+            } catch (UserGroupException $uge) {
+                $this->Session->setFlash(
+                    $uge->getMessage(),
+                    'flash_error'
+                );
             }
         }
 
         $Raduser = new Raduser();
-        $this->set('users', $Raduser->find('list', array('fields' => array('username'))));
+        $this->set(
+            'users',
+            $Raduser->find('list', array('fields' => array('username')))
+        );
         $this->restoreUsers($this->Radgroup->id);
         $this->Checks->restore_common_check_fields($id, $this->request);
     }
 
 	public function delete ($id = null) {
-		$success = $this->Checks->delete($this->request, $id);
+        try {
+            $this->Checks->delete($this->request, $id);
 
-		if ($success) {
 			$this->Session->setFlash(
 				__('The group with id #') . $id . __(' has been deleted.'),
 				'flash_success'
 			);
-		} else {
+		} catch (UserGroupException $uge) {
 			$this->Session->setFlash(
-				__('Unable to delete group with id #') . $id . '.',
+				$uge->getMessage(),
 				'flash_error'
 			);
 		}
@@ -145,8 +182,7 @@ class RadgroupsController extends AppController
 		$this->redirect(array('action' => 'index'));
 	}
 
-    public function restoreUsers($id)
-    {
+    public function restoreUsers($id) {
     	$usersRecords = $this->Checks->getUserGroups($id);
     	$users = array();
 
@@ -158,7 +194,7 @@ class RadgroupsController extends AppController
     	$this->set('selectedUsers', $users);
     }
 
-    public function updateUsers($id, $request){
+    public function updateUsers($id, $request) {
         $Raduser = new Raduser();
         $users = $this->Checks->getUserGroups($id);
         $usersToAdd = array();
@@ -167,7 +203,9 @@ class RadgroupsController extends AppController
         // remove deleted users
         foreach($users as $user){
             $found = false;
-            $raduser = $Raduser->findByUsername($user['Radusergroup']['username']);
+            $raduser = $Raduser->findByUsername(
+                $user['Radusergroup']['username']
+            );
             if(!empty($request->data['Radgroup']['users'])){
                 foreach($request->data['Radgroup']['users'] as $requestUser){
                     if($raduser['Raduser']['id'] == $requestUser)
@@ -178,7 +216,8 @@ class RadgroupsController extends AppController
             if(!$found){
                 $usersToDelete[]= $raduser['Raduser']['id'];
             }
-	}
+        }
+
         $this->Checks->deleteUsersOrGroups($id, $usersToDelete);
 
         // add new users

@@ -178,3 +178,9 @@ CakeLog::config('error', array(
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
 ));
+
+/**
+ * My exceptions.
+ */
+require APP . 'Error' . DS . 'MyExceptions.php';
+

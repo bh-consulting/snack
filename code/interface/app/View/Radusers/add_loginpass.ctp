@@ -12,6 +12,13 @@ echo '<legend>' . __('Checks') . '</legend>';
 echo $this->Form->input('username');
 echo $this->Form->input('passwd', array('type' => 'password', 'label' => __('Password')));
 echo $this->Form->input('confirm_password', array('type' => 'password'));
+echo $this->Form->input(
+    'ttls',
+    array(
+	'type' => 'checkbox',
+	'label' => __('Check server certificate')
+    )
+);
 echo $this->Form->input('mac_active', array('label' => __('MAC address')));
 echo $this->element('check_common_fields');
 

@@ -31,7 +31,8 @@ class Raduser extends AppModel {
         ),
         'confirm_password' => array(
             'rule' => array('identicalFieldValues', 'passwd'),
-            'message' => 'Please re-enter your password twice so that the values match'
+	    'message' =>
+		'Please re-enter your password twice so that the values match'
         ),
         'mac' => array(
             'macFormat' => array(
@@ -85,14 +86,14 @@ class Raduser extends AppModel {
     );
 
     public function identicalFieldValues($field=array(), $compare_field=null) {
-        foreach( $field as $key => $value ){ 
-            if(!isset($this->data[$this->name][$compare_field])){
+        foreach ($field as $key => $value) { 
+            if (!isset($this->data[$this->name][$compare_field])) {
                 continue;
             }
 
             $v1 = $value; 
-            $v2 = $this->data[$this->name][ $compare_field ];
-            if($v1 !== $v2) { 
+            $v2 = $this->data[$this->name][$compare_field];
+            if ($v1 !== $v2) { 
                 return false; 
             }
         } 
@@ -101,7 +102,7 @@ class Raduser extends AppModel {
 
     public function isMACFormat($field=array()) {
         $value = array_shift($field);
-        if(!Utils::isMAC($value) && !empty($value)) { 
+        if (!Utils::isMAC($value) && !empty($value)) { 
             return false; 
         }
         return true; 
@@ -111,9 +112,10 @@ class Raduser extends AppModel {
         $value = array_shift($field);
         $value = str_replace(':', '', $value);
         $value = str_replace('-', '', $value);
-        if($this->find('count', array(
-            'conditions' => array('username' => $value)
-        ))){
+	if ($this->find('count', array(
+		'conditions' => array('username' => $value)
+	    )
+	)) {
             return false;
         }
         return true;
@@ -125,44 +127,18 @@ class Raduser extends AppModel {
         $this->log($this->data[$this->name]['is_cisco']);
         $this->log($this->data[$this->name]['is_loginpass']);
         
-        if($value == "" && ($this->data[$this->name]['is_cisco'] == 1
+        if ($value == "" && ($this->data[$this->name]['is_cisco'] == 1
             || $this->data[$this->name]['is_loginpass'] == 1)
-        ){
+        ) {
             return false;
         }
         return true;
     }
 
-    public function beforeValidate($options = array()){
-        if(empty($this->data['Raduser']['password']))
-            unset($this->data['Raduser']['password']);
-    }
-
-    public function delete($id=null, $cascade=true) {
-	$result = Utils::delete_certificate($username);
-
-	switch ($result) {
-	case 0:
-	    $this->Session->setFlash(
-		__('Certificate has been revoke.'),
-		'flash_success'
-	    );
-	    break;
-	case 1:
-	    $this->Session->setFlash(
-		__('Certificate revocation failed.'),
-	        'flash_error'
-	    );
-	    break;
-	case 2:
-	    $this->Session->setFlash(
-		__('Certificate revocation list update failed.'),
-		'flash_error'
-	    );
-	    break;
+    public function beforeValidate($options = array()) {
+        if (empty($this->data['Raduser']['password'])) {
+	    unset($this->data['Raduser']['password']);
 	}
-
-	return parent::delete($id, $cascade) && !$result;
     }
 }
 
