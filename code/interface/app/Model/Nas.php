@@ -15,12 +15,12 @@ class Nas extends AppModel
 		'nasname' => array(
 			'notEmpty' => array(
 				'rule' => 'notEmpty',
-				'message' => 'You have to type the NAS IP',
+				'message' => 'You have to type the NAS IP.',
 				'allowEmpty' => false
 				),
 			'isUnique' => array(
 				'rule' => 'isUnique',
-				'message' => 'IP already in the database'
+				'message' => 'IP already in the database.'
 				),
 			'ipFormat' => array(
 				'rule' => array('isIPFormat'),
@@ -30,7 +30,7 @@ class Nas extends AppModel
 		'secret' => array(
 			'notEmpty' => array(
 				'rule' => 'notEmpty',
-				'message' => 'You have to type the NAS secret',
+				'message' => 'You have to type the NAS secret.',
 				'allowEmpty' => false
 				)
 			)

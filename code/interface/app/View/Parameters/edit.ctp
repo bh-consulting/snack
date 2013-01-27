@@ -4,56 +4,56 @@ $this->assign('param_active', 'active');
 
 echo '<h2>' . __('Edit server parameters') . '</h2>';
 
-echo $this->Form->create(false, array('action' => 'edit'));
+echo $this->Form->create('Parameter', array('action' => 'edit'));
 
 echo $this->Form->input(
-    $contactEmail['id'],
+    'contactEmail',
     array(
-	'label' => $contactEmail['label'],
-	'value' => $contactEmail['value'],
+	'label' => __('Contact email'),
+	'value' => $contactEmail,
 	'class' => 'email',
     )
 );
 echo $this->Form->input(
-    $scriptsPath['id'],
+    'scriptsPath',
     array(
-	'label' => $scriptsPath['label'],
-	'value' => $scriptsPath['value'],
+	'label' => __('Scripts path'),
+	'value' => $scriptsPath,
     )
 );
 echo $this->Form->input(
-    $certsPath['id'],
+    'certsPath',
     array(
-	'label' => $certsPath['label'],
-	'value' => $certsPath['value'],
+	'label' => __('Certificates path'),
+	'value' => $certsPath,
     )
 );
 echo $this->Form->input(
-    $countryName['id'],
+    'countryName',
     array(
-	'label' => $countryName['label'],
-	'value' => $countryName['value'],
+	'label' => __('Country'),
+	'value' => $countryName,
     )
 );
 echo $this->Form->input(
-    $stateOrProvinceName['id'],
+    'stateOrProvinceName',
     array(
-	'label' => $stateOrProvinceName['label'],
-	'value' => $stateOrProvinceName['value'],
+	'label' => __('State or province'),
+	'value' => $stateOrProvinceName,
     )
 );
 echo $this->Form->input(
-    $localityName['id'],
+    'localityName',
     array(
-	'label' => $localityName['label'],
-	'value' => $localityName['value'],
+	'label' =>  __('Locality'),
+	'value' => $localityName,
     )
 );
 echo $this->Form->input(
-    $organizationName['id'],
+    'organizationName',
     array(
-	'label' => $organizationName['label'],
-	'value' => $organizationName['value'],
+	'label' => __('Organization'),
+	'value' => $organizationName,
     )
 );
 

@@ -7,65 +7,65 @@ $this->assign('param_active', 'active');
 
 <?php
 echo $this->Html->link(
-	'<i class="icon-wrench icon-white"></i> ' . __('Edit server parameters'),
-	array('controller' => 'parameters', 'action' => 'edit'),
-	array('escape' => false, 'class' => 'btn btn-primary')
-    );
+    '<i class="icon-wrench icon-white"></i> ' . __('Edit server parameters'),
+    array('controller' => 'parameters', 'action' => 'edit'),
+    array('escape' => false, 'class' => 'btn btn-primary')
+);
 ?>
 
 <h4><?php echo __('General information:'); ?></h4>
 <dl class="well dl-horizontal">
-    <dt><?php echo $contactEmail['label']; ?></dt>
+    <dt><?php echo __('Contact email'); ?></dt>
     <dd>
 <?php
-echo empty($contactEmail['value']) ? __('Not set.') : $contactEmail['value'];
+echo empty($contactEmail) ? __('Not set.') : $contactEmail;
 ?>
     </dd>
-    <dt><?php echo $scriptsPath['label']; ?></dt>
+    <dt><?php echo __('Scripts path'); ?></dt>
     <dd>
 <?php
-echo empty($scriptsPath['value']) ? __('Not set.') : $scriptsPath['value'];
+echo empty($scriptsPath) ? __('Not set.') : $scriptsPath;
 ?>
     </dd>
-    <dt><?php echo $certsPath['label']; ?></dt>
+    <dt><?php echo __('Certificates path'); ?></dt>
     <dd>
 <?php
-echo empty($certsPath['value']) ? __('Not set.') : $certsPath['value'];
+echo empty($certsPath) ? __('Not set.') : $certsPath;
 ?>
     </dd>
 </dl>
 
 <h4><?php echo __('Certificates configuration:'); ?></h4>
 <dl class="well dl-horizontal">
-    <dt><?php echo $countryName['label']; ?></dt>
+    <dt><?php echo __('Country'); ?></dt>
     <dd>
 <?php
-echo empty($countryName['value']) ? __('Not set.') : $countryName['value'];
+echo empty($countryName) ? __('Not set.') : $countryName;
 ?>
     </dd>
 
-    <dt><?php echo $stateOrProvinceName['label']; ?></dt>
+    <dt><?php echo __('State or province'); ?></dt>
     <dd>
 <?php
-echo empty($stateOrProvinceName['value']) ?
+echo empty($stateOrProvinceName) ?
     __('Not set.')
-    : $stateOrProvinceName['value'];
+    : $stateOrProvinceName;
 ?>
     </dd>
 
-    <dt><?php echo $localityName['label']; ?></dt> 
+    <dt><?php echo __('Locality'); ?></dt>
     <dd>
 <?php
-echo empty($localityName['value']) ? __('Not set.') : $localityName['value'];
+echo empty($localityName) ? __('Not set.') : $localityName;
 ?>
     </dd>
 
-    <dt><?php echo $organizationName['label']; ?></dt> 
+    <dt><?php echo __('Organization'); ?></dt> 
     <dd>
 <?php
-echo empty($organizationName['value']) ?
+echo empty($organizationName) ?
     __('Not set.')
-    : $organizationName['value'];
+    : $organizationName;
 ?>
     </dd>
 </dl>
