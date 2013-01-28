@@ -50,25 +50,27 @@ class SystemDetailsController extends AppController {
     }
 
     public function restart($server) {
-        switch ($server) {
-        case 'mysql':
-            $result = Utils::shell('sudo /usr/sbin/service mysql restart');
-            break;
-        case 'freeradius':
-            $result = Utils::shell('sudo /usr/sbin/service freeradius restart');
-            break;
-        }
+        if (isset($server)) {
+            switch ($server) {
+            case 'mysql':
+                $result = Utils::shell('sudo /usr/sbin/service mysql restart');
+                break;
+            case 'freeradius':
+                $result = Utils::shell('sudo /usr/sbin/service freeradius restart');
+                break;
+            }
 
-        if (isset($result['code']) && $result['code'] == 0) {
-            $this->Session->setFlash(
-                __('Server %s has been restarted.', $server),
-                'flash_success'
-            );
-        } else {
-            $this->Session->setFlash(
-                __('Server %s cannot be restarted.', $server),
-                'flash_error'
-            );
+            if (isset($result['code']) && $result['code'] == 0) {
+                $this->Session->setFlash(
+                    __('Server %s has been restarted.', $server),
+                    'flash_success'
+                );
+            } else {
+                $this->Session->setFlash(
+                    __('Server %s cannot be restarted.', $server),
+                    'flash_error'
+                );
+            }
         }
 
         $this->redirect(array('action' => 'index'));
