@@ -26,9 +26,41 @@ echo $this->Html->link(
 <h4><?php echo __('Services:'); ?></h4>
 <dl class="well dl-horizontal">
     <dt><?php echo __('Freeradius'); ?></dt>
-    <dd><?php echo $radiusstate; ?></dd>
+    <dd>
+<?php
+echo $radiusstate
+    . $this->Html->link(
+        '<i class="icon-refresh icon-white"></i> ' . __('Restart Freeradius'),
+        array(
+            'action' => 'restart',
+            'freeradius'
+        ),
+        array(
+            'class' => 'btn btn-mini btn-danger',
+            'style' => 'margin-left:30px',
+            'escape' => false
+        )
+    );
+?>
+    </dd>
     <dt><?php echo __('MySQL'); ?></dt>
-    <dd><?php echo $mysqlstate; ?></dd>
+    <dd>
+<?php
+echo $mysqlstate
+    . $this->Html->link(
+        '<i class="icon-refresh icon-white"></i> ' . __('Restart Mysql'),
+        array(
+            'action' => 'restart',
+            'mysql',
+        ),
+        array(
+            'class' => 'btn btn-mini btn-danger',
+            'style' => 'margin-left:30px',
+            'escape' => false
+        )
+    );
+?>
+    </dd>
 </dl>
 
 <h4><?php echo __('Statistics:'); ?></h4>

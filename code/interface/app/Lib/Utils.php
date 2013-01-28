@@ -59,10 +59,6 @@ class Utils {
         return $result;
     }
 
-    //TODO
-    public static function restart_radius() {
-    }
-
     public static function getUserCertsPath($username) {
         $base = Configure::read('Parameters.certsPath') . '/' . $username;
         return array(
