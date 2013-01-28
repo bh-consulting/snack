@@ -1,6 +1,10 @@
 #!/bin/bash
 PAQUETNAME=snack
 
+# Droit sudo pour l'interface
+chmod 0440 /etc/sudoers.d/snack
+chown root:root /etc/sudoers.d/snack
+
 #Cleaning the stdin buffer
 read -t 1 -n 10000 discard
 
@@ -304,6 +308,4 @@ sed -e 's/\(destination\s*=\s*\).*$/\1syslog/'\
 	 -i /etc/freeradius/radiusd.conf
 service freeradius restart
 
-# Droit sudo pour l'interface
-chmod 0440 /etc/sudoers.d/snack
 exit 0
