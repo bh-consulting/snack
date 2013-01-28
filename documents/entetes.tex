@@ -12,6 +12,7 @@
 
 \definecolor{lightgray}{gray}{0.9}
 \definecolor{darkgray}{gray}{0.4}
+\newcommand{\hlc}[1]{\color{purple}{\textbf{#1}}}
 \lstset{language=,
     basicstyle=\sffamily\footnotesize,
     xleftmargin=20pt,
@@ -26,14 +27,13 @@
     showstringspaces=false
     inputencoding=utf8, %put1 d'utf8 dans listing
     extendedchars=true, %put1 d'utf8 dans listing
-    literate={à}{{\`a}}1 {é}{{\'e}}1 {è}{{\`e}}1 {ê}{{\^e}}1 {â}{{\^a}}1 {î}{{\^i}}1 {ê}{{\^e}}1 {É}{{\'E}}1 {À}{{\`A}}1 {«}{{\og}}1 {»}{{\fg{}}}1 {ô}{{\^o}}1 {ù}{{\`u}}1 {û}{{\^u}}1 {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {--}{{-\,-}}1 {-}{{-}}1 {*}{{*}}1, %put1 d'utf8 dans listing
+    literate={à}{{\`a}}1 {é}{{\'e}}1 {è}{{\`e}}1 {ê}{{\^e}}1 {â}{{\^a}}1 {î}{{\^i}}1 {ê}{{\^e}}1 {É}{{\'E}}1 {À}{{\`A}}1 {«}{{\og}}1 {»}{{\fg{}}}1 {ô}{{\^o}}1 {ù}{{\`u}}1 {û}{{\^u}}1 {ç}{{\c{c}}}1 {Ç}{{\c{C}}}1 {--}{{-\,-}}1 {-}{{-}}1 {*}{{*}}1 {Switch(config)\#}{{\textbf{Switch(config)\# }}}1 {Switch(config-if)\#}{{\textbf{Switch(config-if)\# }}}1 {Switch(config-line)\#}{{\textbf{Switch(config-line)\# }}}1 {Switch>}{{\textbf{Switch> }}}1 {Switch\#}{{\textbf{Switch\# }}}1, %put1 d'utf8 dans listing
     columns=fullflexible, % suppression des espaces autour des deux-points
     escapechar=§, % permet d'insérer du §code latex§
-    commentstyle=,
     backgroundcolor=\color{lightgray},
-    alsoletter={., 1,2,3,4,5,6,7,8,9,0},
-    keywords={path_to_certs, user_login, user_password, nom_entreprise, pass_radius_sql, utilisateur1, pass_utilisateur1, secret_radius, 192.168.1.10, 255.255.255.0, fastethernet0/1, vlan_id, pass_utilisateur1_enable, pass_utilisateur1_enable_secours, utilisateur_secours, pass_utilisateur1_secours, pass_root_sql, snack, 192.168.0.254, commutateur1, client1, Nancy, BHConsulting, France, FR, nom_serveur_radius, dossier_certs_utilisateur },
-    keywordstyle=\color{purple},
+    alsoletter={.,1,2,3,4,5,6,7,8,9,0},
+    keywords={path_to_certs, user_login, user_password, nom_entreprise, pass_radius_sql, utilisateur1, pass_utilisateur1, secret_radius, 192.168.1.2, 192.168.1.10, 255.255.255.0, fastethernet0/1, vlan_id, pass_enable, pass_enable_secours, utilisateur_secours, pass_utilisateur_secours, pass_root_sql, snack, 192.168.0.254, commutateur1, client1, Nancy, BHConsulting, France, FR, nom_serveur_radius, dossier_certs, dossier_certs_utilisateur, eth0 },
+    keywordstyle=\hlc,
     morecomment=[l]{\#}, % commentaires shell en ligne
     commentstyle=\itshape\color{darkgray},
 }

@@ -1,17 +1,13 @@
-\section{Commutateur}
-\subsection{Configuration Cisco}
-\subsubsection{Réinitialisation et paramètres par défaut}
+\section{Commutateur Cisco (NAS)}
+\subsection{Authentification des clients en 802.1x}
+\subsubsection{Paramètres par défaut}
 
-Pour réinitialiser la configuration du 802.1x sur le commutateur~:
-
-\begin{lstlisting}
-Switch(config)# dot1x default
-\end{lstlisting}
+{\Large\Info} Le commutateur utilisé pour rédiger cette documentation est un Catalyst 2950 (C2950-I6Q4L2-M) avec un IOS en version 12.1(22)EA14. Il est possible que certaines commandes différent légèrement d'une version d'IOS à l'autre. Toutes les versions de IOS ne supportent pas le protocole 802.1x\footnote{Voir \url{http://tools.cisco.com/ITDIT/CFN/jsp/by-feature-technology.jsp}}.
 
 La configuration par défaut est~:
 
 \begin{itemize}
-\item Authentication, authorization, and accounting (AAA) authentication <-> Disable Disabled. 
+\item Authentication, authorization, and accounting (AAA) authentication <-> Disabled
 \item RADIUS server : IP address <-> None specified
 \item RADIUS server : UDP authentication port <-> 1812
 \item RADIUS server : Key <-> None specified
@@ -24,43 +20,49 @@ La configuration par défaut est~:
 \item Multiple host support <-> Disabled
 \end{itemize}
 
-\subsubsection{Attribuer une adresse IP}
+Par défaut, le protocole 802.1x est désactivé.
 
-Exemple en IPv4~:
+\subsubsection{Activer le protocole 802.1x}
 
-\begin{lstlisting}
-Switch(config)# interface vlan 1
-Switch(config-if)# ip addr 192.168.0.10 255.255.255.0
-Switch(config-if)# no shutdown
-Switch(config-if)# exit
-\end{lstlisting}
-
-\subsubsection{Activer le 802.1x}
-
-Activation du protocole~:
+Activer le protocole sur le commutateur~:
 
 \begin{lstlisting}
+Switch> en
+Switch# conf t
 Switch(config)# aaa new-model
 Switch(config)# aaa authentication dot1x default group radius
 Switch(config)# dot1x system-auth-control
 \end{lstlisting}
 
+\subsubsection{Déclarer un serveur Radius}
+
+Ajouter la définition d'un serveur Radius (\emph{192.168.1.10})~:
+
+\begin{lstlisting}
+Switch(config)# aaa new-model
+Switch(config)# radius-server host 192.168.1.10 auth-port 1812 key radius_secret
+\end{lstlisting}
+
+Pour que le commutateur puisse communiquer avec le Radius, il faut lui définir une adresse IP~:
+
+\begin{lstlisting}
+Switch(config)# interface vlan 1
+Switch(config-if)# no shutdown
+Switch(config-if)# ip addr 192.168.1.2 255.255.255.0
+Switch(config-if)# exit
+\end{lstlisting}
+
+\textbf{{\huge\Stopsign} Attention~:} L'adresse IP du NAS doit être la même que le client (qui jouait le rôle de NAS) lors des tests précédents. Sinon, son adresse doit être ajoutée à la table des NAS du serveur Radius (cf. section~\ref{ajout-nas} page~\pageref{ajout-nas}).
+
 \subsubsection{Configurer une interface}
 
-L'interface dois être en mode \emph{access}~:
+Passer l'interface en mode \emph{access}~:
 
 \begin{lstlisting}
-Switch(config)# interface fastethernet0/1
+Switch(config)# interface §\hlc{fastethernet0/1}§
 Switch(config-if)# switchport mode access
+Switch(config-if)# no shutdown
 \end{lstlisting}
-
-Activer sur le 802.1x pour cette interface~:
-
-\begin{lstlisting}
-Switch(config-if)# dot1x port-control auto
-\end{lstlisting}
-
-\subsubsection{Incompatibilités}
 
 Le protocole 802.1x ne peut pas être activé sur les ports suivants~:
 
@@ -73,95 +75,137 @@ Le protocole 802.1x ne peut pas être activé sur les ports suivants~:
 \item Switch Port Analyzer (SPAN)
 \end{enumerate}
 
-\subsubsection{Lier à un serveur Radius}
-
-Ajouter la définition d'un serveur Radius (\emph{192.168.1.10})~:
+Activer le 802.1x pour cette interface en particulier~:
 
 \begin{lstlisting}
-Switch(config)# aaa new-model
-Switch(config)# radius-server host 192.168.1.10 auth-port 1812 key radius_secret
+Switch(config-if)# dot1x port-control auto
+Switch(config-if)# exit
 \end{lstlisting}
 
-\subsubsection{Authentification périodique}
+\subsubsection{Test de l'authentification en 802.1x}
 
-Activer la réauthentification périodique~:
+Relier le client en ethernet au port configuré précédemment. Par défaut, le voyant du port devrait être orange sur le commutateur et le client ne devrait pas pouvoir accéder au réseau.
+
+Réutiliser le fichier d'authentification créé pour le test d'authentification simple en MD5 de la section~\ref{auth-md5} page~\pageref{auth-md5}.
+
+Cette fois-ci il faut tester l'authentification avec un vrai \emph{supplicant}, comme WpaSupplicant~:
 
 \begin{lstlisting}
-Switch(config)# dot1x re-authentication
-Switch(config)# dot1x timeout re-authperiod 4000
+$ sudo wpa_supplicant -c dot1x.md5.conf -D wired -i eth0
 \end{lstlisting}
 
-\subsubsection{Déboguer}
+Grâce au Freeradius lancé en mode en mode verbeux sur le serveur (cf. section~\ref{freeradius-x} page~\pageref{freeradius-x}), une authentification réussie devrait afficher, comme lors des autres tests~:
 
-Pour obtenir des informations concernant le fonctionnement actuel du 802.1x sur le commutateur~:
+\begin{lstlisting}[morekeywords={0x03010004, 8}]
+Sending Access-Accept of id 8 to 192.168.1.2 port 1812
+        EAP-Message = 0x03010004
+        Message-Authenticator = 0x00000000000000000000000000000000
+        User-Name = "utilisateur1"
+\end{lstlisting}
+
+Du côté du commutateur, le voyant du port ethernet devrait passer en jaune~: le réseau est accessible pour le client, qui peut dès lors récupérer une IP en DHCP.
+
+Pour tester l'authentification par certificat, utiliser les fichiers proposés dans la section~\ref{tests-certificats} page~\pageref{tests-certificats} directement avec la commande \emph{wpa\_supplicant} donnée ci-dessus.
+
+Exemple d'envoi de réponse positive avec TLS~:
+
+\begin{lstlisting}[morekeywords={0xb6d79d7dc6ac237bade516921f3c801e790ae968b0e83de5c4ad8c727df824ea, 0x41345ea21c13773a0f4f4d279b170fe0deb9cb37f886c4c19f55dd079e92d1e2, 0x03090004, 28}]
+Sending Access-Accept of id 28 to 193.50.40.71 port 1812
+        MS-MPPE-Recv-Key = 0xb6d79d7dc6ac237bade516921f3c801e790ae968b0e83de5c4ad8c727df824ea
+        MS-MPPE-Send-Key = 0x41345ea21c13773a0f4f4d279b170fe0deb9cb37f886c4c19f55dd079e92d1e2
+        EAP-Message = 0x03090004
+        Message-Authenticator = 0x00000000000000000000000000000000
+        User-Name = "utilisateur1"
+\end{lstlisting}
+
+\subsubsection{Debug}
+
+Pour obtenir des informations concernant le fonctionnement actuel du 802.1x côté commutateur~:
 
 \begin{lstlisting}
+Switch> enable
+Switch# debug dot1x all
+Switch# conf t
 Switch(config)# show dot1x
 Switch(config)# show dot1x statistics
-Switch# debug dot1x all
 \end{lstlisting}
 
-\subsubsection{VLAN invité}
-
-Pour définir un réseau virtuel par défaut~:
-
-\begin{lstlisting}
-Switch(config-if)# dot1x guest-vlan { vlan_id }
-\end{lstlisting}
-
-\subsection{Authentification sur le port console et les VTY}
+\subsection{Authentification des administrateurs du commutateur}
 \subsubsection{Identifiants Radius}
 
-Commencer par ajouter le mode d'authentification~:
+Commencer par ajouter le mode d'authentification général~:
 
 \begin{lstlisting}
-Swicth>enable
-Switch#configure terminal
-Switch(config)#aaa authentication login default group radius
-Switch(config)#aaa authentication enable default group radius
+Switch> enable
+Switch# configure terminal
+Switch(config)# aaa authentication login default group radius
 \end{lstlisting}
 
-Pour l'activer sur le port console~:
+Pour l'activer sur le port console (penser à faire un \emph{write mem} avant, pour pouvoir relancer le commutateur sans perdre les modifications précédentes si la console devenait inaccessible)~:
+
+\begin{lstlisting}[morekeywords=0]
+Switch(config)# line console 0
+Switch(config-line)# login authentication default
+Switch(config-line)# exit
+\end{lstlisting}
+
+Tester une authentification sur le port console, avec l'utilisateur \emph{utilisateur1} et le mot de passe \emph{pass\_utilisateur1} (créé dans la section~\ref{ajout-utilisateur-md5} page~\pageref{ajout-utilisateur-md5}). % Pour activer le mode \emph{enable}, voir la section suivante.
+
+Pour l'activer sur les connexions Telnet/SSH~:
+
+\begin{lstlisting}[morekeywords=0]
+Switch(config)# line vty 0
+Switch(config-line)# login authentication default
+Switch(config-line)# exit
+\end{lstlisting}
+
+Tester une authentification en Telnet ou SSH, avec les mêmes identifiants que précédemment.
+
+Les authentifications devraient fonctionner, mais pas le passage en super-utilisable avec la commande \emph{enable}. L'accès à ce privilège requiert des actions supplémentaires sur le serveur Radius.
+
+\subsubsection{Activation du mode \emph{enable}}
+
+Activer l'authentification pour le passage en super-utilisateur sur le commutateur~:
+
+\begin{lstlisting}[morekeywords=0]
+Switch(config)# aaa authentication enable default group radius
+\end{lstlisting}
+
+Sur le serveur Radius, ajouter cette ligne dans la section \emph{sql} du fichier \emph{/etc/freeradius/sql.conf}~:
 
 \begin{lstlisting}
-Switch(config)#line console 0
-Switch(config-line)#login authentication default
+sql {
+	§\emph{[...]}§
+
+	safe-characters = "@0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_: /$"
+}
 \end{lstlisting}
 
-Pour l'activer sur les connexions Telnet~:
+Puis ajouter cet utilisateur particulier dans la base de données, qui définit le mot de passe pour passer en super-utilisateur~:
 
 \begin{lstlisting}
-Switch(config)#line vty 0 15
-Switch(config-line)#login authentication default
+$ sudo echo "INSERT INTO radcheck(username, attribute, op, value) VALUES ('\$enab15\$', 'Crypt-Password', ':=', encrypt('pass_enable'))" | mysql -uradius -p§§pass_radius_sql radius
 \end{lstlisting}
 
-L'accès au mode \textit{enable} requiert une action supplémentaire sur le serveur Radius.
-
-Pour l'activer, ajouter cette ligne au fichier \textit{sql.conf}~:
-
-\begin{lstlisting}
-safe-characters = "@0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_: /$"
-\end{lstlisting}
-
-Puis ajouter un utilisateur particulier~:
-
-\begin{lstlisting}
-$ sudo echo "INSERT INTO radcheck (username,attribute,value) VALUES ('$enab15$','Cleartext-Password','pass_enable')" | mysql -uroot -p radius
-\end{lstlisting}
+Tester un passage en mode \emph{enable} dans une connexion en mode console, Telnet ou SSH.
 
 \subsubsection{Identifiants de secours}
 
-Si jamais le serveur Radius n'est pas joignable, personne ne pourra se connecter au commutateur pour le configurer. Lorsqu'un réseau tombe en panne, il est probable qu'il faille configurer le commutateur alors que le serveur Radius n'est plus accessible. C'est pourquoi il faut faut installer des identifiants de secours qui ne seront utilisés que dans le cas où le server Radius ne répond pas.
+Si jamais le serveur Radius n'est pas joignable, personne ne pourra se connecter au commutateur pour le configurer. Lorsqu'un réseau tombe en panne, il est probable qu'il faille configurer le commutateur alors que le serveur Radius n'est plus accessible. C'est pourquoi il faut installer des identifiants de secours.
 
 Suivre la procédure suivante~:
 
 \begin{lstlisting}
-Swicth>enable
-Switch#configure terminal
+Switch>en
+Switch#conf t
 Switch(config)#aaa authentication login default group radius local
 Switch(config)#aaa authentication enable default group radius enable
-Switch(config)#enable password pass_enable_secours
 Switch(config)#username utilisateur_secours password pass_utilisateur_secours
+Switch(config)#enable password pass_enable_secours
 \end{lstlisting}
 
-Si le serveur ne répond pas, il faudra utiliser l'utilisateur \emph{utilisateur\_secours} et le mot de passe \emph{pass\_secours} pour se connecter sur le port console. Le mot de passe \emph{pass\_enable\_secours} pourra être utilisé pour passer en mode privilégié.
+Tenter une authentification (console, Telnet, SSH ou directement en série) avec l'utilisateur \emph{utilisateur\_secours} et le mot de passe \emph{pass\_utilisateur\_secours}. Puisque le serveur Radius est accessible, elle ne devrait pas fonctionner. Couper le Freeradius (Ctrl-C) et retenter~: l'authentification fonctionne (après un certain temps correspondant à l'attente nécessaire pour le commutateur conclut que le Radius n'est pas accessible) 
+
+Le mot de passe \emph{pass\_enable\_secours} pourra être utilisé pour passer en mode privilégié lorsque le Radius n'est pas disponible.
+
+\textbf{Félicitations, penser à faire un \emph{write mem} final \Coffeecup.}

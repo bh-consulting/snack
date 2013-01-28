@@ -1,5 +1,5 @@
 \section{Certificats}
-\subsection{Installation des certificats}
+\subsection{Certificat racine et CRL}
 \subsubsection{Openssl}
 
 Pour l'instant, les utilisateurs ne peuvent s'authentifier qu'en utilisant un nom d'utilisateur et un mot de passe, avec du MD5. Pour pouvoir proposer des solutions qui apportent plus de sécurité, Openssl peut être utilisé pour générer des certificats.
@@ -77,56 +77,8 @@ $ ln -s dossier_certs/users/ca_cert.pem dossier_certs/certs/$HASH.0
 $ ln -s dossier_certs/crl/crl.pem dossier_certs/certs/$HASH.r0
 \end{lstlisting}
 
-\subsection{Utilisation des certificats}
+\subsection{Certificats pour le Radius}
 \subsubsection{Génération et signature}
-
-Génération d'une clé pour un utilisateur (\emph{utilisateur1})~:
-
-\begin{lstlisting}
-$ openssl genrsa -out dossier_certs/users/utilisateur1_key.pem 4096
-\end{lstlisting}
-
-Génération d'une requête pour faire signer le certificat, en prenant soin de définir le champ \emph{commonName} à l'aide de l'identifiant de l'utilisateur~:
-
-\begin{lstlisting}
-$ openssl req -config /etc/ssl/openssl.cnf -new -key dossier_certs/users/utilisateur1_key.pem -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=utilisateur1/ -out dossier_certs/users/§§utilisateur1§§_req.pem -days 3650
-\end{lstlisting}
-
-Signature du certificat, avec le certificat racine créé précédemment~:
-
-\begin{lstlisting}
-$ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out dossier_certs/users/§§utilisateur1§§_cert.pem -batch -infiles dossier_certs/users/§§utilisateur1§§_req.pem
-\end{lstlisting}
-
-Penser à mettre à jour la CRL (cf. section~\ref{gen-crl} page~\pageref{gen-crl}).
-
-Une erreur de ce type à la signature signifie que la valeur donnée pour le \emph{commonName} a déjà été utilisée par le passé (même si le certificat a été supprimé)~:
-
-\begin{lstlisting}
-failed to update database
-TXT_DB error number 2
-\end{lstlisting}
-
-En cas d'erreur, il faut donc éditer le fichier \emph{dossier\_certs/index.txt} pour supprimer les reliquats des anciens certificats.
-
-\subsubsection{Révocation}
-
-Pour révoquer un certificat (irréversible)~: 
-
-\begin{lstlisting}
-$ openssl ca -config /etc/ssl/openssl.cnf -revoke dossier_certs/users/utilisateur1_cert.pem
-\end{lstlisting}
-
-Penser à mettre à jour la CRL (cf. section~\ref{gen-crl} page~\pageref{gen-crl}).
-
-Pour vérifier qu'un certificat a bien été révoqué~:
-
-\begin{lstlisting}
-$ openssl verify -CApath dossier_certs/certs/ -crl_check dossier_certs/users/utilisateur1_cert.pem
-\end{lstlisting}
-
-\subsection{Certificats et Radius}
-\subsubsection{Configuration}
 
 Pour mettre en place les certificats de Radius, commencer par créer un fichier aléatoire~: 
 
@@ -148,6 +100,8 @@ $ openssl genrsa -out dossier_certs/private/radius_key.pem 4096
 $ openssl req -config /etc/ssl/openssl.cnf -new -key dossier_certs/private/radius_key.pem -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=nom_serveur_radius/ -out dossier_certs/private/radius_req.pem -days 3650
 $ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out dossier_certs/private/radius_cert.pem -batch -infiles dossier_certs/private/radius_req.pem
 \end{lstlisting}
+
+\subsubsection{Configuration de Freeradius}
 
 Modifier ou décommenter l'ensemble des paramètres de la section TLS du fichier \emph{/etc/freeradius/eap.conf} de la façon suivante (laisser la valeur par défaut pour les autres)~:
 
@@ -195,7 +149,56 @@ authorize {
 }
 \end{lstlisting}
 
-\subsection{Utilisation des certificats côté client}
+\subsection{Certificats pour les clients}
+\subsubsection{Génération et signature}
+
+Génération d'une clé pour un utilisateur (\emph{utilisateur1})~:
+
+\begin{lstlisting}
+$ openssl genrsa -out dossier_certs/users/utilisateur1_key.pem 4096
+\end{lstlisting}
+
+Génération d'une requête pour faire signer le certificat, en prenant soin de définir le champ \emph{commonName} à l'aide de l'identifiant de l'utilisateur~:
+
+\begin{lstlisting}
+$ openssl req -config /etc/ssl/openssl.cnf -new -key dossier_certs/users/utilisateur1_key.pem -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=utilisateur1/ -out dossier_certs/users/utilisateur1§§_req.pem -days 3650
+\end{lstlisting}
+
+Signature du certificat, avec le certificat racine créé précédemment~:
+
+\begin{lstlisting}
+$ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out dossier_certs/users/utilisateur1§§_cert.pem -batch -infiles dossier_certs/users/utilisateur1§§_req.pem
+\end{lstlisting}
+
+Penser à mettre à jour la CRL (cf. section~\ref{gen-crl} page~\pageref{gen-crl}).
+
+Une erreur de ce type à la signature signifie que la valeur donnée pour le \emph{commonName} a déjà été utilisée par le passé (même si le certificat a été supprimé)~:
+
+\begin{lstlisting}
+failed to update database
+TXT_DB error number 2
+\end{lstlisting}
+
+En cas d'erreur, il faut donc éditer le fichier \emph{dossier\_certs/index.txt} pour supprimer les reliquats des anciens certificats.
+
+\subsubsection{Révocation}
+
+Pour révoquer un certificat (irréversible)~: 
+
+\begin{lstlisting}
+$ openssl ca -config /etc/ssl/openssl.cnf -revoke dossier_certs/users/utilisateur1_cert.pem
+\end{lstlisting}
+
+Penser à mettre à jour la CRL (cf. section~\ref{gen-crl} page~\pageref{gen-crl}).
+
+Pour vérifier qu'un certificat a bien été révoqué~:
+
+\begin{lstlisting}
+$ openssl verify -CApath dossier_certs/certs/ -crl_check dossier_certs/users/utilisateur1_cert.pem
+\end{lstlisting}
+
+\label{tests-certificats}
+\subsubsection{Test avec un client}
 
 Créer un répertoire pour les certificats (\emph{dossier\_certs\_utilisateur}) de l'utilisateur sur la machine cliente, pour y copier directement trois des fichiers qui ont été générés précédemment~:
 
@@ -205,9 +208,9 @@ Créer un répertoire pour les certificats (\emph{dossier\_certs\_utilisateur}) 
 \item \emph{dossier\_certs/utilisateur1\_key.pem} (certificat privé de l'utilisateur)
 \end{enumerate}
 
-La configuration du serveur actuelle permet à l'utilisateur de choisir entre un tunnel TLS, TTLS avec MD5 ou PEAP, selon ses exigences de sécurité. Les trois fichiers ciè-dessous permettent de tester chacun des modes pour vérifier leur bon fonctionnement.
+La configuration du serveur actuelle permet à l'utilisateur de choisir entre un tunnel TLS, TTLS avec MD5 ou PEAP, selon ses exigences de sécurité. Les trois fichiers ci-dessous permettent de tester chacun des modes pour vérifier leur bon fonctionnement.
 
-Pour TLS~:
+Pour TLS, il faut créer un fichier \emph{dot1x.certif.conf} contenant~:
 
 \begin{lstlisting}
 network={
@@ -221,7 +224,7 @@ network={
 }
 \end{lstlisting}
 
-TTLS avec un chiffrement MD5 dans le tunnel~:
+Pour TTLS avec un chiffrement MD5 dans le tunnel~:
 
 \begin{lstlisting}
 network={
@@ -235,7 +238,7 @@ network={
 }
 \end{lstlisting}
 
-PEAP~:
+Enfin, pour PEAP~:
 
 \begin{lstlisting}
 network={
@@ -249,11 +252,7 @@ network={
 }
 \end{lstlisting}
 
-Côté serveur, démarrer Freeradius en mode test (il faudra le relancer à chaque modification de sa configuration, en cas de problème)~:
-
-\begin{lstlisting}
-$ sudo freeradius -X
-\end{lstlisting}
+Côté serveur, démarrer Freeradius en mode verbeux comme expliqué dans la section~\ref{freeradius-x} page~\pageref{freeradius-x} (il faudra le relancer à chaque modification de sa configuration, en cas de problème).
 
 Côté client, à l'aide de l'outil \emph{eapol\_test} (cf. section~\ref{eapol-test} page~\pageref{eapol-test}) et des fichiers de configuration indiqués ci-dessus, tester chacun des modes d'authentification~:
 

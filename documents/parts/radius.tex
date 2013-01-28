@@ -70,7 +70,7 @@ $ sudo cp default snack
 $ sudo ln -s /etc/freeradius/sites-available/snack /etc/freeradius/sites-enabled/
 \end{lstlisting}
 
-Modifier le virtualhost en éditant le fichier \emph{/etc/freeradius/sites-available/snack} (il devrait y avoir deux \emph{digest} à supprimer, deux \emph{files}, deux \emph{unix}, un \emph{attr\_filter.accounting\_response} et un \emph{exec}, et trois \emph{sql} à décommenter) pour arriver à ce résultat~:
+Modifier l'hôte virtuel en éditant le fichier \emph{/etc/freeradius/sites-available/snack} (il devrait y avoir deux \emph{digest} à supprimer, deux \emph{files}, deux \emph{unix}, un \emph{attr\_filter.accounting\_response} et un \emph{exec}, et trois \emph{sql} à décommenter) pour arriver à ce résultat~:
 
 \begin{lstlisting}
 server snack{
@@ -161,20 +161,23 @@ authorize {
 \subsection{Test d'authentification}
 \subsubsection{Test local}
 
-Ce test peut être fait entre deux machines, l'une faisant office de serveur d'authentification avec le Freeradius (\emph{192.168.1.10}), et l'autre faisant à la fois office de client et de NAS (\emph{192.168.1.2}), avec un outil d'authentification.
+Ce test peut être fait entre deux machines, l'une faisant office de serveur d'authentification avec le Freeradius (\emph{192.168.1.10}), et l'autre faisant office de client/NAS (\emph{192.168.1.2}), avec un outil d'authentification.
 
+\label{ajout-nas}
 Ajouter le client (\emph{client1}) dans la table des NAS admis du serveur qui vient d'être configuré~:
 
 \begin{lstlisting}
 $ echo "INSERT INTO nas(nasname, shortname, secret) VALUES ('192.168.1.2', 'client1', 'secret_radius')" | sudo mysql -uradius -p§§pass_radius_sql radius
 \end{lstlisting}
 
+\label{ajout-utilisateur-md5}
 Créer un utilisateur simple \emph{utilisateur1}, qui pourra s'authentifier en 802.1x avec un mot de passe non-chiffré (\emph{pass\_utilisateur1})~:
 
 \begin{lstlisting}
-$ echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('utilisateur1', 'Cleartext-Password', ':=', 'pass_utilisateur1')" | sudo mysql -u radius -p§§pass_radius_sql radius
+$ echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('utilisateur1', 'Crypt-Password', ':=', encrypt('pass_utilisateur1'))" | sudo mysql -u radius -p§§pass_radius_sql radius
 \end{lstlisting}
 
+\label{freeradius-x}
 Lancer le serveur Radius en mode verbeux, et sans détachement~:
 
 \begin{lstlisting}
@@ -214,14 +217,10 @@ $ sudo apt-get install libnl-dev
 $ make eapol_test
 \end{lstlisting}
 
-Créer un fichier d'authentification (\emph{dot1x.conf.eap}) en MD5, pour l'utilisateur \emph{utilisateur1}~:
+\label{auth-md5}
+Créer un fichier d'authentification (\emph{dot1x.md5.conf}) en MD5, pour l'utilisateur \emph{utilisateur1}~:
 
 \begin{lstlisting}
-ctrl_interface=/var/run/wpa_supplicant
-ctrl_interface_group=0
-eapol_version=1
-ap_scan=0
-
 network={
         key_mgmt=IEEE8021X
         eap=MD5
@@ -230,10 +229,12 @@ network={
 }
 \end{lstlisting}
 
+Penser à lancer le Freeradius en mode verbeux (cf. section~\ref{freeradius-x} page~\pageref{freeradius-x})~:
+
 Tester de nouveau la connexion~:
 
 \begin{lstlisting}
-$ ./eapol_test -c dot1x.conf.eap -a§§192.168.1.10 -p1812 -s§§secret_radius -r0
+$ ./eapol_test -c dot1x.md5.conf -a§§192.168.1.10 -p1812 -s§§secret_radius -r0
 \end{lstlisting} 
 
 L'affichage d'un message \og{}\emph{eapol\_sm\_cb: success=1}\fg{} dans les dernières lignes de la trace de \emph{eapol\_test} côté client confirme la réussite de l'authentification (il faut ignorer la toute dernière ligne \emph{FAILURE} qui prendra du sens par la suite). En cas d'échec, la valeur de \emph{success} est zéro. Côté serveur Radius, les messages sont les mêmes que lors du test précédent.
