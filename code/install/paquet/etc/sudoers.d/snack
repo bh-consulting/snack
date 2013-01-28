@@ -1,0 +1,1 @@
+www-data ALL = NOPASSWD: /usr/sbin/service mysql restart, /usr/sbin/service freeradius restart
