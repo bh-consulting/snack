@@ -304,4 +304,6 @@ sed -e 's/\(destination\s*=\s*\).*$/\1syslog/'\
 	 -i /etc/freeradius/radiusd.conf
 service freeradius restart
 
+# Droit sudo pour l'interface
+chmod 0440 /etc/sudoers.d/snack
 exit 0
