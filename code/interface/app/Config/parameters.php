@@ -2,7 +2,7 @@
 $config = array (
   'Parameters' => 
   array (
-    'contactEmail' => 'couc@ouesial.net',
+    'contactEmail' => 'coucou@esial.net',
     'countryName' => 'FR',
     'stateOrProvinceName' => 'France',
     'localityName' => 'Nancy',

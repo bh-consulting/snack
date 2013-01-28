@@ -60,11 +60,6 @@ class Parameter extends AppModel {
             )
         ),
         'scriptsPath' => array(
-            'path' => array(
-                'rule' => 'checkPath',
-                'message' => 'Invalid unix path.',
-                'required' => true
-            ),
             'exists' => array(
                 'rule' => 'dirExists',
                 'message' => 'Directory does not exist.',
@@ -72,11 +67,6 @@ class Parameter extends AppModel {
             )
         ),
         'certsPath' => array(
-            'path' => array(
-                'rule' => 'checkPath',
-                'message' => 'Invalid unix path.',
-                'required' => true
-            ),
             'exists' => array(
                 'rule' => 'dirExists',
                 'message' => 'Directory does not exist.',
@@ -91,14 +81,17 @@ class Parameter extends AppModel {
                 $this->set($key, Configure::read('Parameters.' . $key));
             }
         }
+
+        return $this->data;
     }
 
     public function set($one, $two = null){
+
         if (is_array($one) && isset($one['Parameter'])) {
             foreach ($one['Parameter'] as $key => $value) {
                 $this->set($key, $value);
             }
-        } else {
+        } elseif (!is_array($one)) {
             Configure::write(
                 'Parameters.' . $one,
                 $two
@@ -117,24 +110,15 @@ class Parameter extends AppModel {
             );
             return true;
         } else {
-            debug($this->validationErrors);
             return false;
         }
     }
 
-    public function checkPath($check) {
+    public function dirExists($check) {
         $value = array_values($check);
         $value = $value[0];
 
-        if (substr($value, -1) == '/') {
-            $value = substr($value, 0, strlen($value)-1);
-        }
-
-        return true;
-    }
-
-    public function dirExists($check) {
-        return true;
+        return is_dir($value);
     }
 }
 ?>

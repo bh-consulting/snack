@@ -42,6 +42,8 @@ var Boostrapify = {
 	// Special inputs
 	$('input.email').wrap('<div class="input-append"/>');
 	$('input.email').after('<span class="add-on">@</span>');
+	$('input.path').wrap('<div class="input-append"/>');
+	$('input.path').after('<span class="add-on">../</span>');
 
 	// FORM ERROR MESSAGES
 	$('div.error-message').replaceWith(function() { 

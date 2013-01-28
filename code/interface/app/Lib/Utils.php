@@ -26,6 +26,12 @@ class Utils {
         return $mac;
     }
 
+    public static function cleanPath(&$path) {
+        if (substr($path, -1) == '/') {
+            $path = substr($path, 0, strlen($path)-1);
+        }
+    }
+
     /**
      * Reformat the mac addr for a nice display
      */

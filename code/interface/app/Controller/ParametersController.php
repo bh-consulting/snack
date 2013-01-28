@@ -14,26 +14,27 @@ class ParametersController extends AppController {
     }
 
     public function edit() {
-        if($this->request->is('post')){
+        if ($this->request->is('post')) {
+            Utils::cleanPath($this->request->data['Parameter']['scriptsPath']);
+            Utils::cleanPath($this->request->data['Parameter']['certsPath']);
+
             $this->Parameter->set($this->request->data);
+
             if ($this->Parameter->save()) {
                 $this->Session->setFlash(
                     __('Parameters have been updated.'),
                     'flash_success'
                 );
-                //$this->redirect(array('action' => 'index'));
+                
+                $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(
                     __('Unable to update parameters.'),
                     'flash_error'
                 );
             }
-        }
-
-        $this->Parameter->read();
-
-        foreach ($this->Parameter->data['Parameter'] as $key => $value) {
-            $this->set($key, $value);
+        } else {
+            $this->request->data = $this->Parameter->read();
         }
     }
 }
