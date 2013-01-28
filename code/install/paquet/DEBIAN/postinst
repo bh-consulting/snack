@@ -168,7 +168,7 @@ echo "01" > $DESTPATH/crlnumber
 openssl genrsa -out $DESTPATH/private/$CAKEY 4096 
 
 openssl req -new -key $DESTPATH/private/$CAKEY \
-	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=$CLIENTNAME/ \
+	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName="$CLIENTNAME"/ \
 	-out $DESTPATH/private/$CAREQ
 
 
