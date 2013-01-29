@@ -9,3 +9,10 @@ install:
 
 clean:
 	sudo rm -fr paquet_deb Radius-BH-Consulting.deb
+
+uninstall: clean
+	-sudo delgroup snack
+	-echo "drop database radius;" | mysql -uroot -pbh
+	sudo rm -fr /home/pi/snack
+	sudo rm -fr /etc/sudoers.d/snack
+	sudo apt-get autoremove --purge radius-bh-consulting
