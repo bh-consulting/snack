@@ -148,23 +148,30 @@ class RadusersController extends AppController {
         $attributes = $type;
 
         // Raduser
-        if( $views['base']['Raduser']['type'] == "mac"
+        if( $views['base']['Raduser']['type'] == 'mac'
             && strlen( $views['base']['Raduser']['username'] ) == 12
         ) {
             $attributes['MAC address'] = Utils::formatMAC(
                 $views['base']['Raduser']['username']
             );
+
         } else {
             $attributes['Username'] = $views['base']['Raduser']['username'];
         }
         $attributes['Comment'] = $views['base']['Raduser']['comment'];
         $attributes['Certificate path'] =
             $views['base']['Raduser']['cert_path'];
+        $attributes['Cisco'] = $views['base']['Raduser']['is_cisco'] 
+            ? _('Yes') : _('No');
 
         // Radchecks
         foreach($views['checks'] as $check){
             $attributes[ $check['Radcheck']['attribute'] ] =
                 $check['Radcheck']['value'];
+            if($check['Radcheck']['attribute'] == 'Calling-Station-Id'){
+                $attributes['MAC address'] = Utils::formatMAC(
+                    $check['Radcheck']['value']);
+            }
         }
 
         // Radgroups
@@ -179,43 +186,27 @@ class RadusersController extends AppController {
     }
 
     /**
-     * View a cisco user.
-     * @param  $id - user id
-     */
-    public function view_cisco($id = null) {
-        $this->set(
-            'showedAttr',
-            array(
-                'Authentication type',
-                'Username',
-                'Comment',
-                'NAS-Port-Type',
-                'Expiration',
-                'Simultaneous-Use',
-                'Groups',
-            )
-        );
-        $this->view($id, array( 'Authentication type' => 'Cisco' ));
-    }
-
-    /**
      * View a user with certificate.
      * @param  $id - user id
      */
     public function view_cert($id = null) {
-        $this->set(
-            'showedAttr',
-            array(
-                'Authentication type',
-                'Username',
-                'Comment',
-                'Certificate path',
-                'EAP-Type',
-                'Expiration',
-                'Simultaneous-Use', 
-                'Groups',
-            )
+        $showedAttr = array(
+            'Authentication type',
+            'Username',
+            'Comment',
+            'Certificate path',
+            'EAP-Type',
+            'Expiration',
+            'Simultaneous-Use', 
+            'Groups',
+            'Cisco',
+            'MAC address',
         );
+        $raduser = $this->Raduser->findById($id);
+        if($raduser['Raduser']['is_cisco']){
+            $showedAttr[]= 'NAS-Port-Type';
+        }
+        $this->set('showedAttr', $showedAttr);
         $this->view($id, array( 'Authentication type' => 'Certificate' ));
     }
 
@@ -224,17 +215,23 @@ class RadusersController extends AppController {
      * @param  $id - user id
      */
     public function view_loginpass($id = null) {
-        $this->set(
-            'showedAttr',
-            array(
-                'Authentication type',
-                'Username',
-                'Comment',
-                'Expiration',
-                'Simultaneous-Use',
-                'Groups',
-            )
+        $showedAttr = array(
+            'Authentication type',
+            'Username',
+            'Comment',
+            'Expiration',
+            'Simultaneous-Use',
+            'Groups',
+            'Cisco',
+            'MAC address',
         );
+
+        $raduser = $this->Raduser->findById($id);
+        if($raduser['Raduser']['is_cisco']){
+            $showedAttr[]= 'NAS-Port-Type';
+        }
+
+        $this->set('showedAttr', $showedAttr);
         $this->view($id, array( 'Authentication type' => 'Login / Password' ));
     }
 
@@ -274,8 +271,8 @@ class RadusersController extends AppController {
                     );
                     $this->Session->setFlash(__(
                         'New user added. His certificates were %s and %s.',
-                        $certs[0],
-                        $certs[1],
+                        $certs['public'],
+                        $certs['key'],
                         'flash_success'
                     ));
                 } else {
@@ -358,6 +355,7 @@ class RadusersController extends AppController {
                 '==',
                 $mac,
             );
+            $this->request->data['Raduser']['is_mac'] = 1;
         }
     }
 
