@@ -367,8 +367,6 @@ class RadusersController extends AppController {
                 $username = $this->request->data['Raduser']['username'];
 
                 $this->request->data['Raduser']['is_loginpass'] = 1;
-                // TODO: delete next line, I think it's useless (Nicolas)
-                // $this->Raduser->data['Raduser']['is_loginpass'] = 1;
 
                 if ($this->request->data['Raduser']['ttls'] == 1) {
                     $eapType = 'EAP-TTLS';
@@ -414,58 +412,59 @@ class RadusersController extends AppController {
     }
 
 
-    public function add_mac_active() {
-        $success = false;
+    // TODO: delete if mac active is not supported
+    // public function add_mac_active() {
+    //     $success = false;
 
-        if ($this->request->is('post')) {
-            try {
-                $this->request->data['Raduser']['mac'] = 
-                    Utils::cleanMAC($this->request->data['Raduser']['mac']);
+    //     if ($this->request->is('post')) {
+    //         try {
+    //             $this->request->data['Raduser']['mac'] = 
+    //                 Utils::cleanMAC($this->request->data['Raduser']['mac']);
 
-                $username = $this->request->data['Raduser']['username'];
-                $this->request->data['Raduser']['is_mac'] = 1;
-                $rads = array(
-                    array(
-                        $username,
-                        'NAS-Port-Type',
-                        '==',
-                        '15'
-                    ),
-                    // FIXME to test
-                    // array($username,
-                    //     'Cleartext-Password',
-                    //     ':=',
-                    //     $this->request->data['Raduser']['mac']
-                    // ),
-                    // array($username,
-                    //     'EAP-Type',
-                    //     ':=',
-                    //     'MD5-CHALLENGE'
-                    // ),
-                    array(
-                        $username,
-                        'Calling-Station-Id',
-                        '==',
-                        $this->request->data['Raduser']['mac'],
-                    ),
-                );
+    //             $username = $this->request->data['Raduser']['username'];
+    //             $this->request->data['Raduser']['is_mac'] = 1;
+    //             $rads = array(
+    //                 array(
+    //                     $username,
+    //                     'NAS-Port-Type',
+    //                     '==',
+    //                     '15'
+    //                 ),
+    //                 // FIXME to test
+    //                 // array($username,
+    //                 //     'Cleartext-Password',
+    //                 //     ':=',
+    //                 //     $this->request->data['Raduser']['mac']
+    //                 // ),
+    //                 // array($username,
+    //                 //     'EAP-Type',
+    //                 //     ':=',
+    //                 //     'MD5-CHALLENGE'
+    //                 // ),
+    //                 array(
+    //                     $username,
+    //                     'Calling-Station-Id',
+    //                     '==',
+    //                     $this->request->data['Raduser']['mac'],
+    //                 ),
+    //             );
 
-                $this->addCommonCiscoMacFields($rads);
-                $this->Checks->add($this->request, $rads);
+    //             $this->addCommonCiscoMacFields($rads);
+    //             $this->Checks->add($this->request, $rads);
 
-                $success = true;
-            } catch(UserGroupException $e) {
-                $this->Session->setFlash(
-                    $e->getMessage(),
-                    'flash_error'
-                );
+    //             $success = true;
+    //         } catch(UserGroupException $e) {
+    //             $this->Session->setFlash(
+    //                 $e->getMessage(),
+    //                 'flash_error'
+    //             );
 
-                $success = false;
-            }
-        }
+    //             $success = false;
+    //         }
+    //     }
 
-        $this->add($success);
-    }
+    //     $this->add($success);
+    // }
 
     public function add_cert(){
         $success = false;
@@ -581,47 +580,54 @@ class RadusersController extends AppController {
         $this->restoreGroups($this->Raduser->id);
 
         // Radcheck
-        $this->Checks->restore_common_check_fields(
+        $this->Checks->restoreCommonCheckFields(
+            $this->Raduser->id,
+            $this->request,
+            $this->Raduser->is_cisco
+        );
+
+        // Radreply
+        $this->Checks->restoreCommonReplyFields(
             $this->Raduser->id,
             $this->request
         );
     }
 
-    public function edit_cisco($id = null) {
-        $this->Raduser->id = $id;
-        $success = false;
+    // public function edit_cisco($id = null) {
+    //     $this->Raduser->id = $id;
+    //     $success = false;
 
-        if ($this->request->is('get')) {
-            $this->request->data = $this->Raduser->read();
-        } else {
-            try {
-                $this->Raduser->save($this->request->data);
+    //     if ($this->request->is('get')) {
+    //         $this->request->data = $this->Raduser->read();
+    //     } else {
+    //         try {
+    //             $this->Raduser->save($this->request->data);
 
-                // update radchecks fields
-                $checkClassFields = array(
-                    'NAS-Port-Type' => 
-                    $this->request->data['Raduser']['nas-port-type'],
-                    'Cleartext-Password' =>
-                    $this->request->data['Raduser']['passwd']
-                );
-                $this->Checks->updateRadcheckFields(
-                    $id,
-                    $this->request,
-                    $checkClassFields
-                );
-                $this->updateGroups($this->Raduser->id, $this->request);
+    //             // update radchecks fields
+    //             $checkClassFields = array(
+    //                 'NAS-Port-Type' => 
+    //                 $this->request->data['Raduser']['nas-port-type'],
+    //                 'Cleartext-Password' =>
+    //                 $this->request->data['Raduser']['passwd']
+    //             );
+    //             $this->Checks->updateRadcheckFields(
+    //                 $id,
+    //                 $this->request,
+    //                 $checkClassFields
+    //             );
+    //             $this->updateGroups($this->Raduser->id, $this->request);
 
-                $success = true;
-            } catch(UserGroupException $e) {
-                $this->Session->setFlash(
-                    $e->getMessage(),
-                    'flash_error'
-                );
-            }
-        }
+    //             $success = true;
+    //         } catch(UserGroupException $e) {
+    //             $this->Session->setFlash(
+    //                 $e->getMessage(),
+    //                 'flash_error'
+    //             );
+    //         }
+    //     }
 
-        $this->edit($success);
-    }
+    //     $this->edit($success);
+    // }
 
     public function edit_loginpass($id = null) {
         $this->Raduser->id = $id;
@@ -674,6 +680,7 @@ class RadusersController extends AppController {
 
                 $this->updateGroups($this->Raduser->id, $this->request);
                 $this->Checks->updateRadcheckFields($id, $this->request);
+                $this->Checks->updateRadreplyFields($id, $this->request);
 
                 $success = true;
             } catch(UserGroupException $e) {

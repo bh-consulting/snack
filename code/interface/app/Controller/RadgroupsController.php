@@ -161,7 +161,7 @@ class RadgroupsController extends AppController
             $Raduser->find('list', array('fields' => array('username')))
         );
         $this->restoreUsers($this->Radgroup->id);
-        $this->Checks->restore_common_check_fields($id, $this->request);
+        $this->Checks->restoreCommonCheckFields($id, $this->request);
     }
 
 	public function delete ($id = null) {

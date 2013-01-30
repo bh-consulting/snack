@@ -74,22 +74,6 @@ class ChecksComponent extends Component {
     }
 
     /**
-     * Get the index page: list of all entities (users or groups) with its type if user
-     */
-    public function index() {
-        /*TODO: delete is useleff
-        $rads = $this->baseClass->find('all');
-        if($this->baseClassName == 'Raduser'){
-            foreach ($rads as &$r) {
-                $r[$this->baseClassName]['ntype'] = $this->getType($r[$this->baseClassName], true);
-                $r[$this->baseClassName]['type'] = $this->getType($r[$this->baseClassName], false);
-            }
-        }
-        return $rads;
-         */
-    }
-
-    /**
      * Get the details of an entity to display it in a view page
      */
     public function view($id = null) {
@@ -406,6 +390,19 @@ class ChecksComponent extends Component {
             }
         }
 
+        // Delete matching radreplies
+        $rads = $this->getReplies($id);
+        foreach ($rads as $r) {
+            if (!$this->replyClass->delete($r[$this->replyClassName]['id'])) {
+                throw new ReplyRemoveException(
+                    $this->baseClassName,
+                    $id,
+                    $name,
+                    $r[$this->replyClassName]['id']
+                );
+            }
+        }
+
         // Delete user-group relations
         $this->deleteAllUsersOrGroups($id);
 
@@ -528,7 +525,7 @@ class ChecksComponent extends Component {
     /**
      * Restore the check fields of a user or a group
      */
-    public function restore_common_check_fields($id, &$request, $cisco=false)
+    public function restoreCommonCheckFields($id, &$request, $cisco=false)
     {
         // restore values from radchecks
         $rads = $this->getChecks($id);
@@ -539,6 +536,22 @@ class ChecksComponent extends Component {
                 $request->data[$this->baseClassName]['expiration_date'] = $r[$this->checkClassName]['value'];
             } else if($r[$this->checkClassName]['attribute'] == 'Simultaneous-Use'){
                 $request->data[$this->baseClassName]['simultaneous_use'] = $r[$this->checkClassName]['value'];
+            }
+        }
+    }
+
+    /**
+     * Restore the reply fields of a user or a group
+     */
+    public function restoreCommonReplyFields($id, &$request)
+    {
+        // restore values from radreply
+        $rads = $this->getReplies($id);
+        foreach($rads as $r){
+            if($r[$this->replyClassName]['attribute'] == 'Tunnel-Private-Group-Id'){
+                $request->data[$this->baseClassName]['tunnel-private-group-id'] = $r[$this->replyClassName]['value'];
+            } else if($r[$this->replyClassName]['attribute'] == 'Session-Timeout'){
+                $request->data[$this->baseClassName]['session-timeout'] = $r[$this->replyClassName]['value'];
             }
         }
     }
