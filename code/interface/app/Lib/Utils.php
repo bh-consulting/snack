@@ -157,7 +157,9 @@ class Utils {
         );
 
         foreach ($langs as $key => $value) {
-            if(explode(',', $httpAcceptLanguage)[0] == $key) {
+	    $httpAcceptLanguages = explode(',', $httpAcceptLanguage);
+
+            if($httpAcceptLanguages[0] == $key) {
                 return $value;
             }
         }
