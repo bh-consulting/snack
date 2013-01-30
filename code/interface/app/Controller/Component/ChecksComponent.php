@@ -37,7 +37,9 @@ class ChecksComponent extends Component {
 
         // sorry for that...
         $findAllFunc = 'findAllBy' . ucfirst($this->displayName);
-        return $this->checkClass->$findAllFunc($this->baseClass->field($this->displayName));
+        return $this->checkClass->$findAllFunc(
+            $this->baseClass->field($this->displayName)
+        );
     }
 
     /**
@@ -48,7 +50,9 @@ class ChecksComponent extends Component {
 
         // sorry for that...
         $findAllFunc = 'findAllBy' . ucfirst($this->displayName);
-        return $this->replyClass->$findAllFunc($this->baseClass->field($this->displayName));
+        return $this->replyClass->$findAllFunc(
+            $this->baseClass->field($this->displayName)
+        );
     }
 
     /**

@@ -8,7 +8,7 @@ App::import('Model', 'Radusergroup');
  * Controller to handle user management: add, update, remove users.
  */
 class RadusersController extends AppController {
-    public $helpers = array('Html', 'Form', 'JqueryEngine');
+    public $helpers = array('Html', 'Form', 'JqueryEngine', 'Csv');
     public $paginate = array(
         'limit' => 10,
         'order' => array('Raduser.id' => 'asc')
@@ -20,7 +20,8 @@ class RadusersController extends AppController {
             'checkClass' => 'Radcheck',
             'replyClass' => 'Radreply',
         ),
-        'Session'
+        'Session',
+        'RequestHandler'
     );
 
     /**
@@ -96,18 +97,49 @@ class RadusersController extends AppController {
         }
     }
 
+    public function export($userIds) {
+        $usersData = array();
+        $user = new Raduser();
+        foreach (explode(',', $userIds) as $userId) {
+            if (preg_match('#^[0-9]+$#', $userId)) {
+                $user->id = $userId;
+                $user->read();
+                $checks = $this->Checks->getChecks($userId);
+                $replies = $this->Checks->getReplies($userId);
+                $usersData[] = array_merge(
+                    array('type' => 'Raduser'),
+                    $user->data['Raduser']
+                );
+
+                foreach ($checks as $check) {
+                    $usersData[] = array_merge(
+                        array('type' => 'Radcheck'),
+                        $check['Radcheck']
+                    );
+                }
+
+                foreach ($replies as $reply) {
+                    $usersData[] = array_merge(
+                        array('type' => 'Radreply'),
+                        $reply['Radreply']
+                    );
+                }
+            }
+        }
+
+        $this->set('usersData', $usersData);
+        $this->set('filename', 'users_' . date('d-m-Y'));
+    }
+
     /**
      * Export severals users.
      *
      * @param ids - array of user ID.
      */
-    private function multipleExport($ids=array()) {
+    private function multipleExport($ids = array()) {
         if (isset($ids) && is_array($ids)) {
             try {
-                foreach ($ids as $userId) {
-                    //TODO: export multiple users
-                    throw new UserExportException($userId);
-                }
+                $this->redirect(array('action' => 'export', implode(',', $ids) . '.csv'));
 
                 $this->Session->setFlash(
                     __('Users have been exported.'),

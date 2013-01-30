@@ -42,3 +42,5 @@ CakePlugin::routes();
  * the built-in default routes.
  */
 require CAKE . 'Config' . DS . 'routes.php';
+
+Router::parseExtensions('csv');
