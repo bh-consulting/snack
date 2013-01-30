@@ -1,6 +1,51 @@
 #!/bin/bash
 PAQUETNAME=snack
 
+# Guess and set the home path
+# Deviner et définir le chemin vers le home
+if [ -n "$SUDO_USER" ];
+    then
+	USER_HOME=/home/$SUDO_USER
+elif [ -d "/home/tech" ]
+    then
+	USER_HOME=/home/tech
+else
+	USER_HOME=$HOME
+fi
+
+echo "Using home : $USER_HOME"
+
+DESTROOTPATH=$USER_HOME/$PAQUETNAME
+DESTFOLDER=cert
+DESTPATH=$DESTROOTPATH/$DESTFOLDER
+SSLCNF=/etc/ssl/openssl.cnf
+RADIUSPATH=/etc/freeradius
+RADCERTVALIDITY=3650 #ten years
+CACERTVALIDITY=3650 #ten years
+PATHDIRMODE=0070
+ONLYRADIUSACCESS=0700
+INTERFACEACCESS=0770 
+INTERFACETHROUGH=0710
+READINGONLY=0440
+ONLYINTERFACEACCESS=0700
+
+INTERFACEUSER=www-data
+RADIUSUSER=freerad
+
+CAKEY=cakey.pem
+CAREQ=careq.pem
+CACERT=cacert.pem
+
+RADIUSKEY=radius_key.pem
+RADIUSREQ=radius_req.pem
+RADIUSCERT=radius_cert.pem
+
+EAPCONF=${RADIUSPATH}/eap.conf
+SQLCONF=${RADIUSPATH}/sql.conf
+RADIUSDCONF=${RADIUSPATH}/radiusd.conf
+VIRTUALSERVER=${RADIUSPATH}/sites-available/default
+INNERTUNNELVIRTUALSERVER=${RADIUSPATH}/sites-available/inner-tunnel
+
 # www-data sudo configuration
 # Configuration de sudo pour www-data
 # Le svn ne conserve pas les droits, on pourra supprimer cela pour le paquet final
@@ -65,61 +110,17 @@ echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cle
 sed\
 	-e "s/radpass/$mdp_radius/"\
 	-e "s/#\(readclients\)/\1/"\
-	-i /etc/freeradius/sql.conf
+	-i $SQLCONF
 
 sed\
 	-e 's/#\(\s*\$INCLUDE sql\.conf\)/\1/'\
 	-e 's/#\(\s*\$INCLUDE sql\/mysql\/counter.conf\)/\1/'\
 	-e 'N; s/\(#\s*clients\s*=\s*per_socket_clients.*\)\(}\)/\1\tvirtual_server = bh.consulting.net\n\2/'\
 	-e 's/\(\$INCLUDE clients\.conf\)/#\1/'\
-	-i /etc/freeradius/radiusd.conf
+	-i $RADIUSDCONF
 
 ## Certificates
 ## Certificats
-
-# Guess and set the home path
-# Deviner et définir le chemin vers le home
-if [ -n "$SUDO_USER" ];
-    then
-	USER_HOME=/home/$SUDO_USER
-elif [ -d "/home/tech" ]
-    then
-	USER_HOME=/home/tech
-else
-	USER_HOME=$HOME
-fi
-
-echo "Using home : $USER_HOME"
-
-
-DESTROOTPATH=$USER_HOME/$PAQUETNAME
-DESTFOLDER=cert
-DESTPATH=$DESTROOTPATH/$DESTFOLDER
-SSLCNF=/etc/ssl/openssl.cnf
-RADCERTVALIDITY=3650 #ten years
-CACERTVALIDITY=3650 #ten years
-PATHDIRMODE=0070
-ONLYRADIUSACCESS=0700
-INTERFACEACCESS=0770 
-INTERFACETHROUGH=0710
-READINGONLY=0440
-ONLYINTERFACEACCESS=0700
-
-INTERFACEUSER=www-data
-RADIUSUSER=freerad
-
-
-CAKEY=cakey.pem
-CAREQ=careq.pem
-CACERT=cacert.pem
-
-RADIUSKEY=radius_key.pem
-RADIUSREQ=radius_req.pem
-RADIUSCERT=radius_cert.pem
-
-EAPCONF=/etc/freeradius/eap.conf
-DEFAULTVIRTUALSERVER=/etc/freeradius/sites-available/default
-INNERTUNNELVIRTUALSERVER=/etc/freeradius/sites-available/inner-tunnel
 
 # Get the name of the client firm
 # Récupérer le nom de l'entreprise cliente
@@ -130,7 +131,6 @@ read -p "Enter the name of the client (CA common name): " CLIENTNAME
 # Update openssl.cnf configuration
 # Mise à jour de la configuration openssl.cnf
 
-# TODO: cela sert à quoi
 sed\
 	-e "s|./demoCA|$DESTPATH |"\
 	-e "/\s*certificate\s*=/c certificate = \$dir/private/cacert.pem\t"\
@@ -150,7 +150,6 @@ mkdir "${DESTPATH}/crl" -m $INTERFACEACCESS ;
 mkdir "${DESTPATH}/newcerts" -m $INTERFACEACCESS;
 mkdir "${DESTPATH}/private" -m $INTERFACETHROUGH;
 mkdir "${DESTPATH}/users" -m $INTERFACEACCESS;
-# TODO: cela sert à quoi
 touch $DESTPATH/index.txt
 echo "01" > $DESTPATH/crlnumber
 
@@ -230,7 +229,6 @@ chmod $ONLYRADIUSACCESS $DESTPATH/dh
 # onfiguration du fichier eap.conf
 
 # TLS
-# TODO: simplifier les règles
 sed\
         -e "/certdir =/i \\\t\t\tconfdir = $DESTPATH"\
         -e "/certdir =/c \\\t\t\tcertdir = \${confdir}"\
@@ -246,14 +244,14 @@ sed\
         -i $EAPCONF
 
 # By the way, changes for default virtual server and inner-tunnel. Used by EAP-MD5 authentication.
-# TODO: vérifier à quoi ça sert
+# TODO: retirer si déjà dans le serveur virtuel
 sed -e "{N 
 	    s/\s*#  Read the 'users' file\n\s*files/\\t#  Read the 'users' file\n#\\tfiles/
 	    }" \
 	-e "{N
 	    s/\s*#  See \"Authorization Queries\" in sql.conf\n\s*#\s*sql/\\t#  See \"Authorization Queries\" in sql.conf\n\\tsql/
 	    }" \
-	-i $DEFAULTVIRTUALSERVER
+	-i $VIRTUALSERVER
 
 sed -e "{N 
 	    s/\s*#  Read the 'users' file\n\s*files/\\t#  Read the 'users' file\n#\\tfiles/
@@ -267,7 +265,7 @@ sed -e "{N
 # Copie des scripts
 
 mkdir $USER_HOME/$PAQUETNAME/scripts -m $ONLYINTERFACEACCESS
-cp -r scripts/* $USER_HOME/$PAQUETNAME/scripts
+mv /tmp/snack/scripts/* $USER_HOME/$PAQUETNAME/scripts
 
 # Setting approriates permissions
 # Affecter les permissions
@@ -283,13 +281,18 @@ usermod -a -G snack $RADIUSUSER
 usermod -a -G snack $INTERFACEUSER
 chown -R :snack $USER_HOME/$PAQUETNAME
 
+# Delete temporary directory
+# Suppression du dossier temporaire
+
+rm -r /tmp/snack
+
 # Activate syslog for freeradius
 # Active Syslog pour Freeradius
 
 service syslog-ng restart
 sed -e 's/\(destination\s*=\s*\).*$/\1syslog/'\
 	 -e 's/\(syslog_facility\s*=\s*\).*$/\1local2/'\
-	 -i /etc/freeradius/radiusd.conf
+	 -i $RADIUSDCONF
 service freeradius restart
 
 exit 0
