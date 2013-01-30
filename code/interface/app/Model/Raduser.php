@@ -31,8 +31,8 @@ class Raduser extends AppModel {
         ),
         'confirm_password' => array(
             'rule' => array('identicalFieldValues', 'passwd'),
-	    'message' =>
-		'Please re-enter your password twice so that the values match'
+    	    'message' =>
+        		'Please re-enter your password twice so that the values match'
         ),
         'mac' => array(
             'macFormat' => array(
@@ -61,28 +61,43 @@ class Raduser extends AppModel {
                 'message' => 'You have to specify a country.',
                 'allowEmpty' => false,
             ),
-	),
+    	),
         'province' => array(
             'notEmpty' => array(
                 'rule' => 'notEmpty',
                 'message' => 'You have to specify a state or province.',
                 'allowEmpty' => false,
             ),
-	),
+    	),
         'locality' => array(
             'notEmpty' => array(
                 'rule' => 'notEmpty',
                 'message' => 'You have to specify a locality.',
                 'allowEmpty' => false,
             ),
-	),
+    	),
         'organization' => array(
             'notEmpty' => array(
                 'rule' => 'notEmpty',
                 'message' => 'You have to specify an organization.',
                 'allowEmpty' => false,
             ),
-	),
+    	),
+        'simultaneous_use' => array(
+            'rule' => 'decimal',
+            'message' => 'Simultaneous uses has to be a number.',
+            'allowEmpty' => true,
+        ),
+        'tunnel-private-group-id' => array(
+            'rule' => 'decimal',
+            'message' => 'VLAN number has to be a number.',
+            'allowEmpty' => true,
+        ),
+        'session-timeout' => array(
+            'rule' => 'decimal',
+            'message' => 'Session timeout has to be a number.',
+            'allowEmpty' => true,
+        ),
     );
 
     public function identicalFieldValues($field=array(), $compare_field=null) {

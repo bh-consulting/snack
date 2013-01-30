@@ -377,7 +377,8 @@ class RadusersController extends AppController {
         }
 
         // add radchecks for mac auth
-        if(isset($this->request->data['Raduser']['mac_active'])) {
+        if(isset($this->request->data['Raduser']['mac_active'])
+            && !empty($this->request->data['Raduser']['mac_active'])) {
             $mac = $this->request->data['Raduser']['mac_active'];
             $mac = str_replace(':', '', $mac);
             $mac = str_replace('-', '', $mac);
@@ -681,6 +682,7 @@ class RadusersController extends AppController {
                     $this->request,
                     $checkClassFields
                 );
+                $this->Checks->updateRadreplyFields($id, $this->request);
 
                 $this->updateGroups($this->Raduser->id, $this->request);
 
@@ -738,6 +740,7 @@ class RadusersController extends AppController {
 
                 $this->updateGroups($this->Raduser->id, $this->request);
                 $this->Checks->updateRadcheckFields($id, $this->request);
+                $this->Checks->updateRadreplyFields($id, $this->request);
 
                 // If user asks for a new certificate
                 if ($this->request->data['Raduser']['cert_gen'] == 1) {

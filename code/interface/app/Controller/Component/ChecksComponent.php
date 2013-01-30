@@ -198,24 +198,24 @@ class ChecksComponent extends Component {
                 $replies[]= array(
                     $name,
                     'Tunnel-Private-Group-Id',
-                    '=',
+                    ':=',
                     $request->data[$this->baseClassName]['tunnel-private-group-id']
                 );
                 $replies[]= array($name,
                     'Tunnel-Type',
-                    '=',
+                    ':=',
                     'VLAN'
                 );
                 $replies[]= array($name,
                     'Tunnel-Medium-Type',
-                    '=',
+                    ':=',
                     'IEEE-802'
                 );
             }
             $replies[]= array(
                 $name,
                 'Session-Timeout',
-                '=',
+                ':=',
                 $request->data[$this->baseClassName]['session-timeout']
             );
             foreach($replies as $reply){
@@ -432,28 +432,17 @@ class ChecksComponent extends Component {
             foreach($rads as &$r){
                 if($r[$this->checkClassName]['attribute'] == $key){
                     $found = true;
-                    //TODO: delete next commented parts if no error, testing...
-                    // if($r[$this->checkClassName]['value'] != ""){
+                    if(!empty($value)){
                         $r[$this->checkClassName]['value'] = $value;
                         $this->checkClass->save($r);
                         break;
-                    //}
+                    } else {
+                        // delete radcheck
+                        $this->checkClass->delete($r[$this->checkClassName]['id']);
+                    }
                 }
             }
-            // FIXME: doesn't work for new check fields!
             if(!$found && $value!= ""){
-                // TRY FIX (nicolas)
-                /*
-                $r = array($this->checkClassName => array(
-                    'attribute' => $key,
-                    'value' => $value,
-                    'op' => ':=',
-                    $this->displayName => $this->baseClass->field($this->displayName)));
-                if($value != ""){
-                    $this->checkClass->create();
-                    $this->checkClass->save($r);
-                }
-                 */
                 if (!$this->createCheck(
                     $this->baseClass->field($this->displayName),
                     $key,
@@ -484,31 +473,31 @@ class ChecksComponent extends Component {
 
         foreach($fields as $key=>$value){
             $found = false;
+            $tunnelToDelete = false;
             foreach($rads as &$r){
                 if($r[$this->replyClassName]['attribute'] == $key){
                     $found = true;
-                    //TODO: delete next commented parts if no error, testing...
-                    //if($r[$this->replyClassName]['value'] != ""){
+                    if(!empty($value)){
+                        // update radreply
                         $r[$this->replyClassName]['value'] = $value;
                         $this->replyClass->save($r);
                         break;
-                    //}
+                    } else {
+                        // delete radreply
+                        $this->replyClass->delete($r[$this->replyClassName]['id']);
+                        //FIXME, doesn't work
+                        if($key == 'Tunnel-Private-Group-Id'){
+                            $tunnelToDelete = true;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                if($tunnelToDelete && ($key == 'Tunnel-Type' || $key == 'Tunnel-Medium-Type')){
+                    $this->replyClass->delete($r[$this->replyClassName]['id']);
                 }
             }
-            // FIXME: doesn't work for new check fields!
             if(!$found){
-                //Try fix (nicolas)
-                /*
-                $r = array($this->replyClassName => array(
-                    'attribute' => $key,
-                    'value' => $value,
-                    'op' => ':=',
-                    $this->displayName => $this->baseClass->field($this->displayName)));
-                if($value != ""){
-                    $this->replyClass->create();
-                    $this->replyClass->save($r);
-                }
-                 */
                 if (!$this->createReply(
                     $this->baseClass->field($this->displayName),
                     $key,
