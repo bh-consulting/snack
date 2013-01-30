@@ -40,7 +40,13 @@ class SystemDetail extends AppModel
 	/* Gets the uptime of a service or -1 if the service is down. */
 	function checkService( $service ) {
 		$result = $this->execCmd( "ps -e -o comm,etimes | grep " . $service . " | tail -1" );
-		return ( !empty($result) ) ? $this->convertSecTime( preg_split ( "#\s#", $result[0], NULL, PREG_SPLIT_NO_EMPTY )[1] ) : -1;
+		
+		if (!empty($result)) {
+			$ps = preg_split( "#\s#", $result[0], NULL, PREG_SPLIT_NO_EMPTY );
+			return $this->convertSecTime($ps[1]);
+		}
+
+		return -1;
 	}
 
 	/* Gets the current date. */
@@ -52,7 +58,9 @@ class SystemDetail extends AppModel
 
 	/* Gets the system hostname. */
 	public function getHostname() {
-		return $this->readFile( "/proc/sys/kernel/hostname" )[0]; /* Hostname */
+		$readfile = $this->readFile( "/proc/sys/kernel/hostname" );
+
+		return $readfile[0]; /* Hostname */
 	}
 
 	/* Gets the system uptime and idletime. */
