@@ -26,7 +26,19 @@ Modifier le fichier de configuration \emph{/etc/ssl/openssl.cnf} pour changer le
     serial          = $dir/serial           # The current serial number
     crlnumber       = $dir/crlnumber        # the current crl number must be commented out to leave a V1 CRL
     crl             = $dir/crl.pem          # The current CRL
-    private_key     = $dir/private/ca_key.pem# The private key
+    private_key     = $dir/private/ca_key.pem # The private key
+\end{lstlisting}
+
+Dans ce m\^eme fichier, ajouter les sections~:
+
+\begin{lstlisting}
+
+[xpclient_ext]
+extendedKeyUsage=1.3.6.1.5.5.7.3.2
+
+[xpserver_ext]
+extendedKeyUsage=1.3.6.1.5.5.7.3.1
+
 \end{lstlisting}
 
 \subsubsection{Création de l'environnement}
@@ -98,7 +110,7 @@ Générer et signer un certificat pour le Radius, en prenant soin de définir le
 \begin{lstlisting}
 $ openssl genrsa -out dossier_certs/private/radius_key.pem 4096
 $ openssl req -config /etc/ssl/openssl.cnf -new -key dossier_certs/private/radius_key.pem -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=nom_serveur_radius/ -out dossier_certs/private/radius_req.pem -days 3650
-$ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out dossier_certs/private/radius_cert.pem -batch -infiles dossier_certs/private/radius_req.pem
+$ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out dossier_certs/private/radius_cert.pem -batch -extensions xpserver_ext -infiles dossier_certs/private/radius_req.pem
 \end{lstlisting}
 
 \subsubsection{Configuration de Freeradius}
@@ -167,7 +179,12 @@ $ openssl req -config /etc/ssl/openssl.cnf -new -key dossier_certs/users/utilisa
 Signature du certificat, avec le certificat racine créé précédemment~:
 
 \begin{lstlisting}
-$ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out dossier_certs/users/utilisateur1§§_cert.pem -batch -infiles dossier_certs/users/utilisateur1§§_req.pem
+$ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out dossier_certs/users/utilisateur1§§_cert.pem -batch -extensions xpclient_ext -infiles dossier_certs/users/utilisateur1§§_req.pem
+\end{lstlisting}
+
+Export au format p12~:
+\begin{lstlisting}
+$ openssl pkcs12 -password pass: -export -in dossier_certs/users/utilisateur1§§_cert.pem -inkey dossier_certs/users/utilisateurs1§§_key.pem -out dossier_certs/users/utilisateur1.p12 -clcerts
 \end{lstlisting}
 
 Penser à mettre à jour la CRL (cf. section~\ref{gen-crl} page~\pageref{gen-crl}).
@@ -221,6 +238,19 @@ network={
     ca_cert="dossier_certs_utilisateur/cacert.pem"
     client_cert="dossier_certs_utilisateur/utilisateur1§§_cert.pem"
     private_key="dossier_certs_utilisateur/utilisateur1§§_key.pem"
+}
+\end{lstlisting}
+
+Pour TLS, en utilsant un certificat au format p12~: 
+
+\begin{lstlisting}
+network={
+    eap=TLS
+    eapol_flags=0
+    key_mgmt=IEEE8021X
+    identity="utilisateur1"
+    ca_cert="dossier_certs_utilisateur/cacert.pem"
+    private_key="dossier_certs_utilisateur/utilisateur1.p12"
 }
 \end{lstlisting}
 

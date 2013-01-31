@@ -23,6 +23,7 @@ fi
 USERKEY=${USERNAME}_key.pem
 USERCERT=${USERNAME}_cert.pem
 USERREQ=${USERNAME}_req.pem
+USERP12=${USERNAME}.p12
 USERCERTVALIDITY=3650  # 10 years
 
 openssl genrsa -out $USERFILESPATH/$USERKEY 4096
@@ -30,7 +31,10 @@ openssl genrsa -out $USERFILESPATH/$USERKEY 4096
 openssl req -config /etc/ssl/openssl.cnf -new -key $USERFILESPATH/$USERKEY \
         -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=$USERNAME/ \
         -out $USERFILESPATH/$USERREQ -days $USERCERTVALIDITY
-openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out $USERFILESPATH/$USERCERT -batch -infiles $USERFILESPATH/$USERREQ
+openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out $USERFILESPATH/$USERCERT -batch -extensions xpclient_ext -infiles $USERFILESPATH/$USERREQ
+
+openssl pkcs12 -password pass: -export -in $USERFILESPATH/$USERCERT -inkey $USERFILESPATH/$USERKEY -out $USERFILESPATH/$USERP12 -clcerts
+
 
 
 #CRL regeneration. Needed to pass in the revocation test.
