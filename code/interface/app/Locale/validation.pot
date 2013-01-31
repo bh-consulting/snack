@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-01-24 01:08+0000\n"
+"POT-Creation-Date: 2013-01-31 16:49+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -15,11 +15,11 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: Model/Nas.php:validation for field nasname
-msgid "You have to type the NAS IP"
+msgid "You have to type the NAS IP."
 msgstr ""
 
 #: Model/Nas.php:validation for field nasname
-msgid "IP already in the database"
+msgid "IP already in the database."
 msgstr ""
 
 #: Model/Nas.php:validation for field nasname
@@ -27,7 +27,7 @@ msgid "This is not an IP address format."
 msgstr ""
 
 #: Model/Nas.php:validation for field secret
-msgid "You have to type the NAS secret"
+msgid "You have to type the NAS secret."
 msgstr ""
 
 #: Model/Radcheck.php:validation for field username
@@ -51,11 +51,11 @@ msgstr ""
 msgid "Username already used"
 msgstr ""
 
-#: Model/Raduser.php:validation for field password
+#: Model/Raduser.php:validation for field passwd
 msgid "You have to type a password"
 msgstr ""
 
-#: Model/Raduser.php:validation for field password
+#: Model/Raduser.php:validation for field confirm_password
 msgid "Please re-enter your password twice so that the values match"
 msgstr ""
 
@@ -69,5 +69,33 @@ msgstr ""
 
 #: Model/Raduser.php:validation for field mac
 msgid "MAC already used"
+msgstr ""
+
+#: Model/Raduser.php:validation for field country
+msgid "You have to specify a country."
+msgstr ""
+
+#: Model/Raduser.php:validation for field province
+msgid "You have to specify a state or province."
+msgstr ""
+
+#: Model/Raduser.php:validation for field locality
+msgid "You have to specify a locality."
+msgstr ""
+
+#: Model/Raduser.php:validation for field organization
+msgid "You have to specify an organization."
+msgstr ""
+
+#: Model/Raduser.php:validation for field simultaneous_use
+msgid "Simultaneous uses has to be a number."
+msgstr ""
+
+#: Model/Raduser.php:validation for field tunnel-private-group-id
+msgid "VLAN number has to be a number."
+msgstr ""
+
+#: Model/Raduser.php:validation for field session-timeout
+msgid "Session timeout has to be a number."
 msgstr ""
 

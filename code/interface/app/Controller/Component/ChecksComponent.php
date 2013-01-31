@@ -113,7 +113,45 @@ class ChecksComponent extends Component {
      * Create a new reply (radreply or radgroupreply) 
      */
     public function createReply($displayName, $attribute, $op, $value){
-        if($value != "" && $attribute != ""){
+        if(!empty($value) && !empty($attribute)){
+            $reply = new $this->replyClass;
+
+            // create additional replies if vlan id
+            if($attribute == 'Tunnel-Private-Group-Id'){
+                $replyToAdd = array(
+                    $this->displayName => $displayName,
+                    'attribute' => 'Tunnel-Type',
+                    'op' => ':=',
+                    'value' => 'VLAN',
+                );
+
+                $reply->create();
+                if(!$reply->save($replyToAdd)){
+                    throw new ReplyAddException(
+                        $this->baseClassName,
+                        $this->baseClass->id,
+                        $displayName,
+                        'Tunnel-Type := VLAN'
+                    );
+                }
+
+                $replyToAdd = array(
+                    $this->displayName => $displayName,
+                    'attribute' => 'Tunnel-Medium-Type',
+                    'op' => ':=',
+                    'value' => 'IEEE-802',
+                );
+                $reply->create();
+                if(!$reply->save($replyToAdd)){
+                    throw new ReplyAddException(
+                        $this->baseClassName,
+                        $this->baseClass->id,
+                        $displayName,
+                        'Tunnel-Medium-Type := IEEE-802'
+                    );
+                }
+            }
+
             $data = array(
                 $this->displayName => $displayName,
                 'attribute' => $attribute,
@@ -121,12 +159,16 @@ class ChecksComponent extends Component {
                 'value' => $value
             );
 
-            $reply = new $this->replyClass;
             $reply->create();
-            return $reply->save($data);
+            if(!$reply->save($data)){
+                throw new ReplyAddException(
+                    $this->baseClassName,
+                    $this->baseClass->id,
+                    $displayName,
+                    $attribute.$op.$value
+                );
+            }
         }
-
-        return true;
     }
 
     /**
@@ -193,42 +235,22 @@ class ChecksComponent extends Component {
             }
 
             // Add common replies values
-            $replies = array();
-            if (!empty($request->data[$this->baseClassName]['tunnel-private-group-id'])) {
-                $replies[]= array(
+            $replies = array(
+                array(
                     $name,
                     'Tunnel-Private-Group-Id',
                     ':=',
                     $request->data[$this->baseClassName]['tunnel-private-group-id']
-                );
-                $replies[]= array($name,
-                    'Tunnel-Type',
+                ),
+                array(
+                    $name,
+                    'Session-Timeout',
                     ':=',
-                    'VLAN'
-                );
-                $replies[]= array($name,
-                    'Tunnel-Medium-Type',
-                    ':=',
-                    'IEEE-802'
-                );
-            }
-            $replies[]= array(
-                $name,
-                'Session-Timeout',
-                ':=',
-                $request->data[$this->baseClassName]['session-timeout']
+                    $request->data[$this->baseClassName]['session-timeout']
+                ),
             );
             foreach($replies as $reply){
-                if (!$this->createReply($reply[0], $reply[1],
-                    $reply[2], $reply[3])
-                ) {
-                    throw new ReplyAddException(
-                        $this->baseClassName,
-                        $this->baseClass->id,
-                        $name,
-                        $reply[1].$reply[2].$reply[3]
-                    );
-                }
+                $this->createReply($reply[0], $reply[1],$reply[2], $reply[3]);
             }
         }
     }
@@ -473,7 +495,6 @@ class ChecksComponent extends Component {
 
         foreach($fields as $key=>$value){
             $found = false;
-            $tunnelToDelete = false;
             foreach($rads as &$r){
                 if($r[$this->replyClassName]['attribute'] == $key){
                     $found = true;
@@ -485,32 +506,23 @@ class ChecksComponent extends Component {
                     } else {
                         // delete radreply
                         $this->replyClass->delete($r[$this->replyClassName]['id']);
-                        //FIXME, doesn't work
                         if($key == 'Tunnel-Private-Group-Id'){
-                            $tunnelToDelete = true;
-                        } else {
-                            break;
+                            $this->replyClass->deleteAll(array(
+                                'Radreply.username' => $r[$this->replyClassName]['username'],
+                                'Radreply.attribute' => array('Tunnel-Type', 'Tunnel-Medium-Type'),
+                            ));
                         }
+                        break;
                     }
-                }
-                if($tunnelToDelete && ($key == 'Tunnel-Type' || $key == 'Tunnel-Medium-Type')){
-                    $this->replyClass->delete($r[$this->replyClassName]['id']);
                 }
             }
             if(!$found){
-                if (!$this->createReply(
+                $this->createReply(
                     $this->baseClass->field($this->displayName),
                     $key,
                     ':=',//TODO: ceci n'est pas vrai pour tous les attributs (==, =~..)
-                    $value)
-                ) {
-                    throw new ReplyAddException(
-                        $this->baseClassName,
-                        $this->baseClass->id,
-                        $this->baseClass->field($this->displayName),
-                        $key.':='.$value
-                    );
-                }
+                    $value
+                );
             }
         }
     }

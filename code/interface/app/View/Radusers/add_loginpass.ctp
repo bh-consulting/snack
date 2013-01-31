@@ -1,9 +1,9 @@
 <?php
 $this->extend('/Common/radius_sidebar');
 $this->assign('users_active', 'active');
-?>
-<h1><? echo __('Add a user with login / password'); ?></h1>
-<?php
+
+echo '<h1>' . __('Add a user with login / password') . '</h1>';
+
 echo $this->Form->create('Raduser');
 
 echo '<fieldset>';

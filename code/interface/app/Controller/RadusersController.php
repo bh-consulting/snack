@@ -64,8 +64,7 @@ class RadusersController extends AppController {
         $this->set('sortIcons', array(
             'asc' => 'icon-chevron-down',
             'desc' => 'icon-chevron-up')
-        );
-    }
+        );    }
 
     /**
      * Delete severals users.
