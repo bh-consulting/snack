@@ -329,7 +329,7 @@ class RadusersController extends AppController {
      * Add check lines if cisco checkbox is checked or MAC address typed.
      * @param $checks - array of radchecks lines
      */
-    private function addCommonCiscoMacFields(&$checks) {
+    private function setCommonCiscoMacFields(&$checks) {
         $username = $this->request->data['Raduser']['username'];
 
         // add radchecks for cisco user
@@ -345,12 +345,9 @@ class RadusersController extends AppController {
             }
 
             $this->request->data['Raduser']['is_cisco'] = 1;
-            // TODO: delete next line if it's not usefull.
-            // $this->Raduser->data['Raduser']['is_cisco'] = 1;
 
             $nasPortType = $this->request->data['Raduser']['nas-port-type'];
 
-            //TODO: a priori quand on va changer de both vers console/vty, on va ajouter un type de port mais pas supprimer l'autre...
             if($nasPortType == 10){
                 $nasPortTypeRegexp = '0|5|15';
             } else {
@@ -376,11 +373,9 @@ class RadusersController extends AppController {
         }
 
         // add radchecks for mac auth
-        if(isset($this->request->data['Raduser']['mac_active'])
-            && !empty($this->request->data['Raduser']['mac_active'])) {
-            $mac = $this->request->data['Raduser']['mac_active'];
-            $mac = str_replace(':', '', $mac);
-            $mac = str_replace('-', '', $mac);
+        if(isset($this->request->data['Raduser']['calling-station-id'])
+            && !empty($this->request->data['Raduser']['calling-station-id'])) {
+            $mac = Utils::cleanMAC($this->request->data['Raduser']['calling-station-id']);
             $checks[]= array(
                 $username,
                 'Calling-Station-Id',
@@ -426,7 +421,7 @@ class RadusersController extends AppController {
                         $eapType,
                     )
                 );
-                $this->addCommonCiscoMacFields($rads);
+                $this->setCommonCiscoMacFields($rads);
                 $this->Checks->add($this->request, $rads);
 
                 $success = true;
@@ -527,7 +522,7 @@ class RadusersController extends AppController {
                         'TLS'
                     )
                 );
-                $this->addCommonCiscoMacFields($rads);
+                $this->setCommonCiscoMacFields($rads);
                 $this->Checks->add($this->request, $rads);
 
                 $success = true;
@@ -623,43 +618,17 @@ class RadusersController extends AppController {
             $this->Raduser->id,
             $this->request
         );
+
+        // MAC or Cisco properties for active users
+        if($this->request->data['Raduser']['is_cisco']
+            || $this->request->data['Raduser']['is_mac'])
+        {
+            $this->Checks->restoreCommonCiscoMacFields(
+                $this->Raduser->id,
+                $this->request
+            );
+        }
     }
-
-    // public function edit_cisco($id = null) {
-    //     $this->Raduser->id = $id;
-    //     $success = false;
-
-    //     if ($this->request->is('get')) {
-    //         $this->request->data = $this->Raduser->read();
-    //     } else {
-    //         try {
-    //             $this->Raduser->save($this->request->data);
-
-    //             // update radchecks fields
-    //             $checkClassFields = array(
-    //                 'NAS-Port-Type' => 
-    //                 $this->request->data['Raduser']['nas-port-type'],
-    //                 'Cleartext-Password' =>
-    //                 $this->request->data['Raduser']['passwd']
-    //             );
-    //             $this->Checks->updateRadcheckFields(
-    //                 $id,
-    //                 $this->request,
-    //                 $checkClassFields
-    //             );
-    //             $this->updateGroups($this->Raduser->id, $this->request);
-
-    //             $success = true;
-    //         } catch(UserGroupException $e) {
-    //             $this->Session->setFlash(
-    //                 $e->getMessage(),
-    //                 'flash_error'
-    //             );
-    //         }
-    //     }
-
-    //     $this->edit($success);
-    // }
 
     public function edit_loginpass($id = null) {
         $this->Raduser->id = $id;
@@ -669,20 +638,27 @@ class RadusersController extends AppController {
             $this->request->data = $this->Raduser->read();
         } else {
             try {
+                $checksCiscoMac = array();
+                $this->setCommonCiscoMacFields($checksCiscoMac);
+
                 $this->Raduser->save($this->request->data);
 
                 // update radchecks fields
                 $checkClassFields = array(
                     'Cleartext-Password' =>
-                    $this->request->data['Raduser']['passwd']
+                    $this->request->data['Raduser']['passwd'],
+                    'Calling-Station-Id' => $this->request->data['Raduser']['calling-station-id'],
+
                 );
                 $this->Checks->updateRadcheckFields(
                     $id,
                     $this->request,
                     $checkClassFields
                 );
+                // update radreply fields
                 $this->Checks->updateRadreplyFields($id, $this->request);
 
+                // update group list
                 $this->updateGroups($this->Raduser->id, $this->request);
 
                 $success = true;
@@ -709,6 +685,8 @@ class RadusersController extends AppController {
                 );
         } else {
             try {
+                $this->request->data['Raduser']['username'] =
+                    Utils::cleanMAC($this->request->data['Raduser']['username']);
                 $this->Raduser->save($this->request->data);
 
                 $this->updateGroups($this->Raduser->id, $this->request);
@@ -790,6 +768,10 @@ class RadusersController extends AppController {
         $this->redirect(array('action' => 'index'));
     }
 
+    /**
+     * Restore the list of groups of a user (on edit page)
+     * @param  [type] $id user id
+     */
     private function restoreGroups($id) {
         $groupsRecords = $this->Checks->getUserGroups(
             $id, array( 'priority' => 'asc')
@@ -803,6 +785,12 @@ class RadusersController extends AppController {
         $this->set('selectedGroups', $groups);
     }
 
+    /**
+     * Update the groups of a user
+     * @param  [type] $id      user id
+     * @param  [type] $request request where to save the groups
+     * @return [type]          [description]
+     */
     private function updateGroups($id, $request) {
         if (!$this->Checks->deleteAllUsersOrGroups($id)) {
             throw new UserGroupCleanGroupException(

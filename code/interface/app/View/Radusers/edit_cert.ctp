@@ -37,7 +37,7 @@ echo '</fieldset>';
 
 echo '<fieldset>';
 echo '<legend>' . __('Checks') . '</legend>';
-echo $this->Form->input('mac_active', array('label' => __('MAC address')));
+echo $this->Form->input('calling-station-id', array('label' => __('MAC address')));
 echo $this->element('check_common_fields');
 echo $this->element(
     'doubleListsSelector',

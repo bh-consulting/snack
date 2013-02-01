@@ -561,6 +561,38 @@ class ChecksComponent extends Component {
         }
     }
 
+    /**
+     * Restore the MAC or Cisco properties for active users
+     * @param  [type] $id      user id
+     * @param  [type] $request request where to values
+     */
+    public function restoreCommonCiscoMacFields($id, &$request) {
+        if($request->data[$this->baseClassName]['is_cisco']){
+            $request->data[$this->baseClassName]['cisco'] = 1;
+        }
+
+        $rads = $this->getChecks($id);
+        foreach($rads as $r){
+            switch($r[$this->checkClassName]['attribute']){
+                case 'Calling-Station-Id':
+                    $request->data[$this->baseClassName]['calling-station-id'] = Utils::formatMac($r[$this->checkClassName]['value']);
+                    break;
+
+                case 'NAS-Port-Type':
+                    $nasPortType = $r[$this->checkClassName]['value'];
+
+                    if($nasPortType == '0|5|15'){
+                        $request->data[$this->baseClassName]['nas-port-type'] = 10;
+                    } else if(preg_match('/.*0.*/', $r[$this->checkClassName]['value'])){
+                        $request->data[$this->baseClassName]['nas-port-type'] = 0;
+                    } else if(preg_match('/.*5.*/', $r[$this->checkClassName]['value'])){
+                        $request->data[$this->baseClassName]['nas-port-type'] = 5;
+                    }
+                    break;
+            }
+        }
+    }
+
     // FIXME
     public function login()
     {
