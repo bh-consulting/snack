@@ -455,8 +455,24 @@ class ChecksComponent extends Component {
                 if($r[$this->checkClassName]['attribute'] == $key){
                     $found = true;
                     if(!empty($value)){
+                        $oldValue = $r[$this->checkClassName]['value'];
                         $r[$this->checkClassName]['value'] = $value;
+
+                        // check if that was a cisco user that was deleted
+                        // TODO: test!!
+                        if($key == 'NAS-Port-Type'
+                            && preg_match('/[05]/', $oldValue)
+                            && $value == '15'
+                            && !isset($request->data[$this->baseClassName]['is_loginpass'])
+                        ){
+                            $this->checkClass->deleteAll(array(
+                                'Radcheck.username' => $r[$this->checkClassName]['username'],
+                                'Radcheck.attribute' => 'Cleartext-Password',
+                            ));
+                        }
+
                         $this->checkClass->save($r);
+                        
                         break;
                     } else {
                         // delete radcheck
@@ -464,7 +480,7 @@ class ChecksComponent extends Component {
                     }
                 }
             }
-            if(!$found && $value!= ""){
+            if(!$found && !empty($value)){
                 if (!$this->createCheck(
                     $this->baseClass->field($this->displayName),
                     $key,

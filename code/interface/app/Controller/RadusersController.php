@@ -329,21 +329,20 @@ class RadusersController extends AppController {
      * Add check lines if cisco checkbox is checked or MAC address typed.
      * @param $checks - array of radchecks lines
      */
-    private function setCommonCiscoMacFields(&$checks) {
+    private function setCommonCiscoMacFields(&$checks=array()) {
         $username = $this->request->data['Raduser']['username'];
+
+        // retrieve nas-port-type check
+        $nasPortTypeIndex = -1;
+        for($i = 0; $i < count($checks); $i++){
+            if($checks[$i][1] == 'NAS-Port-Type'){
+                $nasPortTypeIndex = $i;
+                break;
+            }
+        }
 
         // add radchecks for cisco user
         if($this->request->data['Raduser']['cisco'] == 1){
-
-            // retrieve nas-port-type check
-            $nasPortTypeIndex = -1;
-            for($i = 0; $i < count($checks); $i++){
-                if($checks[$i][1] == 'NAS-Port-Type'){
-                    $nasPortTypeIndex = $i;
-                    break;
-                }
-            }
-
             $this->request->data['Raduser']['is_cisco'] = 1;
 
             $nasPortType = $this->request->data['Raduser']['nas-port-type'];
@@ -370,20 +369,34 @@ class RadusersController extends AppController {
                         $this->request->data['Raduser']['passwd'],
                     );
                 }
+        } else {
+            $checks[$nasPortTypeIndex] = array($username, 'NAS-Port-Type', '=~', '15');
+            $this->request->data['Raduser']['is_cisco'] = 0;
         }
 
         // add radchecks for mac auth
-        if(isset($this->request->data['Raduser']['calling-station-id'])
-            && !empty($this->request->data['Raduser']['calling-station-id'])) {
-            $mac = Utils::cleanMAC($this->request->data['Raduser']['calling-station-id']);
-            $checks[]= array(
-                $username,
-                'Calling-Station-Id',
-                '==',
-                $mac,
-            );
-            $this->request->data['Raduser']['is_mac'] = 1;
+        if(isset($this->request->data['Raduser']['calling-station-id'])){
+            if(!empty($this->request->data['Raduser']['calling-station-id'])) {
+                $mac = Utils::cleanMAC($this->request->data['Raduser']['calling-station-id']);
+                $checks[]= array(
+                    $username,
+                    'Calling-Station-Id',
+                    '==',
+                    $mac,
+                );
+                $this->request->data['Raduser']['is_mac'] = 1;
+            } else {
+                $checks[]= array(
+                    $username,
+                    'Calling-Station-Id',
+                    '==',
+                    "",
+                );
+                $this->request->data['Raduser']['is_mac'] = 0;
+            }
         }
+
+        return $checks;
     }
 
     public function add_loginpass(){
@@ -638,8 +651,7 @@ class RadusersController extends AppController {
             $this->request->data = $this->Raduser->read();
         } else {
             try {
-                $checksCiscoMac = array();
-                $this->setCommonCiscoMacFields($checksCiscoMac);
+                $checksCiscoMac = $this->setCommonCiscoMacFields();
 
                 $this->Raduser->save($this->request->data);
 
@@ -647,14 +659,16 @@ class RadusersController extends AppController {
                 $checkClassFields = array(
                     'Cleartext-Password' =>
                     $this->request->data['Raduser']['passwd'],
-                    'Calling-Station-Id' => $this->request->data['Raduser']['calling-station-id'],
-
                 );
+                foreach ($checksCiscoMac as $c) {
+                    $checkClassFields[$c[1]] = $c[3];
+                }
                 $this->Checks->updateRadcheckFields(
                     $id,
                     $this->request,
                     $checkClassFields
                 );
+
                 // update radreply fields
                 $this->Checks->updateRadreplyFields($id, $this->request);
 
@@ -713,11 +727,20 @@ class RadusersController extends AppController {
             $this->request->data = $this->Raduser->read();
         } else {
             try {
+                $this->request->data['Raduser']['is_cert'] = 1;
+                $checksCiscoMac = $this->setCommonCiscoMacFields();
                 $this->Raduser->save($this->request->data);
 
-                $this->updateGroups($this->Raduser->id, $this->request);
-                $this->Checks->updateRadcheckFields($id, $this->request);
+                // update radchecks fields
+                $checkClassFields = array();
+                foreach ($checksCiscoMac as $c) {
+                    $checkClassFields[$c[1]] = $c[3];
+                }
+                $this->Checks->updateRadcheckFields($id, $this->request, $checkClassFields);
+
                 $this->Checks->updateRadreplyFields($id, $this->request);
+
+                $this->updateGroups($this->Raduser->id, $this->request);
 
                 // If user asks for a new certificate
                 if ($this->request->data['Raduser']['cert_gen'] == 1) {

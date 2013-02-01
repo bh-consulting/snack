@@ -138,11 +138,9 @@ class Raduser extends AppModel {
 
     public function notEmptyIfCiscoOrLoginpass($field=array()) {
         $value = array_shift($field);
-        $this->log('empty value:' . empty($value));
-        $this->log($this->data[$this->name]['is_cisco']);
-        $this->log($this->data[$this->name]['is_loginpass']);
         
-        if ($value == "" && ($this->data[$this->name]['is_cisco'] == 1
+        if (empty($value) 
+            && ($this->data[$this->name]['is_cisco'] == 1
             || $this->data[$this->name]['is_loginpass'] == 1)
         ) {
             return false;
@@ -152,8 +150,8 @@ class Raduser extends AppModel {
 
     public function beforeValidate($options = array()) {
         if (empty($this->data['Raduser']['password'])) {
-	    unset($this->data['Raduser']['password']);
-	}
+    	    unset($this->data['Raduser']['password']);
+    	}
     }
 }
 
