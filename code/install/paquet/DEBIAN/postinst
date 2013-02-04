@@ -1,5 +1,4 @@
 #!/bin/bash
-PAQUETNAME=snack
 
 # Guess and set the home path
 # Deviner et définir le chemin vers le home
@@ -15,43 +14,54 @@ fi
 
 echo "Using home : $USER_HOME"
 
-DESTROOTPATH=$USER_HOME/$PAQUETNAME
-DESTFOLDER=cert
-DESTPATH=$DESTROOTPATH/$DESTFOLDER
-SSLCNF=/etc/ssl/openssl.cnf
-RADIUSPATH=/etc/freeradius
-RADCERTVALIDITY=3650 #ten years
-CACERTVALIDITY=3650 #ten years
-PATHDIRMODE=0070
-ONLYRADIUSACCESS=0700
-INTERFACEACCESS=0770 
-INTERFACETHROUGH=0710
-READINGONLY=0440
-ONLYINTERFACEACCESS=0700
+PAQUETNAME=snack
+DATABASE=radius
+SSL_CONF=/etc/ssl/openssl.cnf
+RADIUS_PATH=/etc/freeradius
+APACHE_PATH=/etc/apache2
 
-INTERFACEUSER=www-data
-RADIUSUSER=freerad
+DEST_ROOT_PATH=$USER_HOME/$PAQUETNAME
+DEST_PATH=$DEST_ROOT_PATH/cert
 
-CAKEY=cakey.pem
-CAREQ=careq.pem
-CACERT=cacert.pem
+RADCERT_VALIDITY=3650 #ten years
+CA_CERT_VALIDITY=3650 #ten years
 
-RADIUSKEY=radius_key.pem
-RADIUSREQ=radius_req.pem
-RADIUSCERT=radius_cert.pem
+ROOT_MODE=0070
+ONLY_RADIUS_ACCESS=0700
+INTERFACE_ACCESS=0770 
+INTERFACE_THROUGH=0710
+READ_ONLY=0440
+ONLY_INTERFACE_ACCESS=0700
 
-EAPCONF=${RADIUSPATH}/eap.conf
-SQLCONF=${RADIUSPATH}/sql.conf
-RADIUSDCONF=${RADIUSPATH}/radiusd.conf
-VIRTUALSERVER=${RADIUSPATH}/sites-available/default
-INNERTUNNELVIRTUALSERVER=${RADIUSPATH}/sites-available/inner-tunnel
+INTERFACE_USER=www-data
+RADIUS_USER=freerad
 
-# www-data sudo configuration
-# Configuration de sudo pour www-data
-# Le svn ne conserve pas les droits, on pourra supprimer cela pour le paquet final
-# TODO :Delete
-chmod 0440 /etc/sudoers.d/snack
-chown root:root /etc/sudoers.d/snack
+CA_KEY=cakey.pem
+CA_REQ=careq.pem
+CA_CERT=cacert.pem
+
+RADIUS_KEY=radius_key.pem
+RADIUS_REQ=radius_req.pem
+RADIUS_CERT=radius_cert.pem
+
+EAP_CONF=${RADIUS_PATH}/eap.conf
+SQL_CONF=${RADIUS_PATH}/sql.conf
+RADIUSD_CONF=${RADIUS_PATH}/radiusd.conf
+
+APACHE_PORTS_CONF=${APACHE_PATH}/ports.conf
+APACHE_SNACK=${APACHE_PATH}/sites-available/snack
+
+# Apache configuration
+# Configuraton du serveur Apache
+
+#TODO: ajouter la ligne uniquement si elle n'existe pas
+sed \
+	-e 'N; s/\(Listen 80\)/\1\nListen 4242/'\
+	-i $APACHE_PORTS_CONF
+
+sed \
+	-e "s/INTERFACE_PATH/${DEST_ROOT_PATH}/"\
+	-i $APACHE_SNACK
 
 # Cleaning the stdin buffer before reading
 # Vider le buffer du stdin avant de lire
@@ -72,37 +82,35 @@ do
     fi
 
     read -t 1 -n 10000 -d '' discard
-    read -s  -p "Define password for mysql user used by freeradius : " mdp_radius
+    read -s  -p "Define administrator password : " mdp_radius
     echo ""
     
     read -t 1 -n 10000 -d '' discard
-    read -s -p "Re enter this password : " mdp_radius_bis
+    read -s -p "Re enter administrator password : " mdp_radius_bis
     echo ""
 done
 
-echo "	create database radius;\
-	grant all on radius.* to radius@localhost identified by '$mdp_radius';\
+echo "	create database ${DATABASE};\
+	grant all on ${DATABASE}.* to radius@localhost identified by '$mdp_radius';\
 	flush privileges;\
 " | mysql -uroot -p$mdp_root
 
 until [ $? -eq 0 ]
 do
 	read -t 1 -n 10000 -d "" discard
-	read -s -p "Mot de passe root MySQL : " mdp_root
+	read -s -p "Enter MySQL root password : " mdp_root
         echo ""
-	
 
-	echo "	create database radius;\
-		grant all on radius.* to radius@localhost identified by '$mdp_radius';\
+	echo "	create database ${DATABASE};\
+		grant all on ${DATABASE}.* to radius@localhost identified by '$mdp_radius';\
 		flush privileges;\
 	" | mysql -uroot -p$mdp_root
-	
 done
 
-mysql -uroot -p$mdp_root radius < /etc/freeradius/sql/mysql/schema.sql
-mysql -uroot -p$mdp_root radius < /etc/freeradius/sql/mysql/nas.sql
+mysql -uroot -p$mdp_root ${DATABASE} < /etc/freeradius/sql/mysql/schema.sql
+mysql -uroot -p$mdp_root ${DATABASE} < /etc/freeradius/sql/mysql/nas.sql
 
-echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cleartext-Password', ':=', '$mdp_radius');" | mysql -uroot -p$mdp_root radius
+echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cleartext-Password', ':=', '$mdp_radius');" | mysql -uroot -p$mdp_root ${DATABASE}
 
 # Configuration de Radius pour intéragir avec la base de donnée
 # Radius configuration in order to interact with our database
@@ -110,14 +118,14 @@ echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cle
 sed\
 	-e "s/radpass/$mdp_radius/"\
 	-e "s/#\(readclients\)/\1/"\
-	-i $SQLCONF
+	-i $SQL_CONF
 
 sed\
 	-e 's/#\(\s*\$INCLUDE sql\.conf\)/\1/'\
 	-e 's/#\(\s*\$INCLUDE sql\/mysql\/counter.conf\)/\1/'\
 	-e 'N; s/\(#\s*clients\s*=\s*per_socket_clients.*\)\(}\)/\1\tvirtual_server = bh.consulting.net\n\2/'\
 	-e 's/\(\$INCLUDE clients\.conf\)/#\1/'\
-	-i $RADIUSDCONF
+	-i $RADIUSD_CONF
 
 ## Certificates
 ## Certificats
@@ -132,89 +140,105 @@ read -p "Enter the name of the client (CA common name): " CLIENTNAME
 # Mise à jour de la configuration openssl.cnf
 
 sed\
-	-e "s|./demoCA|$DESTPATH |"\
+	-e "s|./demoCA|$DEST_PATH |"\
 	-e "/\s*certificate\s*=/c certificate = \$dir/private/cacert.pem\t"\
-	-i $SSLCNF
-echo "" >> $SSLCNF
+	-i $SSL_CONF
+echo "" >> $SSL_CONF
 
-echo "[xpclient_ext]" >> $SSLCNF
-echo "extendedKeyUsage=1.3.6.1.5.5.7.3.2" >> $SSLCNF
-echo "" >> $SSLCNF
-echo "[xpserver_ext]" >> $SSLCNF
-echo "extendedKeyUsage=1.3.6.1.5.5.7.3.1" >> $SSLCNF
+echo "[xpclient_ext]" >> $SSL_CONF
+echo "extendedKeyUsage=1.3.6.1.5.5.7.3.2" >> $SSL_CONF
+echo "" >> $SSL_CONF
+echo "[xpserver_ext]" >> $SSL_CONF
+echo "extendedKeyUsage=1.3.6.1.5.5.7.3.1" >> $SSL_CONF
 
 # Creation of the needed repertories
 # Création des répertoires nécessaires
 
-if test ! -d $DESTROOTPATH
+if test ! -d $DEST_ROOT_PATH
 then
-	mkdir -p $DESTROOTPATH -m $PATHDIRMODE
+	mkdir -p $DEST_ROOT_PATH -m $ROOT_MODE
 fi
 
-mkdir $DESTPATH -m $INTERFACEACCESS;
-mkdir "${DESTPATH}/certs" -m $INTERFACETHROUGH;
-mkdir "${DESTPATH}/crl" -m $INTERFACEACCESS ;
-mkdir "${DESTPATH}/newcerts" -m $INTERFACEACCESS;
-mkdir "${DESTPATH}/private" -m $INTERFACETHROUGH;
-mkdir "${DESTPATH}/users" -m $INTERFACEACCESS;
-touch $DESTPATH/index.txt
-echo "01" > $DESTPATH/crlnumber
+mkdir $DEST_PATH -m $INTERFACE_ACCESS;
+mkdir "${DEST_PATH}/certs" -m $INTERFACE_THROUGH;
+mkdir "${DEST_PATH}/crl" -m $INTERFACE_ACCESS ;
+mkdir "${DEST_PATH}/newcerts" -m $INTERFACE_ACCESS;
+mkdir "${DEST_PATH}/private" -m $INTERFACE_THROUGH;
+mkdir "${DEST_PATH}/users" -m $INTERFACE_ACCESS;
+touch $DEST_PATH/index.txt
+echo "01" > $DEST_PATH/crlnumber
 
 # Creation of the Authority Certificate (CA)
 # Création du certificat d'autorité (CA)
 
-openssl genrsa -out $DESTPATH/private/$CAKEY 4096 
+openssl genrsa -out $DEST_PATH/private/$CA_KEY 4096 
 
-openssl req -new -key $DESTPATH/private/$CAKEY \
-	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName="$CLIENTNAME"/ \
-	-out $DESTPATH/private/$CAREQ
+openssl req \
+	-new \
+	-key $DEST_PATH/private/$CA_KEY \
+	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName="B.H. Consulting"/commonName="$CLIENTNAME"/ \
+	-out $DEST_PATH/private/$CA_REQ
 
-openssl ca -config /etc/ssl/openssl.cnf \
-	-create_serial -out $DESTPATH/private/$CACERT -days $CACERTVALIDITY -batch \
-	-keyfile $DESTPATH/private/$CAKEY -selfsign \
+openssl ca \
+	-config /etc/ssl/openssl.cnf \
+	-create_serial \
+	-out $DEST_PATH/private/$CA_CERT \
+	-days $CA_CERT_VALIDITY \
+	-batch \
+	-keyfile $DEST_PATH/private/$CA_KEY \
+	-selfsign \
 	-extensions v3_ca \
-	-infiles $DESTPATH/private/$CAREQ
+	-infiles $DEST_PATH/private/$CA_REQ
   
 
 # Setting approriates permissions
 # Affectation des permissions
 
-chown $INTERFACEUSER $DESTPATH/private/$CAKEY
-chmod $INTERFACEACCESS $DESTPATH/private/$CAKEY
-# TODO: vérifier qu'on peut téléchager le CACERT avec le readonly
-chmod $READINGONLY $DESTPATH/private/$CACERT
+chown $INTERFACE_USER $DEST_PATH/private/$CA_KEY
+chmod $INTERFACE_ACCESS $DEST_PATH/private/$CA_KEY
+chmod $READ_ONLY $DEST_PATH/private/$CA_CERT
 
 # Creation of the radius certificate
 # Création du certificat authentifiant le server radius
 
-openssl genrsa -out $DESTPATH/private/$RADIUSKEY 4096
+openssl genrsa -out $DEST_PATH/private/$RADIUS_KEY 4096
 
-openssl req -config /etc/ssl/openssl.cnf -new -key $DESTPATH/private/$RADIUSKEY \
-	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=`hostname`/ \
-	-out $DESTPATH/private/$RADIUSREQ -days $RADCERTVALIDITY
+openssl req \
+	-config /etc/ssl/openssl.cnf -new -key $DEST_PATH/private/$RADIUS_KEY \
+	-subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName="B.H. Consulting"/commonName=`hostname`/ \
+	-out $DEST_PATH/private/$RADIUS_REQ \
+	-days $RADCERT_VALIDITY
 
-openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out $DESTPATH/private/$RADIUSCERT -batch -extensions xpserver_ext -infiles $DESTPATH/private/$RADIUSREQ
+openssl ca \
+	-config /etc/ssl/openssl.cnf \
+	-policy policy_anything \
+	-out $DEST_PATH/private/$RADIUS_CERT \
+	-batch \
+	-extensions xpserver_ext \
+	-infiles $DEST_PATH/private/$RADIUS_REQ
 
-chown $RADIUSUSER $DESTPATH/private/$RADIUSKEY
-chown $RADIUSUSER $DESTPATH/private/$RADIUSCERT
-chmod $ONLYRADIUSACCESS $DESTPATH/private/$RADIUSKEY
-chmod $ONLYRADIUSACCESS $DESTPATH/private/$RADIUSCERT
+chown $RADIUS_USER $DEST_PATH/private/$RADIUS_KEY
+chown $RADIUS_USER $DEST_PATH/private/$RADIUS_CERT
+chmod $ONLY_RADIUS_ACCESS $DEST_PATH/private/$RADIUS_KEY
+chmod $ONLY_RADIUS_ACCESS $DEST_PATH/private/$RADIUS_CERT
 
 # First CRL Generation + link to permit revocation verifications
 # Première génération de la CRL + permission de révocation
 
-openssl ca -config /etc/ssl/openssl.cnf -gencrl -out $DESTPATH/crl/crl.pem
+openssl ca \
+	-config /etc/ssl/openssl.cnf \
+	-gencrl \
+	-out $DEST_PATH/crl/crl.pem
 
-HASH=`openssl x509 -noout -hash -in $DESTPATH/private/$CACERT`
-ln -s $DESTPATH/private/$CACERT $DESTPATH/certs/$HASH.0
-ln -s $DESTPATH/crl/crl.pem $DESTPATH/certs/$HASH.r0
-
+HASH=`openssl x509 -noout -hash -in $DEST_PATH/private/$CA_CERT`
+ln -s $DEST_PATH/private/$CA_CERT $DEST_PATH/certs/$HASH.0
+ln -s $DEST_PATH/crl/crl.pem $DEST_PATH/certs/$HASH.r0
 
 # Setting approriates permissions
 # Affectation des permissions
 
-chown $RADIUSUSER $DESTPATH/crl/crl.pem
-chmod $INTERFACEACCESS $DESTPATH/crl/crl.pem
+chown $RADIUS_USER $DEST_PATH/crl/crl.pem
+chmod $INTERFACE_ACCESS $DEST_PATH/crl/crl.pem
 
 # Now, we configure the radius to use certificates
 # Maintenant, on configure le radius pour qu'il utilise les certificats
@@ -222,71 +246,52 @@ chmod $INTERFACEACCESS $DESTPATH/crl/crl.pem
 # First, we must create those two file
 # On doit d'abord créer ces deux fichiers
 
-dd if=/dev/urandom of=$DESTPATH/random count=2
-openssl dhparam -check -text -5 1024 -out $DESTPATH/dh
+dd if=/dev/urandom of=$DEST_PATH/random count=2
+openssl dhparam -check -text -5 1024 -out $DEST_PATH/dh
 
 # Setting approriates permissions
 # Affectation des permissions
 
-chown $RADIUSUSER $DESTPATH/random
-chown $RADIUSUSER $DESTPATH/dh
-chmod $ONLYRADIUSACCESS $DESTPATH/random
-chmod $ONLYRADIUSACCESS $DESTPATH/dh
+chown $RADIUS_USER $DEST_PATH/random
+chown $RADIUS_USER $DEST_PATH/dh
+chmod $ONLY_RADIUS_ACCESS $DEST_PATH/random
+chmod $ONLY_RADIUS_ACCESS $DEST_PATH/dh
 
 # Setting the eap.conf file
 # onfiguration du fichier eap.conf
 
 # TLS
 sed\
-        -e "/certdir =/i \\\t\t\tconfdir = $DESTPATH"\
+        -e "/certdir =/i \\\t\t\tconfdir = $DEST_PATH"\
         -e "/certdir =/c \\\t\t\tcertdir = \${confdir}"\
         -e "/cadir =/c \\\t\t\tcadir = \${confdir}/private"\
         -e "/private_key_password =/c \\\t\t\tprivate_key_password ="\
-        -e "/private_key_file =/c \\\t\t\tprivate_key_file = \${cadir}/$RADIUSKEY"\
-        -e "/^\s*certificate_file =/c \\\t\t\tcertificate_file = \${cadir}/$RADIUSCERT"\
-        -e "/^\s*CA_file =/c \\\t\t\tCA_file = \${cadir}/$CACERT"\
+        -e "/private_key_file =/c \\\t\t\tprivate_key_file = \${cadir}/$RADIUS_KEY"\
+        -e "/^\s*certificate_file =/c \\\t\t\tcertificate_file = \${cadir}/$RADIUS_CERT"\
+        -e "/^\s*CA_file =/c \\\t\t\tCA_file = \${cadir}/$CA_CERT"\
         -e "/dh_file =/c \\\t\t\tdh_file = \${certdir}/dh"\
         -e "/check_crl =/c \\\t\t\tcheck_crl = yes"\
         -e "/^\s*#*CA_path =/c \\\t\t\tCA_path = \${certdir}/certs"\
         -e "/^\s*#*\s*check_cert_cn =/c \\\t\t\tcheck_cert_cn = %{User-Name}"\
-        -i $EAPCONF
-
-# By the way, changes for default virtual server and inner-tunnel. Used by EAP-MD5 authentication.
-# TODO: retirer si déjà dans le serveur virtuel
-sed -e "{N 
-	    s/\s*#  Read the 'users' file\n\s*files/\\t#  Read the 'users' file\n#\\tfiles/
-	    }" \
-	-e "{N
-	    s/\s*#  See \"Authorization Queries\" in sql.conf\n\s*#\s*sql/\\t#  See \"Authorization Queries\" in sql.conf\n\\tsql/
-	    }" \
-	-i $VIRTUALSERVER
-
-sed -e "{N 
-	    s/\s*#  Read the 'users' file\n\s*files/\\t#  Read the 'users' file\n#\\tfiles/
-	    }" \
-	-e "{N
-	    s/\s*#  See \"Authorization Queries\" in sql.conf\n\s*#\s*sql/\\t#  See \"Authorization Queries\" in sql.conf\n\\tsql/
-	    }" \
-	-i $INNERTUNNELVIRTUALSERVER
+        -i $EAP_CONF
 
 # Copy scripts version
 # Copie des scripts
 
-mkdir $USER_HOME/$PAQUETNAME/scripts -m $ONLYINTERFACEACCESS
-mv /tmp/snack/scripts/* $USER_HOME/$PAQUETNAME/scripts
+mv /tmp/snack/scripts $USER_HOME/$PAQUETNAME
 
 # Setting approriates permissions
 # Affecter les permissions
 
-chown -R $INTERFACEUSER $USER_HOME/$PAQUETNAME/scripts
-chmod -R $ONLYINTERFACEACCESS $USER_HOME/$PAQUETNAME/scripts
+chown -R $INTERFACE_USER $USER_HOME/$PAQUETNAME/scripts
+chmod -R $ONLY_INTERFACE_ACCESS $USER_HOME/$PAQUETNAME/scripts
 
 # Setting access groups to include web interface and radius
 # Nouveau groupe regroupant l'interface et le radius
 
 groupadd snack
-usermod -a -G snack $RADIUSUSER
-usermod -a -G snack $INTERFACEUSER
+usermod -a -G snack $RADIUS_USER
+usermod -a -G snack $INTERFACE_USER
 chown -R :snack $USER_HOME/$PAQUETNAME
 
 # Delete temporary directory
@@ -298,9 +303,10 @@ rm -r /tmp/snack
 # Active Syslog pour Freeradius
 
 service syslog-ng restart
-sed -e 's/\(destination\s*=\s*\).*$/\1syslog/'\
-	 -e 's/\(syslog_facility\s*=\s*\).*$/\1local2/'\
-	 -i $RADIUSDCONF
+sed\
+	-e 's/\(destination\s*=\s*\).*$/\1syslog/'\
+	-e 's/\(syslog_facility\s*=\s*\).*$/\1local2/'\
+	-i $RADIUSD_CONF
 service freeradius restart
 
 exit 0
