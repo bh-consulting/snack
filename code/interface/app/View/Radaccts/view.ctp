@@ -1,6 +1,6 @@
 <? 
 $this->extend('/Common/radius_sidebar');
-$this->assign('monitoring_active', 'active');
+$this->assign('session_active', 'active');
 ?>
 <h2><? echo __('Session:') . ' ' . h($radacct['Radacct']['acctuniqueid']); ?></h2>
 

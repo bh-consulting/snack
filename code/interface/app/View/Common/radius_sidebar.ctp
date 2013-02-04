@@ -18,9 +18,9 @@
 		<i class="icon-chevron-right"></i>
 	    </a>
 	</li>
-	<li class="<?php echo $this->fetch('monitoring_active'); ?>">
+	<li class="<?php echo $this->fetch('session_active'); ?>">
 	    <a href="/interface/radaccts/">
-		<i class="icon-ok"></i> <?php echo __('Monitoring'); ?>
+		<i class="icon-ok"></i> <?php echo __('Session'); ?>
 		<i class="icon-chevron-right"></i>
 	    </a>
 	</li>

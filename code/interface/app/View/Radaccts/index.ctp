@@ -1,6 +1,6 @@
 <?php
 $this->extend('/Common/radius_sidebar');
-$this->assign('monitoring_active', 'active');
+$this->assign('session_active', 'active');
 ?>
 
 <h1><?php echo __('Sessions'); ?></h1>
