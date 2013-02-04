@@ -67,17 +67,17 @@ class DATABASE_CONFIG {
 		'password' => 'radiusroxx',
 		'database' => 'raddb',
 		'prefix' => '',
-		//'encoding' => 'utf8',
+		'encoding' => 'utf8',
 	);
 
 	public $test = array(
 		'datasource' => 'Database/Mysql',
 		'persistent' => false,
 		'host' => 'localhost',
-		'login' => 'user',
-		'password' => 'password',
-		'database' => 'test_database_name',
+		'login' => 'radius',
+		'password' => 'radiusroxx',
+		'database' => 'test_raddb',
 		'prefix' => '',
-		//'encoding' => 'utf8',
+		'encoding' => 'utf8',
 	);
 }
