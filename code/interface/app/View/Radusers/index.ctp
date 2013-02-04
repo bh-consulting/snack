@@ -22,11 +22,6 @@ echo $this->element('dropdownButton', array(
                 array('action' => 'add_loginpass'),
                 array('escape' => false, 'class' => 'warning_auth')
             ),
-            $this->Html->link(
-                '<i class="icon-plus-sign"></i> ' . __('MAC address'), 
-                array('action' => 'add_mac_active'),
-                array('escape' => false, 'class' => 'dangerous_auth')
-            ),
         ),
         _('Passive') => array(
             $this->Html->link(

@@ -452,60 +452,6 @@ class RadusersController extends AppController {
     }
 
 
-    // TODO: delete if mac active is not supported
-    // public function add_mac_active() {
-    //     $success = false;
-
-    //     if ($this->request->is('post')) {
-    //         try {
-    //             $this->request->data['Raduser']['mac'] = 
-    //                 Utils::cleanMAC($this->request->data['Raduser']['mac']);
-
-    //             $username = $this->request->data['Raduser']['username'];
-    //             $this->request->data['Raduser']['is_mac'] = 1;
-    //             $rads = array(
-    //                 array(
-    //                     $username,
-    //                     'NAS-Port-Type',
-    //                     '==',
-    //                     '15'
-    //                 ),
-    //                 // FIXME to test
-    //                 // array($username,
-    //                 //     'Cleartext-Password',
-    //                 //     ':=',
-    //                 //     $this->request->data['Raduser']['mac']
-    //                 // ),
-    //                 // array($username,
-    //                 //     'EAP-Type',
-    //                 //     ':=',
-    //                 //     'MD5-CHALLENGE'
-    //                 // ),
-    //                 array(
-    //                     $username,
-    //                     'Calling-Station-Id',
-    //                     '==',
-    //                     $this->request->data['Raduser']['mac'],
-    //                 ),
-    //             );
-
-    //             $this->addCommonCiscoMacFields($rads);
-    //             $this->Checks->add($this->request, $rads);
-
-    //             $success = true;
-    //         } catch(UserGroupException $e) {
-    //             $this->Session->setFlash(
-    //                 $e->getMessage(),
-    //                 'flash_error'
-    //             );
-
-    //             $success = false;
-    //         }
-    //     }
-
-    //     $this->add($success);
-    // }
-
     public function add_cert(){
         $success = false;
 
@@ -552,7 +498,7 @@ class RadusersController extends AppController {
         $this->add($success);
     }
 
-    public function add_mac_passive(){
+    public function add_mac(){
         $success = false;
 
         if ($this->request->is('post')) {

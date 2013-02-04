@@ -6,7 +6,7 @@ $this->assign('nas_active', 'active');
 <h1><?php echo __('NAS'); ?></h1>
 <?php
 echo $this->Html->link(
-    '<i class="icon-list icon-white"></i> ' . __('Add a NAS'),
+    '<i class="icon-hdd icon-white"></i> ' . __('Add a NAS'),
     array('controller' => 'nas', 'action' => 'add'),
     array('escape' => false, 'class' => 'btn btn-primary')
 );
