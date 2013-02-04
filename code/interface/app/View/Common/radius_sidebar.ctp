@@ -20,7 +20,7 @@
 	</li>
 	<li class="<?php echo $this->fetch('session_active'); ?>">
 	    <a href="/interface/radaccts/">
-		<i class="icon-ok"></i> <?php echo __('Session'); ?>
+		<i class="icon-ok"></i> <?php echo __('Sessions'); ?>
 		<i class="icon-chevron-right"></i>
 	    </a>
 	</li>

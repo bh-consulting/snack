@@ -181,20 +181,26 @@ class ChecksComponent extends Component {
         if ($request->is('post')) { 
             // add common checks values (expiration date and simultaneous uses)
             $name = $request->data[$this->baseClassName][$this->displayName];
-            $checks = array_merge($checks, array(
-                array(
-                    $name,
-                    'Expiration',
-                    ':=',
-                    $request->data[$this->baseClassName]['expiration_date']
-                ),
-                array(
-                    $name,
-                    'Simultaneous-Use',
-                    ':=',
-                    $request->data[$this->baseClassName]['simultaneous_use']
-                )
-            ));
+            if(isset($request->data[$this->baseClassName]['expiration_date'])){
+                $checks = array_merge($checks, array(
+                    array(
+                        $name,
+                        'Expiration',
+                        ':=',
+                        $request->data[$this->baseClassName]['expiration_date']
+                    ),
+                ));
+            }
+            if(isset($request->data[$this->baseClassName]['simultaneous_use'])){
+                $checks = array_merge($checks, array(
+                    array(
+                        $name,
+                        'Simultaneous-Use',
+                        ':=',
+                        $request->data[$this->baseClassName]['simultaneous_use']
+                    )
+                ));
+            }
 
             $this->baseClass->create();
             if (!$this->baseClass->save($request->data)) {
@@ -235,20 +241,24 @@ class ChecksComponent extends Component {
             }
 
             // Add common replies values
-            $replies = array(
-                array(
+            $replies = array();
+            if(isset($request->data[$this->baseClassName]['tunnel-private-group-id'])){
+                $replies[]= array(
                     $name,
                     'Tunnel-Private-Group-Id',
                     ':=',
                     $request->data[$this->baseClassName]['tunnel-private-group-id']
-                ),
-                array(
+                );
+            }
+            if(isset($request->data[$this->baseClassName]['session-timeout'])){
+                $checks[]= array(
                     $name,
                     'Session-Timeout',
                     ':=',
                     $request->data[$this->baseClassName]['session-timeout']
-                ),
-            );
+                );
+            }
+            
             foreach($replies as $reply){
                 $this->createReply($reply[0], $reply[1],$reply[2], $reply[3]);
             }

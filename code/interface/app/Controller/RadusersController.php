@@ -1,5 +1,6 @@
 <?php
 
+App::uses('AppController', 'Controller');
 App::import('Model', 'Radcheck');
 App::import('Model', 'Radgroup');
 App::import('Model', 'Radusergroup');
@@ -31,17 +32,19 @@ class RadusersController extends AppController {
     public function index() {
         // Multiple delete/export
         if ($this->request->is('post')) {
-            switch ($this->request->data['action']) {
-            case "delete":
-                $this->multipleDelete(
-                    $this->request->data['MultiSelection']['users']
-                );
-                break;
-            case "export":
-                $this->multipleExport(
-                    $this->request->data['MultiSelection']['users']
-                );
-                break;
+            if(isset($this->request->data['action'])){
+                switch ($this->request->data['action']) {
+                    case "delete":
+                        $this->multipleDelete(
+                            $this->request->data['MultiSelection']['users']
+                        );
+                        break;
+                    case "export":
+                        $this->multipleExport(
+                            $this->request->data['MultiSelection']['users']
+                        );
+                        break;
+                }
             }
         }
 
@@ -64,7 +67,8 @@ class RadusersController extends AppController {
         $this->set('sortIcons', array(
             'asc' => 'icon-chevron-down',
             'desc' => 'icon-chevron-up')
-        );    }
+        );
+    }
 
     /**
      * Delete severals users.
@@ -342,7 +346,7 @@ class RadusersController extends AppController {
         }
 
         // add radchecks for cisco user
-        if($this->request->data['Raduser']['cisco'] == 1){
+        if(isset($this->request->data['Raduser']['cisco']) && $this->request->data['Raduser']['cisco'] == 1){
             $this->request->data['Raduser']['is_cisco'] = 1;
 
             $nasPortType = $this->request->data['Raduser']['nas-port-type'];
