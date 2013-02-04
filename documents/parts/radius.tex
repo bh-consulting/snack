@@ -27,6 +27,8 @@ $ sudo cat /etc/freeradius/sql/mysql/schema.sql | mysql -uroot -p§§pass_root_s
 $ sudo cat /etc/freeradius/sql/mysql/nas.sql | mysql -uroot -p§§pass_root_sql radius
 \end{lstlisting}
 
+{\Large\Info} Penser à systématiquement adapter les extraits de commandes ou de configuration proposés qui apparaissent en {\hlc{surbrillance}}.
+
 Afin que Freeradius utilise les tables MySQL pour sa liste d'utilisateurs comme pour sa liste de NAS, adapter le fichier \emph{/etc/freeradius/sql.conf} (la ligne \emph{password} devrait être à changer, et la ligne \emph{readclients} à décommenter)~:
 \begin{lstlisting}
 sql {
@@ -191,6 +193,8 @@ Côté client, installer le paquet suivant~:
 \begin{lstlisting}
 $ sudo apt-get install freeradius-utils
 \end{lstlisting}
+
+{\Large\Info} Un client de type GNU/Linux Debian (ou Ubuntu) sera utilisé pour valider chacune des étapes de cette documentation. Une fois que tout aura été validé, l'infrastructure sera prête à accueillir des clients GNU/Linux comme Microsoft Windows ou Mac OS X.
 
 Puis tenter une authentification avec l'utilisateur créé dans la base de données~:
 

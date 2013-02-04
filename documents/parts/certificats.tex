@@ -10,7 +10,7 @@ Pour l'installer, en super-utilisateur sur le serveur~:
 $ sudo apt-get install openssl
 \end{lstlisting}
 
-Modifier le fichier de configuration \emph{/etc/ssl/openssl.cnf} pour changer le chemin par défaut des certificats créés (\emph{dossier\_certs}), ainsi que la valeur de la clé \emph{certificate} (ligne 10)~:
+Modifier le fichier de configuration \emph{/etc/ssl/openssl.cnf} pour changer le chemin par défaut des certificats créés (\emph{dossier\_certs}), ainsi que la valeur des clés \emph{certificate} et \emph{private\_key} (lignes 10 et 14)~:
 
 \begin{lstlisting}
    [ CA_default ]
@@ -29,16 +29,14 @@ Modifier le fichier de configuration \emph{/etc/ssl/openssl.cnf} pour changer le
     private_key     = $dir/private/ca_key.pem # The private key
 \end{lstlisting}
 
-Dans ce m\^eme fichier, ajouter les sections~:
+Ajouter également ces deux sections à la fin du fichier, nécessaires pour supporter les clients Microsoft Windows~:
 
 \begin{lstlisting}
-
 [xpclient_ext]
 extendedKeyUsage=1.3.6.1.5.5.7.3.2
 
 [xpserver_ext]
 extendedKeyUsage=1.3.6.1.5.5.7.3.1
-
 \end{lstlisting}
 
 \subsubsection{Création de l'environnement}
@@ -99,34 +97,29 @@ $ dd if=/dev/urandom of=dossier_certs/random count=2
 $ openssl dhparam -check -text -5 1024 -out dossier_certs/dh
 \end{lstlisting}
 
-Récupérer le nom de la machine (\emph{nom\_serveur\_radius}) qui héberge le serveur Radius en exécutant la commande suivante~:
-
-\begin{lstlisting}
-$ hostname
-\end{lstlisting}
-
-Générer et signer un certificat pour le Radius, en prenant soin de définir le champ \emph{commonName} à l'aide du nom de la machine du serveur~:
+Générer et signer un certificat pour le Radius (penser à adapter la valeur du champ \emph{commonName} si le certificat n'est pas créé directement sur le serveur du Freeradius)~:
 
 \begin{lstlisting}
 $ openssl genrsa -out dossier_certs/private/radius_key.pem 4096
-$ openssl req -config /etc/ssl/openssl.cnf -new -key dossier_certs/private/radius_key.pem -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=nom_serveur_radius/ -out dossier_certs/private/radius_req.pem -days 3650
+$ openssl req -config /etc/ssl/openssl.cnf -new -key dossier_certs/private/radius_key.pem -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=$(hostname)/ -out dossier_certs/private/radius_req.pem -days 3650
 $ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out dossier_certs/private/radius_cert.pem -batch -extensions xpserver_ext -infiles dossier_certs/private/radius_req.pem
 \end{lstlisting}
 
 \subsubsection{Configuration de Freeradius}
 
-Modifier ou décommenter l'ensemble des paramètres de la section TLS du fichier \emph{/etc/freeradius/eap.conf} de la façon suivante (laisser la valeur par défaut pour les autres)~:
+Adapter les paramètres de la section TLS du fichier \emph{/etc/freeradius/eap.conf} de la façon suivante (laisser la valeur par défaut pour les autres)~:
 
 \begin{lstlisting}
 tls {
 	confdir = dossier_certs 
 	certdir = ${confdir}
 	cadir = ${confdir}/private
+	usersdir = ${confdir}/users
 
 	private_key_password =
 	private_key_file = ${cadir}/radius_key.pem
 	certificate_file = ${cadir}/radius_cert.pem
-	CA_file = ${cadir}/cacert.pem
+	CA_file = ${usersdir}/ca_cert.pem
 	dh_file = ${certdir}/dh
 	random_file = /dev/urandom
 	fragment_size = 1024
@@ -167,13 +160,13 @@ authorize {
 Génération d'une clé pour un utilisateur (\emph{utilisateur1})~:
 
 \begin{lstlisting}
-$ openssl genrsa -out dossier_certs/users/utilisateur1_key.pem 4096
+$ openssl genrsa -out dossier_certs/users/utilisateur1§§_key.pem 4096
 \end{lstlisting}
 
 Génération d'une requête pour faire signer le certificat, en prenant soin de définir le champ \emph{commonName} à l'aide de l'identifiant de l'utilisateur~:
 
 \begin{lstlisting}
-$ openssl req -config /etc/ssl/openssl.cnf -new -key dossier_certs/users/utilisateur1_key.pem -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=utilisateur1/ -out dossier_certs/users/utilisateur1§§_req.pem -days 3650
+$ openssl req -config /etc/ssl/openssl.cnf -new -key dossier_certs/users/utilisateur1§§_key.pem -subj /countryName=FR/stateOrProvinceName=France/localityName=Nancy/organizationName=BHConsulting/commonName=utilisateur1/ -out dossier_certs/users/utilisateur1§§_req.pem -days 3650
 \end{lstlisting}
 
 Signature du certificat, avec le certificat racine créé précédemment~:
@@ -182,10 +175,13 @@ Signature du certificat, avec le certificat racine créé précédemment~:
 $ openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out dossier_certs/users/utilisateur1§§_cert.pem -batch -extensions xpclient_ext -infiles dossier_certs/users/utilisateur1§§_req.pem
 \end{lstlisting}
 
-Export au format p12~:
+Export au format P12 (qui contient à la fois la partie privée et publique du certificat client)~:
+
 \begin{lstlisting}
-$ openssl pkcs12 -password pass: -export -in dossier_certs/users/utilisateur1§§_cert.pem -inkey dossier_certs/users/utilisateurs1§§_key.pem -out dossier_certs/users/utilisateur1.p12 -clcerts
+$ openssl pkcs12 -password pass: -export -in dossier_certs/users/utilisateur1§§_cert.pem -inkey dossier_certs/users/utilisateurs1§§_key.pem -out dossier_certs/users/utilisateur1§§.p12 -clcerts
 \end{lstlisting}
+
+{\Large\Info} Le format P12 est requis par les clients Microsoft Windows, qui ne reconnaissent pas aussi facilement le format PEM. Puisque le format P12 fonctionne également sur les clients GNU/Linux et Mac OS X, il sera systématiquement utilisé dans la suite de cette installation. En outre, ils ont l'avantage de fusionner la partie privée et publique en un seul fichier, ce qui est pratique pour les certificats clients (mais inutilisable pour les certificats serveurs).
 
 Penser à mettre à jour la CRL (cf. section~\ref{gen-crl} page~\pageref{gen-crl}).
 
@@ -203,7 +199,7 @@ En cas d'erreur, il faut donc éditer le fichier \emph{dossier\_certs/index.txt}
 Pour révoquer un certificat (irréversible)~: 
 
 \begin{lstlisting}
-$ openssl ca -config /etc/ssl/openssl.cnf -revoke dossier_certs/users/utilisateur1_cert.pem
+$ openssl ca -config /etc/ssl/openssl.cnf -revoke dossier_certs/users/utilisateur1§§_cert.pem
 \end{lstlisting}
 
 Penser à mettre à jour la CRL (cf. section~\ref{gen-crl} page~\pageref{gen-crl}).
@@ -211,18 +207,21 @@ Penser à mettre à jour la CRL (cf. section~\ref{gen-crl} page~\pageref{gen-crl
 Pour vérifier qu'un certificat a bien été révoqué~:
 
 \begin{lstlisting}
-$ openssl verify -CApath dossier_certs/certs/ -crl_check dossier_certs/users/utilisateur1_cert.pem
+$ openssl verify -CApath dossier_certs/certs/ -crl_check dossier_certs/users/utilisateur1§§_cert.pem
 \end{lstlisting}
+
+{\Large\Info} Pour plus de manipulations avec OpenSSL, consulter la \emph{cheatsheet} du wiki de Samat.org\footnote{\url{http://wiki.samat.org/CheatSheet/OpenSSL}}.
 
 \label{tests-certificats}
 \subsubsection{Test avec un client}
 
-Créer un répertoire pour les certificats (\emph{dossier\_certs\_utilisateur}) de l'utilisateur sur la machine cliente, pour y copier directement trois des fichiers qui ont été générés précédemment~:
+Créer un répertoire pour les certificats (\emph{dossier\_certs\_utilisateur}) de l'utilisateur sur la machine cliente, pour y copier directement deux des fichiers qui ont été générés précédemment~:
 
 \begin{enumerate}
 \item \emph{dossier\_certs/users/ca\_cert.pem} (certificat publique de l'autorité de certification)
-\item \emph{dossier\_certs/utilisateur1\_cert.pem} (certificat publique de l'utilisateur)
-\item \emph{dossier\_certs/utilisateur1\_key.pem} (certificat privé de l'utilisateur)
+\item \emph{dossier\_certs/users/{\hlc{utilisateur1}}.p12} (certificats publique et privé de l'utilisateur)
+%\item \emph{dossier\_certs/users/utilisateur1\_cert.pem} (certificat publique de l'utilisateur)
+%\item \emph{dossier\_certs/users/utilisateur1\_key.pem} (certificat privé de l'utilisateur)
 \end{enumerate}
 
 La configuration du serveur actuelle permet à l'utilisateur de choisir entre un tunnel TLS, TTLS avec MD5 ou PEAP, selon ses exigences de sécurité. Les trois fichiers ci-dessous permettent de tester chacun des modes pour vérifier leur bon fonctionnement.
@@ -235,24 +234,24 @@ network={
     eapol_flags=0
     key_mgmt=IEEE8021X
     identity="utilisateur1"
-    ca_cert="dossier_certs_utilisateur/cacert.pem"
-    client_cert="dossier_certs_utilisateur/utilisateur1§§_cert.pem"
-    private_key="dossier_certs_utilisateur/utilisateur1§§_key.pem"
+    ca_cert="dossier_certs_utilisateur/ca_cert.pem"
+    private_key="dossier_certs_utilisateur/utilisateur1§§.p12"
 }
 \end{lstlisting}
 
-Pour TLS, en utilsant un certificat au format p12~: 
-
-\begin{lstlisting}
-network={
-    eap=TLS
-    eapol_flags=0
-    key_mgmt=IEEE8021X
-    identity="utilisateur1"
-    ca_cert="dossier_certs_utilisateur/cacert.pem"
-    private_key="dossier_certs_utilisateur/utilisateur1.p12"
-}
-\end{lstlisting}
+%À titre d'information, pour faire du TLS sous GNU/Linux sans passer par le format P12~:
+%
+%\begin{lstlisting}
+%network={
+%    eap=TLS
+%    eapol_flags=0
+%    key_mgmt=IEEE8021X
+%    identity="utilisateur1"
+%    ca_cert="dossier_certs_utilisateur/ca_cert.pem"
+%    client_cert="dossier_certs_utilisateur/utilisateur1§§_cert.pem"
+%    private_key="dossier_certs_utilisateur/utilisateur1§§_key.pem"
+%}
+%\end{lstlisting}
 
 Pour TTLS avec un chiffrement MD5 dans le tunnel~:
 
@@ -263,7 +262,7 @@ network={
     key_mgmt=IEEE8021X
     identity="utilisateur1"
     password="pass_utilisateur1"
-    ca_cert="dossier_certs_utilisateur/cacert.pem"
+    ca_cert="dossier_certs_utilisateur/ca_cert.pem"
     phase2="auth=MD5"
 }
 \end{lstlisting}
@@ -277,7 +276,7 @@ network={
     key_mgmt=IEEE8021X
     identity="utilisateur1"
     password="pass_utilisateur1"
-    ca_cert="dossier_certs_utilisateur/cacert.pem"
+    ca_cert="dossier_certs_utilisateur/ca_cert.pem"
     phase2="auth=MSCHAPV2"
 }
 \end{lstlisting}

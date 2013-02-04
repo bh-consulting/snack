@@ -40,7 +40,7 @@ Ajouter la définition d'un serveur Radius (\emph{192.168.1.10})~:
 
 \begin{lstlisting}
 Switch(config)# aaa new-model
-Switch(config)# radius-server host 192.168.1.10 auth-port 1812 key radius_secret
+Switch(config)# radius-server host 192.168.1.10 auth-port 1812 key secret_radius
 \end{lstlisting}
 
 Pour que le commutateur puisse communiquer avec le Radius, il faut lui définir une adresse IP~:
