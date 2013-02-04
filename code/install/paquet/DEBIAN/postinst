@@ -60,7 +60,7 @@ sed \
 	-i $APACHE_PORTS_CONF
 
 sed \
-	-e "s/INTERFACE_PATH/${DEST_ROOT_PATH}/"\
+	-e "s|INTERFACE_PATH|${DEST_ROOT_PATH}|"\
 	-i $APACHE_SNACK
 
 # Cleaning the stdin buffer before reading
