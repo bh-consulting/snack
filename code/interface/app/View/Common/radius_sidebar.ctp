@@ -1,46 +1,95 @@
 <div class="span3">
     <ul class="nav nav-list bs-sidenav affix">
 	<li class="<?php echo $this->fetch('users_active'); ?>">
-	    <a href="/interface/radusers/">
-		<i class="icon-user"></i> <?php echo __('Users'); ?>
-		<i class="icon-chevron-right"></i>
-	    </a>
+<?php
+echo $this->Html->link(
+    '<i class="icon-user"></i> ' . __('Users')
+    . '<i class="icon-chevron-right"></i>',
+    array(
+        'controller' => 'Radusers',
+        'action' => 'index',
+    ),
+    array('escape' => false)
+);
+?>
 	</li>
 	<li class="<?php echo $this->fetch('groups_active'); ?>">
-	    <a href="/interface/radgroups/">
-		<i class="icon-list"></i> <?php echo __('Groups'); ?>
-		<i class="icon-chevron-right"></i>
-	    </a>
+<?php
+echo $this->Html->link(
+    '<i class="icon-list"></i> ' . __('Groups')
+    . '<i class="icon-chevron-right"></i>',
+    array(
+        'controller' => 'Radgroups',
+        'action' => 'index',
+    ),
+    array('escape' => false)
+);
+?>
 	</li>
 	<li class="<?php echo $this->fetch('nas_active'); ?>">
-	    <a href="/interface/nas/">
-		<i class="icon-hdd"></i> <?php echo __('NAS'); ?>
-		<i class="icon-chevron-right"></i>
-	    </a>
+<?php
+echo $this->Html->link(
+    '<i class="icon-hdd"></i> ' . __('NAS')
+    . '<i class="icon-chevron-right"></i>',
+    array(
+        'controller' => 'Nas',
+        'action' => 'index',
+    ),
+    array('escape' => false)
+);
+?>
 	</li>
 	<li class="<?php echo $this->fetch('session_active'); ?>">
-	    <a href="/interface/radaccts/">
-		<i class="icon-ok"></i> <?php echo __('Sessions'); ?>
-		<i class="icon-chevron-right"></i>
-	    </a>
+<?php
+echo $this->Html->link(
+    '<i class="icon-ok"></i> ' . __('Sessions')
+    . '<i class="icon-chevron-right"></i>',
+    array(
+        'controller' => 'Radaccts',
+        'action' => 'index',
+    ),
+    array('escape' => false)
+);
+?>
 	</li>
 	<li class="<?php echo $this->fetch('logs_active'); ?>">
-	    <a href="/interface/loglines">
-		<i class="icon-list-alt"></i> <?php echo __('Logs'); ?>
-		<i class="icon-chevron-right"></i>
-	</a>
+<?php
+echo $this->Html->link(
+    '<i class="icon-list-alt"></i> ' . __('Logs')
+    . '<i class="icon-chevron-right"></i>',
+    array(
+        'controller' => 'Loglines',
+        'action' => 'index',
+    ),
+    array('escape' => false)
+);
+?>
 	</li>
 	<li class="<?php echo $this->fetch('dashboard_active'); ?>">
-	    <a href="/interface/systemDetails/">
-		<i class="icon-th-large"></i> <?php echo __('Server dashboard'); ?>
-		<i class="icon-chevron-right"></i>
-	    </a>
+<?php
+echo $this->Html->link(
+    '<i class="icon-th-large"></i> ' . __('Server dashboard')
+    . '<i class="icon-chevron-right"></i>',
+    array(
+        'controller' => 'SystemDetails',
+        'action' => 'index',
+    ),
+    array('escape' => false)
+);
+?>
 	</li>
 	<li class="<?php echo $this->fetch('param_active'); ?>">
-	    <a href="/interface/parameters">
-		<i class="icon-wrench"></i> <?php echo __('Server parameters'); ?>
-		<i class="icon-chevron-right"></i>
-	    </a>
+<?php
+echo $this->Html->link(
+    '<i class="icon-wrench"></i> ' . __('Server parameters')
+    . '<i class="icon-chevron-right"></i>',
+    array(
+        'controller' => 'Parameters',
+        'action' => 'index',
+    ),
+    array('escape' => false)
+);
+?>
 	</li>
     </ul>
 </div>

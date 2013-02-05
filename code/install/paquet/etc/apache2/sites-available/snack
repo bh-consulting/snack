@@ -1,0 +1,13 @@
+<VirtualHost *:80>
+	ServerName snack
+	DocumentRoot INTERFACE_PATH
+</VirtualHost>
+
+# TODO: configure SSL
+<VirtualHost *:4443>
+	ServerName snack_ssl
+	DocumentRoot INTERFACE_PATH
+
+	RewriteEngine On
+	RewriteRule ^/?(.*)$ https://%{SERVER_ADDR}/$1
+</VirtualHost>

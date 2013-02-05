@@ -7,8 +7,10 @@ all:
 	sudo dpkg-deb --build paquet_deb Radius-BH-Consulting.deb
 
 install:
+	sudo mkdir /home/pi/snack
+	sudo cp -R ../interface /home/pi/snack/interface
+	sudo chmod 777 -R /home/pi/snack/interface/app/tmp
 	sudo dpkg -i Radius-BH-Consulting.deb || sudo apt-get -y --force-yes -f install
-	sudo cp -R ../interface /home/pi/snack
 	sudo find /home/pi/snack -name .svn -exec rm -r {} +
 
 clean:
@@ -21,4 +23,8 @@ uninstall: clean
 	sudo rm -fr /etc/sudoers.d/snack
 	sudo rm -fr /etc/apache2/sites-available/snack
 	sudo rm -fr /etc/apache2/sites-enabled/snack
-	sudo apt-get autoremove --purge radius-bh-consulting
+	-sudo a2dismod ssl
+	-sudo a2dismod rewrite
+	-sudo ln -s /etc/apache2/sites-available/default /etc/apache2/sites-enabled/000-default
+	-sudo service apache2 restart
+	-sudo apt-get autoremove --purge radius-bh-consulting

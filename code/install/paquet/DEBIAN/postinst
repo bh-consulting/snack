@@ -1,5 +1,9 @@
 #!/bin/bash
 
+###########################
+# Parameters / Paramètres #
+###########################
+
 # Guess and set the home path
 # Deviner et définir le chemin vers le home
 if [ -n "$SUDO_USER" ];
@@ -51,17 +55,11 @@ RADIUSD_CONF=${RADIUS_PATH}/radiusd.conf
 APACHE_PORTS_CONF=${APACHE_PATH}/ports.conf
 APACHE_SNACK=${APACHE_PATH}/sites-available/snack
 
-# Apache configuration
-# Configuraton du serveur Apache
+##############################################################
+# Radius-Mysql configuration / Configuration de Radius-Mysql #
+##############################################################
 
-#TODO: ajouter la ligne uniquement si elle n'existe pas
-sed \
-	-e 'N; s/\(Listen 80\)/\1\nListen 4242/'\
-	-i $APACHE_PORTS_CONF
-
-sed \
-	-e "s|INTERFACE_PATH|${DEST_ROOT_PATH}|"\
-	-i $APACHE_SNACK
+echo "Configuring Mysql..."
 
 # Cleaning the stdin buffer before reading
 # Vider le buffer du stdin avant de lire
@@ -71,52 +69,56 @@ read -t 1 -n 10000 -d "" discard
 # Create database + Add default admin user account
 # Création de la base de donnée + Ajout d'un compte administrateur par défaut
 
-read -s -p "Enter MySQL root password : " mdp_root
+read -s -p "Enter MySQL root password : " PASSWORD_DB_ROOT
 echo ""
 
-while [ -z "$mdp_radius" -o $mdp_radius != $mdp_radius_bis ] 
+while [ -z "${PASSWORD_RADIUS}" -o ${PASSWORD_RADIUS} != ${PASSWORD_RADIUS_BIS} ] 
 do
-    if [ -n "$mdp_radius" ]
+    if [ -n "${PASSWORD_RADIUS}" ]
     then
 	echo "Password not corresponding! "
     fi
 
     read -t 1 -n 10000 -d '' discard
-    read -s  -p "Define administrator password : " mdp_radius
+    read -s  -p "Define administrator password : " PASSWORD_RADIUS
     echo ""
     
     read -t 1 -n 10000 -d '' discard
-    read -s -p "Re enter administrator password : " mdp_radius_bis
+    read -s -p "Re enter administrator password : " PASSWORD_RADIUS_BIS
     echo ""
 done
 
 echo "	create database ${DATABASE};\
-	grant all on ${DATABASE}.* to radius@localhost identified by '$mdp_radius';\
+	grant all on ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
 	flush privileges;\
-" | mysql -uroot -p$mdp_root
+" | mysql -uroot -p${PASSWORD_DB_ROOT}
 
 until [ $? -eq 0 ]
 do
 	read -t 1 -n 10000 -d "" discard
-	read -s -p "Enter MySQL root password : " mdp_root
+	read -s -p "Enter MySQL root password : " PASSWORD_DB_ROOT
         echo ""
 
-	echo "	create database ${DATABASE};\
-		grant all on ${DATABASE}.* to radius@localhost identified by '$mdp_radius';\
+	echo "	CREATE DATABASE ${DATABASE} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;\
+		GRANT ALL ON ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
+		GRANT ALL ON ${DATABASE}.logs to logsfreeradius@localhost identified by 'logsfreeradius';\
 		flush privileges;\
-	" | mysql -uroot -p$mdp_root
+	" | mysql -uroot -p${PASSWORD_DB_ROOT}
 done
 
-mysql -uroot -p$mdp_root ${DATABASE} < /etc/freeradius/sql/mysql/schema.sql
-mysql -uroot -p$mdp_root ${DATABASE} < /etc/freeradius/sql/mysql/nas.sql
+mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /etc/freeradius/sql/mysql/schema.sql
+mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /etc/freeradius/sql/mysql/nas.sql
+mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /tmp/snack/schema.sql
 
-echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cleartext-Password', ':=', '$mdp_radius');" | mysql -uroot -p$mdp_root ${DATABASE}
+echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cleartext-Password', ':=', '${PASSWORD_RADIUS}');" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE}
 
 # Configuration de Radius pour intéragir avec la base de donnée
 # Radius configuration in order to interact with our database
 
+echo "Configuring Radius-Mysql link..."
+
 sed\
-	-e "s/radpass/$mdp_radius/"\
+	-e "s/radpass/${PASSWORD_RADIUS}/"\
 	-e "s/#\(readclients\)/\1/"\
 	-i $SQL_CONF
 
@@ -127,8 +129,11 @@ sed\
 	-e 's/\(\$INCLUDE clients\.conf\)/#\1/'\
 	-i $RADIUSD_CONF
 
-## Certificates
-## Certificats
+##############################
+# Certificates / Certificats #
+##############################
+
+echo "Configuring certificates..."
 
 # Get the name of the client firm
 # Récupérer le nom de l'entreprise cliente
@@ -171,6 +176,8 @@ echo "01" > $DEST_PATH/crlnumber
 # Creation of the Authority Certificate (CA)
 # Création du certificat d'autorité (CA)
 
+echo "Generating CA certificate..."
+
 openssl genrsa -out $DEST_PATH/private/$CA_KEY 4096 
 
 openssl req \
@@ -200,6 +207,8 @@ chmod $READ_ONLY $DEST_PATH/private/$CA_CERT
 
 # Creation of the radius certificate
 # Création du certificat authentifiant le server radius
+
+echo "Generating Radius certificate..."
 
 openssl genrsa -out $DEST_PATH/private/$RADIUS_KEY 4096
 
@@ -260,6 +269,8 @@ chmod $ONLY_RADIUS_ACCESS $DEST_PATH/dh
 # Setting the eap.conf file
 # onfiguration du fichier eap.conf
 
+echo "Configuring TLS/Radius..."
+
 # TLS
 sed\
         -e "/certdir =/i \\\t\t\tconfdir = $DEST_PATH"\
@@ -294,19 +305,48 @@ usermod -a -G snack $RADIUS_USER
 usermod -a -G snack $INTERFACE_USER
 chown -R :snack $USER_HOME/$PAQUETNAME
 
-# Delete temporary directory
-# Suppression du dossier temporaire
+##########
+# Apache #
+##########
 
-rm -r /tmp/snack
+# Apache configuration
+# Configuraton du serveur Apache
+
+sed \
+	-e "s|INTERFACE_PATH|${DEST_ROOT_PATH}/interface|"\
+	-i $APACHE_SNACK
+
+rm -f ${APACHE_PATH}/sites-enabled/000-default
+
+a2enmod ssl
+a2enmod rewrite
+
+#TODO delete sed 'database'
+sed \
+	-e "s/\('password' =>\) '.*'/\1 '${PASSWORD_RADIUS}'/"\
+	-i ${DEST_ROOT_PATH}/interface/app/Config/database.php
+
+##########
+# Syslog #
+##########
+
+echo "Configuring syslog..."
 
 # Activate syslog for freeradius
 # Active Syslog pour Freeradius
 
-service syslog-ng restart
 sed\
 	-e 's/\(destination\s*=\s*\).*$/\1syslog/'\
 	-e 's/\(syslog_facility\s*=\s*\).*$/\1local2/'\
 	-i $RADIUSD_CONF
+
+service syslog-ng restart
 service freeradius restart
+service apache2 restart
+
+# Delete temporary directory
+# Suppression du dossier temporaire
+
+rm -r /tmp/snack
 
 exit 0

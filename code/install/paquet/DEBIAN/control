@@ -3,7 +3,7 @@ Version: 1.0
 Section: base
 Priority: optional
 Architecture: all
-Depends: bash, openssl, freeradius, freeradius-utils, freeradius-mysql, mysql-server, syslog-ng, syslog-ng-mod-sql, libdbd-mysql
+Depends: bash, openssl, freeradius, freeradius-utils, freeradius-mysql, mysql-server, php5, php5-mysql, syslog-ng, syslog-ng-mod-sql, libdbd-mysql
 Maintainer: SNACK Team <nicolas.bouget@esial.net>
 Description: Configuration d'un serveur Radius. Ajout d'une interface.
 
