@@ -6,14 +6,11 @@
 */
 
 class RadusersControllerTest extends ControllerTestCase {
-    public $fixture = array('app.raduser');
+    public $fixtures = array('app.raduser');
 
     public function setUp(){
-        $Radusers = $this->generate('Radusers', array(
-            'models' => array(
-                'Raduser'
-            ),
-        ));
+        parent::setUp();
+        $this->autoMock = true;
     }
 
     public function testIndex() {
@@ -29,23 +26,33 @@ class RadusersControllerTest extends ControllerTestCase {
                 'passwd' => 'lol',
                 'confirm_password' => 'lol',
                 'expiration_date' => '',
-                'simultaneous_use'
+                'simultaneous_use' => '',
             )
         );
         $this->testAction(
             '/radusers/add_loginpass',
             array('data' => $data, 'method' => 'post')
         );
-        $expected1 = array(
-            array('Raduser' => array(
+
+        $expected = array(
+            'Raduser' => array(
                 'username' => 'bob',
-                'is_loginpass' => 1
-            ))
+                'admin' => false,
+                'comment' => null,
+                'is_cisco' => false,
+                'is_loginpass' => true,
+                'is_cert' => false,
+                'is_mac' => false,
+                'cert_path' => null,
+                'id' => 96,
+            )
         );
 
         //$expected2 = array('bob', 'Cleartext-Password', ':=', 'lol');
-        $result = $Radusers->findAll();
-        $this->assertEquals($expected1, $result);
+        $result = $this->controller->Raduser->findByUsername('bob');
+        debug($result);
+        $this->assertEquals($expected, $result);
+        //$this->assertTrue(true);
     }
 }
 

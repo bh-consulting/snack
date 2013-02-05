@@ -50,14 +50,16 @@ class RadusersController extends AppController {
 
         $radusers = $this->paginate('Raduser');
 
-        foreach ($radusers as &$r) {
-            $r['Raduser']['ntype'] = $this->Checks->getType($r['Raduser'], true);
-            $r['Raduser']['type'] = $this->Checks->getType($r['Raduser'], false);
+        if($radusers != null){
+            foreach ($radusers as &$r) {
+                $r['Raduser']['ntype'] = $this->Checks->getType($r['Raduser'], true);
+                $r['Raduser']['type'] = $this->Checks->getType($r['Raduser'], false);
 
-            if( $r['Raduser']['type'] == "mac" ) {
-                $r['Raduser']['username'] = Utils::formatMAC(
-                    $r['Raduser']['username']
-                );
+                if( $r['Raduser']['type'] == "mac" ) {
+                    $r['Raduser']['username'] = Utils::formatMAC(
+                        $r['Raduser']['username']
+                    );
+                }
             }
         }
 
