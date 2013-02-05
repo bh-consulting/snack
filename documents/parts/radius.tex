@@ -27,9 +27,9 @@ $ sudo cat /etc/freeradius/sql/mysql/schema.sql | mysql -uroot -p§§pass_root_s
 $ sudo cat /etc/freeradius/sql/mysql/nas.sql | mysql -uroot -p§§pass_root_sql radius
 \end{lstlisting}
 
-{\Large\Info} Penser à systématiquement adapter les extraits de commandes ou de configuration proposés qui apparaissent en {\hlc{surbrillance}}.
+{\Large\Info} Penser à systématiquement adapter les extraits de commandes ou de configuration proposés qui apparaissent {\hlc{en surbrillance}}.
 
-Afin que Freeradius utilise les tables MySQL pour sa liste d'utilisateurs comme pour sa liste de NAS, adapter le fichier \emph{/etc/freeradius/sql.conf} (la ligne \emph{password} devrait être à changer, et la ligne \emph{readclients} à décommenter)~:
+Afin que Freeradius utilise les tables MySQL pour sa liste d'utilisateurs comme pour sa liste de NAS (\emph{Network Access Server}), adapter le fichier \emph{/etc/freeradius/sql.conf} (la ligne \emph{password} devrait être à changer, et la ligne \emph{readclients} à décommenter)~:
 \begin{lstlisting}
 sql {
         database = "mysql"
@@ -64,100 +64,77 @@ $INCLUDE sql.conf
 $INCLUDE sql/mysql/counter.conf
 \end{lstlisting}
 
-Créer un hôte Radius virtuel, en changeant éventuellement son nom (\emph{snack})~:
+Créer un hôte Radius virtuel (\emph{snack} peut être remplacé par un autre nom) en copiant le contenu suivant dans un fichier \emph{/etc/freeradius/sites-available/snack}~:
 
 \begin{lstlisting}
-$ cd /etc/freeradius/sites-available/
-$ sudo cp default snack
+server snack {
+	authorize {
+		preprocess
+		suffix
+
+		eap {
+			ok = return
+		}
+		sql
+
+		expiration
+		logintime
+	}
+
+	authenticate {
+		eap
+	}
+
+	preacct {
+		preprocess
+		acct_unique
+		suffix
+	}
+
+	accounting {
+		detail
+		radutmp
+		sql
+	}
+
+	session {
+		radutmp
+		sql
+	}
+
+	post-auth {
+		sql
+
+		Post-Auth-Type REJECT {
+			attr_filter.access_reject
+		}
+	}
+
+	pre-proxy {
+	}
+
+	post-proxy {
+		eap
+	}
+}
+\end{lstlisting}
+
+Activer l'hôte virtuel dans Freeradius~:
+
+\begin{lstlisting}
 $ sudo ln -s /etc/freeradius/sites-available/snack /etc/freeradius/sites-enabled/
 \end{lstlisting}
 
-Modifier l'hôte virtuel en éditant le fichier \emph{/etc/freeradius/sites-available/snack} (il devrait y avoir deux \emph{digest} à supprimer, deux \emph{files}, deux \emph{unix}, un \emph{attr\_filter.accounting\_response} et un \emph{exec}, et trois \emph{sql} à décommenter) pour arriver à ce résultat~:
+L'autoriser à écouter par défaut en ajoutant cette ligne à la fin des \textbf{deux} sections \emph{listen} du fichier \emph{/etc/freeradius/radiusd.conf}~:
 
 \begin{lstlisting}
-server snack{
-    authorize {
-        preprocess
-        chap
-        mschap
-        suffix
-        eap{
-            ok = return
-        }
-        sql
-        expiration
-        logintime
-        pap
-    }
-
-    authenticate {
-        Auth-Type PAP {
-            pap
-        }
-
-        Auth-Type CHAP {
-            chap
-        }
-
-        Auth-Type MS-CHAP {
-            mschap
-        }
-
-        eap
-    }
-
-    preacct {
-        preprocess
-        acct_unique
-        suffix
-    }
-
-    accounting {
-        detail
-        radutmp
-        sql
-    }
-
-    session {
-        radutmp
-        sql
-    }
-
-    post-auth {
-        sql
-        exec
-
-        Post-Auth-Type REJECT {
-            attr_filter.access_reject
-        }
-    }
-
-    pre-proxy {
-    }
-
-    post-proxy {
-        eap
-    }
-}
+    virtual_server = snack
 \end{lstlisting}
 
-De la même façon, dans la section \emph{authorize} du fichier \emph{/etc/freeradius/sites-enabled/default}, commenter \emph{files} et décommenter \emph{sql} de cette façon~:
+Enfin, supprimer la configuration par défaut pour ne pas avoir de collisions~:
 
 \begin{lstlisting}
-authorize {
-        preprocess
-        chap
-        mschap
-        suffix
-        eap{
-            ok = return
-        }
-        #files
-        sql
-        expiration
-        logintime
-        pap
-}
+$ sudo rm /etc/freeradius/sites-enabled/default
 \end{lstlisting}
 
 \subsection{Test d'authentification}

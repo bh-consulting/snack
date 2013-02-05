@@ -204,7 +204,7 @@ Switch(config)#username utilisateur_secours password pass_utilisateur_secours
 Switch(config)#enable password pass_enable_secours
 \end{lstlisting}
 
-Tenter une authentification (console, Telnet, SSH ou directement en série) avec l'utilisateur \emph{utilisateur\_secours} et le mot de passe \emph{pass\_utilisateur\_secours}. Puisque le serveur Radius est accessible, elle ne devrait pas fonctionner. Couper le Freeradius (Ctrl-C) et retenter~: l'authentification fonctionne (après un certain temps correspondant à l'attente nécessaire pour le commutateur conclut que le Radius n'est pas accessible) 
+Tenter une authentification (console, Telnet, SSH ou directement en série) avec l'utilisateur \emph{utilisateur\_secours} et le mot de passe \emph{pass\_utilisateur\_secours}. Puisque le serveur Radius est accessible, elle ne devrait pas fonctionner. Couper le Freeradius (Ctrl-C) et retenter~: l'authentification fonctionne (après un certain temps correspondant à l'attente nécessaire pour le commutateur conclut que le Radius n'est pas accessible).
 
 Le mot de passe \emph{pass\_enable\_secours} pourra être utilisé pour passer en mode privilégié lorsque le Radius n'est pas disponible.
 

@@ -1,8 +1,8 @@
 \section{Certificats}
 \subsection{Certificat racine et CRL}
-\subsubsection{Openssl}
+\subsubsection{OpenSSL}
 
-Pour l'instant, les utilisateurs ne peuvent s'authentifier qu'en utilisant un nom d'utilisateur et un mot de passe, avec du MD5. Pour pouvoir proposer des solutions qui apportent plus de sécurité, Openssl peut être utilisé pour générer des certificats.
+Pour l'instant, les utilisateurs ne peuvent s'authentifier qu'en utilisant un nom d'utilisateur et un mot de passe, avec du MD5. Pour pouvoir proposer des solutions qui apportent plus de sécurité, OpenSSL peut être utilisé pour générer des certificats.
 
 Pour l'installer, en super-utilisateur sur le serveur~:
 
@@ -56,7 +56,7 @@ $ echo 01 > dossier_certs/crlnumber
 
 \subsubsection{Génération du certificat racine}
 
-Créer le certificat racine sans passphrase avec Openssl~:
+Créer le certificat racine sans passphrase avec OpenSSL~:
 
 \begin{lstlisting}
 $ openssl genrsa -out dossier_certs/private/ca_key.pem 4096 
