@@ -1,6 +1,6 @@
 CREATE USER 'logsfreeradius'@'localhost' IDENTIFIED BY 'logsfreeradius';
 
-CREATE TABLE logs (
+CREATE TABLE radius.logs (
 	id bigint unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	host varchar(128) default NULL,
 	facility varchar(10) default NULL,
@@ -12,4 +12,4 @@ CREATE TABLE logs (
 	msg text
 );
 
-GRANT ALL ON raddb.logs TO 'logsfreeradius'@'localhost';
+GRANT ALL ON radius.logs TO 'logsfreeradius'@'localhost';

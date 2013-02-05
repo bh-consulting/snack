@@ -7,22 +7,24 @@
 
 class RadusersControllerTest extends ControllerTestCase {
     public $fixtures = array('app.raduser');
+    public $dropTables = false;
 
     public function setUp(){
         parent::setUp();
         $this->autoMock = true;
+        $this->dropTables = false;
     }
 
     public function testIndex() {
         $this->testAction('/radusers/index');
         $this->assertTrue(true);
+        // TODO
     }
 
-    public function testAddLoginPassTtls(){
+    public function testAddLoginPass(){
         $data = array(
             'Raduser' => array(
                 'username' => 'bob',
-                'ttls' => 1,
                 'passwd' => 'lol',
                 'confirm_password' => 'lol',
                 'expiration_date' => '',
@@ -44,7 +46,7 @@ class RadusersControllerTest extends ControllerTestCase {
                 'is_cert' => false,
                 'is_mac' => false,
                 'cert_path' => null,
-                'id' => 96,
+                'id' => 1,
             )
         );
 
@@ -52,7 +54,6 @@ class RadusersControllerTest extends ControllerTestCase {
         $result = $this->controller->Raduser->findByUsername('bob');
         debug($result);
         $this->assertEquals($expected, $result);
-        //$this->assertTrue(true);
     }
 }
 

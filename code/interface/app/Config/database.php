@@ -72,7 +72,7 @@ class DATABASE_CONFIG {
 
 	public $test = array(
 		'datasource' => 'Database/Mysql',
-		'persistent' => true,
+		'persistent' => false,
 		'host' => 'localhost',
 		'login' => 'radius',
 		'password' => 'radiusroxx',

@@ -414,7 +414,8 @@ class RadusersController extends AppController {
 
                 $this->request->data['Raduser']['is_loginpass'] = 1;
 
-                if ($this->request->data['Raduser']['ttls'] == 1) {
+                if (isset($this->request->data['Raduser']['ttls'])
+                    && $this->request->data['Raduser']['ttls'] == 1) {
                     $eapType = 'EAP-TTLS';
                 } else {
                     $eapType = 'MD5-CHALLENGE';
