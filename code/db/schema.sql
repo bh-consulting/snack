@@ -11,15 +11,15 @@
 #                                   Mike Machado <mike@innercite.com>     #
 ###########################################################################
 
-CREATE DATABASE raddb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE radius DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE user 'radius'@'localhost' identified by 'radiusroxx';
 
-GRANT ALL ON raddb.* to 'radius'@'localhost';
+GRANT ALL ON radius.* to 'radius'@'localhost';
 
 #
 # Table structure for table 'radacct'
 #
-CREATE TABLE raddb.radacct (
+CREATE TABLE radius.radacct (
   radacctid bigint(21) NOT NULL auto_increment,
   acctsessionid varchar(64) NOT NULL default '',
   acctuniqueid varchar(32) NOT NULL default '',
@@ -61,7 +61,7 @@ CREATE TABLE raddb.radacct (
 # Table structure for table 'radcheck'
 #
 
-CREATE TABLE raddb.radcheck (
+CREATE TABLE radius.radcheck (
   id int(11) unsigned NOT NULL auto_increment,
   username varchar(64) NOT NULL default '',
   attribute varchar(64)  NOT NULL default '',
@@ -75,7 +75,7 @@ CREATE TABLE raddb.radcheck (
 # Table structure for table 'radgroupcheck'
 #
 
-CREATE TABLE raddb.radgroupcheck (
+CREATE TABLE radius.radgroupcheck (
   id int(11) unsigned NOT NULL auto_increment,
   groupname varchar(64) NOT NULL default '',
   attribute varchar(64)  NOT NULL default '',
@@ -89,7 +89,7 @@ CREATE TABLE raddb.radgroupcheck (
 # Table structure for table 'radgroupreply'
 #
 
-CREATE TABLE raddb.radgroupreply (
+CREATE TABLE radius.radgroupreply (
   id int(11) unsigned NOT NULL auto_increment,
   groupname varchar(64) NOT NULL default '',
   attribute varchar(64)  NOT NULL default '',
@@ -103,7 +103,7 @@ CREATE TABLE raddb.radgroupreply (
 # Table structure for table 'radreply'
 #
 
-CREATE TABLE raddb.radreply (
+CREATE TABLE radius.radreply (
   id int(11) unsigned NOT NULL auto_increment,
   username varchar(64) NOT NULL default '',
   attribute varchar(64) NOT NULL default '',
@@ -118,7 +118,7 @@ CREATE TABLE raddb.radreply (
 # Table structure for table 'radusergroup'
 #
 
-CREATE TABLE raddb.radusergroup (
+CREATE TABLE radius.radusergroup (
   username varchar(64) NOT NULL default '',
   groupname varchar(64) NOT NULL default '',
   priority int(11) NOT NULL default '1',
@@ -129,7 +129,7 @@ CREATE TABLE raddb.radusergroup (
 # Table structure for table 'radpostauth'
 #
 
-CREATE TABLE raddb.radpostauth (
+CREATE TABLE radius.radpostauth (
   id int(11) NOT NULL auto_increment,
   username varchar(64) NOT NULL default '',
   pass varchar(64) NOT NULL default '',
@@ -141,7 +141,7 @@ CREATE TABLE raddb.radpostauth (
 #
 # Table structure for table 'nas'
 #
-CREATE TABLE raddb.nas (
+CREATE TABLE radius.nas (
   id int(10) NOT NULL auto_increment,
   nasname varchar(128) NOT NULL,
   shortname varchar(32),
@@ -158,7 +158,7 @@ CREATE TABLE raddb.nas (
 #
 # Table structure for table 'raduser'
 #
-CREATE TABLE raddb.raduser (
+CREATE TABLE radius.raduser (
     id int(11) unsigned NOT NULL auto_increment,
     username varchar(64) NOT NULL default '',
     admin boolean default '0',
@@ -175,7 +175,7 @@ CREATE TABLE raddb.raduser (
 #
 # Table structure for table 'radgroup'
 #
-CREATE TABLE raddb.radgroup (
+CREATE TABLE radius.radgroup (
     id int(11) unsigned NOT NULL auto_increment,
     groupname varchar(64) NOT NULL default '',
     cert_path varchar(255),
