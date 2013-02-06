@@ -1,27 +1,77 @@
 <?php
+App::uses('RadusersController', 'Controller');
 
 /**
-* Test class for RaduserController
-* return => {vars, contents, view, result}
-*/
-
+ * RadusersController Test Case
+ *
+ */
 class RadusersControllerTest extends ControllerTestCase {
-    public $fixtures = array('app.raduser');
-    public $dropTables = false;
 
-    public function setUp(){
-        parent::setUp();
-        $this->autoMock = true;
-        $this->dropTables = false;
-    }
+/**
+ * Fixtures
+ *
+ * @var array
+ */
+	public $fixtures = array(
+		'app.raduser'
+	);
 
-    public function testIndex() {
+/**
+ * testIndex method
+ *
+ * @return void
+ */
+	public function testIndex() {
         $this->testAction('/radusers/index');
         $this->assertTrue(true);
-        // TODO
-    }
+	}
 
-    public function testAddLoginPass(){
+/**
+ * testExport method
+ *
+ * @return void
+ */
+	public function testExport() {
+	}
+
+/**
+ * testView method
+ *
+ * @return void
+ */
+	public function testView() {
+	}
+
+/**
+ * testViewCert method
+ *
+ * @return void
+ */
+	public function testViewCert() {
+	}
+
+/**
+ * testViewLoginpass method
+ *
+ * @return void
+ */
+	public function testViewLoginpass() {
+	}
+
+/**
+ * testViewMac method
+ *
+ * @return void
+ */
+	public function testViewMac() {
+	}
+
+/**
+ * testAddLoginpass method
+ *
+ * @return void
+ */
+	public function testAddLoginpass() {
         $data = array(
             'Raduser' => array(
                 'username' => 'bob',
@@ -50,11 +100,81 @@ class RadusersControllerTest extends ControllerTestCase {
             )
         );
 
-        //$expected2 = array('bob', 'Cleartext-Password', ':=', 'lol');
         $result = $this->controller->Raduser->findByUsername('bob');
         debug($result);
         $this->assertEquals($expected, $result);
-    }
-}
+	}
 
-?>
+/**
+ * testAddCert method
+ *
+ * @return void
+ */
+	public function testAddCert() {
+	}
+
+/**
+ * testAddMac method
+ *
+ * @return void
+ */
+	public function testAddMac() {
+	}
+
+/**
+ * testEditLoginpass method
+ *
+ * @return void
+ */
+	public function testEditLoginpass() {
+	}
+
+/**
+ * testEditMac method
+ *
+ * @return void
+ */
+	public function testEditMac() {
+	}
+
+/**
+ * testEditCert method
+ *
+ * @return void
+ */
+	public function testEditCert() {
+	}
+
+/**
+ * testDelete method
+ *
+ * @return void
+ */
+	public function testDelete() {
+	}
+
+/**
+ * testCreateCertificate method
+ *
+ * @return void
+ */
+	public function testCreateCertificate() {
+	}
+
+/**
+ * testRemoveCertificate method
+ *
+ * @return void
+ */
+	public function testRemoveCertificate() {
+	}
+
+/**
+ * testRenewCertificate method
+ *
+ * @return void
+ */
+	public function testRenewCertificate() {
+	}
+
+}
