@@ -1,10 +1,10 @@
 <?php
 
 class Logline extends AppModel {
-	var $useTable = 'logs';
-	var $primaryKey = 'id';
-	var $displayField = 'msg';
-	var $name = 'Logline';
+	public $useTable = 'logs';
+	public $primaryKey = 'id';
+	public $displayField = 'msg';
+	public $name = 'Logline';
 
 	public $levels = array(
 		'debug' => 'Debug',

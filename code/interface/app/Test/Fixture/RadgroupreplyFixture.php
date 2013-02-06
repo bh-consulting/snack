@@ -1,23 +1,23 @@
 <?php
 /**
- * RadcheckFixture
+ * RadgroupreplyFixture
  *
  */
-class RadcheckFixture extends CakeTestFixture {
+class RadgroupreplyFixture extends CakeTestFixture {
 
 /**
  * Table name
  *
  * @var string
  */
-	public $table = 'radcheck';
+	public $table = 'radgroupreply';
 
 /**
  * Import
  *
  * @var array
  */
-	public $import = array('model' => 'Radcheck', 'connection' => 'test');
+	public $import = array('model' => 'Radgroupreply', 'connection' => 'test');
 
 /**
  * Records
@@ -27,7 +27,7 @@ class RadcheckFixture extends CakeTestFixture {
 	public $records = array(
 		array(
 			'id' => 1,
-			'username' => 'Lorem ipsum dolor sit amet',
+			'groupname' => 'Lorem ipsum dolor sit amet',
 			'attribute' => 'Lorem ipsum dolor sit amet',
 			'op' => '',
 			'value' => 'Lorem ipsum dolor sit amet'
@@ -35,5 +35,3 @@ class RadcheckFixture extends CakeTestFixture {
 	);
 
 }
-
-?>

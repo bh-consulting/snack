@@ -1,14 +1,37 @@
 <?php
+/**
+ * RadreplyFixture
+ *
+ */
+class RadreplyFixture extends CakeTestFixture {
 
 /**
-*  f
-*/
-class RadreplyFixture extends CakeTestFixture
-{
-    public $import = 'Radreply';
+ * Table name
+ *
+ * @var string
+ */
+	public $table = 'radreply';
 
-    public $records = array(
-        array('id' => 1, 'username' => 'a'),
-        array('id' => 2, 'username' => 'b'),
-    );
+/**
+ * Import
+ *
+ * @var array
+ */
+	public $import = array('model' => 'Radreply', 'connection' => 'test');
+
+/**
+ * Records
+ *
+ * @var array
+ */
+	public $records = array(
+		array(
+			'id' => 1,
+			'username' => 'Lorem ipsum dolor sit amet',
+			'attribute' => 'Lorem ipsum dolor sit amet',
+			'op' => '',
+			'value' => 'Lorem ipsum dolor sit amet'
+		),
+	);
+
 }
