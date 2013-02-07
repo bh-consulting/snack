@@ -16,13 +16,12 @@ else
 	USER_HOME=$HOME
 fi
 
-echo "Using home : $USER_HOME"
-
 PAQUETNAME=snack
 DATABASE=radius
 SSL_CONF=/etc/ssl/openssl.cnf
 RADIUS_PATH=/etc/freeradius
 APACHE_PATH=/etc/apache2
+NULL=/dev/null
 
 DEST_ROOT_PATH=$USER_HOME/$PAQUETNAME
 DEST_PATH=$DEST_ROOT_PATH/cert
@@ -55,73 +54,95 @@ RADIUSD_CONF=${RADIUS_PATH}/radiusd.conf
 APACHE_PORTS_CONF=${APACHE_PATH}/ports.conf
 APACHE_SNACK=${APACHE_PATH}/sites-available/snack
 
+STEP=1
+GAUGE=0
+
+whiptail --title SNACK --infobox "\nWelcome !\n\nYou are installing SNACK." 10 70 10 70
+sleep 1
+
 ##############################################################
 # Radius-Mysql configuration / Configuration de Radius-Mysql #
 ##############################################################
 
-echo "Configuring Mysql..."
-
-# Cleaning the stdin buffer before reading
-# Vider le buffer du stdin avant de lire
-
-read -t 1 -n 10000 -d "" discard
+echo 0 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring Mysql for Radius...Create database." 10 70 0
+sleep 0.5
 
 # Create database + Add default admin user account
 # Création de la base de donnée + Ajout d'un compte administrateur par défaut
 
-read -s -p "Enter MySQL root password : " PASSWORD_DB_ROOT
-echo ""
+PASSWORD_DB_ROOT=$(whiptail --title SNACK --inputbox "\n\nWhat is the Mysql password for root?" 10 70 3>&1 1>&2 2>&3)
+ 
+if [ $? != 0 ]; then
+	whiptail --title SNACK --msgbox "\n\nUser has canceled the installation!" 10 70
+	exit 1
+fi
 
 while [ -z "${PASSWORD_RADIUS}" -o ${PASSWORD_RADIUS} != ${PASSWORD_RADIUS_BIS} ] 
 do
     if [ -n "${PASSWORD_RADIUS}" ]
     then
-	echo "Password not corresponding! "
+	whiptail --title SNACK --infobox "\n\nError: Password not corresponding!" 10 70
+	sleep 1
     fi
 
-    read -t 1 -n 10000 -d '' discard
-    read -s  -p "Define administrator password : " PASSWORD_RADIUS
-    echo ""
+    PASSWORD_RADIUS=$(whiptail --title SNACK --inputbox "\n\nDefine the password for administrator:" 10 70 3>&1 1>&2 2>&3)
+     
+    if [ $? != 0 ]; then
+	whiptail --title SNACK --msgbox "\n\nUser has canceled the installation!" 10 70
+    	exit 1
+    fi
     
-    read -t 1 -n 10000 -d '' discard
-    read -s -p "Re enter administrator password : " PASSWORD_RADIUS_BIS
-    echo ""
+    PASSWORD_RADIUS_BIS=$(whiptail --title SNACK --inputbox "\n\nRe-enter the password for administrator:" 10 70 3>&1 1>&2 2>&3)
+     
+    if [ $? != 0 ]; then
+	whiptail --title SNACK --msgbox "\n\nUser has canceled the installation!" 10 70
+    	exit 1
+    fi
 done
 
-echo "	create database ${DATABASE};\
-	grant all on ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
+echo "	CREATE DATABASE ${DATABASE} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;\
+	GRANT ALL ON ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
+	GRANT ALL ON ${DATABASE}.logs to logsfreeradius@localhost identified by 'logsfreeradius';\
 	flush privileges;\
-" | mysql -uroot -p${PASSWORD_DB_ROOT}
+" | mysql -uroot -p${PASSWORD_DB_ROOT} > $NULL 2>>errors.log
 
 until [ $? -eq 0 ]
 do
-	read -t 1 -n 10000 -d "" discard
-	read -s -p "Enter MySQL root password : " PASSWORD_DB_ROOT
-        echo ""
+	PASSWORD_DB_ROOT=$(whiptail --title SNACK --inputbox "\n\nError: Cannot create database!\nWhat is the Mysql password for root?" 10 70 3>&1 1>&2 2>&3)
+ 
+	if [ $? != 0 ]; then
+		whiptail --title SNACK --msgbox "\n\nUser has canceled the installation!" 10 70
+		exit 1
+	fi
 
 	echo "	CREATE DATABASE ${DATABASE} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;\
 		GRANT ALL ON ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
 		GRANT ALL ON ${DATABASE}.logs to logsfreeradius@localhost identified by 'logsfreeradius';\
 		flush privileges;\
-	" | mysql -uroot -p${PASSWORD_DB_ROOT}
+	" | mysql -uroot -p${PASSWORD_DB_ROOT} > $NULL 2>>errors.log
 done
 
-mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /etc/freeradius/sql/mysql/schema.sql
-mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /etc/freeradius/sql/mysql/nas.sql
-mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /tmp/snack/schema.sql
+echo 20 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring Mysql for Radius...\nCreate tables." 10 70 0
+
+mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /etc/freeradius/sql/mysql/schema.sql > $NULL 2>>errors.log
+mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /etc/freeradius/sql/mysql/nas.sql > $NULL 2>>errors.log
+mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /tmp/snack/schema.sql > $NULL 2>>errors.log
 
 echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cleartext-Password', ':=', '${PASSWORD_RADIUS}');" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE}
 
+echo 50 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring Mysql for Radius...\nConfigure Freeradius." 10 70 0
+
 # Configuration de Radius pour intéragir avec la base de donnée
 # Radius configuration in order to interact with our database
-
-echo "Configuring Radius-Mysql link..."
 
 sed\
 	-e "s/radpass/${PASSWORD_RADIUS}/"\
 	-e "s/#\(readclients\)/\1/"\
 	-i $SQL_CONF
 
+echo 75 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring Mysql for Radius...\nConfigure Freeradius." 10 70 0
+
+#TODO: change virtual server (bh.consulting.net => snack)
 sed\
 	-e 's/#\(\s*\$INCLUDE sql\.conf\)/\1/'\
 	-e 's/#\(\s*\$INCLUDE sql\/mysql\/counter.conf\)/\1/'\
@@ -129,17 +150,26 @@ sed\
 	-e 's/\(\$INCLUDE clients\.conf\)/#\1/'\
 	-i $RADIUSD_CONF
 
+echo 100 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring Mysql for Radius...\nDone!" 10 70 0
+sleep 0.2
+
+STEP=2
+
 ##############################
 # Certificates / Certificats #
 ##############################
 
-echo "Configuring certificates..."
+echo 0 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius..." 10 70 0
+sleep 0.5
 
-# Get the name of the client firm
-# Récupérer le nom de l'entreprise cliente
+CLIENTNAME=$(whiptail --title SNACK --inputbox "\n\nEnter the name of the client (CA common name):" 10 70 3>&1 1>&2 2>&3)
+     
+if [ $? != 0 ]; then
+	whiptail --title SNACK --msgbox "\n\nUser has canceled the installation!" 10 70
+	exit 1
+fi
 
-read -t 1 -n 10000 -d "" discard
-read -p "Enter the name of the client (CA common name): " CLIENTNAME
+echo 5 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nConfiguring SSL." 10 70 0
 
 # Update openssl.cnf configuration
 # Mise à jour de la configuration openssl.cnf
@@ -155,6 +185,8 @@ echo "extendedKeyUsage=1.3.6.1.5.5.7.3.2" >> $SSL_CONF
 echo "" >> $SSL_CONF
 echo "[xpserver_ext]" >> $SSL_CONF
 echo "extendedKeyUsage=1.3.6.1.5.5.7.3.1" >> $SSL_CONF
+
+echo 10 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nCreate directories." 10 70 0
 
 # Creation of the needed repertories
 # Création des répertoires nécessaires
@@ -173,12 +205,13 @@ mkdir "${DEST_PATH}/users" -m $INTERFACE_ACCESS;
 touch $DEST_PATH/index.txt
 echo "01" > $DEST_PATH/crlnumber
 
+echo 20 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nGenerate certificate authority" 10 70 0
+
 # Creation of the Authority Certificate (CA)
 # Création du certificat d'autorité (CA)
 
-echo "Generating CA certificate..."
-
-openssl genrsa -out $DEST_PATH/private/$CA_KEY 4096 
+{
+openssl genrsa -out $DEST_PATH/private/$CA_KEY 4096
 
 openssl req \
 	-new \
@@ -196,7 +229,9 @@ openssl ca \
 	-selfsign \
 	-extensions v3_ca \
 	-infiles $DEST_PATH/private/$CA_REQ
-  
+} > $NULL 2>>errors.log
+
+echo 30 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nSet permissions." 10 70 0
 
 # Setting approriates permissions
 # Affectation des permissions
@@ -205,11 +240,12 @@ chown $INTERFACE_USER $DEST_PATH/private/$CA_KEY
 chmod $INTERFACE_ACCESS $DEST_PATH/private/$CA_KEY
 chmod $READ_ONLY $DEST_PATH/private/$CA_CERT
 
+echo 35 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nGenerate Freeradius certicate" 10 70 0
+
 # Creation of the radius certificate
 # Création du certificat authentifiant le server radius
 
-echo "Generating Radius certificate..."
-
+{
 openssl genrsa -out $DEST_PATH/private/$RADIUS_KEY 4096
 
 openssl req \
@@ -224,12 +260,20 @@ openssl ca \
 	-out $DEST_PATH/private/$RADIUS_CERT \
 	-batch \
 	-extensions xpserver_ext \
-	-infiles $DEST_PATH/private/$RADIUS_REQ
+	-infiles $DEST_PATH/private/$RADIUS_REQ \
+} > $NULL 2>>errors.log
+
+echo 40 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nSet permissions." 10 70 0
+
+# Setting approriates permissions
+# Affectation des permissions
 
 chown $RADIUS_USER $DEST_PATH/private/$RADIUS_KEY
 chown $RADIUS_USER $DEST_PATH/private/$RADIUS_CERT
 chmod $ONLY_RADIUS_ACCESS $DEST_PATH/private/$RADIUS_KEY
 chmod $ONLY_RADIUS_ACCESS $DEST_PATH/private/$RADIUS_CERT
+
+echo 45 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nCreate certificate revocation list." 10 70 0
 
 # First CRL Generation + link to permit revocation verifications
 # Première génération de la CRL + permission de révocation
@@ -237,7 +281,8 @@ chmod $ONLY_RADIUS_ACCESS $DEST_PATH/private/$RADIUS_CERT
 openssl ca \
 	-config /etc/ssl/openssl.cnf \
 	-gencrl \
-	-out $DEST_PATH/crl/crl.pem
+	-out $DEST_PATH/crl/crl.pem \
+> $NULL 2>>errors.log
 
 HASH=`openssl x509 -noout -hash -in $DEST_PATH/private/$CA_CERT`
 ln -s $DEST_PATH/private/$CA_CERT $DEST_PATH/certs/$HASH.0
@@ -248,6 +293,8 @@ ln -s $DEST_PATH/crl/crl.pem $DEST_PATH/certs/$HASH.r0
 
 chown $RADIUS_USER $DEST_PATH/crl/crl.pem
 chmod $INTERFACE_ACCESS $DEST_PATH/crl/crl.pem
+
+echo 60 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nConfigure random module." 10 70 0
 
 # Now, we configure the radius to use certificates
 # Maintenant, on configure le radius pour qu'il utilise les certificats
@@ -266,10 +313,10 @@ chown $RADIUS_USER $DEST_PATH/dh
 chmod $ONLY_RADIUS_ACCESS $DEST_PATH/random
 chmod $ONLY_RADIUS_ACCESS $DEST_PATH/dh
 
+echo 70 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nConfigure Freeradius TLS authentication." 10 70 0
+
 # Setting the eap.conf file
 # onfiguration du fichier eap.conf
-
-echo "Configuring TLS/Radius..."
 
 # TLS
 sed\
@@ -286,6 +333,8 @@ sed\
         -e "/^\s*#*\s*check_cert_cn =/c \\\t\t\tcheck_cert_cn = %{User-Name}"\
         -i $EAP_CONF
 
+echo 80 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nImport scripts for the web interface." 10 70 0
+
 # Copy scripts version
 # Copie des scripts
 
@@ -297,6 +346,8 @@ mv /tmp/snack/scripts $USER_HOME/$PAQUETNAME
 chown -R $INTERFACE_USER $USER_HOME/$PAQUETNAME/scripts
 chmod -R $ONLY_INTERFACE_ACCESS $USER_HOME/$PAQUETNAME/scripts
 
+echo 90 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nCreate snack group." 10 70 0
+
 # Setting access groups to include web interface and radius
 # Nouveau groupe regroupant l'interface et le radius
 
@@ -305,9 +356,17 @@ usermod -a -G snack $RADIUS_USER
 usermod -a -G snack $INTERFACE_USER
 chown -R :snack $USER_HOME/$PAQUETNAME
 
+echo 100 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring certificates for Radius...\nDone!" 10 70 0
+sleep 0.2
+
+STEP=3
+
 ##########
 # Apache #
 ##########
+
+echo 0 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring apache for Radius...\nVirtual servers management." 10 70 0
+sleep 0.5
 
 # Apache configuration
 # Configuraton du serveur Apache
@@ -318,19 +377,28 @@ sed \
 
 rm -f ${APACHE_PATH}/sites-enabled/000-default
 
+echo 33 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring apache for Radius...\nEnabling ssl and rewrite modules." 10 70 0
+
+{
 a2enmod ssl
 a2enmod rewrite
+} > $NULL 2>>errors.log
 
-#TODO delete sed 'database'
+echo 66 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring apache for Radius...\nMysql access for radius." 10 70 0
+
 sed \
 	-e "s/\('password' =>\) '.*'/\1 '${PASSWORD_RADIUS}'/"\
 	-i ${DEST_ROOT_PATH}/interface/app/Config/database.php
+
+echo 100 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring apache for Radius...\nDone!" 10 70 0
+sleep 0.2
 
 ##########
 # Syslog #
 ##########
 
-echo "Configuring syslog..."
+echo 0 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring syslog for Radius..." 10 70 0
+sleep 0.5
 
 # Activate syslog for freeradius
 # Active Syslog pour Freeradius
@@ -340,13 +408,35 @@ sed\
 	-e 's/\(syslog_facility\s*=\s*\).*$/\1local2/'\
 	-i $RADIUSD_CONF
 
-service syslog-ng restart
-service freeradius restart
-service apache2 restart
+echo 100 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Configuring syslog for Radius...\nDone!" 10 70 0
+sleep 0.2
+sleep 0.5
+
+STEP=4
+
+echo 0 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Restarting services...\nSyslog-ng" 10 70 0
+service syslog-ng restart > $NULL 2>>errors.log
+
+echo 33 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Restarting services...\nFreeradius" 10 70 0
+service freeradius restart > $NULL 2>>errors.log
+
+echo 66 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Restarting services...\nApache2" 10 70 0
+service apache2 restart > $NULL 2>>errors.log
+
+echo 100 | whiptail --title SNACK --gauge "\n\nStep #${STEP}: Restarting services...\nDone!" 10 70 0
+sleep 0.2
+
+STEP=5
 
 # Delete temporary directory
 # Suppression du dossier temporaire
 
+whiptail --title SNACK --infobox "\n\nStep #${STEP}: Cleaning..." 10 70 10 70
+sleep 0.5
+
 rm -r /tmp/snack
 
+whiptail --title SNACK --msgbox "\n\nInstallation done!" 10 70
+
 exit 0
+
