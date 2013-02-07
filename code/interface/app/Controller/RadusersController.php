@@ -64,12 +64,6 @@ class RadusersController extends AppController {
         }
 
         $this->set('radusers', $radusers);
-
-        // FIXME: should not be here, DRY
-        $this->set('sortIcons', array(
-            'asc' => 'icon-chevron-down',
-            'desc' => 'icon-chevron-up')
-        );
     }
 
     /**

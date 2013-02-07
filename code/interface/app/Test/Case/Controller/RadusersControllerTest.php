@@ -16,6 +16,10 @@ class RadusersControllerTest extends ControllerTestCase {
 		'app.raduser'
 	);
 
+    public function setUp() {
+        parent::setUp();
+        $this->autoMock = true;
+    }
 /**
  * testIndex method
  *
@@ -96,12 +100,11 @@ class RadusersControllerTest extends ControllerTestCase {
                 'is_cert' => false,
                 'is_mac' => false,
                 'cert_path' => null,
-                'id' => 1,
             )
         );
 
         $result = $this->controller->Raduser->findByUsername('bob');
-        debug($result);
+        unset($result['Raduser']['id']);
         $this->assertEquals($expected, $result);
 	}
 

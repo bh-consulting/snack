@@ -43,6 +43,13 @@ class AppController extends Controller {
             'Config.language',
             $this->Session->read('Config.language')
         );
+
+        // set class for sort icons, used in all indexes to display
+        // sorted tables of elements
+        $this->set('sortIcons', array(
+            'asc' => 'icon-chevron-down',
+            'desc' => 'icon-chevron-up',
+        ));
     }
 
     public function changeLang($lang) {

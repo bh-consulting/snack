@@ -44,8 +44,6 @@ class NasController extends AppController
             }
         }
         $this->set('nas', $this->paginate('Nas'));
-        // FIXME: should not be here, DRY
-        $this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
     }
 
     public function view($id = null)

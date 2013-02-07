@@ -29,9 +29,6 @@ class RadgroupsController extends AppController
         }
 
 		$this->set('radgroups', $this->paginate('Radgroup'));
-
-		// FIXME: should not be here, DRY
-		$this->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
 	}
 
     /**
