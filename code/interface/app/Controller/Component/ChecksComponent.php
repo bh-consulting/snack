@@ -464,30 +464,38 @@ class ChecksComponent extends Component {
             foreach($rads as &$r){
                 if($r[$this->checkClassName]['attribute'] == $key){
                     $found = true;
+                    // value is set
                     if(!empty($value)){
-                        $oldValue = $r[$this->checkClassName]['value'];
-                        $r[$this->checkClassName]['value'] = $value;
+                        // value modified
+                        if($value != $r[$this->checkClassName]['value']){
+                            $oldValue = $r[$this->checkClassName]['value'];
+                            $r[$this->checkClassName]['value'] = $value;
+                            $this->log('new value: ' . $value);
 
-                        // check if that was a cisco user that was deleted
-                        // TODO: test!!
-                        if($key == 'NAS-Port-Type'
-                            && preg_match('/[05]/', $oldValue)
-                            && $value == '15'
-                            && !isset($request->data[$this->baseClassName]['is_loginpass'])
-                        ){
-                            $this->checkClass->deleteAll(array(
+                            // check if that was a cisco user that was deleted
+                            // TODO: test!!
+                            if($key == 'NAS-Port-Type'
+                                && preg_match('/[05]/', $oldValue)
+                                && $value == '15'
+                                && !isset($request->data[$this->baseClassName]['is_loginpass'])
+                            ){
+                                $this->checkClass->deleteAll(array(
 
-                                $this->checkClassName . '.' . $this->displayName => $r[$this->checkClassName][$this->displayName],
-                                $this->checkClassName . '.attribute' => 'Cleartext-Password',
-                            ));
-                        }
+                                    $this->checkClassName . '.' . $this->displayName => $r[$this->checkClassName][$this->displayName],
+                                    $this->checkClassName . '.attribute' => 'Cleartext-Password',
+                                ));
+                            }
 
-                        $this->checkClass->save($r);
+                            $this->checkClass->save($r);
                         
+                        }
                         break;
+                    // blank field => value deleted
                     } else {
-                        // delete radcheck
-                        $this->checkClass->delete($r[$this->checkClassName]['id']);
+                        // delete radcheck if not a password field
+                        if($key != 'Cleartext-Password'){
+                            $this->checkClass->delete($r[$this->checkClassName]['id']);
+                        }
                     }
                 }
             }
@@ -525,11 +533,16 @@ class ChecksComponent extends Component {
             foreach($rads as &$r){
                 if($r[$this->replyClassName]['attribute'] == $key){
                     $found = true;
+                    // value is set
                     if(!empty($value)){
-                        // update radreply
-                        $r[$this->replyClassName]['value'] = $value;
-                        $this->replyClass->save($r);
+                        // new value
+                        if($value != $r[$this->replyClassName]['value']){
+                            // update radreply
+                            $r[$this->replyClassName]['value'] = $value;
+                            $this->replyClass->save($r);
+                        }
                         break;
+                    // blank value => attribute deleted
                     } else {
                         // delete radreply
                         $this->replyClass->delete($r[$this->replyClassName]['id']);

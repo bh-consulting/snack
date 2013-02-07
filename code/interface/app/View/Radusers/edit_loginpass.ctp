@@ -9,7 +9,7 @@ echo $this->Form->create('Raduser', array('action' => 'edit_loginpass',));
 
 echo '<fieldset>';
 echo '<legend>' . __('Checks') . '</legend>';
-echo $this->Form->input('password');
+echo $this->Form->input('passwd', array('type' => 'password', 'label' => __('Password')));
 echo $this->Form->input(
     'confirm_password',
     array(

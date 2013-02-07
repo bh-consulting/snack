@@ -598,6 +598,8 @@ class RadusersController extends AppController {
             $this->request->data = $this->Raduser->read();
         } else {
             try {
+                $this->request->data['Raduser']['is_loginpass'] = 1;
+
                 $checksCiscoMac = $this->setCommonCiscoMacFields();
 
                 $this->Raduser->save($this->request->data);
@@ -646,6 +648,7 @@ class RadusersController extends AppController {
                 );
         } else {
             try {
+                $this->request->data['Raduser']['is_mac'] = 1;
                 $this->request->data['Raduser']['username'] =
                     Utils::cleanMAC($this->request->data['Raduser']['username']);
                 $this->Raduser->save($this->request->data);
