@@ -6,7 +6,7 @@ echo $this->Html->link(
     '<i class="icon-user"></i> ' . __('Users')
     . '<i class="icon-chevron-right"></i>',
     array(
-        'controller' => 'Radusers',
+        'controller' => 'radusers',
         'action' => 'index',
     ),
     array('escape' => false)
@@ -19,7 +19,7 @@ echo $this->Html->link(
     '<i class="icon-list"></i> ' . __('Groups')
     . '<i class="icon-chevron-right"></i>',
     array(
-        'controller' => 'Radgroups',
+        'controller' => 'radgroups',
         'action' => 'index',
     ),
     array('escape' => false)
@@ -32,7 +32,7 @@ echo $this->Html->link(
     '<i class="icon-hdd"></i> ' . __('NAS')
     . '<i class="icon-chevron-right"></i>',
     array(
-        'controller' => 'Nas',
+        'controller' => 'nas',
         'action' => 'index',
     ),
     array('escape' => false)
@@ -45,7 +45,7 @@ echo $this->Html->link(
     '<i class="icon-ok"></i> ' . __('Sessions')
     . '<i class="icon-chevron-right"></i>',
     array(
-        'controller' => 'Radaccts',
+        'controller' => 'radaccts',
         'action' => 'index',
     ),
     array('escape' => false)
@@ -58,7 +58,7 @@ echo $this->Html->link(
     '<i class="icon-list-alt"></i> ' . __('Logs')
     . '<i class="icon-chevron-right"></i>',
     array(
-        'controller' => 'Loglines',
+        'controller' => 'loglines',
         'action' => 'index',
     ),
     array('escape' => false)
@@ -71,7 +71,7 @@ echo $this->Html->link(
     '<i class="icon-th-large"></i> ' . __('Server dashboard')
     . '<i class="icon-chevron-right"></i>',
     array(
-        'controller' => 'SystemDetails',
+        'controller' => 'systemDetails',
         'action' => 'index',
     ),
     array('escape' => false)
@@ -84,7 +84,7 @@ echo $this->Html->link(
     '<i class="icon-wrench"></i> ' . __('Server parameters')
     . '<i class="icon-chevron-right"></i>',
     array(
-        'controller' => 'Parameters',
+        'controller' => 'parameters',
         'action' => 'index',
     ),
     array('escape' => false)

@@ -71,9 +71,39 @@ $cakeDescription = __('SNACK');
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li class="active"><a href="/interface/radusers/"><? echo __('Radius'); ?></a></li>
-                    <li><a href="/interface/config/"><? echo __('Configuration'); ?></a></li>
-                    <li><a href="/interface/term/"><? echo __('Terminal'); ?></a></li>
+                    <?php
+                    echo '<li class="active">' .
+                        $this->Html->link(
+                            __('Radius'),
+                            array(
+                                'controller' => 'radusers',
+                                'action' => 'index',
+                            ),
+                            array()
+                        ) . '</li>';
+
+                    echo '<li>' .
+                        $this->Html->link(
+                            __('Configuration'),
+                            array(
+                                'controller' => 'configuration',
+                                'action' => 'index',
+                            ),
+                            array()
+                        ) .
+                        '</li>';
+
+                    echo '<li>' .
+                        $this->Html->link(
+                            __('Terminal'),
+                            array(
+                                'controller' => 'terminal',
+                                'action' => 'index',
+                            ),
+                            array()
+                        ) .
+                        '</li>';
+                    ?>
                 </ul>
             </div>
         </div>

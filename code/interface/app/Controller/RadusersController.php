@@ -25,6 +25,9 @@ class RadusersController extends AppController {
         'RequestHandler'
     );
 
+    public function login() {
+    }
+    
     /**
      * Display users list.
      * Manage multiple delete/export actions.
