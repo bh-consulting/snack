@@ -190,8 +190,8 @@ class RadusersController extends AppController {
             $attributes['Username'] = $views['base']['Raduser']['username'];
         }
         $attributes['Comment'] = $views['base']['Raduser']['comment'];
-        $attributes['Certificate path'] =
-            $views['base']['Raduser']['cert_path'];
+        $attributes['Certificate path'] = Configure::read('Parameters.certsPath')
+                    . '/users/' . $views['base']['Raduser']['username'] . '_';
         $attributes['Cisco'] = $views['base']['Raduser']['is_cisco'] 
             ? _('Yes') : _('No');
 
@@ -463,10 +463,6 @@ class RadusersController extends AppController {
 
                 // Create certificate
                 $this->createCertificate(-1, $username);
-
-                $this->request->data['Raduser']['cert_path'] = 
-                    Configure::read('Parameters.certsPath')
-                    . '/users/' . $username . '_';
 
                 $rads = array(
                     array(

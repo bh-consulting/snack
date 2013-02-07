@@ -470,7 +470,6 @@ class ChecksComponent extends Component {
                         if($value != $r[$this->checkClassName]['value']){
                             $oldValue = $r[$this->checkClassName]['value'];
                             $r[$this->checkClassName]['value'] = $value;
-                            $this->log('new value: ' . $value);
 
                             // check if that was a cisco user that was deleted
                             // TODO: test!!

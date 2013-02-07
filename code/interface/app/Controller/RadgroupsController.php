@@ -71,7 +71,6 @@ class RadgroupsController extends AppController
     	// Radgroup
     	$attributes['Groupname'] = $views['base']['Radgroup']['groupname'];
     	$attributes['Comment'] = $views['base']['Radgroup']['comment'];
-    	$attributes['Certificate path'] = $views['base']['Radgroup']['cert_path'];
 
     	// Radchecks
     	foreach($views['checks'] as $check){
