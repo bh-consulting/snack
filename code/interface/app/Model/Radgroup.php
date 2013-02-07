@@ -23,6 +23,21 @@ class Radgroup extends AppModel
                 'allowEmpty' => false
             )
         ),
+        'simultaneous_use' => array(
+            'rule' => 'decimal',
+            'message' => 'Simultaneous uses has to be a number.',
+            'allowEmpty' => true,
+        ),
+        'tunnel-private-group-id' => array(
+            'rule' => 'decimal',
+            'message' => 'VLAN number has to be a number.',
+            'allowEmpty' => true,
+        ),
+        'session-timeout' => array(
+            'rule' => 'decimal',
+            'message' => 'Session timeout has to be a number.',
+            'allowEmpty' => true,
+        ),
     );
 }
 

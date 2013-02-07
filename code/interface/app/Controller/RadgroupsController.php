@@ -159,6 +159,7 @@ class RadgroupsController extends AppController
         );
         $this->restoreUsers($this->Radgroup->id);
         $this->Checks->restoreCommonCheckFields($id, $this->request);
+        $this->Checks->restoreCommonReplyFields($id, $this->request);
     }
 
 	public function delete ($id = null) {

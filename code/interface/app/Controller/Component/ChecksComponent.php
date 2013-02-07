@@ -476,8 +476,9 @@ class ChecksComponent extends Component {
                             && !isset($request->data[$this->baseClassName]['is_loginpass'])
                         ){
                             $this->checkClass->deleteAll(array(
-                                'Radcheck.username' => $r[$this->checkClassName]['username'],
-                                'Radcheck.attribute' => 'Cleartext-Password',
+
+                                $this->checkClassName . '.' . $this->displayName => $r[$this->checkClassName][$this->displayName],
+                                $this->checkClassName . '.attribute' => 'Cleartext-Password',
                             ));
                         }
 
@@ -534,8 +535,8 @@ class ChecksComponent extends Component {
                         $this->replyClass->delete($r[$this->replyClassName]['id']);
                         if($key == 'Tunnel-Private-Group-Id'){
                             $this->replyClass->deleteAll(array(
-                                'Radreply.username' => $r[$this->replyClassName]['username'],
-                                'Radreply.attribute' => array('Tunnel-Type', 'Tunnel-Medium-Type'),
+                                $this->replyClassName . '.' . $this->displayName => $r[$this->replyClassName][$this->displayName],
+                                $this->replyClassName . '.attribute' => array('Tunnel-Type', 'Tunnel-Medium-Type'),
                             ));
                         }
                         break;
