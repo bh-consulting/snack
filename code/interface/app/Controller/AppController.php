@@ -59,21 +59,23 @@ class AppController extends Controller {
         $this->redirect($this->referer());
     }
     
-    // public $components = array(
-    //     'Session',
-    //     'Auth' => array(
-    //         'loginAction' => array(
-    //             'controller' => 'radusers',
-    //             'action' => 'login'
-    //         ),
-    //         'loginRedirect' => array('controller' => 'radusers', 'action' => 'index'),
-    //         'logoutRedirect' => array('controller' => 'pages', 'action' => 'display', 'home'),
-    //         'authenticate' => array(
-    //             'Form' => array(
-    //                 'fields' => array('username' => 'username', 'password' => 'value'),
-    //                 'userModel' => 'Raduser'
-    //             )
-    //         )
-    //     )
-    // );
+/*
+    public $components = array(
+        'Session',
+        'Auth' => array(
+            'loginAction' => array(
+                'controller' => 'radusers',
+                'action' => 'login'
+            ),
+            'loginRedirect' => array('controller' => 'radusers', 'action' => 'index'),
+            'logoutRedirect' => array('controller' => 'radusers', 'action' => 'index'),
+            'authenticate' => array(
+                'Form' => array(
+                    'fields' => array('username' => 'username', 'password' => 'passwd'),
+                    'userModel' => 'Raduser'
+                )
+            )
+        )
+    );
+*/
 }

@@ -26,6 +26,36 @@ class RadusersController extends AppController {
     );
 
     public function login() {
+        if($this->request->is('post')){
+            if($this->checkAuthentication(
+                $this->request->data['Raduser']['username'],
+                $this->request->data['Raduser']['passwd']
+            )){
+                $this->Auth->login($this->request->data['Raduser']); 
+                return $this->redirect($this->Auth->redirect());
+            } else {
+                $this->Session->setFlash(__('Username or password is incorrect'), 'default', array(), 'auth');
+            }
+        }
+    }
+
+    public function logout() {
+        $this->redirect($this->Auth->logout());
+    }
+
+    private function checkAuthentication($username, $passwd) {
+        $user = $this->Raduser->findByUsername($this->request->data['Raduser']['username']);
+        if(isset($user) && !empty($user)){
+            $checks = $this->Checks->getChecks($user['Raduser']['id']);
+            foreach ($checks as $check) {
+                if($check['Radcheck']['attribute'] == 'Cleartext-Password'){
+                    if($check['Radcheck']['value'] == $passwd){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
     
     /**

@@ -84,17 +84,6 @@ $cakeDescription = __('SNACK');
 
                     echo '<li>' .
                         $this->Html->link(
-                            __('Configuration'),
-                            array(
-                                'controller' => 'configuration',
-                                'action' => 'index',
-                            ),
-                            array()
-                        ) .
-                        '</li>';
-
-                    echo '<li>' .
-                        $this->Html->link(
                             __('Terminal'),
                             array(
                                 'controller' => 'terminal',
@@ -103,7 +92,27 @@ $cakeDescription = __('SNACK');
                             array()
                         ) .
                         '</li>';
-                    ?>
+                ?>
+                </ul>
+                <ul class="nav pull-right">
+
+                <?php
+
+                if(AuthComponent::user('username') != null){
+                    echo '<li>' .
+                        $this->Html->link(
+                            __('Logout from ') . AuthComponent::user('username') .
+                            ' <i class="icon-off"></i>',
+                            array(
+                                'controller' => 'radusers',
+                                'action' => 'logout'
+                            ),
+                            array('escape' => false)
+                        ) .
+                        '</li>';
+                }
+
+                ?>
                 </ul>
             </div>
         </div>
