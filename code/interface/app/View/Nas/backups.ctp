@@ -3,7 +3,7 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('nas_active', 'active');
 ?>
 
-<h1><?php echo __('NAS'); ?></h1>
+<h1><?php echo __('Backups (%s)', $this->data['Nas']['nasname']); ?></h1>
 <?php
 echo $this->Html->link(
     '<i class="icon-hdd icon-white"></i> ' . __('Add a NAS'),

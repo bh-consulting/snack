@@ -117,6 +117,15 @@ class NasController extends AppController
             $this->redirect(array('action' => 'index'));
         }
     }
+
+    public function backups($id)
+    {
+        $this->Nas->id = $id;
+        if($this->request->is('get')){
+            $this->request->data = $this->Nas->read();
+        } else {
+	}
+    }
 }
 
 ?>
