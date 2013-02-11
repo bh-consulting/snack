@@ -1,0 +1,6 @@
+#!/bin/bash
+
+userdel -r snack
+groupdel snack
+
+exit 0
