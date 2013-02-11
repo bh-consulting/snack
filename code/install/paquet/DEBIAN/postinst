@@ -53,9 +53,18 @@ DISPLAY_SLEEP=0.5
 whiptail \
 	--title "SNACK ${VERSION}" \
 	--yes-button "Start" \
+	--no-button "Cancel" \
 	--yesno "\nWelcome !\n\nYou are installing SNACK.\n\nErrors are logged in /tmp/snack_errors.log\nStdout are logged in /tmp/snack_out.log" \
 	15 70
 
+if [ $? != 0 ]; then
+	whiptail \
+		--title "SNACK ${VERSION}" \
+		--msgbox "\n\nUser has canceled the installation!" \
+		10 70
+	exit 1
+fi
+	
 ##############################################################
 # Radius-Mysql configuration / Configuration de Radius-Mysql #
 ##############################################################
@@ -227,9 +236,9 @@ echo 5 | whiptail \
 # Mise à jour de la configuration openssl.cnf
 
 {
-sed\
-	-e "s|^\(dir\s*=\s*\).*\(\s*#.*\)$|\1$DEST_PATH\2|"\
-	-e "s/^\(certificate\s*=\s*\).*\(\s*#.*\)/\1\$dir/private/cacert.pem\2"\
+sed \
+	-e "s|^\(dir\s*=\s*\)\S\+\(.*\)$|\1$DEST_PATH\2|"\
+	-e "s|^\(certificate\s*=\s*\)\S\+\(.*\)|\1\$dir/private/cacert.pem\2|"\
 	-i $SSL_CONF
 echo "" >> $SSL_CONF
 
@@ -527,7 +536,6 @@ sleep $DISPLAY_SLEEP
 
 # Activate syslog for freeradius
 # Active Syslog pour Freeradius
-
 sed\
 	-e 's/\(destination\s*=\s*\).*$/\1syslog/'\
 	-e 's/\(syslog_facility\s*=\s*\).*$/\1local2/'\
@@ -584,6 +592,7 @@ rm -r ${TMP} >> $OUT 2>>$LOG
 
 whiptail \
 	--title "SNACK ${VERSION}" \
+	--ok-button "Finish" \
 	--msgbox "\n\nInstallation done!" \
 	10 70
 
