@@ -209,3 +209,20 @@ Tenter une authentification (console, Telnet, SSH ou directement en série) avec
 Le mot de passe \emph{pass\_enable\_secours} pourra être utilisé pour passer en mode privilégié lorsque le Radius n'est pas disponible.
 
 \textbf{Félicitations, penser à faire un \emph{write mem} final \Coffeecup.}
+
+
+\subsection{Accounting}
+\subsubsection{Activation}
+Pour activer l'accounting sur le switch: 
+\begin{lstlisting}
+Switch(config)#aaa accounting dot1x default start-stop group radius
+Switch(config)#aaa accounting exec default start-stop group radius
+\end{lstlisting}
+
+\subsubsection{Test}
+Pour verifier le bon fonctionnement de l'accounting, sur le radius, connectez vous a la database radius de la base sql.
+Authentifiez un client, en lancez la commande~: 
+\begin{lstlisting}
+select * from radacct;
+\end{lstlisting}
+Le nouveau client doit apparaitre.
