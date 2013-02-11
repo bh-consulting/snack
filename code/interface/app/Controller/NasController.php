@@ -5,6 +5,9 @@ class NasController extends AppController
     public $helpers = array('Html', 'Form', 'JqueryEngine');
     public $paginate = array('limit' => 10, 'order' => array('Nas.id' => 'asc'));
     public $uses = array('Nas');
+    public $components = array(
+	'Filters' => array('model' => 'Nas')
+    );
 
     public function index() {
         if ($this->request->is('post')) {
@@ -122,8 +125,20 @@ class NasController extends AppController
     {
         $this->Nas->id = $id;
 	$this->Nas->git = $this->Nas->readBackups('testeuh');
-	$this->set('git', $this->Nas->git);
+	$this->set('backups', $this->Nas->git);
 	$this->request->data = $this->Nas->read();
+
+	$this->Filters->addDatesConstraint(array(
+	    'column' => 'datetime', 
+	    'from' => 'datefrom',
+	    'to' => 'dateto',
+	));
+
+	$this->Filters->addStringConstraint(array(
+	    'column' => 'author', 
+	));
+
+	$this->Filters->paginate();
     }
 }
 

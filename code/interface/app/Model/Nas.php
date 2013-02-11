@@ -49,9 +49,28 @@ class Nas extends AppModel
 	}
 
 	public function readBackups($nas) {
-	    $git = '/bh-consulting/trunk/code/db/backups-clone.git';
-	    exec("echo toto > /tmp/aa; cd $git; /usr/bin/git log $nas", $output);
-	    return $output;
+	    $git = '/home/pi/bh-consulting/trunk/code/db/backups-clone.git';
+	    $commits = array();
+
+	    exec("cd $git; /usr/bin/git log $nas", $lines);
+
+	    for($i = 0; $i < count($lines); $i++) {
+		$lineParts = preg_split('/\s+/', $lines[$i]);
+
+		if($lineParts[0] == 'commit') {
+		    $commit['commit'] = $lineParts[1];
+
+		    $lineParts = preg_split('/\s+/', $lines[++$i]);
+		    $commit['author'] = $lineParts[1];
+
+		    $lineParts = preg_split('/\s+/', $lines[++$i], 2);
+		    $commit['datetime'] = $lineParts[1];
+
+		    $commits[] = $commit;
+		}
+	    }
+
+	    return $commits;
 	}
 }
 ?>
