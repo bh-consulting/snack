@@ -52,8 +52,8 @@ DISPLAY_SLEEP=0.5
 
 whiptail \
 	--title "SNACK ${VERSION}" \
-	--ok-button "Start" \
-	--msgbox "\nWelcome !\n\nYou are installing SNACK.\n\nErrors are logged in /tmp/snack_errors.log\nStdout are logged in /tmp/snack_out.log" \
+	--yes-button "Start" \
+	--yesno "\nWelcome !\n\nYou are installing SNACK.\n\nErrors are logged in /tmp/snack_errors.log\nStdout are logged in /tmp/snack_out.log" \
 	15 70
 
 ##############################################################
@@ -228,8 +228,8 @@ echo 5 | whiptail \
 
 {
 sed\
-	-e "s|\(dir\s*=\s*\)\(.*\)\(\s*.*\)|\1$DEST_PATH\2|"\
-	-e "/\s*certificate\s*=/c certificate = \$dir/private/cacert.pem\t"\
+	-e "s|^\(dir\s*=\s*\).*\(\s*#.*\)$|\1$DEST_PATH\2|"\
+	-e "s/^\(certificate\s*=\s*\).*\(\s*#.*\)/\1\$dir/private/cacert.pem\2"\
 	-i $SSL_CONF
 echo "" >> $SSL_CONF
 
@@ -456,7 +456,7 @@ echo 90 | whiptail \
 {
 usermod -a -G snack $RADIUS_USER
 usermod -a -G snack $INTERFACE_USER
-chown -R :snack $USER_HOME/$PAQUETNAME
+chown -R :snack $USER_HOME
 } >> $OUT 2>>$LOG
 
 echo 100 | whiptail \

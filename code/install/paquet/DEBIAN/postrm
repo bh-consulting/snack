@@ -3,4 +3,12 @@
 userdel -r snack
 groupdel snack
 
+ln -s /etc/apache2/sites-available/default /etc/apache2/sites-enabled/000-default
+
+rm -fr /etc/apache2/sites-available/snack
+rm -fr /etc/apache2/sites-enabled/snack
+rm -fr /etc/sudoers.d/snack
+
+service apache2 restart
+
 exit 0
