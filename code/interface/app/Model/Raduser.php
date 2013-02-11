@@ -25,9 +25,8 @@ class Raduser extends AppModel {
             ),
         ),
         'passwd' => array(
-                'rule' => 'notEmptyIfCiscoOrLoginpass',
-                'message' => 'You have to type a password',
-                'on' => 'create',
+            'rule' => array('notEmptyIfCiscoOrLoginpass', 'was_cisco'),
+            'message' => 'You have to type a password',
         ),
         'confirm_password' => array(
             'rule' => array('identicalFieldValues', 'passwd'),
@@ -136,22 +135,41 @@ class Raduser extends AppModel {
         return true;
     }
 
-    public function notEmptyIfCiscoOrLoginpass($field=array()) {
+    public function notEmptyIfCiscoOrLoginpass($field=array(), $was_cisco=null) {
         $value = array_shift($field);
-        
-        if (empty($value) 
-            && ($this->data[$this->name]['is_cisco'] == 1
-            || $this->data[$this->name]['is_loginpass'] == 1)
-        ) {
-            return false;
+        if(isset($this->data[$this->name][$was_cisco])){
+            $was_cisco = $this->data[$this->name][$was_cisco];
+        } else {
+            $was_cisco = false;
+        }
+
+        // NEW raduser (no id set)
+        if(!isset($this->data[$this->name]['id'])){
+            if (empty($value) 
+                && ($this->data[$this->name]['is_cisco'] == 1
+                || $this->data[$this->name]['is_loginpass'] == 1)
+            ) {
+                return false;
+            }
+        // raduser UPDATE (id isset)
+        } else {
+            if(empty($value)
+                && !$was_cisco
+                && $this->data[$this->name]['is_cisco']
+                && !(isset($this->data[$this->name]['is_loginpass'])
+                    && $this->data[$this->name]['is_loginpass'])
+            ){
+                return false;
+            }
         }
         return true;
     }
 
-    public function beforeValidate($options = array()) {
-        if (empty($this->data['Raduser']['password'])) {
-    	    unset($this->data['Raduser']['password']);
-    	}
+    public function beforeSave($options = array()) {
+        if (empty($this->data[$this->name]['passwd'])) {
+            unset($this->data[$this->name]['passwd']);
+        }
+        return true;
     }
 }
 

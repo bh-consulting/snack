@@ -608,6 +608,7 @@ class ChecksComponent extends Component {
     public function restoreCommonCiscoMacFields($id, &$request) {
         if($request->data[$this->baseClassName]['is_cisco']){
             $request->data[$this->baseClassName]['cisco'] = 1;
+            $request->data[$this->baseClassName]['was_cisco'] = 1;
         }
 
         $rads = $this->getChecks($id);

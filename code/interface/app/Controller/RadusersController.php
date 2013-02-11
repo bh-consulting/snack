@@ -45,6 +45,7 @@ class RadusersController extends AppController {
 
     private function checkAuthentication($username, $passwd) {
         $user = $this->Raduser->findByUsername($this->request->data['Raduser']['username']);
+        //$passwd = crypt($passwd);
         if(isset($user) && !empty($user)){
             $checks = $this->Checks->getChecks($user['Raduser']['id']);
             foreach ($checks as $check) {
@@ -631,7 +632,9 @@ class RadusersController extends AppController {
 
                 $checksCiscoMac = $this->setCommonCiscoMacFields();
 
-                $this->Raduser->save($this->request->data);
+                if(!$this->Raduser->save($this->request->data)){
+                    throw new EditException('Raduser', $id, $this->request->data['Raduser']['username']);
+                }
 
                 // update radchecks fields
                 $checkClassFields = array(
@@ -680,7 +683,9 @@ class RadusersController extends AppController {
                 $this->request->data['Raduser']['is_mac'] = 1;
                 $this->request->data['Raduser']['username'] =
                     Utils::cleanMAC($this->request->data['Raduser']['username']);
-                $this->Raduser->save($this->request->data);
+                if(!$this->Raduser->save($this->request->data)){
+                    throw new EditException('Raduser', $id, $this->request->data['Raduser']['username']);
+                }
 
                 $this->updateGroups($this->Raduser->id, $this->request);
                 $this->Checks->updateRadcheckFields($id, $this->request);
@@ -708,7 +713,9 @@ class RadusersController extends AppController {
             try {
                 $this->request->data['Raduser']['is_cert'] = 1;
                 $checksCiscoMac = $this->setCommonCiscoMacFields();
-                $this->Raduser->save($this->request->data);
+                if(!$this->Raduser->save($this->request->data)){
+                    throw new EditException('Raduser', $id, $this->request->data['Raduser']['username']);
+                }
 
                 // update radchecks fields
                 $checkClassFields = array();

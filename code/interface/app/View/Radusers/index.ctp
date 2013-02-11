@@ -26,7 +26,14 @@ echo $this->element('dropdownButton', array(
         _('Passive') => array(
             $this->Html->link(
                 '<i class="icon-plus-sign"></i> ' . __('MAC address'), 
-                array('action' => 'add_mac_passive'),
+                array('action' => 'add_mac'),
+                array('escape' => false)
+            )
+        ),
+        _('Snack') => array(
+            $this->Html->link(
+                '<i class="icon-plus-sign"></i> ' . __('Admin'), 
+                array('action' => 'add_admin'),
                 array('escape' => false)
             )
         ),

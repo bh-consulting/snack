@@ -59,7 +59,7 @@ class AppController extends Controller {
         $this->redirect($this->referer());
     }
     
-/*
+
     public $components = array(
         'Session',
         'Auth' => array(
@@ -77,5 +77,5 @@ class AppController extends Controller {
             )
         )
     );
-*/
+
 }
