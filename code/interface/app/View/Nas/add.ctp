@@ -1,5 +1,6 @@
 <? 
 $this->extend('/Common/radius_sidebar'); 
+$this->assign('radius_active', 'active');
 $this->assign('nas_active', 'active');
 ?>
 

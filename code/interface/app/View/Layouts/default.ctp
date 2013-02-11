@@ -40,6 +40,7 @@ $cakeDescription = __('SNACK');
     echo $this->Html->css('jquery-ui-bootstrap/jquery-ui-1.9.2.custom');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
     echo $this->Html->css('flags.css');
+    echo $this->Html->css('jquery.terminal.css');
 
     echo $this->fetch('meta');
     echo $this->fetch('css');
@@ -72,7 +73,7 @@ $cakeDescription = __('SNACK');
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     <?php
-                    echo '<li class="active">' .
+                    echo '<li class="' . $this->fetch('radius_active') . '">' .
                         $this->Html->link(
                             __('Radius'),
                             array(
@@ -82,7 +83,7 @@ $cakeDescription = __('SNACK');
                             array()
                         ) . '</li>';
 
-                    echo '<li>' .
+                    echo '<li class="' . $this->fetch('term_active') . '">' .
                         $this->Html->link(
                             __('Terminal'),
                             array(
@@ -149,6 +150,9 @@ echo $this->Html->script('doubleListsSelector');
 echo $this->Html->script('loglines');
 echo $this->Html->script('checkboxRangeSelection');
 echo $this->Html->script('bhconsulting');
+echo $this->Html->script('jquery.terminal.min.js');
+echo $this->Html->script('jquery.mousewheel-min.js');
+echo $this->Html->script('myterm.js');
 ?>
 </script>
 </body>

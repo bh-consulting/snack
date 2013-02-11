@@ -1,5 +1,6 @@
 <?php
 $this->extend('/Common/radius_sidebar'); 
+$this->assign('radius_active', 'active');
 $this->assign('param_active', 'active');
 ?>
 

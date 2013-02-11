@@ -1,5 +1,6 @@
 <?php
 $this->extend('/Common/radius_sidebar');
+$this->assign('radius_active', 'active');
 $this->assign('logs_active', 'active');
 
 $columns = array(

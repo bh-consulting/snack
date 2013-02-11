@@ -1,5 +1,6 @@
 <? 
 $this->extend('/Common/radius_sidebar');
+$this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
 
 echo '<h1>' . __('Edit') . ' ' . $this->data['Raduser']['username'] . ' ' . __('(MAC user)') . '</h1>';
