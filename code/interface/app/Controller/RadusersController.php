@@ -577,6 +577,20 @@ class RadusersController extends AppController {
         $this->add($success);
     }
 
+    public function add_admin() {
+        if($this->request->is('post')){
+
+        } else {
+            $users = $this->Raduser->find('all');
+            $values = array();
+            foreach ($users as $u) {
+                $values[$u['Raduser']['id']]= $u['Raduser']['username'];
+            }
+            $this->set('users', $values);
+        }
+        
+    }
+
     private function edit($success) {
         if ($this->request->is('post')) {
             if ($success) {
@@ -662,6 +676,7 @@ class RadusersController extends AppController {
                     $e->getMessage(),
                     'flash_error'
                 );
+                $success = false;
             }
         }
 
@@ -697,6 +712,7 @@ class RadusersController extends AppController {
                     $e->getMessage(),
                     'flash_error'
                 );
+                $success = false;
             }
         }
 
@@ -742,6 +758,7 @@ class RadusersController extends AppController {
                     $e->getMessage(),
                     'flash_error'
                 );
+                $success = false;
             }
         }
 
