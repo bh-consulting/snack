@@ -9,7 +9,7 @@ class Nas extends AppModel
 	public $displayField = 'nasname';
 	public $name = 'Nas';
 
-    public $validationDomain = 'validation';
+	public $validationDomain = 'validation';
 
 	public $validate = array(
 		'nasname' => array(
@@ -46,6 +46,12 @@ class Nas extends AppModel
 			} 
 		} 
 		return true; 
+	}
+
+	public function readBackups($nas) {
+	    $git = '/bh-consulting/trunk/code/db/backups-clone.git';
+	    exec("echo toto > /tmp/aa; cd $git; /usr/bin/git log $nas", $output);
+	    return $output;
 	}
 }
 ?>

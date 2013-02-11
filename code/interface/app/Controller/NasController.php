@@ -121,10 +121,9 @@ class NasController extends AppController
     public function backups($id)
     {
         $this->Nas->id = $id;
-        if($this->request->is('get')){
-            $this->request->data = $this->Nas->read();
-        } else {
-	}
+	$this->Nas->git = $this->Nas->readBackups('testeuh');
+	$this->set('git', $this->Nas->git);
+	$this->request->data = $this->Nas->read();
     }
 }
 
