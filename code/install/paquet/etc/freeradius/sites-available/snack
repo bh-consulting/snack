@@ -1,19 +1,29 @@
-server bh.consulting.net {
+server snack {
 	authorize {
 		preprocess
 		suffix
+		expiration
+		logintime
 
 		eap {
 			ok = return
 		}
 		sql
 
-		expiration
-		logintime
+		chap
+		pap
 	}
 
 	authenticate {
 		eap
+
+		Auth-Type PAP {
+			reject
+		}
+
+		Auth-Type CHAP {
+			reject
+		}
 	}
 
 	preacct {
