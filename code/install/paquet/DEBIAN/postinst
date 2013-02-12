@@ -185,6 +185,7 @@ mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /etc/freeradius/sql/mysql/nas.s
 mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < ${TMP}/schema.sql >> $OUT 2>>$LOG
 
 echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cleartext-Password', ':=', '${PASSWORD_RADIUS}');" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} >> $OUT 2>>$LOG
+echo "INSERT INTO raduser(UserName, Admin) VALUES ('admin', true);" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} >> $OUT 2>>$LOG
 
 echo 50 | whiptail \
 	--title "SNACK ${VERSION}" \
