@@ -1,12 +1,14 @@
 <?php
 
+App::import('Model', 'Backup');
+
 class NasController extends AppController
 {
     public $helpers = array('Html', 'Form', 'JqueryEngine');
     public $paginate = array('limit' => 10, 'order' => array('Nas.id' => 'asc'));
     public $uses = array('Nas');
     public $components = array(
-	'Filters' => array('model' => 'Nas')
+	'Filters' => array('model' => 'Nas'),
     );
 
     public function index() {
@@ -119,26 +121,6 @@ class NasController extends AppController
             $this->Session->setFlash(__('The NAS with id:') . $id . ' ' . __('has been deleted') . '.');
             $this->redirect(array('action' => 'index'));
         }
-    }
-
-    public function backups($id)
-    {
-        $this->Nas->id = $id;
-	$this->Nas->git = $this->Nas->readBackups('testeuh');
-	$this->set('backups', $this->Nas->git);
-	$this->request->data = $this->Nas->read();
-
-	$this->Filters->addDatesConstraint(array(
-	    'column' => 'datetime', 
-	    'from' => 'datefrom',
-	    'to' => 'dateto',
-	));
-
-	$this->Filters->addStringConstraint(array(
-	    'column' => 'author', 
-	));
-
-	$this->Filters->paginate();
     }
 }
 

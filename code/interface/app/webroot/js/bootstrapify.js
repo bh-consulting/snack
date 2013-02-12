@@ -23,6 +23,7 @@ var Boostrapify = {
 	$('div.input.error').wrap('<div class="control-group error"/>');
 	$('input')
 	    .not('input[type="checkbox"]')
+	    .not('input[type="radio"]')
 	    .not('input[type="hidden"]')
 	    .wrap('<div class="controls"/>');
 	$('textarea').wrap('<div class="controls"/>');

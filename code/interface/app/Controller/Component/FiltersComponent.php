@@ -79,7 +79,7 @@ class FiltersComponent extends Component {
 
 	public function paginate() {
 		$columnNames = array_keys($this->controller->{$this->modelName}->schema());
-		$this->controller->set('loglines', $this->controller->paginate($this->modelName, $this->constraints, $columnNames));
+		$this->controller->set(strtolower($this->modelName).'s', $this->controller->paginate($this->modelName, $this->constraints, $columnNames));
 		$this->controller->set('sortIcons', array('asc' => 'icon-chevron-down', 'desc' => 'icon-chevron-up'));
 	}
 }

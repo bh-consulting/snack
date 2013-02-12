@@ -35,7 +35,7 @@
 	margin: -4px 0 0 213px;
 }
 
-a.ui-slider-handle {
+a.ui-slider-handle, radio {
 	outline: none;
 }
 
@@ -67,6 +67,7 @@ a.ui-slider-handle {
 .fit {
     white-space:nowrap;
     width: 1px;
+    text-align: center;
 }
 
 form .required {
@@ -77,4 +78,8 @@ form .required label:after {
     color: #e32;
     content: ' *';
     display:inline;
+}
+
+table td.smallCol, table th.smallCol {
+    text-align: center;
 }

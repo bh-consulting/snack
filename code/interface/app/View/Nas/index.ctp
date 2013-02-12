@@ -16,11 +16,8 @@ $columns = array(
     'id' => array('text' => __('ID'), 'fit' => true),
     'nasname' => array('text' => __('Name')),
     'shortname' => array('text' => __('Short name')),
-    'type' => array('text' => __('Type'), 'fit' => true),
-    'ports' => array('text' => __('Ports'), 'fit' => true),
-    'server' => array('text' => __('Server')),
-    'community' => array('text' => __('Community')),
     'description' => array('text' => __('Description')),
+    'type' => array('text' => __('Type'), 'fit' => true),
 );
 
 echo $this->Form->create('Nas', array('action' => 'delete'));
@@ -69,9 +66,10 @@ foreach ($columns as $field => $info) {
     . '</th>';
 }
 ?>
-	    <th class="fit"><? echo __('Backups'); ?></th>
-	    <th class="fit"><? echo __('Edit'); ?></th>
-	    <th class="fit"><? echo __('Delete'); ?></th>
+	    <th class="fit smallCol"><? echo __('View'); ?></th>
+	    <th class="fit smallCol"><? echo __('Edit'); ?></th>
+	    <th class="fit smallCol"><? echo __('Delete'); ?></th>
+	    <th class="fit smallCol"><? echo __('Backups'); ?></th>
 	</tr>
     </thead>
 
@@ -81,7 +79,7 @@ if (!empty($nas)) {
     foreach ($nas as $n) {
 ?>
 	<tr>
-	    <td class="fit">
+	    <td class="fit smallCol">
 <?php
 	echo $this->Form->select(
 	    'nas',
@@ -94,18 +92,7 @@ if (!empty($nas)) {
 	);
 ?>
 	    </td>
-	    <td class="fit">
-<?php
-	echo $this->Html->link(
-	    $n['Nas']['id'],
-	    array(
-		'controller' => 'nas',
-		'action' => 'view',
-		$n['Nas']['id']
-	    )
-	);
-?>
-	    </td>
+	    <td class="fit smallCol"><strong> <?php echo $n['Nas']['id'] ?></strong> </td>
 	    <td>
 <?php
     echo $n['Nas']['nasname'];
@@ -116,41 +103,27 @@ if (!empty($nas)) {
     echo $n['Nas']['shortname'];
 ?>
 	    </td>
-	    <td class="fit">
-<?php
-    echo $n['Nas']['type'];
-?>
-	    </td>
-	    <td class="fit">
-<?php
-    echo $n['Nas']['ports'];
-?>
-	    </td>
-	    <td>
-<?php
-    echo $n['Nas']['server'];
-?>
-	    </td>
-	    <td>
-<?php
-    echo $n['Nas']['community'];
-?>
-	    </td>
 	    <td>
 <?php
     echo $n['Nas']['description'];
 ?>
 	    </td>
 	    <td class="fit">
-		<i class="icon-camera"></i>
+<?php
+    echo $n['Nas']['type'];
+?>
+	    </td>
+	    <td class="fit smallCol">
+		<i class="icon-eye-open"></i>
 <?php
     echo $this->Html->link(
-	__('Backups'),
-	array('action' => 'backups', $n['Nas']['id'])
+	__('View'),
+	array('action' => 'view', 'controller' => 'nas', $n['Nas']['id'])
     );
 ?>
 	    </td>
-	    <td class="fit">
+
+	    <td class="fit smallCol">
 		<i class="icon-edit"></i>
 <?php
     echo $this->Html->link(
@@ -159,7 +132,7 @@ if (!empty($nas)) {
     );
 ?>
 	    </td>
-	    <td class="fit">
+	    <td class="fit smallCol">
 		<i class="icon-remove"></i>
 <?php
     echo $this->Html->link(
@@ -175,6 +148,16 @@ if (!empty($nas)) {
     );
 ?>
 	    </td>
+	    <td class="fit">
+		<i class="icon-camera"></i>
+<?php
+    echo $this->Html->link(
+	__('Backups'),
+	array('action' => 'index', 'controller' => 'backups', $n['Nas']['id'])
+    );
+?>
+	    </td>
+
 	</tr>
 <?php
     }

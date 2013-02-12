@@ -66,10 +66,5 @@ class LoglinesController extends AppController {
 
 	$this->Filters->paginate();
     }
-
-    public function view($id = null) {
-	$this->Logline->id = $id;
-	$this->set('loglines', $this->Logline->read());
-    }
 }
 ?>
