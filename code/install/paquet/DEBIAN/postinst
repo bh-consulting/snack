@@ -131,32 +131,49 @@ do
     fi
 done
 
-echo "	CREATE DATABASE ${DATABASE} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;\
-	GRANT ALL ON ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
-	GRANT ALL ON ${DATABASE}.logs to logsfreeradius@localhost identified by 'logsfreeradius';\
-	flush privileges;\
-" | mysql -uroot -p${PASSWORD_DB_ROOT} >> $OUT 2>>$LOG
+MYSQL_RES=$(echo "	CREATE DATABASE ${DATABASE} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;\
+			GRANT ALL ON ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
+			GRANT ALL ON ${DATABASE}.logs to logsfreeradius@localhost identified by 'logsfreeradius';\
+			flush privileges;\
+" | mysql -uroot -p${PASSWORD_DB_ROOT} 2>&1 >$OUT)
 
 until [ $? -eq 0 ]
 do
-	PASSWORD_DB_ROOT=$(whiptail \
-		--title "SNACK ${VERSION}" \
-		--passwordbox "\n\nError: Cannot create database!\nWhat is the Mysql password for root?" \
-		10 70 3>&1 1>&2 2>&3)
- 
-	if [ $? != 0 ]; then
+	if [[ $MYSQL_RES =~ .*"database exists".* ]]; then
 		whiptail \
 			--title "SNACK ${VERSION}" \
-			--msgbox "\n\nUser has canceled the installation!" \
+			--yesno "\nDatabase '${DATABASE}' exists!\n\nDo you want to override it ?" \
 			10 70
-		exit 1
+
+		if [ $? == 0 ]; then
+			echo "DROP DATABASE ${DATABASE};" | mysql -uroot -p${PASSWORD_DB_ROOT}
+		else
+			whiptail \
+				--title "SNACK ${VERSION}" \
+				--msgbox "\n\nUser has canceled the installation!" \
+				10 70
+    			exit 1
+		fi
+	else
+		PASSWORD_DB_ROOT=$(whiptail \
+			--title "SNACK ${VERSION}" \
+			--passwordbox "\n\nError: Cannot create database!\nWhat is the Mysql password for root?" \
+			10 70 3>&1 1>&2 2>&3)
+ 
+		if [ $? != 0 ]; then
+			whiptail \
+				--title "SNACK ${VERSION}" \
+				--msgbox "\n\nUser has canceled the installation!" \
+				10 70
+			exit 1
+		fi
 	fi
 
-	echo "	CREATE DATABASE ${DATABASE} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;\
-		GRANT ALL ON ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
-		GRANT ALL ON ${DATABASE}.logs to logsfreeradius@localhost identified by 'logsfreeradius';\
-		flush privileges;\
-	" | mysql -uroot -p${PASSWORD_DB_ROOT} >> $OUT 2>>$LOG
+	MYSQL_RES=$(echo "	CREATE DATABASE ${DATABASE} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;\
+				GRANT ALL ON ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
+				GRANT ALL ON ${DATABASE}.logs to logsfreeradius@localhost identified by 'logsfreeradius';\
+				flush privileges;\
+	" | mysql -uroot -p${PASSWORD_DB_ROOT})
 done
 
 echo 20 | whiptail \
@@ -238,7 +255,7 @@ echo 5 | whiptail \
 {
 sed \
 	-e "s|^\(dir\s*=\s*\)\S\+\(.*\)$|\1$DEST_PATH\2|"\
-	-e "s|^\(certificate\s*=\s*\)\S\+\(.*\)|\1\$dir/private/cacert.pem\2|"\
+	-e "s|^\(certificate\s*=\s*\)\S\+\(.*\)$|\1\$dir/private/cacert.pem\2|"\
 	-i $SSL_CONF
 echo "" >> $SSL_CONF
 
@@ -318,7 +335,7 @@ chmod $READ_ONLY $DEST_PATH/private/$CA_CERT
 
 echo 35 | whiptail \
 	--title "SNACK ${VERSION}" \
-	--gauge "\nStep #${STEP}/${LAST_STEP}: Configuring certificates for Radius...\nGenerate Freeradius certicate.\nCould take a long time." \
+	--gauge "\nStep #${STEP}/${LAST_STEP}: Configuring certificates for Radius...\nGenerate Freeradius certificate.\nCould take a long time." \
 	10 70 0
 
 # Creation of the radius certificate
