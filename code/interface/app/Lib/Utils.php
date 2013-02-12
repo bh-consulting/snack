@@ -32,6 +32,44 @@ class Utils {
         }
     }
 
+    public static function secondToTime($last) {
+		$seconds	= $last%60;
+		$minutes	= floor($last/60)%60;
+		$hours		= floor($last/3600)%24;
+		$days		= floor($last/86400);
+
+        $result = ($days) ? $days . ' '  
+            . __n(__("day"), __("days"), $days)
+            . ' ' : '';
+        $result .= ($hours) ? $hours . ' '  
+            . __n(__("hour"), __("hours"), $hours)
+            . ' ' : '';
+        $result .= ($minutes) ? $minutes . ' '  
+            . __n(__("minute"), __("minutes"), $minutes)
+            . ' ' : '';
+        $result .= ($seconds) ? $seconds . ' '  
+            . __n(__("second"), __("seconds"), $seconds)
+            . ' ' : '';
+
+        return $result;
+    }
+
+    public static function octets($data) {
+		$octets     = $data%1024;
+		$koctets	= floor($data/1024)%1024;
+		$moctets	= floor($data/1048576)%1024;
+		$goctets	= floor($data/1073741824);
+
+        $result = ($goctets) ? $goctets . ' Go ' : '';
+        $result .= ($moctets) ? $moctetss . ' Mo ' : '';
+        $result .= ($koctets) ? $koctets . ' Ko ' : '';
+        $result .= ($octets) ? $octets . ' '
+            . __n(__("octet"), __("octets"), $octets)
+            . ' ' : '';
+
+        return $result;
+    }
+
     /**
      * Reformat the mac addr for a nice display
      */

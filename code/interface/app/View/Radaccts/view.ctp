@@ -1,29 +1,48 @@
-<? 
+<?php
 $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('session_active', 'active');
 ?>
-<h2><? echo __('Session:') . ' ' . h($radacct['Radacct']['acctuniqueid']); ?></h2>
+<h2>
+<?php
+echo __('Session of %s', h($radacct['Radacct']['username']));
+?>
+</h2>
 
-<div class="well">
-	<h4><? echo __('User:'); ?></h4>
-	<p style="padding: 0 0 0 20px">
-		<strong><? echo __('Username:'); ?></strong> <? echo $radacct['Radacct']['username']; ?></br>
-		<strong><? echo __('Groupname:'); ?></strong> <? echo $radacct['Radacct']['groupname']; ?></br>
-		<strong><? echo __('IP:'); ?></strong> <? echo $radacct['Radacct']['callingstationid']; ?>
-	</p>
-	
-	<h4><? echo __('Statistics:'); ?></h4>
-	<p style="padding: 0 0 0 20px">
-		<strong><? echo __('Start:'); ?> </strong><? echo $radacct['Radacct']['acctstarttime']; ?></br>
-		<strong><? echo __('Stop:'); ?> </strong><? echo $radacct['Radacct']['acctstoptime']; ?></br>
-		<strong><? echo __('Period:'); ?> </strong><? echo $radacct['Radacct']['acctsessiontime']; ?>
-	</p>
-	
-	<h4><? echo __('Network Access Server:'); ?></h4>
-	<p style="padding: 0 0 0 20px">
-		<strong><? echo __('IP:'); ?> </strong><? echo $radacct['Radacct']['calledstationid']; ?></br>
-		<strong><? echo __('Port:'); ?> </strong><? echo $radacct['Radacct']['nasportid']; ?></br>
-		<strong><? echo __('Connection type:'); ?> </strong><? echo $radacct['Radacct']['nasporttype']; ?>
-	</p>
-</div>
+<?php
+echo $this->element('block-dl', array(
+    'title' => __('User:'),
+    'fields' => array(
+        __('Username') => $radacct['Radacct']['username'],
+        __('Groupname') => $radacct['Radacct']['groupname'],
+        __('User station') => $radacct['Radacct']['callingstationid'],
+        __('Session id') => $radacct['Radacct']['acctuniqueid'],
+    ),
+));
+
+echo $this->element('block-dl', array(
+    'title' => __('Statistics:'),
+    'fields' => array(
+        __('Session start') => $radacct['Radacct']['acctstarttime'],
+        __('Session stop') => $radacct['Radacct']['acctstoptime'],
+        __('Session time') => Utils::secondToTime($radacct['Radacct']['acctsessiontime']),
+        __('Terminate cause') => $radacct['Radacct']['acctterminatecause'],
+        __('Input data') => Utils::octets($radacct['Radacct']['acctinputoctets']),
+        __('Output data') => Utils::octets($radacct['Radacct']['acctoutputoctets']),
+    ),
+));
+
+if (!empty($radacct['Radacct']['nasportid'])) {
+    $portid = " (" .  $radacct['Radacct']['nasportid'] . ")";
+} else {
+    $portid = '';
+}
+
+echo $this->element('block-dl', array(
+    'title' => __('Network Access Server:'),
+    'fields' => array(
+        __('IP address') => $radacct['Radacct']['nasipaddress'],
+        __('Port') => $radacct['Radacct']['nasporttype'] . $portid
+    ),
+));
+?>

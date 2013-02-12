@@ -6,7 +6,6 @@ class Radacct extends AppModel
     public $primaryKey = 'radacctid';
     public $displayField = 'acctsessionsid';
     public $name = 'Radacct';
-
 }
 
 ?>

@@ -1,29 +1,33 @@
 <?php
 
-class SystemDetail extends AppModel
-{
+class SystemDetail extends AppModel {
 	/* Reads a file. */
-	public function readFile( $fileName ) {
-		$result = file( $fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES );
+	public function readFile($fileName) {
+        $result = file(
+            $fileName,
+            FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
+        );
 
-		foreach( $result as &$value)
-			$value = trim( $value );
+		foreach  ($result as &$value) {
+            $value = trim( $value );
+        }
 
 		return $result;
 	}
 
 	/* Executes a command. */
-	public function execCmd( $cmd ) {
-		exec( $cmd, $result );
+	public function execCmd($cmd) {
+		exec($cmd, $result);
 
-		foreach( $result as &$value)
-			$value = trim( $value );
+		foreach($result as &$value) {
+            $value = trim( $value );
+        }
 
 		return $result;
 	}
 
 	/* Converts seconds to days, hours, minutes, seconds. */
-	public function convertSecTime( $time ){
+	public function convertSecTime($time) {
 		$seconds	= $time%60;
 		$minutes	= floor($time/60)%60;
 		$hours		= floor($time/3600)%24;

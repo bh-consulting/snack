@@ -39,7 +39,10 @@ class RadacctsController extends AppController
 				    }
 				}
 		    } else {
-				$this->Session->setFlash(__('Please, select at least one session !'), 'flash_warning');
+                $this->Session->setFlash(
+                    __('Please, select at least one session !'),
+                    'flash_warning'
+                );
 		    }
 		}
 		$this->set(
