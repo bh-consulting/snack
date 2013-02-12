@@ -54,7 +54,7 @@ whiptail \
 	--title "SNACK ${VERSION}" \
 	--yes-button "Start" \
 	--no-button "Cancel" \
-	--yesno "\nWelcome !\n\nYou are installing SNACK.\n\nErrors are logged in /tmp/snack_errors.log\nStdout are logged in /tmp/snack_out.log" \
+	--yesno "\nWelcome !\n\nYou are installing SNACK.\n\nAll errors are logged in /tmp/snack_errors.log\nStdout are logged in /tmp/snack_out.log" \
 	15 70
 
 if [ $? != 0 ]; then
@@ -80,7 +80,7 @@ sleep $DISPLAY_SLEEP
 
 PASSWORD_DB_ROOT=$(whiptail \
 	--title "SNACK ${VERSION}" \
-	--passwordbox "\n\nWhat is the Mysql password for root?" \
+	--passwordbox "\n\nWhat is the MySQL password for 'ROOT' user?" \
 	10 70 3>&1 1>&2 2>&3)
  
 if [ $? != 0 ]; then
@@ -95,10 +95,10 @@ while [ -z "${PASSWORD_RADIUS}" -o ${PASSWORD_RADIUS} != ${PASSWORD_RADIUS_BIS} 
 do
     if [ -n "${PASSWORD_RADIUS}" ]
     then
-	echo "Password not corresponding!" >> $LOG
+	echo "Passwords not corresponding!" >> $LOG
 	whiptail \
 		--title "SNACK ${VERSION}" \
-		--infobox "\n\nError: Password not corresponding!" \
+		--infobox "\n\nError: Passwords not corresponding!" \
 		10 70
 	sleep $DISPLAY_SLEEP
 	sleep $DISPLAY_SLEEP
@@ -106,7 +106,7 @@ do
 
     PASSWORD_RADIUS=$(whiptail \
 	--title "SNACK ${VERSION}" \
-	--passwordbox "\n\nDefine the password for administrator:" \
+	--passwordbox "\n\nPlease, define the password for 'ADMIN' user:" \
 	10 70 3>&1 1>&2 2>&3)
      
     if [ $? != 0 ]; then
@@ -119,7 +119,7 @@ do
     
     PASSWORD_RADIUS_BIS=$(whiptail \
 	--title "SNACK ${VERSION}" \
-	--passwordbox "\n\nRe-enter the password for administrator:" \
+	--passwordbox "\n\nPlease, re-enter the password for 'ADMIN' user:" \
 	10 70 3>&1 1>&2 2>&3)
      
     if [ $? != 0 ]; then
@@ -135,7 +135,7 @@ MYSQL_RES=$(echo "	CREATE DATABASE ${DATABASE} DEFAULT CHARACTER SET utf8 COLLAT
 			GRANT ALL ON ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
 			GRANT ALL ON ${DATABASE}.logs to logsfreeradius@localhost identified by 'logsfreeradius';\
 			flush privileges;\
-" | mysql -uroot -p${PASSWORD_DB_ROOT} 2>&1 >$OUT)
+" | mysql -uroot -p${PASSWORD_DB_ROOT} 2>&1 >>$OUT)
 
 until [ $? -eq 0 ]
 do
@@ -146,7 +146,7 @@ do
 			10 70
 
 		if [ $? == 0 ]; then
-			echo "DROP DATABASE ${DATABASE};" | mysql -uroot -p${PASSWORD_DB_ROOT}
+			echo "DROP DATABASE ${DATABASE};" | mysql -uroot -p${PASSWORD_DB_ROOT} >>$OUT 2>>$LOG
 		else
 			whiptail \
 				--title "SNACK ${VERSION}" \
@@ -173,7 +173,7 @@ do
 				GRANT ALL ON ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
 				GRANT ALL ON ${DATABASE}.logs to logsfreeradius@localhost identified by 'logsfreeradius';\
 				flush privileges;\
-	" | mysql -uroot -p${PASSWORD_DB_ROOT})
+	" | mysql -uroot -p${PASSWORD_DB_ROOT} 2>&1 >>$OUT)
 done
 
 echo 20 | whiptail \
@@ -246,7 +246,7 @@ fi
 
 echo 5 | whiptail \
 	--title "SNACK ${VERSION}" \
-	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring certificates for Radius...\nConfiguring SSL." \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring certificates for Radius...\nConfigure SSL." \
 	10 70 0
 
 # Update openssl.cnf configuration
@@ -292,7 +292,7 @@ echo "01" > $DEST_PATH/crlnumber
 
 echo 20 | whiptail \
 	--title "SNACK ${VERSION}" \
-	--gauge "\nStep #${STEP}/${LAST_STEP}: Configuring certificates for Radius...\nGenerate certificate authority\nCould take a long time." \
+	--gauge "\nStep #${STEP}/${LAST_STEP}: Configuring certificates for Radius...\nGenerate certificate authority.\nCould take a long time." \
 	10 70 0
 
 # Creation of the Authority Certificate (CA)
@@ -473,7 +473,7 @@ chmod -R $ONLY_INTERFACE_ACCESS $USER_HOME/scripts
 
 echo 90 | whiptail \
 	--title "SNACK ${VERSION}" \
-	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring certificates for Radius...\nCreate snack group." \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring certificates for Radius...\nPopulate snack group." \
 	10 70 0
 
 # Setting access groups to include web interface and radius
@@ -516,7 +516,7 @@ rm -f ${APACHE_PATH}/sites-enabled/000-default
 
 echo 33 | whiptail \
 	--title "SNACK ${VERSION}" \
-	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring apache for Radius...\nEnabling ssl and rewrite modules." \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring apache for Radius...\nEnable ssl and rewrite modules." \
 	10 70 0
 
 {

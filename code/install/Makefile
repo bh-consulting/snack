@@ -1,5 +1,4 @@
-all:
-	sudo rm -fr paquet_deb
+all: clean
 	sudo cp -a paquet paquet_deb
 	sudo cp -R ../interface paquet_deb/home/snack/interface
 	sudo find paquet_deb -name .svn -exec rm -r {} +
@@ -15,5 +14,4 @@ clean:
 	sudo rm -fr paquet_deb Radius-BH-Consulting.deb
 
 uninstall: clean
-	-echo "drop database radius;" | mysql -uroot -pbh
-	-sudo apt-get remove radius-bh-consulting
+	sudo apt-get autoremove --purge radius-bh-consulting
