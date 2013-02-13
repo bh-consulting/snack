@@ -193,12 +193,7 @@ echo $this->element('dropdownButton', array(
 	    ),
 	)
     ));
-echo $this->Form->end(array(
-    'id' => 'selectionAction',
-    'name' => 'action',
-    'type' => 'hidden',
-    'value' => 'delete'
-));
+echo $this->Form->end();
 echo $this->element('paginator_footer');
 unset($n);
 ?>

@@ -180,4 +180,10 @@ class ReplyRemoveException extends UserGroupException {
     }
 }
 
+class BadBackupOrNasID extends CakeException {
+    public function __construct($msg, $params=array()) {
+        parent::__construct(vsprintf($msg, $params));
+    }
+}
+
 ?>

@@ -13,7 +13,7 @@ $columns = array(
 );
 ?>
 
-<h1><?php echo __('Backups (%s)', $nas); ?></h1>
+<h1><?php echo __('Backups of %s (%s)', $nasShortname, $nasIP); ?></h1>
 
 <?php
 echo $this->element('filters_panel', array(
@@ -122,7 +122,8 @@ for($i = 0; $i < count($backups); $i++) {
 	array(
 	    'controller' => 'backups',
 	    'action' => 'view',
-	    $columns['id'],
+	    $backup['Backup']['id'],
+	    $nasID,
 	)
     );
     echo '</td>';
@@ -159,7 +160,12 @@ echo $this->Form->button('<i class="icon-zoom-in icon-white"></i> ' . __('Compar
     )
 );
 
+echo $this->Form->hidden('nas',
+    array('value' => $nasID)
+);
+
 echo $this->Form->end();
+
 ?>
 
 <?php
