@@ -53,7 +53,7 @@ echo $this->Form->create('SelectDiff', array(
 	<thead>
 	    <tr>
 <?php
-foreach($columns as $field => $text) {
+foreach ($columns as $field => $text) {
     $sort = '';
 
     if (preg_match("#$field$#", $this->Paginator->sortKey())) {
@@ -69,20 +69,20 @@ foreach($columns as $field => $text) {
     }
 }
 
-echo '<th class="smallCol">'.__('View').'</th>';
+echo '<th class="smallCol">' . __('View') . '</th>';
 ?>
 	    </tr>
 	</thead>
 
 	<tbody>
-	<?php if(!empty($backups)): ?>
+	<?php if (!empty($backups)): ?>
 <?php
 for($i = 0; $i < count($backups); $i++) {
     $backup = $backups[$i];
 
     echo '<tr>';
 
-    foreach($columns as $field => $text) {
+    foreach ($columns as $field => $text) {
 	echo '<td '.($field == 'id' ? 'class="smallCol" style="font-weight: bold"' : '').'>';
 	echo $backup['Backup'][$field];
 	echo '</td>';

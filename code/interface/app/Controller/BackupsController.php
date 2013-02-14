@@ -101,7 +101,7 @@ class BackupsController extends AppController
 	    $this->gitDiffNas(
 		$this->params['url']['nas'],
 		$this->params['url']['a'],
-		$this->params['url']['b'],
+		$this->params['url']['b']
 	    );
 
 	} catch(BadBackupOrNasID $e) {

@@ -150,4 +150,5 @@ var Boostrapify = {
 // styling starts when document loads
 $(document).ready(function(){
     Boostrapify.load();
+    $(window).resize();
 });

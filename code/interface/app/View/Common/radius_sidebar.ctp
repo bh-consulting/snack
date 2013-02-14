@@ -1,5 +1,4 @@
-<div class="span3">
-    <ul class="nav nav-list bs-sidenav affix">
+    <ul class="nav nav-list bs-sidenav affix mainmenu">
 	<li class="<?php echo $this->fetch('users_active'); ?>">
 <?php
 echo $this->Html->link(
@@ -92,12 +91,7 @@ echo $this->Html->link(
 ?>
 	</li>
     </ul>
-</div>
-<div class="span9">
     <div id="content" class="content">
 	<?php echo $this->Session->flash(); ?>
-
 	<?php echo $this->fetch('content'); ?>
     </div>
-</div>
-
