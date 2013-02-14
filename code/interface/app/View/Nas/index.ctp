@@ -35,9 +35,9 @@ echo $this->Form->select(
     'All',
     array('all' => ''),
     array(
-	'class' => 'checkbox rangeAll',
-	'multiple' => 'checkbox',
-	'hiddenField' => false,
+    	'class' => 'checkbox rangeAll',
+    	'multiple' => 'checkbox',
+    	'hiddenField' => false,
     )
 );
 ?>
@@ -178,7 +178,7 @@ if (!empty($nas)) {
 <?php
 echo $this->element('dropdownButton', array(
     'buttonCount' => 1,
-    'title' => 'Action',
+    'title' => __('Action'),
     'icon' => '',
     'items' => array(
 	$this->Html->link(
@@ -193,7 +193,12 @@ echo $this->element('dropdownButton', array(
 	    ),
 	)
     ));
-echo $this->Form->end();
+echo $this->Form->end(array(
+    'id' => 'selectionAction',
+    'name' => 'action',
+    'type' => 'hidden',
+    'value' => 'delete'
+));
 echo $this->element('paginator_footer');
 unset($n);
 ?>

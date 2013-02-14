@@ -2,13 +2,13 @@
 
 App::import('Model', 'Backup');
 
-class NasController extends AppController
-{
+class NasController extends AppController {
     public $helpers = array('Html', 'Form', 'JqueryEngine');
     public $paginate = array('limit' => 10, 'order' => array('Nas.id' => 'asc'));
     public $uses = array('Nas');
     public $components = array(
-	'Filters' => array('model' => 'Nas'),
+    // 	'Filters' => array('model' => 'Nas'),
+        'Session',
     );
 
     public function index() {
@@ -31,6 +31,7 @@ class NasController extends AppController
                                 __('NAS have been deleted.'),
                                 'flash_success'
                             );
+                            Utils::userlog('deleted NAS ' . $nasId);
                             break;
                         }
                     } else {
@@ -40,6 +41,7 @@ class NasController extends AppController
                                 __('Unable to delete NAS.'),
                                 'flash_error'
                             );
+                            Utils::userlog(__('error while deleting NAS %s', $nasId), 'error');
                             break;
                         }
                     }
@@ -51,8 +53,7 @@ class NasController extends AppController
         $this->set('nas', $this->paginate('Nas'));
     }
 
-    public function view($id = null)
-    {
+    public function view($id = null) {
         $this->Nas->id = $id;
         $nas = $this->Nas->read();
 
@@ -89,9 +90,11 @@ class NasController extends AppController
 
             if ($this->Nas->save($this->request->data)) {
                 $this->alert_restart_server();
+                Utils::userlog(__('added NAS %s', $this->Nas->id));
                 $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(__('Unable to add NAS.'), 'flash_error');
+                Utils::userlog(__('error while adding NAS'), 'error');
             }
         }
     }
@@ -104,9 +107,11 @@ class NasController extends AppController
         } else {
             if($this->Nas->save($this->request->data)){
                 $this->alert_restart_server();
+                Utils::userlog(__('edited NAS %s', $id));
                 $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(__('Unable to update NAS'), 'flash_error');
+                Utils::userlog(__('error while editing NAS %s', $id), 'error');
             }
         }
     }
@@ -119,7 +124,11 @@ class NasController extends AppController
 
         if($this->Nas->delete($id)){
             $this->Session->setFlash(__('The NAS with id:') . $id . ' ' . __('has been deleted') . '.');
+            Utils::userlog(__('deleted NAS %s', $id));
             $this->redirect(array('action' => 'index'));
+        } else {
+            $this->Session->setFlash(__('Unable to delete NAS id:') . $id . ' ' . __('has been deleted') . '.');
+            Utils::userlog(__('error while deleting NAS %s', $id), 'error');
         }
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-class RadacctsController extends AppController
-{
+class RadacctsController extends AppController {
+
     public $helpers = array('Html', 'Form');
     public $paginate = array('limit' => 10, 'order' => array( 'acctuniqueid' => 'asc' ) );
 
@@ -25,6 +25,7 @@ class RadacctsController extends AppController
 							__('Sessions have been deleted.'),
 							'flash_success'
 						    );
+						    Utils::userlog(__('deleted session %s', $sessionId));
 						    break;
 						}
 				    } else {
@@ -34,6 +35,7 @@ class RadacctsController extends AppController
 							__('Unable to delete sessions.'),
 							'flash_error'
 						    );
+						    Utils::userlog(__('error while deleting session %s', $sessionId), 'error');
 						    break;
 						}
 				    }
@@ -76,7 +78,15 @@ class RadacctsController extends AppController
 				. __(' has been deleted.'),
 				'flash_success'
 		    );
+		    Utils::userlog(__('deleted session %s', $id));
 		    $this->redirect(array('action' => 'index'));
+		} else {
+		    $this->Session->setFlash(
+				__('Unable to delete session')
+				. ' ' . $id,
+				'flash_error'
+			);
+			Utils::userlog(__('error while deleting session %s', $id), 'error');
 		}
     }
 }

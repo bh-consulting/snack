@@ -2,8 +2,7 @@
 
 App::uses('Utils', 'Lib');
 
-class Nas extends AppModel
-{
+class Nas extends AppModel {
 	public $useTable = 'nas';
 	public $primaryKey = 'id';
 	public $displayField = 'nasname';
@@ -16,36 +15,34 @@ class Nas extends AppModel
 			'notEmpty' => array(
 				'rule' => 'notEmpty',
 				'message' => 'You have to type the NAS IP.',
-				'allowEmpty' => false
-				),
+				'allowEmpty' => false,
+				'required' => true,
+			),
 			'isUnique' => array(
 				'rule' => 'isUnique',
-				'message' => 'IP already in the database.'
-				),
-			'ipFormat' => array(
-				'rule' => array('isIPFormat'),
-				'message' => 'This is not an IP address format.'
-				)
+				'message' => 'IP already in the database.',
 			),
+			'ipFormat' => array(
+				'rule' => 'isIPFormat',
+				'message' => 'This is not an IP address format.',
+			),
+		),
 		'secret' => array(
 			'notEmpty' => array(
 				'rule' => 'notEmpty',
 				'message' => 'You have to type the NAS secret.',
-				'allowEmpty' => false
-				)
-			)
-		);
+				'required' => true,
+				'allowEmpty' => false,
+			),
+		)
+	);
 
 	public function isIPFormat($field=array()) {
-		foreach( $field as $key => $value ){ 
-			$v1 = $value; 
-			if(!Utils::isIP($v1)) { 
-				return false; 
-			} else { 
-				continue; 
-			} 
-		} 
-		return true; 
+		$value = array_shift($field);
+		if(Utils::isIP($value)) { 
+			return true; 
+		}
+		return false; 
 	}
 }
 ?>

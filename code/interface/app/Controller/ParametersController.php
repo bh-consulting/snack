@@ -25,6 +25,7 @@ class ParametersController extends AppController {
                     __('Parameters have been updated.'),
                     'flash_success'
                 );
+                Utils::userlog(__('Parameters have been updated.'));
                 
                 $this->redirect(array('action' => 'index'));
             } else {
@@ -32,6 +33,7 @@ class ParametersController extends AppController {
                     __('Unable to update parameters.'),
                     'flash_error'
                 );
+                Utils::userlog(__('Unable to update parameters.'), 'error');
             }
         } else {
             $this->request->data = $this->Parameter->read();

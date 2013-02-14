@@ -174,16 +174,18 @@ CakeLog::config('error', array(
     'file' => 'error',
 ));
 
-CakeLog::config('syslog', array(
-    'engine' => 'SysLog',
-    'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
+CakeLog::config('debug', array(
+    'engine' => 'FileLog',
+    'types' => array('notice', 'info', 'debug'),
+    'file' => 'debug',
 ));
 
-CakeLog::config('debug', array(
-	'engine' => 'FileLog',
-	'types' => array('notice', 'info', 'debug'),
-	'file' => 'debug',
+CakeLog::config('syslog', array(
+    'engine' => 'SysLog',
+    'ident' => 'Snack',
+    'facility' => LOG_LOCAL4,
 ));
+
 
 /**
  * My exceptions.

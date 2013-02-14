@@ -32,7 +32,7 @@ class RadusersController extends AppController {
                 $this->request->data['Raduser']['passwd']
             )){
                 $this->Auth->login($this->request->data['Raduser']);
-                $this->log($this->request->data['Raduser'] . ' logged in.');
+                Utils::userlog(__('logged in'));
                 return $this->redirect($this->Auth->redirect());
             } else {
                 $this->Session->setFlash(__('Username or password is incorrect'), 'default', array(), 'auth');
@@ -41,6 +41,7 @@ class RadusersController extends AppController {
     }
 
     public function logout() {
+        Utils::userlog(__('logged out'));
         $this->redirect($this->Auth->logout());
     }
 
@@ -111,6 +112,7 @@ class RadusersController extends AppController {
             try {
                 foreach ($ids as $userId) {
                     $this->Checks->delete($this->request, $userId);
+                    Utils::userlog(__('deleted user %s', $userId));
                 }
 
                 $this->Session->setFlash(
@@ -122,6 +124,7 @@ class RadusersController extends AppController {
                     $e->getMessage(),
                     'flash_error'
                 );
+                Utils::userlog(__('error while deleting users'), 'error');
             }
         } else {
             $this->Session->setFlash(
@@ -348,6 +351,7 @@ class RadusersController extends AppController {
                     );
                 }
 
+                Utils::userlog(__('added user %s', $this->Raduser->id));
                 $this->redirect(array('action' => 'index'));
             }
         }
@@ -479,7 +483,7 @@ class RadusersController extends AppController {
                     $e->getMessage(),
                     'flash_error'
                 );
-
+                Utils::userlog(__('error while adding a loginpass user'), 'error');
                 $success = false;
             }
         }
@@ -522,6 +526,7 @@ class RadusersController extends AppController {
                     $e->getMessage(),
                     'flash_error'
                 );
+                Utils::userlog(__('error while adding a cert user'), 'error');
 
                 $success = false;
             }
@@ -571,6 +576,7 @@ class RadusersController extends AppController {
                     'flash_error'
                 );
 
+                Utils::userlog(__('error while adding a MAC user'), 'error');
                 $success = false;
             }
         }
@@ -599,6 +605,7 @@ class RadusersController extends AppController {
                     __('User has been updated.'),
                     'flash_success');
 
+                Utils::userlog(__('edited user %s', $this->Raduser->id));
                 $this->redirect(array('action' => 'index'));
             }
         }
@@ -677,6 +684,7 @@ class RadusersController extends AppController {
                     $e->getMessage(),
                     'flash_error'
                 );
+                Utils::userlog(__('error while editing loginpass user %s', $this->Raduser->id), 'error');
                 $success = false;
             }
         }
@@ -713,6 +721,7 @@ class RadusersController extends AppController {
                     $e->getMessage(),
                     'flash_error'
                 );
+                Utils::userlog(__('error while editing MAC user %s', $this->Raduser->id), 'error');
                 $success = false;
             }
         }
@@ -759,6 +768,7 @@ class RadusersController extends AppController {
                     $e->getMessage(),
                     'flash_error'
                 );
+                Utils::userlog(__('error while editing cert user %s', $this->Raduser->id), 'error');
                 $success = false;
             }
         }
@@ -780,6 +790,7 @@ class RadusersController extends AppController {
             }
 
             $this->Checks->delete($this->request, $id);
+            Utils::userlog(__('deleted user %s', $id));
 
             $this->Session->setFlash(
                 __('The user with id #%d has been deleted.', $id),
@@ -790,6 +801,7 @@ class RadusersController extends AppController {
                 $e->getMessage(),
                 'flash_error'
             );
+            Utils::userlog(__('error while deleting user %s', $id), 'error');
         }
 
         $this->redirect(array('action' => 'index'));
@@ -856,6 +868,7 @@ class RadusersController extends AppController {
 
         // Create new certificate
         $result = Utils::shell($command);
+        Utils::userlog(__('created certificate for user %s', $userID));
 
         switch ($result['code']) {
         case 1:
@@ -886,6 +899,7 @@ class RadusersController extends AppController {
 
             // Revoke
             $result = Utils::shell($command);
+            Utils::userlog(__('deleted certificate for user %s', $userID));
 
             if ($result['code']) {
                 switch ($result['code']) {

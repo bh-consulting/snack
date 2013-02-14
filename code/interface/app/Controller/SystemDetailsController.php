@@ -65,11 +65,13 @@ class SystemDetailsController extends AppController {
                     __('Server %s has been restarted.', $server),
                     'flash_success'
                 );
+                Utils::userlog(__('Server %s has been restarted.', $server));
             } else {
                 $this->Session->setFlash(
                     __('Server %s cannot be restarted.', $server),
                     'flash_error'
                 );
+                Utils::userlog(__('Server %s cannot be restarted.', $server), 'error');
             }
         }
 

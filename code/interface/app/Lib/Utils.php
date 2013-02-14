@@ -1,10 +1,13 @@
 <?
-/**
- * 
- */
 Configure::load('parameters');
 
 class Utils {
+
+    /**
+     * Tell if the given string is a MAC address
+     * @param  string $string string to check
+     * @return boolean         string is a MAC
+     */
     public static function isMAC($string) {
         return preg_match(
             '/^(?:[[:xdigit:]]{2}([-:]?))(?:[[:xdigit:]]{2}\1){4}[[:xdigit:]]{2}$/',
@@ -12,6 +15,11 @@ class Utils {
         );
     }
 
+    /**
+     * Tell if the given string is an IP address
+     * @param  string $string string to check
+     * @return boolean         string is an IP
+     */
     public static function isIP($string) {
         return preg_match(
             '/^([[:digit:]]{1,3}.){3}[[:digit:]]{1,3}(\/[[:digit:]]{2})?$/',
@@ -19,6 +27,11 @@ class Utils {
         );
     }
 
+    /**
+     * Clean a MAC string by removing - and : chars
+     * @param  string $mac mac nicely formatted
+     * @return string      cleaned mac
+     */
     public static function cleanMAC($mac) {
         $mac = str_replace(':', '', $mac);
         $mac = str_replace('-', '', $mac);
@@ -124,70 +137,6 @@ class Utils {
         return "";
     }
 
-    public function isCiscoCheck($id) {
-        $radchecks = $this->getRadchecks($id);
-        foreach ($radchecks as $r) {
-            if ($r['Radcheck']['attribute'] == 'NAS-Port-Type') {
-                if($r['Radcheck']['value'] == '0'
-                    || $r['Radcheck']['value'] == '5') {
-                        return true;
-                    } 
-            }
-        }
-        return false;        
-    }
-
-    public function isLoginPassCheck($id) {
-        $md5challenge = false;
-        $nasporttype = false;
-
-        $radchecks = $this->getRadchecks($id);
-        foreach ($radchecks as $r) {
-            if ($r['Radcheck']['attribute'] == 'NAS-Port-Type') {
-                if($r['Radcheck']['value'] == '15')
-                    $nasporttype = true; 
-            } else if ($r['Radcheck']['attribute'] == 'EAP-Type') {
-                if($r['Radcheck']['value'] == 'MD5-CHALLENGE')
-                    $md5challenge = true;
-            }
-            $username = $r['Radcheck']['username'];
-        }
-
-        return $md5challenge
-            && $nasporttype
-            && ! $this->isMACAddress($username);
-    }
-
-    public function isMACCheck($id) {
-        $md5challenge = false;
-        $nasporttype = false;
-
-        $radchecks = $this->getRadchecks($id);
-        foreach ($radchecks as $r) {
-            if ($r['Radcheck']['attribute'] == 'NAS-Port-Type') {
-                if($r['Radcheck']['value'] == '15')
-                    $nasporttype = true; 
-            } else if ($r['Radcheck']['attribute'] == 'EAP-Type') {
-                if($r['Radcheck']['value'] == 'MD5-CHALLENGE')
-                    $md5challenge = true;
-            }
-            $username = $r['Radcheck']['username'];
-        }
-        return $md5challenge && $nasporttype && $this->isMACAddress($username);
-    }
-
-    public function isCertCheck($id) {
-        $radchecks = $this->getRadchecks($id);
-        foreach ($radchecks as $r) {
-            if ($r['Radcheck']['attribute'] == 'EAP-Type') {
-                if($r['Radcheck']['value'] == 'EAP-TTLS'
-                    || $r['Radcheck']['value'] == 'EAP-TLS')
-                    return true; 
-            }
-        }
-        return false;        
-    }
-
     public static function getISOCode($httpAcceptLanguage) {
         $langs = array(
             'fr-FR' => 'fre',
@@ -195,13 +144,23 @@ class Utils {
         );
 
         foreach ($langs as $key => $value) {
-	    $httpAcceptLanguages = explode(',', $httpAcceptLanguage);
+    	    $httpAcceptLanguages = explode(',', $httpAcceptLanguage);
 
             if($httpAcceptLanguages[0] == $key) {
                 return $value;
             }
         }
         return 'eng';
+    }
+
+    /**
+     * Log a message in syslog using currently connected user
+     * @param  string $message message to log
+     * @param  string $level   level of the message
+     * @return void         
+     */
+    public static function userlog($message, $level='info') {
+        CakeLog::write($level, AuthComponent::user('username') . ': ' . $message);
     }
 }
 ?>

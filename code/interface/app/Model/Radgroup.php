@@ -1,6 +1,5 @@
 <?
 
-App::uses('AuthComponent', 'Controller/Component');
 App::uses('Utils', 'Lib');
 
 class Radgroup extends AppModel
@@ -20,7 +19,8 @@ class Radgroup extends AppModel
             'notEmpty' => array(
                 'rule' => 'notEmpty',
                 'message' => 'Groupname cannot be empty',
-                'allowEmpty' => false
+                'allowEmpty' => false,
+                'required' => true,
             )
         ),
         'simultaneous_use' => array(

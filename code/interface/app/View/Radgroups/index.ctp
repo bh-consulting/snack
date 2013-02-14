@@ -155,7 +155,7 @@ if (!empty($radgroups)) {
 <?php
 echo $this->element('dropdownButton', array(
     'buttonCount' => 1,
-    'title' => 'Action',
+    'title' => __('Action'),
     'icon' => '',
     'items' => array(
 	$this->Html->link(

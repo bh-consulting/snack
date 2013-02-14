@@ -41,6 +41,7 @@ class RadgroupsController extends AppController
             try {
                 foreach ($ids as $userId) {
                     $this->Checks->delete($this->request, $userId);
+                    Utils::userlog(__('deleted group %s', $userId));
                 }
 
                 $this->Session->setFlash(
@@ -52,6 +53,7 @@ class RadgroupsController extends AppController
                     $e->getMessage(),
                     'flash_error'
                 );
+                Utils::userlog(__('error while deleting group'), 'error');
             }
         } else {
             $this->Session->setFlash(
@@ -108,6 +110,7 @@ class RadgroupsController extends AppController
                     __('New group added.'),
                     'flash_success'
                 );
+                Utils::userlog(__('added group %s', $this->Radgroup->id));
 
                 $this->redirect(array('action' => 'index'));
             } catch (UserGroupException $uge) {
@@ -115,6 +118,7 @@ class RadgroupsController extends AppController
                     $uge->getMessage(),
                     'flash_error'
                 );
+                Utils::userlog(__('error while adding group'), 'error');
             }
         }
 
@@ -141,6 +145,7 @@ class RadgroupsController extends AppController
                     __('Group has been updated.'),
                     'flash_success'
                 );
+                Utils::userlog(__('edited group %s', $this->Radgroup->id));
 
                 $this->redirect(array('action' => 'index'));
             } catch (UserGroupException $uge) {
@@ -148,6 +153,7 @@ class RadgroupsController extends AppController
                     $uge->getMessage(),
                     'flash_error'
                 );
+                Utils::userlog(__('error while editing group %s', $this->Radgroup->id), 'error');
             }
         }
 
@@ -169,11 +175,13 @@ class RadgroupsController extends AppController
 				__('The group with id #') . $id . __(' has been deleted.'),
 				'flash_success'
 			);
+            Utils::userlog(__('deleted group %s', $id));
 		} catch (UserGroupException $uge) {
 			$this->Session->setFlash(
 				$uge->getMessage(),
 				'flash_error'
 			);
+            Utils::userlog(__('error while deleting group %s', $this->Radgroup->id), 'error');
 		}
 		
 		$this->redirect(array('action' => 'index'));

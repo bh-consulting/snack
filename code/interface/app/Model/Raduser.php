@@ -1,6 +1,5 @@
 <?php
 
-//App::uses('AuthComponent', 'Controller/Component');
 App::uses('Utils', 'Lib');
 
 class Raduser extends AppModel {
