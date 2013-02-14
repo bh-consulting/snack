@@ -99,10 +99,10 @@ $cakeDescription = __('SNACK');
 
                 <?php
 
-                if(AuthComponent::user('username') != null){
+                if($this->Session->read('Auth.User')){
                     echo '<li>' .
                         $this->Html->link(
-                            __('Logout from ') . AuthComponent::user('username') .
+                            __('Logout from ') . $this->Session->read('Auth.User.username') .
                             ' <i class="icon-off"></i>',
                             array(
                                 'controller' => 'radusers',

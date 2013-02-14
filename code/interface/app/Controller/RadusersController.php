@@ -31,7 +31,8 @@ class RadusersController extends AppController {
                 $this->request->data['Raduser']['username'],
                 $this->request->data['Raduser']['passwd']
             )){
-                $this->Auth->login($this->request->data['Raduser']); 
+                $this->Auth->login($this->request->data['Raduser']);
+                $this->log($this->request->data['Raduser'] . ' logged in.');
                 return $this->redirect($this->Auth->redirect());
             } else {
                 $this->Session->setFlash(__('Username or password is incorrect'), 'default', array(), 'auth');
