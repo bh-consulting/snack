@@ -12,7 +12,10 @@ echo '<legend>' . __('User info') . '</legend>';
 echo $this->element('tab_panes', array(
     'items' => array(
         __('New') => $this->Form->input('username'),
-        __('Existing') => $this->Form->input('users', array('type' => 'select')),
+        __('Existing') => $this->Form->input(
+            'existing_user',
+            array('type' => 'select', 'options' => $users, 'empty' => true)
+        ),
     ),
 ));
 
@@ -22,10 +25,16 @@ echo '</fieldset>';
 
 echo '<fieldset>';
 echo '<legend>' . __('Admin rights') . '</legend>';
-echo $this->Form->input('create_right');
-echo $this->Form->input('crud_right');
+echo $this->Form->input('admin', array(
+    // 'type' => 'radio',
+    'options' => array(
+        '1' => __('Create users'),
+        '2' => __('Create, Update, Delete users'),
+    ),
+    'legend' => false,
+));
+echo '</fieldset>';
 echo 'Citation CdC : - créer utilisateur
 – créer, modifier, supprimer + accès aux certificats';
-echo '</fieldset>';
 
 echo $this->Form->end(__('Create'));

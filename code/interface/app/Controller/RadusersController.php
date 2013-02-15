@@ -9,6 +9,7 @@ App::import('Model', 'Radusergroup');
  * Controller to handle user management: add, update, remove users.
  */
 class RadusersController extends AppController {
+
     public $helpers = array('Html', 'Form', 'JqueryEngine', 'Csv');
     public $paginate = array(
         'limit' => 10,
@@ -339,7 +340,7 @@ class RadusersController extends AppController {
                         $this->request->data['Raduser']['username']
                     );
                     $this->Session->setFlash(__(
-                        'New user added. His certificates were %s and %s.',
+                        'New user added. His certificates are %s and %s.',
                         $certs['public'],
                         $certs['key'],
                         'flash_success'
@@ -584,18 +585,77 @@ class RadusersController extends AppController {
         $this->add($success);
     }
 
+    /**
+     * Controller method to add an admin user
+     */
     public function add_admin() {
         if($this->request->is('post')){
+            $found = false;
+            $Radcheck = new Radcheck;
 
-        } else {
-            $users = $this->Raduser->find('all');
-            $values = array();
-            foreach ($users as $u) {
-                $values[$u['Raduser']['id']]= $u['Raduser']['username'];
+            // add the admin rights to an existing user
+            if(isset($this->request->data['Raduser']['existing_user'])
+                && !empty($this->request->data['Raduser']['existing_user'])
+            ){
+                $user = $this->Raduser->findById($this->request->data['Raduser']['existing_user']);
+                $user['Raduser']['admin'] = $this->request->data['Raduser']['admin'];
+                $this->request->data['Raduser']['username'] = $user['Raduser']['username'];
+
+                // change or add the password to the user
+                if(isset($this->request->data['Raduser']['passwd'])){
+                    $checks = $this->Checks->getChecks($this->request->data['Raduser']['existing_user']);
+                    foreach ($checks as $check) {
+                        if($check['Radcheck']['attribute'] == 'Cleartext-Password'){
+                            $check['Radcheck']['value'] = $this->request->data['Raduser']['passwd'];
+                            $found = true;
+                            $Radcheck->save($check);
+                            break;
+                        }
+                    }
+                }
+
+                $success = $this->Raduser->save($user);
+
+            // create a new user (only admin)
+            } else {
+                $this->Raduser->create();
+                $success = $this->Raduser->save($this->request->data);
             }
-            $this->set('users', $values);
+
+            // the user does not exist in radcheck, create it
+            if(!$found){
+                $Radcheck->create();
+                $Radcheck->save(array(
+                    'username' => $this->request->data['Raduser']['username'],
+                    'attribute' => 'Cleartext-Password',
+                    'op' => ':=',
+                    'value' => $this->request->data['Raduser']['passwd']
+                ));
+            }
+
+            if($success){
+                $this->Session->setFlash(__(
+                    'The admin user %s was added', $this->request->data['Raduser']['username']),
+                    'flash_success'
+                );
+                Utils::userlog(__('added admin user %s', $this->request->data['Raduser']['username']), 'error');
+                $this->redirect(array('action' => 'index'));
+
+            } else {
+                $this->Session->setFlash(
+                    'Unable to add the admin user',
+                    'flash_error'
+                );
+                Utils::userlog(__('error while adding an admin user'), 'error');
+            }
         }
-        
+
+        $users = $this->Raduser->find('all');
+        $values = array();
+        foreach ($users as $u) {
+            $values[$u['Raduser']['id']]= $u['Raduser']['username'];
+        }
+        $this->set('users', $values);
     }
 
     private function edit($success) {

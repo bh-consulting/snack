@@ -146,7 +146,8 @@ class Raduser extends AppModel {
         if(!isset($this->data[$this->name]['id'])){
             if (empty($value) 
                 && ($this->data[$this->name]['is_cisco'] == 1
-                || $this->data[$this->name]['is_loginpass'] == 1)
+                || $this->data[$this->name]['is_loginpass'] == 1
+                || $this->data[$this->name]['admin'] > 0)
             ) {
                 return false;
             }

@@ -15,17 +15,17 @@ var Boostrapify = {
 
 		// FORMS
 		$('form')
-		.not('#MultiSelectionIndexForm')
-		.addClass('form-horizontal');
+			.not('#MultiSelectionIndexForm')
+			.addClass('form-horizontal');
 		$('div.input')
-		.not('div.error')
-		.wrap('<div class="control-group"/>');
+			.not('div.error')
+			.wrap('<div class="control-group"/>');
 		$('div.input.error').wrap('<div class="control-group error"/>');
 		$('input')
-		.not('input[type="checkbox"]')
-		.not('input[type="radio"]')
-		.not('input[type="hidden"]')
-		.wrap('<div class="controls"/>');
+			.not('input[type="checkbox"]')
+			.not('input[type="radio"]')
+			.not('input[type="hidden"]')
+			.wrap('<div class="controls"/>');
 		$('textarea').wrap('<div class="controls"/>');
 		$('select').wrap('<div class="controls"/>');
 		$('label').addClass('control-label');
@@ -36,6 +36,9 @@ var Boostrapify = {
 		});
 		$('label.checkbox').wrap('<div class="controls"/>');
 		$('label:empty').remove();
+
+		$('input[type="radio"]').wrap('<label class="radio">');
+		$('div.radio').removeClass('radio');
 		
 		// All submit forms converted to primary button
 		$('input[type="submit"]').addClass('btn btn-primary');
