@@ -9,41 +9,21 @@ echo $this->Form->create('Raduser');
 
 echo '<fieldset>';
 echo '<legend>' . __('User info') . '</legend>';
+echo $this->element('tab_panes', array(
+    'items' => array(
+        __('New') => $this->Form->input('username'),
+        __('Existing') => $this->Form->input('users', array('type' => 'select')),
+    ),
+));
 
-?>
-<div class="tabbable">
-    <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="#tab1" data-toggle="tab">
-                <?php echo __('New'); ?>
-            </a>
-        </li>
-        <li>
-            <a href="#tab2" data-toggle="tab">
-                <?php echo __('Existing'); ?>
-            </a>
-        </li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane active" id="tab1">
-            <?php echo $this->Form->input('username'); ?>
-        </div>
-        <div class="tab-pane" id="tab2">
-            <?php
-                echo $this->Form->input('users', array('type' => 'select'));
-            ?>
-        </div>
-    </div>
-</div>
-
-<?php
 echo $this->Form->input('passwd', array('type' => 'password', 'label' => __('Password')));
 echo $this->Form->input('confirm_password', array('type' => 'password'));
-
 echo '</fieldset>';
 
 echo '<fieldset>';
 echo '<legend>' . __('Admin rights') . '</legend>';
+echo $this->Form->input('create_right');
+echo $this->Form->input('crud_right');
 echo 'Citation CdC : - créer utilisateur
 – créer, modifier, supprimer + accès aux certificats';
 echo '</fieldset>';

@@ -41,6 +41,8 @@ $cakeDescription = __('SNACK');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
     echo $this->Html->css('flags.css');
     echo $this->Html->css('jquery.terminal.css');
+    
+    echo $this->Html->script('jquery.min');
 
     echo $this->fetch('meta');
     echo $this->fetch('css');
@@ -141,7 +143,6 @@ $cakeDescription = __('SNACK');
 </div>
 <?php
 echo $this->element('sql_dump');
-echo $this->Html->script('jquery.min');
 echo $this->Html->script('jquery-ui.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapify');
