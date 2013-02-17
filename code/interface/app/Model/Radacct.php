@@ -4,7 +4,7 @@ class Radacct extends AppModel
 {
     public $useTable = 'radacct';
     public $primaryKey = 'radacctid';
-    public $displayField = 'acctsessionsid';
+    public $displayField = 'acctsessionid';
     public $name = 'Radacct';
 }
 

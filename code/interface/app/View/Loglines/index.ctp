@@ -17,29 +17,30 @@ $columns = array(
 echo $this->element('filters_panel', array(
     'controller' => 'loglines/index',
     'inputs' => array(
-	array(
-	    'name' => 'level',
-	    'label' => __('Severity from'),
-	    'type' => 'slidermax',
-	    'options' => array('id' => 'severity')
-	),
-	array(
-	    'name' => 'datefrom',
-	    'label' => __('From'),
-	    'type' => 'datetimepicker',
-	    'options' => array('id' => 'datefrom')
-	),
-	array(
-	    'name' => 'dateto',
-	    'label' => __('To'),
-	    'type' => 'datetimepicker',
-	    'options' => array('id' => 'dateto')
-	),
-	array(
-	    'name' => 'msg',
-	    'label' => __('Message contains (accept regex)'),
-	    'options' => array('id' => 'logmessage')
-	))
+        array(
+            'name' => 'level',
+            'label' => __('Severity from'),
+            'type' => 'slidermax',
+            'options' => array('id' => 'severity'),
+        ),
+        array(
+            'name' => 'datefrom',
+            'label' => __('From'),
+            'type' => 'datetimepicker',
+            'options' => array('id' => 'datefrom'),
+        ),
+        array(
+            'name' => 'dateto',
+            'label' => __('To'),
+            'type' => 'datetimepicker',
+            'options' => array('id' => 'dateto'),
+        ),
+        array(
+            'name' => 'text',
+            'label' => __('Message contains (accept regex)'),
+            'options' => array('id' => 'logmessage'),
+            'autoComplete' => true,
+        ))
     )
 );
 

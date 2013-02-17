@@ -2,15 +2,6 @@
 $this->extend('/Common/radius_sidebar'); 
 $this->assign('radius_active', 'active');
 $this->assign('nas_active', 'active');
-?>
-
-<h1><?php echo __('NAS'); ?></h1>
-<?php
-echo $this->Html->link(
-    '<i class="icon-hdd icon-white"></i> ' . __('Add a NAS'),
-    array('controller' => 'nas', 'action' => 'add'),
-    array('escape' => false, 'class' => 'btn btn-primary')
-);
 
 $columns = array(
     'id' => array('text' => __('ID'), 'fit' => true),
@@ -18,6 +9,26 @@ $columns = array(
     'shortname' => array('text' => __('Short name')),
     'description' => array('text' => __('Description')),
     'type' => array('text' => __('Type'), 'fit' => true),
+);
+?>
+
+<h1><?php echo __('NAS'); ?></h1>
+<?php
+echo $this->element('filters_panel', array(
+    'controller' => 'nas/index',
+    'inputs' => array(
+        array(
+            'name' => 'text',
+            'label' => __('Contains (accept regex)'),
+            'autoComplete' => 'true',
+        ))
+    )
+);
+
+echo $this->Html->link(
+    '<i class="icon-hdd icon-white"></i> ' . __('Add a NAS'),
+    array('controller' => 'nas', 'action' => 'add'),
+    array('escape' => false, 'class' => 'btn btn-primary')
 );
 
 echo $this->Form->create('Nas', array('action' => 'delete'));

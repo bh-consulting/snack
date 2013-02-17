@@ -2,23 +2,80 @@
 $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('session_active', 'active');
+
+$columns = array(
+    'checkbox' => array(
+        'id' => 'radacctid',
+        'fit' => true,
+    ),
+    'acctuniqueid' => array(
+        'id' => 'radacctid',
+        'text' => __('ID'),
+        'fit' => true,
+    ),
+    'username' => array(
+        'text' => __('Username'),
+    ),
+    'callingstationid' => array(
+        'text' => __('User station'),
+        'fit' => true,
+    ),
+    'acctstarttime' => array(
+        'text' => __('Start'),
+    ),
+    'acctstoptime' => array(
+        'text' => __('Stop'),
+    ),
+    'nasipaddress' => array(
+        'text' => __('NAS'),
+        'port' => 'nasportid',
+        'fit' => true,
+    ),
+    'nasporttype' => array(
+        'text' => __('Port type'),
+        'fit' => true,
+    ),
+    'view' => array(
+        'text' => __('View'),
+        'fit' => true,
+    ),
+    'delete' => array(
+        'text' => __('Delete'),
+        'fit' => true,
+    ),
+);
 ?>
 
 <h1><?php echo __('Sessions'); ?></h1>
+
 <?php
-$columns = array(
-    'checkbox' => array('id' => 'radacctid', 'fit' => true),
-    'acctuniqueid' => array('id' => 'radacctid', 'text' => __('ID'), 'fit' => true),
-    'username' => array('text' => __('Username')),
-    'callingstationid' => array('text' => __('User station'), 'fit' => true),
-    'acctstarttime' => array('text' => __('Start')),
-    'acctstoptime' => array('text' => __('Stop')),
-    'nasipaddress' => array('text' => __('NAS'), 'port' => 'nasportid', 'fit' => true),
-    'nasporttype' => array('text' => __('Port type'), 'fit' => true),
-    'delete' => array('text' => __('Delete'), 'fit' => true),
+echo $this->element('filters_panel', array(
+    'controller' => 'radaccts/index',
+    'inputs' => array(
+	array(
+	    'name' => 'datefrom',
+	    'label' => __('From'),
+	    'type' => 'datetimepicker',
+	),
+	array(
+	    'name' => 'dateto',
+	    'label' => __('To'),
+	    'type' => 'datetimepicker',
+	),
+	array(
+	    'name' => 'porttype',
+	    'label' => __('Port type'),
+	),
+	array(
+	    'name' => 'text',
+	    'label' => __('Contains (accept regex)'),
+        'autoComplete' => true,
+	))
+    )
 );
 
-echo $this->Form->create('Session', array('action' => 'delete'));
+echo $this->Form->create('Radacct', array('action' => 'delete'));
+echo $this->Form->hidden('id');
 echo $this->Form->end();
 
 echo $this->Form->create('MultiSelection', array('class' => 'form-inline'));
@@ -47,6 +104,7 @@ foreach ($columns as $field => $info) {
             )
         );
         break;
+    case 'view':
     case 'delete':
         echo h($info['text']);
         break;
@@ -56,7 +114,7 @@ foreach ($columns as $field => $info) {
         if (preg_match("#$field$#", $this->Paginator->sortKey())) {
             $sort = '<i class="'
                 .  $sortIcons[$this->Paginator->sortDir()]
-                . '"></i>';
+               . '"></i>';
         }
 
         echo $this->Paginator->sort(
@@ -100,6 +158,17 @@ if (!empty($radaccts)) {
                     )
                 );
                 break;
+            case 'view':
+		        echo '<i class="icon-eye-open"></i> ';
+                echo $this->Html->link(
+                    __('View'),
+                    array(
+                        'action' => 'view',
+                        'controller' => 'radaccts',
+                        $acct['Radacct']['radacctid'],
+                    )
+                );
+                break;
             case 'delete':
                 echo '<i class="icon-remove"></i> ';
                 echo $this->Html->link(
@@ -107,10 +176,9 @@ if (!empty($radaccts)) {
                     '#',
                     array(
                         'onClick' => "if (confirm('" . __('Are you sure?') . "')) {"
-                        . "$('#SessionDeleteForm').attr('action',"
-                        . "$('#SessionDeleteForm').attr('action') + '/"
+                        . "$('#RadacctDeleteForm input').val('"
                         . $acct['Radacct']['radacctid'] . "');"
-                        . "$('#SessionDeleteForm').submit(); }"
+                        . "$('#RadacctDeleteForm').submit(); }"
                     )
                 );
                 break;
@@ -180,10 +248,11 @@ echo $this->element('dropdownButton', array(
 echo $this->Form->end(array(
     'id' => 'selectionAction',
     'name' => 'action',
-    'type' => 'hidden',
-    'value' => 'delete'
+    'type' => 'hidden'
 ));
+
 unset($acct);
+
 echo $this->element('paginator_footer');
 ?>
 

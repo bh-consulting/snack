@@ -16,7 +16,6 @@ class Nas extends AppModel {
 				'rule' => 'notEmpty',
 				'message' => 'You have to type the NAS IP.',
 				'allowEmpty' => false,
-				'required' => true,
 			),
 			'isUnique' => array(
 				'rule' => 'isUnique',
@@ -27,11 +26,17 @@ class Nas extends AppModel {
 				'message' => 'This is not an IP address format.',
 			),
 		),
+        'shortname' => array(
+            'notEmpty' => array(
+                'rule' => 'notempty',
+                'message' => 'You have to type the NAS short name.',
+                'allowEmpty' => false,
+            ),
+        ),
 		'secret' => array(
 			'notEmpty' => array(
 				'rule' => 'notEmpty',
 				'message' => 'You have to type the NAS secret.',
-				'required' => true,
 				'allowEmpty' => false,
 			),
 		)

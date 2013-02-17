@@ -45,12 +45,7 @@ class Utils {
         }
     }
 
-    public static function secondToTime($last) {
-		$seconds	= $last%60;
-		$minutes	= floor($last/60)%60;
-		$hours		= floor($last/3600)%24;
-		$days		= floor($last/86400);
-
+    public static function formatTime($days, $hours, $minutes, $seconds) {
         $result = ($days) ? $days . ' '  
             . __n(__("day"), __("days"), $days)
             . ' ' : '';
@@ -65,6 +60,15 @@ class Utils {
             . ' ' : '';
 
         return $result;
+    }
+
+    public static function secondToTime($last) {
+		$seconds	= $last%60;
+		$minutes	= floor($last/60)%60;
+		$hours		= floor($last/3600)%24;
+		$days		= floor($last/86400);
+
+        return Utils::formatTime($days, $hours, $minutes, $seconds);
     }
 
     public static function octets($data) {
@@ -99,16 +103,28 @@ class Utils {
     public static function shell($command) {
         exec($command, $output, $return);
 
-        $msg[] = __('Command:') . $command;
-        $msg = array_merge($msg, $output);
-
         $result = array(
+            'command' => $command,
             'code' => $return,
-            'msg' => $msg,
+            'msg' => $output,
         );
 
         return $result;
     }
+
+	/* Reads a file. */
+	public static function readFile($fileName) {
+        $result = file(
+            $fileName,
+            FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES
+        );
+
+		foreach  ($result as &$value) {
+            $value = trim( $value );
+        }
+
+		return $result;
+	}
 
     public static function getUserCertsPath($username) {
         $base = Configure::read('Parameters.certsPath') . '/' . $username;
