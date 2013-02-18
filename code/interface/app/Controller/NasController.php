@@ -17,7 +17,13 @@ class NasController extends AppController {
     public function index() {
         $this->MultipleAction->process(
             array(
-                'success' => array('delete' => __('NAS have been removed.')),
+                'success' => array(
+                    'delete' => __('NAS have been removed.')
+                ),
+                'failed' => array(
+                    'delete' => __('Unable to delete NAS.')
+                ),
+                'warning' => __('Please, select at least one NAS !'),
             )
         );
 

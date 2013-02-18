@@ -4,10 +4,21 @@ $this->assign('radius_active', 'active');
 $this->assign('logs_active', 'active');
 
 $columns = array(
-    'id' => __('Line'),
-    'datetime' => __('Date'),
-    'level' => __('Severity'),
-    'msg' => __('Message')
+    'id' => array(
+        'text' => __('Line'),
+        'fit' => true,
+    ),
+    'datetime' => array(
+        'text' => __('Date'),
+        'fit' => true,
+    ),
+    'level' => array(
+        'text' => __('Severity'),
+        'fit' => true,
+    ),
+    'msg' => array(
+        'text' => __('Message'),
+    ),
 );
 ?>
 
@@ -43,114 +54,101 @@ echo $this->element('filters_panel', array(
         ))
     )
 );
-
-echo $this->Form->create('Logs', array('action' => 'delete'));
-echo $this->Form->end();
-
-echo $this->Form->create('MultiSelection', array('class' => 'form-inline'));
 ?>
 
 <table class="table loglinks">
 	<thead>
 	    <tr>
-		<th width="10px">
 <?php
-echo $this->Form->select(
-	'All',
-	array('all' => ''),
-	array('class' => 'checkbox rangeAll', 'multiple' => 'checkbox', 'hiddenField' => false)
-);
-?>
-		</th>
-<?php
-foreach($columns as $field => $text) {
+foreach ($columns as $field => $info) {
+    if (isset($info['fit']) && $info['fit']) {
+        echo '<th class="fit">';
+    } else {
+        echo '<th>';
+    }
+
     $sort = '';
 
     if (preg_match("#$field$#", $this->Paginator->sortKey())) {
-	$sort = '<i class="' . $sortIcons[$this->Paginator->sortDir()] . '"></i>';
+        $sort = '<i class="'
+            .  $sortIcons[$this->Paginator->sortDir()]
+            . '"></i>';
     }
 
-    echo '<th>'
-	. $this->Paginator->sort($field, "$text $sort", array('escape' => false))
-	. '</th>';
+    echo $this->Paginator->sort(
+        $field,
+        $info['text'] . ' '. $sort,
+        array('escape' => false)
+    );
 }
 ?>
 	    </tr>
 	</thead>
 
 	<tbody>
-	<?php if(!empty($loglines)): ?>
 <?php
-foreach($loglines AS $logline) {
-    echo "<tr class='loglevel{$logline['Logline']['level']}'>";
-?>
-		<td>
-<?php
-    echo $this->Form->select(
-	'logs',
-	array($logline['Logline']['id'] => ''),
-	array('class' => 'checkbox range', 'multiple' => 'checkbox', 'hiddenField' => false)
-    );
-?>
-		</td>
-<?php
-    foreach($columns as $field => $text) {
-	echo "<td class='logcell$field'>";
+if (!empty($loglines)) {
+    foreach ($loglines as $logline) {
+        echo "<tr class='loglevel{$logline['Logline']['level']}'>";
 
-	if($field == 'datetime')
-	    echo $this->Html->link(__($logline['Logline'][$field]), '#', array('onclick' => 'logsSearchFromDate($(this))', 'title' => __('Search from this date')));
-	else if($field == 'level')
-	    echo $this->Html->link(__($logline['Logline'][$field]), '#', array('onclick' => 'logsSearchFromSeverity($(this))', 'title' => __('Search from this severity')));
-	else
-	    echo $logline['Logline'][$field];
+        foreach ($columns as $field=>$info) {
+            if (isset($info['fit']) && $info['fit']) {
+                echo "<td class='fit logcell$field'>";
+            } else {
+                echo "<td class='logcell$field'>";
+            }
 
-	echo '</td>';
+            switch ($field) {
+            case 'datetime':
+                echo $this->Html->link(
+                    __($logline['Logline'][$field]),
+                    '#',
+                    array(
+                        'onclick' => 'logsSearchFromDate($(this))',
+                        'title' => __('Search from this date')
+                    )
+                );
+                break;
+            case 'level':
+                echo $this->Html->link(
+                    __($logline['Logline'][$field]),
+                    '#',
+                    array(
+                        'onclick' => 'logsSearchFromSeverity($(this))',
+                        'title' => __('Search from this severity')
+                    )
+                );
+                break;
+            default:
+                echo $logline['Logline'][$field];
+                break;
+            }
+
+            echo '</td>';
+        }
+        echo '</tr>';
     }
+} else {
+?>
+        <tr>
+            <td colspan="<?php echo count($columns); ?>">
+<?php
+    echo __('No logs found').' (';
 
-    echo '</tr>';
+    if(count($this->params['url']) > 0)
+        echo $this->Html->link(__('retry with no filters'), '.');
+    else
+        echo __('no filters');
+
+    echo ').';
+?>
+            </td>
+        </tr>
+<?php
 }
 ?>
-	<?php else: ?>
-		<tr>
-		<td colspan="5">
-<?php
-echo __('No logs found').' (';
-
-if(count($this->params['url']) > 0)
-    echo $this->Html->link(__('retry with no filters'), '.');
-else
-    echo __('no filters');
-
-echo ').';
-?>
-		</td>
-		</tr>
-	<?php endif; ?>
 	</tbody>
 </table>
 <?php
-echo $this->element('dropdownButton', array(
-	'buttonCount' => 1,
-	'title' => 'Action',
-	'icon' => '',
-	'items' => array(
-		$this->Html->link(
-			'<i class="icon-remove"></i> ' . __('Delete selected'),
-			'#',
-			array(
-				'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
-				. "if (confirm('" . __('Are you sure?') . "')) {"
-				. "$('#MultiSelectionIndexForm').submit();}",
-				'escape' => false,
-			)
-		),
-	)
-));
-echo $this->Form->end(array(
-	'id' => 'selectionAction',
-	'name' => 'action',
-	'type' => 'hidden',
-	'value' => 'delete'
-));
 echo $this->element('paginator_footer');
 ?>

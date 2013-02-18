@@ -29,7 +29,13 @@ class Logline extends AppModel {
 			'allowEmpty' => true,
 		),
 		'severity' => array(
-			'rule' => array('inList', array('debug', 'info', 'notice', 'warn', 'err', 'crit', 'alert', 'emerg')),
+            'rule' => array(
+                'inList',
+                array(
+                    'debug', 'info', 'notice', 'warn',
+                    'err', 'crit', 'alert', 'emerg'
+                )
+            ),
 			'message' => 'Format error with severity.',
 			'allowEmpty' => true,
 		)
