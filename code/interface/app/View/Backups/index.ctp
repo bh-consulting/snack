@@ -6,7 +6,7 @@ $this->assign('nas_active', 'active');
 $columns = array(
     'id' => __('ID'),
     'datetime' => __('Date'),
-    'commit' => __('Commit'),
+//    'commit' => __('Commit'),
     'nas' => __('NAS'),
     'action' => __('Action'),
     'users' => __('Users'),
@@ -60,7 +60,7 @@ foreach ($columns as $field => $text) {
 	$sort = '<i class="' . $sortIcons[$this->Paginator->sortDir()] . '"></i>';
     }
 
-    echo '<th '.($field == 'id' ? 'class="smallCol"' : '').'>'
+    echo '<th '.($field == 'id' ? 'class="smallCol fit"' : '').'>'
 	. $this->Paginator->sort($field, "$text $sort", array('escape' => false))
 	. '</th>';
 
@@ -83,12 +83,12 @@ for($i = 0; $i < count($backups); $i++) {
     echo '<tr>';
 
     foreach ($columns as $field => $text) {
-	echo '<td '.($field == 'id' ? 'class="smallCol" style="font-weight: bold"' : '').'>';
+	echo '<td '.($field == 'id' ? 'class="smallCol fit" style="font-weight: bold"' : '').'>';
 	echo $backup['Backup'][$field];
 	echo '</td>';
 
 	if ($field == 'id') {
-	    echo '<td class="smallCol">';
+	    echo '<td class="smallCol fit">';
 
 	    if ($i != 0)
 		echo $this->Form->radio(
@@ -100,7 +100,7 @@ for($i = 0; $i < count($backups); $i++) {
 		    )
 		);
 	    
-	    echo '</td><td class="smallCol">';
+	    echo '</td><td class="smallCol fit">';
 
 	    if ($i != count($backups)-1)
 		echo $this->Form->radio(
