@@ -3,17 +3,56 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('nas_active', 'active');
 
+/*
+ * Define fields to show.
+ */
 $columns = array(
-    'id' => array('text' => __('ID'), 'fit' => true),
-    'nasname' => array('text' => __('Name')),
-    'shortname' => array('text' => __('Short name')),
-    'description' => array('text' => __('Description')),
-    'type' => array('text' => __('Type'), 'fit' => true),
+    'checkbox' => array(
+        'id' => 'radacctid',
+        'fit' => true,
+    ),
+    'id' => array(
+        'text' => __('ID'),
+        'fit' => true,
+    ),
+    'nasname' => array(
+        'text' => __('Name'),
+    ),
+    'shortname' => array(
+        'text' => __('Short name'),
+    ),
+    'description' => array(
+        'text' => __('Description'),
+    ),
+    'type' => array(
+        'text' => __('Type'),
+        'fit' => true,
+    ),
+    'view' => array(
+        'text' => __('View'),
+        'fit' => true,
+    ),
+    'edit' => array(
+        'text' => __('Edit'),
+        'fit' => true,
+    ),
+    'delete' => array(
+        'text' => __('Delete'),
+        'fit' => true,
+    ),
+    'backups' => array(
+        'text' => __('Backups'),
+        'fit' => true,
+    ),
 );
 ?>
 
 <h1><?php echo __('NAS'); ?></h1>
+
 <?php
+/*
+ * Show a filter panel.
+ */
 echo $this->element('filters_panel', array(
     'controller' => 'nas/index',
     'inputs' => array(
@@ -31,185 +70,150 @@ echo $this->Html->link(
     array('escape' => false, 'class' => 'btn btn-primary')
 );
 
-echo $this->Form->create('Nas', array('action' => 'delete'));
-echo $this->Form->end();
+echo $this->element(
+    'delete_links',
+    array('action' => 'form', 'model' => 'Nas')
+);
 
-echo $this->Form->create('MultiSelection', array('class' => 'form-inline'));
+echo $this->element('MultipleAction', array('action' => 'start'));
 ?>
 
 <table class="table">
     <thead>
-	<tr>
-	    <th class="fit">
-<?php
-echo $this->Form->select(
-    'All',
-    array('all' => ''),
-    array(
-    	'class' => 'checkbox rangeAll',
-    	'multiple' => 'checkbox',
-    	'hiddenField' => false,
-    )
-);
-?>
-	    </th>
+	    <tr>
 <?php
 foreach ($columns as $field => $info) {
-    $sort = '';
-
-    if (preg_match("#$field$#", $this->Paginator->sortKey())) {
-	$sort = '<i class="'
-	    . $sortIcons[$this->Paginator->sortDir()]
-	    . '"></i>';
-    }
-
     if (isset($info['fit']) && $info['fit']) {
-	echo '<th class="fit">';
+        echo '<th class="fit">';
     } else {
-	echo '<th>';
+        echo '<th>';
     }
 
-    echo $this->Paginator->sort(
-	$field,
-	$info['text'] . ' '. $sort,
-	array('escape' => false)
-    )
-    . '</th>';
+    switch ($field) {
+    case 'checkbox':
+        echo $this->element('MultipleAction', array('action' => 'head'));
+        break;
+    case 'view':
+    case 'delete':
+    case 'backups':
+    case 'edit':
+        echo h($info['text']);
+        break;
+    default:
+        $sort = '';
+
+        if (preg_match("#$field$#", $this->Paginator->sortKey())) {
+            $sort = '<i class="'
+                .  $sortIcons[$this->Paginator->sortDir()]
+               . '"></i>';
+        }
+
+        echo $this->Paginator->sort(
+            $field,
+            $info['text'] . ' '. $sort,
+            array('escape' => false)
+        );
+        break;
+    }
+
+    echo '</th>';
 }
 ?>
-	    <th class="fit smallCol"><? echo __('View'); ?></th>
-	    <th class="fit smallCol"><? echo __('Edit'); ?></th>
-	    <th class="fit smallCol"><? echo __('Delete'); ?></th>
-	    <th class="fit smallCol"><? echo __('Backups'); ?></th>
-	</tr>
+	    </tr>
     </thead>
 
     <tbody>
 <?php
 if (!empty($nas)) {
     foreach ($nas as $n) {
-?>
-	<tr>
-	    <td class="fit smallCol">
-<?php
-	echo $this->Form->select(
-	    'nas',
-	    array($n['Nas']['id'] => ''),
-	    array(
-		'class' => 'checkbox range',
-		'multiple' => 'checkbox',
-		'hiddenField' => false,
-	    )
-	);
-?>
-	    </td>
-	    <td class="fit smallCol"><strong> <?php echo $n['Nas']['id'] ?></strong> </td>
-	    <td>
-<?php
-    echo $n['Nas']['nasname'];
-?>
-	    </td>
-	    <td>
-<?php
-    echo $n['Nas']['shortname'];
-?>
-	    </td>
-	    <td>
-<?php
-    echo $n['Nas']['description'];
-?>
-	    </td>
-	    <td class="fit">
-<?php
-    echo $n['Nas']['type'];
-?>
-	    </td>
-	    <td class="fit smallCol">
-		<i class="icon-eye-open"></i>
-<?php
-    echo $this->Html->link(
-	__('View'),
-	array('action' => 'view', 'controller' => 'nas', $n['Nas']['id'])
-    );
-?>
-	    </td>
+        echo '<tr>';
 
-	    <td class="fit smallCol">
-		<i class="icon-edit"></i>
-<?php
-    echo $this->Html->link(
-	__('Edit'),
-	array('action' => 'edit', $n['Nas']['id'])
-    );
-?>
-	    </td>
-	    <td class="fit smallCol">
-		<i class="icon-remove"></i>
-<?php
-    echo $this->Html->link(
-	__('Delete'),
-	'#',
-	array(
-	    'onClick' => "if (confirm('" . __('Are you sure?') . "')) {"
-	    . "$('#NasDeleteForm').attr('action',"
-	    . "$('#NasDeleteForm').attr('action') + '/"
-	    . $n['Nas']['id'] . "');"
-	    . "$('#NasDeleteForm').submit(); }"
-	)
-    );
-?>
-	    </td>
-	    <td class="fit">
-		<i class="icon-camera"></i>
-<?php
-    echo $this->Html->link(
-	__('Backups'),
-	array('action' => 'index', 'controller' => 'backups', $n['Nas']['id'])
-    );
-?>
-	    </td>
+        foreach ($columns as $field=>$info) {
+            if (isset($info['fit']) && $info['fit']) {
+                echo '<td class="fit">';
+            } else {
+                echo '<td>';
+            }
 
-	</tr>
-<?php
+            switch ($field) {
+            case 'checkbox':
+                echo $this->element(
+                    'MultipleAction',
+                    array(
+                        'action' => 'line',
+                        'name' => 'nas',
+                        'id' => $n['Nas']['id']
+                    )
+                );
+                break;
+            case 'view':
+		        echo '<i class="icon-eye-open"></i> ';
+                echo $this->Html->link(
+                    __('View'),
+                    array(
+                        'action' => 'view',
+                        'controller' => 'nas',
+                        $n['Nas']['id'],
+                    )
+                );
+                break;
+            case 'edit':
+                echo '<i class="icon-edit"></i> ';
+                echo $this->Html->link(
+                    __('Edit'),
+                    array('action' => 'edit', $n['Nas']['id'])
+                );
+                break;
+            case 'backups':
+                echo '<i class="icon-camera"></i> ';
+                echo $this->Html->link(
+                    __('Backups'),
+                    array(
+                        'action' => 'index',
+                        'controller' => 'backups',
+                        $n['Nas']['id'],
+                    )
+                );
+                break;
+            case 'delete':
+                echo '<i class="icon-remove"></i> ';
+                echo $this->element(
+                    'delete_links',
+                    array(
+                        'model' => 'Nas',
+                        'action' => 'link',
+                        'id' => $n['Nas']['id'],
+                    )
+                );
+                break;
+            case 'id':
+                echo '<strong>' . h($n['Nas'][$field]) . '</strong>';
+                break;
+            default:
+                echo h($n['Nas'][$field]);
+                break;
+            }
+
+            echo '</td>';
+        }
+        echo '</tr>';
     }
 } else {
 ?>
-	<tr>
-	    <td colspan="<?php echo count($columns)+3; ?>">
+    <tr>
+        <td colspan="<?php echo count($columns); ?>">
 <?php
-    echo __('No NAS yet.');
+    echo __('No NAS found.');
 ?>
-	    </td>
-	</tr>
-<?
+        </td>
+    </tr>
+<?php
 }
 ?>
     </tbody>
 </table>
 <?php
-echo $this->element('dropdownButton', array(
-    'buttonCount' => 1,
-    'title' => __('Action'),
-    'icon' => '',
-    'items' => array(
-	$this->Html->link(
-	    '<i class="icon-remove"></i> ' . __('Delete selected'),
-	    '#',
-	    array(
-		'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
-		. "if (confirm('" . __('Are you sure?') . "')) {"
-		. "$('#MultiSelectionIndexForm').submit();}",
-		    'escape' => false,
-		)
-	    ),
-	)
-    ));
-echo $this->Form->end(array(
-    'id' => 'selectionAction',
-    'name' => 'action',
-    'type' => 'hidden',
-    'value' => 'delete'
-));
+echo $this->element('MultipleAction', array('action' => 'end'));
 echo $this->element('paginator_footer');
 unset($n);
 ?>

@@ -11,57 +11,15 @@ class NasController extends AppController {
     public $components = array(
         'Filters' => array('model' => 'Nas'),
         'Session',
+        'MultipleAction' => array('model' => 'Nas', 'name' => 'nas'),
     );
 
     public function index() {
-        if ($this->request->is('post')) {
-            if (isset($this->request->data['MultiSelection']['nas'])
-                && is_array($this->request->data['MultiSelection']['nas'])
-            ) {
-                $success = true;
-                foreach( $this->request->data['MultiSelection']['nas']
-                    as $nasId ) {
-                        switch( $this->request->data['action'] ) {
-                        case "delete":
-                            $success = $success && $this->Nas->delete($nasId);
-                            if ($success) {
-                                Utils::userlog('deleted NAS ' . $nasId);
-                            } else {
-                                Utils::userlog(
-                                    __('error while deleting NAS %s', $nasId),
-                                    'error'
-                                );
-                            }
-                            break;
-                        }
-                    }
-
-                if($success){
-                    switch( $this->request->data['action'] ) {
-                    case "delete":
-                        $this->Session->setFlash(
-                            __('NAS have been deleted.'),
-                            'flash_success'
-                        );
-                        break;
-                    }
-                } else {
-                    switch( $this->request->data['action'] ) {
-                    case "delete":
-                        $this->Session->setFlash(
-                            __('Unable to delete NAS.'),
-                            'flash_error'
-                        );
-                        break;
-                    }
-                }
-            } else {
-                $this->Session->setFlash(
-                    __('Please, select at least one NAS !'),
-                    'flash_warning'
-                );
-            }
-        }
+        $this->MultipleAction->process(
+            array(
+                'success' => array('delete' => __('NAS have been removed.')),
+            )
+        );
 
         $this->Filters->addStringConstraint(array(
             'fields' => array(
@@ -164,11 +122,13 @@ class NasController extends AppController {
         }
     }
 
-    public function delete($id)
+    public function delete()
     {
         if($this->request->is('get')){
             throw new MethodNotAllowedException();
         }
+
+        $id = $this->request->data['Nas']['id'];
 
         if($this->Nas->delete($id)){
             $this->Session->setFlash(

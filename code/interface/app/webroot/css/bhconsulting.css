@@ -64,7 +64,7 @@ a.ui-slider-handle, radio {
 	color: #ffffff;
 }
 
-.fit {
+.fit, td.fit, th.fit {
     white-space:nowrap;
     width: 1px;
     text-align: center;

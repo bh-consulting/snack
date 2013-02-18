@@ -74,9 +74,10 @@ echo $this->element('filters_panel', array(
     )
 );
 
-echo $this->Form->create('Radacct', array('action' => 'delete'));
-echo $this->Form->hidden('id');
-echo $this->Form->end();
+echo $this->element(
+    'delete_links',
+    array('action' => 'form', 'model' => 'Radacct')
+);
 
 echo $this->Form->create('MultiSelection', array('class' => 'form-inline'));
 ?>
@@ -94,15 +95,7 @@ foreach ($columns as $field => $info) {
 
     switch ($field) {
     case 'checkbox':
-        echo $this->Form->select(
-            'All',
-            array('all' => ''),
-            array(
-                'class' => 'checkbox rangeAll',
-                'multiple' => 'checkbox',
-                'hiddenField' => false,
-            )
-        );
+        echo $this->element('MultipleAction', array('action' => 'head'));
         break;
     case 'view':
     case 'delete':
@@ -131,11 +124,9 @@ foreach ($columns as $field => $info) {
     </tr>
     </thead>
 
-<?php
-if (!empty($radaccts)) {
-?>
     <tbody>
 <?php
+if (!empty($radaccts)) {
     foreach ($radaccts as $acct) {
         echo '<tr>';
 
@@ -148,13 +139,12 @@ if (!empty($radaccts)) {
 
             switch ($field) {
             case 'checkbox':
-                echo $this->Form->select(
-                    'sessions',
-                    array($acct['Radacct'][$info['id']] => ''),
+                echo $this->element(
+                    'MultipleAction',
                     array(
-                        'class' => 'checkbox range',
-                        'multiple' => 'checkbox',
-                        'hiddenField' => false,
+                        'action' => 'line',
+                        'name' => 'sessions',
+                        'id' => $acct['Radacct'][$info['id']]
                     )
                 );
                 break;
@@ -171,14 +161,12 @@ if (!empty($radaccts)) {
                 break;
             case 'delete':
                 echo '<i class="icon-remove"></i> ';
-                echo $this->Html->link(
-                    __('Delete'),
-                    '#',
+                echo $this->element(
+                    'delete_links',
                     array(
-                        'onClick' => "if (confirm('" . __('Are you sure?') . "')) {"
-                        . "$('#RadacctDeleteForm input').val('"
-                        . $acct['Radacct']['radacctid'] . "');"
-                        . "$('#RadacctDeleteForm').submit(); }"
+                        'model' => 'Radacct',
+                        'action' => 'link',
+                        'id' => $acct['Radacct']['radacctid'],
                     )
                 );
                 break;
@@ -208,12 +196,8 @@ if (!empty($radaccts)) {
         }
         echo '</tr>';
     }
-?>
-    </tbody>
-<?php
 } else {
 ?>
-    <tbody>
     <tr>
         <td colspan="<?php echo count($columns); ?>">
 <?php
@@ -221,38 +205,15 @@ if (!empty($radaccts)) {
 ?>
         </td>
     </tr>
-    </tbody>
 <?php
 }
 ?>
+    </tbody>
 </table>
 
 <?php
-echo $this->element('dropdownButton', array(
-    'buttonCount' => 1,
-    'title' => 'Action',
-    'icon' => '',
-    'items' => array(
-        $this->Html->link(
-            '<i class="icon-remove"></i> ' . __('Delete selected'),
-            '#',
-            array(
-                'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
-                . "if (confirm('" . __('Are you sure?') . "')) {"
-                . "$('#MultiSelectionIndexForm').submit();}",
-                    'escape' => false,
-                )
-            ),
-        )
-    ));
-echo $this->Form->end(array(
-    'id' => 'selectionAction',
-    'name' => 'action',
-    'type' => 'hidden'
-));
-
-unset($acct);
-
+echo $this->element('MultipleAction', array('action' => 'end'));
 echo $this->element('paginator_footer');
+unset($acct);
 ?>
 
