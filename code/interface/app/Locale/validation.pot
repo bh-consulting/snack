@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-01-31 16:49+0000\n"
+"POT-Creation-Date: 2013-02-18 17:20+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -26,11 +26,16 @@ msgstr ""
 msgid "This is not an IP address format."
 msgstr ""
 
+#: Model/Nas.php:validation for field shortname
+msgid "You have to type the NAS short name."
+msgstr ""
+
 #: Model/Nas.php:validation for field secret
 msgid "You have to type the NAS secret."
 msgstr ""
 
 #: Model/Radcheck.php:validation for field username
+#: Model/Radreply.php:validation for field username
 #: Model/Raduser.php:validation for field username
 msgid "Username cannot be empty"
 msgstr ""
@@ -40,7 +45,23 @@ msgid "Groupname already used"
 msgstr ""
 
 #: Model/Radgroup.php:validation for field groupname
+#: Model/Radgroupreply.php:validation for field groupname
 msgid "Groupname cannot be empty"
+msgstr ""
+
+#: Model/Radgroup.php:validation for field simultaneous_use
+#: Model/Raduser.php:validation for field simultaneous_use
+msgid "Simultaneous uses has to be a number."
+msgstr ""
+
+#: Model/Radgroup.php:validation for field tunnel-private-group-id
+#: Model/Raduser.php:validation for field tunnel-private-group-id
+msgid "VLAN number has to be a number."
+msgstr ""
+
+#: Model/Radgroup.php:validation for field session-timeout
+#: Model/Raduser.php:validation for field session-timeout
+msgid "Session timeout has to be a number."
 msgstr ""
 
 #: Model/Radgroupcheck.php:validation for field groupname
@@ -85,17 +106,5 @@ msgstr ""
 
 #: Model/Raduser.php:validation for field organization
 msgid "You have to specify an organization."
-msgstr ""
-
-#: Model/Raduser.php:validation for field simultaneous_use
-msgid "Simultaneous uses has to be a number."
-msgstr ""
-
-#: Model/Raduser.php:validation for field tunnel-private-group-id
-msgid "VLAN number has to be a number."
-msgstr ""
-
-#: Model/Raduser.php:validation for field session-timeout
-msgid "Session timeout has to be a number."
 msgstr ""
 
