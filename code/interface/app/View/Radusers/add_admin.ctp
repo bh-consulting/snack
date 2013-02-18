@@ -14,13 +14,18 @@ echo $this->element('tab_panes', array(
         __('New') => $this->Form->input('username'),
         __('Existing') => $this->Form->input(
             'existing_user',
-            array('type' => 'select', 'options' => $users, 'empty' => true)
+            array(
+                'type' => 'select',
+                'options' => $users,
+                'empty' => true,
+                'label' => __('Existing user')
+            )
         ),
     ),
 ));
 
 echo $this->Form->input('passwd', array('type' => 'password', 'label' => __('Password')));
-echo $this->Form->input('confirm_password', array('type' => 'password'));
+echo $this->Form->input('confirm_password', array('type' => 'password', 'label' => __('Confirm password')));
 echo '</fieldset>';
 
 echo '<fieldset>';
@@ -34,7 +39,5 @@ echo $this->Form->input('admin', array(
     'legend' => false,
 ));
 echo '</fieldset>';
-echo 'Citation CdC : - créer utilisateur
-– créer, modifier, supprimer + accès aux certificats';
 
 echo $this->Form->end(__('Create'));

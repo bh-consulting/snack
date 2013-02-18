@@ -650,7 +650,7 @@ class RadusersController extends AppController {
             }
         }
 
-        $users = $this->Raduser->find('all');
+        $users = $this->Raduser->find('all', array('conditions' => array('Raduser.admin' => 0)));
         $values = array();
         foreach ($users as $u) {
             $values[$u['Raduser']['id']]= $u['Raduser']['username'];
