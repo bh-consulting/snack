@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-02-18 17:20+0000\n"
+"POT-Creation-Date: 2013-02-18 18:04+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -34,60 +34,52 @@ msgstr ""
 msgid "Please, select at least one log line !"
 msgstr ""
 
-#: Controller/NasController.php:31;183
-msgid "error while deleting NAS %s"
+#: Controller/NasController.php:20
+msgid "NAS have been removed."
 msgstr ""
 
-#: Controller/NasController.php:43
-msgid "NAS have been deleted."
-msgstr ""
-
-#: Controller/NasController.php:52
-msgid "Unable to delete NAS."
-msgstr ""
-
-#: Controller/NasController.php:60
-msgid "Please, select at least one NAS !"
-msgstr ""
-
-#: Controller/NasController.php:120
+#: Controller/NasController.php:78
 msgid "You HAVE to restart the Radius server to apply NAS changes!"
 msgstr ""
 
-#: Controller/NasController.php:135
+#: Controller/NasController.php:93
 msgid "added NAS %s"
 msgstr ""
 
-#: Controller/NasController.php:139
+#: Controller/NasController.php:97
 msgid "Unable to add NAS."
 msgstr ""
 
-#: Controller/NasController.php:142
+#: Controller/NasController.php:100
 msgid "error while adding NAS"
 msgstr ""
 
-#: Controller/NasController.php:155
+#: Controller/NasController.php:113
 msgid "edited NAS %s"
 msgstr ""
 
-#: Controller/NasController.php:159
+#: Controller/NasController.php:117
 msgid "Unable to update NAS"
 msgstr ""
 
-#: Controller/NasController.php:162
+#: Controller/NasController.php:120
 msgid "error while editing NAS %s"
 msgstr ""
 
-#: Controller/NasController.php:175
+#: Controller/NasController.php:135
 msgid "The NAS #%s has been deleted."
 msgstr ""
 
-#: Controller/NasController.php:178
+#: Controller/NasController.php:138
 msgid "deleted NAS %s"
 msgstr ""
 
-#: Controller/NasController.php:182
+#: Controller/NasController.php:142
 msgid "Unable to delete NAS #%s."
+msgstr ""
+
+#: Controller/NasController.php:143
+msgid "error while deleting NAS %s"
 msgstr ""
 
 #: Controller/ParametersController.php:25;28
@@ -333,6 +325,26 @@ msgstr ""
 msgid "Select an option.."
 msgstr ""
 
+#: Controller/Component/MultipleActionComponent.php:28
+msgid "deleted %s #%s"
+msgstr ""
+
+#: Controller/Component/MultipleActionComponent.php:32
+msgid "error while deleting %s #%s"
+msgstr ""
+
+#: Controller/Component/MultipleActionComponent.php:54
+msgid "%s have been removed."
+msgstr ""
+
+#: Controller/Component/MultipleActionComponent.php:70
+msgid "Unable to delete %s."
+msgstr ""
+
+#: Controller/Component/MultipleActionComponent.php:85
+msgid "Please, select at least one %s !"
+msgstr ""
+
 #: Error/MyExceptions.php:11
 msgid "Unable to delete %s %s (#%d)."
 msgstr ""
@@ -451,7 +463,7 @@ msgstr ""
 #: View/Backups/index.ctp:10
 #: View/Backups/view.ctp:14
 #: View/Common/radius_sidebar.ctp:31
-#: View/Nas/index.ctp:15
+#: View/Nas/index.ctp:50
 #: View/Radaccts/index.ctp:30
 msgid "NAS"
 msgstr ""
@@ -485,7 +497,7 @@ msgid "Go back to backups"
 msgstr ""
 
 #: View/Backups/index.ctp:7
-#: View/Nas/index.ctp:7
+#: View/Nas/index.ctp:15
 #: View/Radaccts/index.ctp:13
 #: View/Radgroups/index.ctp:16
 #: View/Radusers/index.ctp:67
@@ -500,7 +512,7 @@ msgid "Date"
 msgstr ""
 
 #: View/Backups/index.ctp:11
-#: View/Nas/index.ctp:192
+#: View/Elements/MultipleAction.ctp:31
 #: View/Radgroups/index.ctp:158
 msgid "Action"
 msgstr ""
@@ -522,8 +534,8 @@ msgid "User(s) contains (accept regex)"
 msgstr ""
 
 #: View/Backups/index.ctp:72;121
-#: View/Nas/index.ctp:80;131
-#: View/Radaccts/index.ctp:39;164
+#: View/Nas/index.ctp:32;152
+#: View/Radaccts/index.ctp:39;154
 msgid "View"
 msgstr ""
 
@@ -562,10 +574,10 @@ msgid "Restore"
 msgstr ""
 
 #: View/Backups/view.ctp:46
+#: View/Elements/MultipleAction.ctp:39
+#: View/Elements/delete_links.ctp:13
 #: View/Elements/viewInfo.ctp:17
 #: View/Loglines/index.ctp:142
-#: View/Nas/index.ctp:153;200
-#: View/Radaccts/index.ctp:178;241
 #: View/Radgroups/index.ctp:128;166
 #: View/Radusers/index.ctp:213;250
 msgid "Are you sure?"
@@ -598,6 +610,13 @@ msgstr ""
 #: View/Common/radius_sidebar.ctp:83
 #: View/Parameters/index.ctp:7
 msgid "Server parameters"
+msgstr ""
+
+#: View/Elements/MultipleAction.ctp:35
+#: View/Loglines/index.ctp:138
+#: View/Radgroups/index.ctp:162
+#: View/Radusers/index.ctp:246
+msgid "Delete selected"
 msgstr ""
 
 #: View/Elements/block-dl.ctp:9;15
@@ -644,6 +663,15 @@ msgstr ""
 msgid "NAS Port Type"
 msgstr ""
 
+#: View/Elements/delete_links.ctp:10
+#: View/Elements/viewInfo.ctp:15
+#: View/Nas/index.ctp:40
+#: View/Radaccts/index.ctp:43
+#: View/Radgroups/index.ctp:67;125
+#: View/Radusers/index.ctp:124;210
+msgid "Delete"
+msgstr ""
+
 #: View/Elements/filters_panel.ctp:3
 msgid "Filters"
 msgstr ""
@@ -669,7 +697,7 @@ msgid "Session timeout (time in seconds)"
 msgstr ""
 
 #: View/Elements/viewInfo.ctp:10
-#: View/Nas/index.ctp:81;141
+#: View/Nas/index.ctp:36;163
 #: View/Radgroups/edit.ctp:7
 #: View/Radgroups/index.ctp:66;116
 #: View/Radusers/edit_cert.ctp:8
@@ -677,14 +705,6 @@ msgstr ""
 #: View/Radusers/edit_mac.ctp:6
 #: View/Radusers/index.ctp:123;198
 msgid "Edit"
-msgstr ""
-
-#: View/Elements/viewInfo.ctp:15
-#: View/Nas/index.ctp:82;150
-#: View/Radaccts/index.ctp:43;175
-#: View/Radgroups/index.ctp:67;125
-#: View/Radusers/index.ctp:124;210
-msgid "Delete"
 msgstr ""
 
 #: View/Elements/viewInfo.ctp:30;39
@@ -705,7 +725,7 @@ msgid "Terminal"
 msgstr ""
 
 #: View/Layouts/default.ctp:107
-msgid "Logout from "
+msgid "Logout from %s"
 msgstr ""
 
 #: View/Layouts/default.ctp:138
@@ -748,16 +768,8 @@ msgstr ""
 msgid "No logs found"
 msgstr ""
 
-#: View/Loglines/index.ctp:138
-#: View/Nas/index.ctp:196
-#: View/Radaccts/index.ctp:237
-#: View/Radgroups/index.ctp:162
-#: View/Radusers/index.ctp:246
-msgid "Delete selected"
-msgstr ""
-
 #: View/Nas/add.ctp:7
-#: View/Nas/index.ctp:29
+#: View/Nas/index.ctp:68
 msgid "Add a NAS"
 msgstr ""
 
@@ -769,7 +781,7 @@ msgstr ""
 
 #: View/Nas/add.ctp:12
 #: View/Nas/edit.ctp:10
-#: View/Nas/index.ctp:8
+#: View/Nas/index.ctp:19
 #: View/Radgroups/add.ctp:10
 #: View/Radgroups/index.ctp:17
 msgid "Name"
@@ -802,29 +814,29 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: View/Nas/index.ctp:9
+#: View/Nas/index.ctp:22
 msgid "Short name"
 msgstr ""
 
-#: View/Nas/index.ctp:10
+#: View/Nas/index.ctp:25
 msgid "Description"
 msgstr ""
 
-#: View/Nas/index.ctp:11
+#: View/Nas/index.ctp:28
 msgid "Type"
 msgstr ""
 
-#: View/Nas/index.ctp:22
+#: View/Nas/index.ctp:44;170
+msgid "Backups"
+msgstr ""
+
+#: View/Nas/index.ctp:61
 #: View/Radaccts/index.ctp:71
 msgid "Contains (accept regex)"
 msgstr ""
 
-#: View/Nas/index.ctp:83;166
-msgid "Backups"
-msgstr ""
-
-#: View/Nas/index.ctp:180
-msgid "No NAS yet."
+#: View/Nas/index.ctp:206
+msgid "No NAS found."
 msgstr ""
 
 #: View/Parameters/edit.ctp:6
@@ -904,7 +916,7 @@ msgstr ""
 msgid "Port type"
 msgstr ""
 
-#: View/Radaccts/index.ctp:220
+#: View/Radaccts/index.ctp:204
 msgid "No session found."
 msgstr ""
 

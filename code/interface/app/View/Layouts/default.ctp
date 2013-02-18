@@ -104,7 +104,7 @@ $cakeDescription = __('SNACK');
                 if($this->Session->read('Auth.User')){
                     echo '<li>' .
                         $this->Html->link(
-                            __('Logout from ') . $this->Session->read('Auth.User.username') .
+                            __('Logout from %s', $this->Session->read('Auth.User.username')) .
                             ' <i class="icon-off"></i>',
                             array(
                                 'controller' => 'radusers',
