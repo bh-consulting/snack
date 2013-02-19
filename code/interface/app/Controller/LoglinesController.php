@@ -7,22 +7,9 @@ class LoglinesController extends AppController {
     public $paginate = array('limit' => 10, 'order' => array('id' => 'desc'));
     public $components = array(
         'Filters' => array('model' => 'Logline'),
-        'MultipleAction' => array('model' => 'Logline', 'name' => 'logline'),
     );
 
     public function index() {
-        $this->MultipleAction->process(
-            array(
-                'success' => array(
-                    'delete' => __('Log lines have been removed.')
-                ),
-                'failed' => array(
-                    'delete' => __('Unable to delete log lines.')
-                ),
-                'warning' => __('Please, select at least one log line !'),
-            )
-        );
-
         $this->Filters->addSliderConstraint(array(
             'fields' => 'level', 
             'input' => 'level',
@@ -42,6 +29,30 @@ class LoglinesController extends AppController {
         ));
 
         $this->Filters->paginate();
+    }
+
+    public function deleteAll($program) {
+        if($this->request->is('get')){
+            throw new MethodNotAllowedException();
+        }
+
+        if (in_array($program, array('freeradius', 'interface'))) {
+            if ($this->Logline->deleteAll(array('program' => $program))) {
+                $this->Session->setFlash(
+                    __('All logs for %s have been deleted.', $program),
+                    'flash_success'
+                );
+                Utils::userlog(__('delete all logs for %s', $program));
+            } else {
+                $this->Session->setFlash(
+                    __('Unable to delete all logs for %s.', $program),
+                    'flash_error'
+                );
+                Utils::userlog(__('error while deleting logs for %s', $program));
+            }
+        }
+
+        $this->redirect(array('action' => 'index'));
     }
 }
 ?>

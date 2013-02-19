@@ -149,6 +149,16 @@ if (!empty($loglines)) {
 ?>
 	</tbody>
 </table>
+<div>
+<?php
+echo $this->Form->postLink(
+    __('Delete all'),
+    array('action' => 'deleteAll', 'freeradius'),
+    array('class' => 'btn btn-primary'),
+    __('Are you sure?')
+);
+?>
+</div>
 <?php
 echo $this->element('paginator_footer');
 ?>
