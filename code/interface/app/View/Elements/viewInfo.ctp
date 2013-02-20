@@ -3,7 +3,7 @@
 echo $this->element('dropdownButton', array(
 	'buttonCount' => 2,
 	'title' => h($name),
-	'icon' => 'icon-user',
+	'icon' => $icon,
 	'linkOptions' => array('action' => $editAction, $id),
 	'items' => array(
 		$this->Html->link(
