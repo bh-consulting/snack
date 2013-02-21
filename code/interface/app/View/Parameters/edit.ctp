@@ -8,10 +8,23 @@ echo '<h2>' . __('Edit server parameters') . '</h2>';
 echo $this->Form->create('Parameter', array('action' => 'edit'));
 
 echo $this->Form->input(
-    'contactEmail',
+    'configurationEmail',
     array(
-        'label' => __('Contact email'),
+        'label' => __('Configuration email'),
         'class' => 'email',
+    )
+);
+echo $this->Form->input(
+    'errorEmail',
+    array(
+        'label' => __('Error email'),
+        'class' => 'email',
+    )
+);
+echo $this->Form->input(
+    'ipAddress',
+    array(
+        'label' => __('Server IP'),
     )
 );
 echo $this->Form->input(

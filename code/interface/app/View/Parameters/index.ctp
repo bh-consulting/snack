@@ -16,10 +16,22 @@ echo $this->Html->link(
 
 <h4><?php echo __('General information:'); ?></h4>
 <dl class="well dl-horizontal">
-    <dt><?php echo __('Contact email'); ?></dt>
+    <dt><?php echo __('Configuration email'); ?></dt>
     <dd>
 <?php
-echo empty($contactEmail) ? __('Not set.') : $contactEmail;
+echo empty($configurationEmail) ? __('Not set.') : $configurationEmail;
+?>
+    </dd>
+    <dt><?php echo __('Error email'); ?></dt>
+    <dd>
+<?php
+echo empty($errorEmail) ? __('Not set.') : $errorEmail;
+?>
+    </dd>
+    <dt><?php echo __('IP server'); ?></dt>
+    <dd>
+<?php
+echo empty($ipAddress) ? __('Not set.') : $ipAddress;
 ?>
     </dd>
     <dt><?php echo __('Scripts path'); ?></dt>

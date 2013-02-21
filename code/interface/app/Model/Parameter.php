@@ -7,11 +7,23 @@ class Parameter extends AppModel {
     public $useTable = false;
 
     public $_schema = array(
-        'contactEmail' => array(
+        'configurationEmail' => array(
             'type' => 'string',
             'null' => true,
             'default' => '',
             'length' => '255',
+        ),
+        'errorEmail' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '',
+            'length' => '255',
+        ),
+        'ipAddress' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '',
+            'length' => '15',
         ),
         'scriptsPath' => array(
             'type' => 'string',
@@ -52,10 +64,24 @@ class Parameter extends AppModel {
     );
 
     public $validate = array(
-        'contactEmail' => array(
+        'configurationEmail' => array(
             'email' => array(
                 'rule' => 'email',
                 'message' => 'Invalid email format.',
+                'required' => true
+            )
+        ),
+        'errorEmail' => array(
+            'email' => array(
+                'rule' => 'email',
+                'message' => 'Invalid email format.',
+                'required' => true
+            )
+        ),
+        'ipAddress' => array(
+			'ipFormat' => array(
+				'rule' => 'isIPFormat',
+				'message' => 'This is not an IP address format.',
                 'required' => true
             )
         ),
@@ -120,5 +146,13 @@ class Parameter extends AppModel {
 
         return is_dir($value);
     }
+
+	public function isIPFormat($field=array()) {
+		$value = array_shift($field);
+		if(Utils::isIP($value)) { 
+			return true; 
+		}
+		return false; 
+	}
 }
 ?>
