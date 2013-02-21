@@ -27,8 +27,8 @@ Par défaut, le protocole 802.1x est désactivé.
 Activer le protocole sur le commutateur~:
 
 \begin{lstlisting}
-Switch> en
-Switch# conf t
+Switch> enable
+Switch# configure terminal
 Switch(config)# aaa new-model
 Switch(config)# aaa authentication dot1x default group radius
 Switch(config)# dot1x system-auth-control
@@ -125,7 +125,7 @@ Pour obtenir des informations concernant le fonctionnement actuel du 802.1x côt
 \begin{lstlisting}
 Switch> enable
 Switch# debug dot1x all
-Switch# conf t
+Switch# configure terminal
 Switch(config)# show dot1x
 Switch(config)# show dot1x statistics
 \end{lstlisting}
@@ -138,7 +138,7 @@ Commencer par ajouter le mode d'authentification général~:
 \begin{lstlisting}
 Switch> enable
 Switch# configure terminal
-Switch(config)# aaa authentication login default group radius
+Switch(config)# aaa authentication login default group radius local
 \end{lstlisting}
 
 Pour l'activer sur le port console (penser à faire un \emph{write mem} avant, pour pouvoir relancer le commutateur sans perdre les modifications précédentes si la console devenait inaccessible)~:
@@ -168,7 +168,7 @@ Les authentifications devraient fonctionner, mais pas le passage en super-utilis
 Activer l'authentification pour le passage en super-utilisateur sur le commutateur~:
 
 \begin{lstlisting}[morekeywords=0]
-Switch(config)# aaa authentication enable default group radius
+Switch(config)# aaa authentication enable default group radius enable
 \end{lstlisting}
 
 Sur le serveur Radius, ajouter cette ligne dans la section \emph{sql} du fichier \emph{/etc/freeradius/sql.conf}~:
@@ -196,12 +196,12 @@ Si jamais le serveur Radius n'est pas joignable, personne ne pourra se connecter
 Suivre la procédure suivante~:
 
 \begin{lstlisting}
-Switch>en
-Switch#conf t
-Switch(config)#aaa authentication login default group radius local
-Switch(config)#aaa authentication enable default group radius enable
-Switch(config)#username utilisateur_secours password pass_utilisateur_secours
-Switch(config)#enable password pass_enable_secours
+Switch> enable
+Switch# configure terminal
+Switch(config)# aaa authentication login default group radius local
+Switch(config)# aaa authentication enable default group radius enable
+Switch(config)# username utilisateur_secours password pass_utilisateur_secours
+Switch(config)# enable password pass_enable_secours
 \end{lstlisting}
 
 Tenter une authentification (console, Telnet, SSH ou directement en série) avec l'utilisateur \emph{utilisateur\_secours} et le mot de passe \emph{pass\_utilisateur\_secours}. Puisque le serveur Radius est accessible, elle ne devrait pas fonctionner. Couper le Freeradius (Ctrl-C) et retenter~: l'authentification fonctionne (après un certain temps correspondant à l'attente nécessaire pour le commutateur conclut que le Radius n'est pas accessible).
@@ -215,8 +215,8 @@ Le mot de passe \emph{pass\_enable\_secours} pourra être utilisé pour passer e
 \subsubsection{Activation}
 Pour activer l'accounting sur le switch: 
 \begin{lstlisting}
-Switch(config)#aaa accounting dot1x default start-stop group radius
-Switch(config)#aaa accounting exec default start-stop group radius
+Switch(config)# aaa accounting dot1x default start-stop group radius
+Switch(config)# aaa accounting exec default start-stop group radius
 \end{lstlisting}
 
 \subsubsection{Test}
