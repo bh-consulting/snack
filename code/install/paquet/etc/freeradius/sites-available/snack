@@ -17,12 +17,12 @@ server snack {
 	authenticate {
 		eap
 
-		Auth-Type PAP {
+		Auth-Type CHAP {
 			reject
 		}
 
-		Auth-Type CHAP {
-			reject
+		Auth-Type PAP {
+			pap
 		}
 	}
 
