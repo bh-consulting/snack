@@ -1,6 +1,6 @@
 CREATE TABLE radius.backups (
   id int(11) unsigned NOT NULL auto_increment,
-  commit varchar(64) NOT NULL,
+  commit varchar(64) DEFAULT NULL,
   datetime DATETIME NOT NULL,
   nas varchar(100)  NOT NULL,
   action varchar(50) NOT NULL ,
