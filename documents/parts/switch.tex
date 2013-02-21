@@ -184,7 +184,7 @@ sql {
 Puis ajouter cet utilisateur particulier dans la base de données, qui définit le mot de passe pour passer en super-utilisateur~:
 
 \begin{lstlisting}
-$ sudo echo "INSERT INTO radcheck(username, attribute, op, value) VALUES ('\$enab15\$', 'Crypt-Password', ':=', encrypt('pass_enable'))" | mysql -uradius -p§§pass_radius_sql radius
+$ echo "INSERT INTO radcheck(username, attribute, op, value) VALUES ('\$enab15\$', 'Cleartext-Password', ':=', 'pass_enable')" | mysql -uradius -p§§pass_radius_sql radius
 \end{lstlisting}
 
 Tester un passage en mode \emph{enable} dans une connexion en mode console, Telnet ou SSH.

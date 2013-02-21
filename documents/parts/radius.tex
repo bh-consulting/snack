@@ -146,14 +146,14 @@ Ce test peut être fait entre deux machines, l'une faisant office de serveur d'a
 Ajouter le client (\emph{client1}) dans la table des NAS admis du serveur qui vient d'être configuré~:
 
 \begin{lstlisting}
-$ echo "INSERT INTO nas(nasname, shortname, secret) VALUES ('192.168.1.2', 'client1', 'secret_radius')" | sudo mysql -uradius -p§§pass_radius_sql radius
+$ echo "INSERT INTO nas(nasname, shortname, secret) VALUES ('192.168.1.2', 'client1', 'secret_radius')" | mysql -uradius -p§§pass_radius_sql radius
 \end{lstlisting}
 
 \label{ajout-utilisateur-md5}
 Créer un utilisateur simple \emph{utilisateur1}, qui pourra s'authentifier en 802.1x avec un mot de passe non-chiffré (\emph{pass\_utilisateur1})~:
 
 \begin{lstlisting}
-$ echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('utilisateur1', 'Crypt-Password', ':=', encrypt('pass_utilisateur1'))" | sudo mysql -u radius -p§§pass_radius_sql radius
+$ echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('utilisateur1', 'Cleartext-Password', ':=', 'pass_utilisateur1')" | mysql -u radius -p§§pass_radius_sql radius
 \end{lstlisting}
 
 \label{freeradius-x}
