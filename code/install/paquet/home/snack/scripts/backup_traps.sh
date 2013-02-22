@@ -30,7 +30,7 @@ if [[\
     export USER_NAME=albert
     export ACCT_STATUS_TYPE=Write
 
-    ~snack/scripts/backup_log-in-out.sh
+    ~snack/scripts/backup_create.sh
 
 # Trap tftp done
 elif [[\
