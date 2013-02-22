@@ -48,18 +48,44 @@ class RadusersController extends AppController {
 
     private function checkAuthentication($username, $passwd) {
         $user = $this->Raduser->findByUsername($this->request->data['Raduser']['username']);
-        //$passwd = crypt($passwd);
         if(isset($user) && !empty($user)){
-            $checks = $this->Checks->getChecks($user['Raduser']['id']);
-            foreach ($checks as $check) {
-                if($check['Radcheck']['attribute'] == 'Cleartext-Password'){
-                    if($check['Radcheck']['value'] == $passwd){
-                        return true;
+            $role = $this->Raduser->getRole($user['Raduser']['id']);
+            if($role != 'user'){
+                $this->request->data['Raduser']['role'] = $role;
+                $checks = $this->Checks->getChecks($user['Raduser']['id']);
+                foreach ($checks as $check) {
+                    if($check['Radcheck']['attribute'] == 'Cleartext-Password'){
+                        if($check['Radcheck']['value'] == $passwd){
+                            return true;
+                        }
                     }
                 }
+            } else {
+                return false;
             }
         }
         return false;
+    }
+
+    public function isAuthorized($user) {
+        
+        // All registered user can view users
+        if(in_array($this->action, array('index', 'view'))){
+            return true;
+        }
+        if($user['role'] === 'admin' && in_array($this->action, array(
+            'add_cert', 'add_loginpass', 'add_mac',
+            'edit_cert', 'edit_loginpass', 'edit_mac'
+        ))){
+            return true;
+        }
+
+        return parent::isAuthorized($user);
+    }
+
+    public function beforeFilter() {
+        $this->Auth->allow('login', 'logout');
+        parent::beforeFilter();
     }
     
     /**
@@ -598,7 +624,7 @@ class RadusersController extends AppController {
                 && !empty($this->request->data['Raduser']['existing_user'])
             ){
                 $user = $this->Raduser->findById($this->request->data['Raduser']['existing_user']);
-                $user['Raduser']['admin'] = $this->request->data['Raduser']['admin'];
+                $user['Raduser']['role'] = $this->request->data['Raduser']['role'];
                 $this->request->data['Raduser']['username'] = $user['Raduser']['username'];
 
                 // change or add the password to the user
@@ -650,7 +676,7 @@ class RadusersController extends AppController {
             }
         }
 
-        $users = $this->Raduser->find('all', array('conditions' => array('Raduser.admin' => 0)));
+        $users = $this->Raduser->find('all', array('conditions' => array('Raduser.role !=' => 'superadmin')));
         $values = array();
         foreach ($users as $u) {
             $values[$u['Raduser']['id']]= $u['Raduser']['username'];

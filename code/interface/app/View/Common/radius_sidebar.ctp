@@ -1,3 +1,6 @@
+<?
+if(AuthComponent::user('role') != 'tech'){
+?>
     <ul class="nav nav-list bs-sidenav affix mainmenu">
 	<li class="<?php echo $this->fetch('users_active'); ?>">
 <?php
@@ -91,7 +94,8 @@ echo $this->Html->link(
 ?>
 	</li>
     </ul>
-    <div id="content" class="content">
-	<?php echo $this->Session->flash(); ?>
-	<?php echo $this->fetch('content'); ?>
-    </div>
+    <? } ?>
+<div id="content" class="content">
+<?php echo $this->Session->flash(); ?>
+<?php echo $this->fetch('content'); ?>
+</div>

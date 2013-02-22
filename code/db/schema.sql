@@ -161,7 +161,7 @@ CREATE TABLE radius.nas (
 CREATE TABLE radius.raduser (
     id int(11) unsigned NOT NULL auto_increment,
     username varchar(64) NOT NULL default '',
-    admin boolean default '0',
+    role varchar(64) default 'user',
     comment text,
     is_cisco boolean default '0',
     is_loginpass boolean default '0',

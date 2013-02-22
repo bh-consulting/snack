@@ -33,6 +33,23 @@ App::uses('Utils', 'Lib');
  * @link http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
+    
+    public $components = array(
+        'Session',
+        'Auth' => array(
+            'loginAction' => array('controller' => 'radusers', 'action' => 'login'),
+            'loginRedirect' => array('controller' => 'radusers', 'action' => 'index'),
+            'logoutRedirect' => array('controller' => 'radusers', 'action' => 'index'),
+            'authenticate' => array(
+                'Form' => array(
+                    'fields' => array('username' => 'username', 'password' => 'passwd'),
+                    'userModel' => 'Raduser'
+                )
+            ),
+            'authorize' => array('Controller'),
+        )
+    );
+
     public function beforeFilter() {
         if (!$this->Session->check('Config.language')) {
             $lang = Utils::getISOCode($_SERVER['HTTP_ACCEPT_LANGUAGE']);
@@ -58,22 +75,14 @@ class AppController extends Controller {
         Configure::write('Config.language', $lang);
         $this->redirect($this->referer());
     }
-    
-    public $components = array(
-        'Session',
-        'Auth' => array(
-            'loginAction' => array(
-                'controller' => 'radusers',
-                'action' => 'login'
-            ),
-            'loginRedirect' => array('controller' => 'radusers', 'action' => 'index'),
-            'logoutRedirect' => array('controller' => 'radusers', 'action' => 'index'),
-            'authenticate' => array(
-                'Form' => array(
-                    'fields' => array('username' => 'username', 'password' => 'passwd'),
-                    'userModel' => 'Raduser'
-                )
-            )
-        )
-    );
+
+    public function isAuthorized($user) {
+        // Super admin can access everything
+        if(isset($user['role']) && $user['role'] === 'superadmin'){
+            return true;
+        }
+        // default deny
+        return false;
+    }
+
 }

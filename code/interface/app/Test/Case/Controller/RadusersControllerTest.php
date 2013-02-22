@@ -93,7 +93,7 @@ class RadusersControllerTest extends ControllerTestCase {
         $expected = array(
             'Raduser' => array(
                 'username' => 'bob',
-                'admin' => false,
+                'role' => 'user',
                 'comment' => null,
                 'is_cisco' => false,
                 'is_loginpass' => true,

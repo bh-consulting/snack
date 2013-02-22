@@ -30,11 +30,12 @@ echo '</fieldset>';
 
 echo '<fieldset>';
 echo '<legend>' . __('Admin rights') . '</legend>';
-echo $this->Form->input('admin', array(
+echo $this->Form->input('role', array(
     // 'type' => 'radio',
     'options' => array(
-        '1' => __('Create users'),
-        '2' => __('Create, Update, Delete users'),
+        'tech' => __('View users'),
+        'admin' => __('Create, Update, View users'),
+        'superadmin' => __('Create, Update, Delete all objects'),
     ),
     'legend' => false,
 ));

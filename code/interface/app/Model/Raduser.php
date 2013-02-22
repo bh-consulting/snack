@@ -98,6 +98,26 @@ class Raduser extends AppModel {
         ),
     );
 
+    public function isUser($id){
+        $user = $this->findById($id);
+        return $user['Raduser']['role'] == 'user';
+    }
+
+    public function isAdmin($id){
+        $user = $this->findById($id);
+        return $user['Raduser']['role'] == 'admin';
+    }
+
+    public function isSuperAdmin($id){
+        $user = $this->findById($id);
+        return $user['Raduser']['role'] == 'superadmin';
+    }
+
+    public function getRole($id) {
+        $user = $this->findById($id);
+        return $user['Raduser']['role'];
+    }
+
     public function identicalFieldValues($field=array(), $compare_field=null) {
         foreach ($field as $key => $value) { 
             if (!isset($this->data[$this->name][$compare_field])) {
@@ -147,7 +167,7 @@ class Raduser extends AppModel {
             if (empty($value) 
                 && ($this->data[$this->name]['is_cisco'] == 1
                 || $this->data[$this->name]['is_loginpass'] == 1
-                || $this->data[$this->name]['admin'] > 0)
+                || $this->data[$this->name]['role'] > 'user')
             ) {
                 return false;
             }

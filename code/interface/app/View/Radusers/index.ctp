@@ -71,7 +71,7 @@ $columns = array(
     'is_loginpass' => array('text' => __('Login / Password'), 'fit' => true),
     'is_mac' => array('text' => __('MAC'), 'fit' => true),
     'is_cisco' => array('text' => __('Cisco'), 'fit' => true),
-    'admin' => array('text' => __('Admin'), 'fit' => true),
+    'role' => array('text' => __('Admin'), 'fit' => true),
 );
 
 echo $this->Form->create('Radusers', array('action' => 'delete'));
@@ -188,7 +188,7 @@ if (!empty($radusers)) {
         </td>
         <td class="fit" style="text-align:center;">
 <?php
-        echo $rad['Raduser']['admin'] ? '<i class="icon-ok"></i>' : '';
+        echo __($rad['Raduser']['role']);
 ?>
         </td>
         <td class="fit">
