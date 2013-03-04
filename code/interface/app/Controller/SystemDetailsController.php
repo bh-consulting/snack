@@ -4,6 +4,17 @@ class SystemDetailsController extends AppController {
     public $name = 'SystemDetails';
     public $helpers = array('Html', 'Form');
 
+    public function isAuthorized($user) {
+        
+        if($user['role'] === 'admin' && in_array($this->action, array(
+            'index', 'refresh'
+        ))){
+            return true;
+        }
+
+        return parent::isAuthorized($user);
+    }
+
     public function index() {
         $this->set('hostname', $this->SystemDetail->getHostname());
 

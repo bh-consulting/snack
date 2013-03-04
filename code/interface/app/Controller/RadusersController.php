@@ -6,7 +6,7 @@ App::import('Model', 'Radgroup');
 App::import('Model', 'Radusergroup');
 
 /**
- * Controller to handle user management: add, update, remove users.
+ * Controller to handle user management: create, update, remove users.
  */
 class RadusersController extends AppController {
 
@@ -36,7 +36,7 @@ class RadusersController extends AppController {
                 Utils::userlog(__('logged in'));
                 return $this->redirect($this->Auth->redirect());
             } else {
-                $this->Session->setFlash(__('Username or password is incorrect'), 'default', array(), 'auth');
+                $this->Session->setFlash(__('Username or password is incorrect, or user is not authorized to access Snack interface.'), 'default', array(), 'auth');
             }
         }
     }
@@ -74,7 +74,7 @@ class RadusersController extends AppController {
             return true;
         }
         if($user['role'] === 'admin' && in_array($this->action, array(
-            'add_cert', 'add_loginpass', 'add_mac',
+            'add_cert', 'add_loginpass', 'add_mac', 'view',
             'edit_cert', 'edit_loginpass', 'edit_mac'
         ))){
             return true;

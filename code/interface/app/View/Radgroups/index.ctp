@@ -64,7 +64,9 @@ foreach ($columns as $field => $info) {
 }
 ?>
 	    <th class="fit"><? echo __('Edit'); ?></th>
-	    <th class="fit"><? echo __('Delete'); ?></th>
+        <?php if(AuthComponent::user('role') == 'superadmin'){
+            echo '<th class="fit">' . __('Delete') . '</th>';
+        } ?>
 	</tr>
     </thead>
 
@@ -156,29 +158,32 @@ if (!empty($radgroups)) {
 </table>
 
 <?php
-echo $this->element('dropdownButton', array(
-    'buttonCount' => 1,
-    'title' => __('Action'),
-    'icon' => '',
-    'items' => array(
-	$this->Html->link(
-	    '<i class="icon-remove"></i> ' . __('Delete selected'),
-	    '#',
-	    array(
-		'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
-		. "if (confirm('" . __('Are you sure?') . "')) {"
-		. "$('#MultiSelectionIndexForm').submit();}",
-		    'escape' => false,
-		)
-	    ),
-	)
+
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->element('dropdownButton', array(
+        'buttonCount' => 1,
+        'title' => __('Action'),
+        'icon' => '',
+        'items' => array(
+    	$this->Html->link(
+    	    '<i class="icon-remove"></i> ' . __('Delete selected'),
+    	    '#',
+    	    array(
+    		'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
+    		. "if (confirm('" . __('Are you sure?') . "')) {"
+    		. "$('#MultiSelectionIndexForm').submit();}",
+    		    'escape' => false,
+    		)
+    	    ),
+    	)
+        ));
+    echo $this->Form->end(array(
+        'id' => 'selectionAction',
+        'name' => 'action',
+        'type' => 'hidden',
+        'value' => 'delete'
     ));
-echo $this->Form->end(array(
-    'id' => 'selectionAction',
-    'name' => 'action',
-    'type' => 'hidden',
-    'value' => 'delete'
-));
+}
 echo $this->element('paginator_footer');
 unset($g);
 ?>

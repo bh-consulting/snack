@@ -44,6 +44,10 @@ $columns = array(
         'fit' => true,
     ),
 );
+
+if(AuthComponent::user('role') != 'superadmin'){
+    unset($columns['delete']);
+}
 ?>
 
 <h1><?php echo __('Sessions'); ?></h1>
@@ -74,10 +78,12 @@ echo $this->element('filters_panel', array(
     )
 );
 
-echo $this->element(
-    'delete_links',
-    array('action' => 'form', 'model' => 'Radacct')
-);
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->element(
+        'delete_links',
+        array('action' => 'form', 'model' => 'Radacct')
+    );
+}
 
 echo $this->Form->create('MultiSelection', array('class' => 'form-inline'));
 ?>
@@ -212,7 +218,9 @@ if (!empty($radaccts)) {
 </table>
 
 <?php
-echo $this->element('MultipleAction', array('action' => 'end'));
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->element('MultipleAction', array('action' => 'end'));
+}
 echo $this->element('paginator_footer');
 unset($acct);
 ?>

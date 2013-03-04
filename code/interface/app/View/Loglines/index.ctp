@@ -151,12 +151,14 @@ if (!empty($loglines)) {
 </table>
 <div>
 <?php
-echo $this->Form->postLink(
-    __('Delete all'),
-    array('action' => 'deleteAll', 'freeradius'),
-    array('class' => 'btn btn-primary'),
-    __('Are you sure?')
-);
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->Form->postLink(
+        __('Delete all'),
+        array('action' => 'deleteAll', 'freeradius'),
+        array('class' => 'btn btn-primary'),
+        __('Are you sure?')
+    );
+}
 ?>
 </div>
 <?php

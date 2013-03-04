@@ -45,6 +45,12 @@ $columns = array(
         'fit' => true,
     ),
 );
+
+if(AuthComponent::user('role') != 'superadmin'){
+    unset($columns['edit']);
+    unset($columns['delete']);
+    unset($columns['backups']);
+}
 ?>
 
 <h1><?php echo __('NAS'); ?></h1>
@@ -64,11 +70,13 @@ echo $this->element('filters_panel', array(
     )
 );
 
-echo $this->Html->link(
-    '<i class="icon-hdd icon-white"></i> ' . __('Add a NAS'),
-    array('controller' => 'nas', 'action' => 'add'),
-    array('escape' => false, 'class' => 'btn btn-primary')
-);
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->Html->link(
+        '<i class="icon-hdd icon-white"></i> ' . __('Add a NAS'),
+        array('controller' => 'nas', 'action' => 'add'),
+        array('escape' => false, 'class' => 'btn btn-primary')
+    );
+}
 
 echo $this->element(
     'delete_links',
@@ -158,33 +166,39 @@ if (!empty($nas)) {
                 );
                 break;
             case 'edit':
-                echo '<i class="icon-edit"></i> ';
-                echo $this->Html->link(
-                    __('Edit'),
-                    array('action' => 'edit', $n['Nas']['id'])
-                );
+                if(AuthComponent::user('role') == 'superadmin'){
+                    echo '<i class="icon-edit"></i> ';
+                    echo $this->Html->link(
+                        __('Edit'),
+                        array('action' => 'edit', $n['Nas']['id'])
+                    );
+                }
                 break;
             case 'backups':
-                echo '<i class="icon-camera"></i> ';
-                echo $this->Html->link(
-                    __('Backups'),
-                    array(
-                        'action' => 'index',
-                        'controller' => 'backups',
-                        $n['Nas']['id'],
-                    )
-                );
+                if(AuthComponent::user('role') == 'superadmin'){
+                    echo '<i class="icon-camera"></i> ';
+                    echo $this->Html->link(
+                        __('Backups'),
+                        array(
+                            'action' => 'index',
+                            'controller' => 'backups',
+                            $n['Nas']['id'],
+                        )
+                    );
+                }
                 break;
             case 'delete':
-                echo '<i class="icon-remove"></i> ';
-                echo $this->element(
-                    'delete_links',
-                    array(
-                        'model' => 'Nas',
-                        'action' => 'link',
-                        'id' => $n['Nas']['id'],
-                    )
-                );
+                if(AuthComponent::user('role') == 'superadmin'){
+                    echo '<i class="icon-remove"></i> ';
+                    echo $this->element(
+                        'delete_links',
+                        array(
+                            'model' => 'Nas',
+                            'action' => 'link',
+                            'id' => $n['Nas']['id'],
+                        )
+                    );
+                }
                 break;
             case 'id':
                 echo '<strong>' . h($n['Nas'][$field]) . '</strong>';
@@ -213,7 +227,9 @@ if (!empty($nas)) {
     </tbody>
 </table>
 <?php
-echo $this->element('MultipleAction', array('action' => 'end'));
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->element('MultipleAction', array('action' => 'end'));
+}
 echo $this->element('paginator_footer');
 unset($n);
 ?>

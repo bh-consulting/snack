@@ -10,6 +10,17 @@ class RadacctsController extends AppController {
         'Filters' => array('model' => 'Radacct')
     );
 
+    public function isAuthorized($user) {
+        
+        if($user['role'] === 'admin' && in_array($this->action, array(
+            'index', 'view'
+        ))){
+            return true;
+        }
+
+        return parent::isAuthorized($user);
+    }
+
     public function index() {
         if ($this->request->is('post')) {
             if (isset($this->request->data['MultiSelection']['sessions'])

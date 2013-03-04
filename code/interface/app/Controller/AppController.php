@@ -82,6 +82,10 @@ class AppController extends Controller {
             return true;
         }
         // default deny
+        $this->Session->setFlash(
+            __('You are not authorized to access this page!'),
+            'flash_error'
+        );
         return false;
     }
 

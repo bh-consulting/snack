@@ -29,8 +29,9 @@ echo $this->Html->link(
     <dt><?php echo __('Freeradius'); ?></dt>
     <dd>
 <?php
-echo $radiusstate
-    . $this->Html->link(
+echo $radiusstate;
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->Html->link(
         '<i class="icon-refresh icon-white"></i> ' . __('Restart Freeradius'),
         array(
             'action' => 'restart',
@@ -42,13 +43,15 @@ echo $radiusstate
             'escape' => false
         )
     );
+}
 ?>
     </dd>
     <dt><?php echo __('MySQL'); ?></dt>
     <dd>
 <?php
-echo $mysqlstate
-    . $this->Html->link(
+echo $mysqlstate;
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->Html->link(
         '<i class="icon-refresh icon-white"></i> ' . __('Restart Mysql'),
         array(
             'action' => 'restart',
@@ -60,6 +63,7 @@ echo $mysqlstate
             'escape' => false
         )
     );
+}
 ?>
     </dd>
 </dl>

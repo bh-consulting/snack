@@ -14,6 +14,17 @@ class NasController extends AppController {
         'MultipleAction' => array('model' => 'Nas', 'name' => 'nas'),
     );
 
+    public function isAuthorized($user) {
+        
+        if($user['role'] === 'admin' && in_array($this->action, array(
+            'index', 'view',
+        ))){
+            return true;
+        }
+
+        return parent::isAuthorized($user);
+    }
+
     public function index() {
         $this->MultipleAction->process(
             array(

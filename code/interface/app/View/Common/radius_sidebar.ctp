@@ -80,7 +80,7 @@ echo $this->Html->link(
 );
 ?>
 	</li>
-    <?php if(AuthComponent::user('role') == 'superadmin'){ ?>
+<?php if(AuthComponent::user('role') == 'superadmin'){ ?>
 	<li class="<?php echo $this->fetch('param_active'); ?>">
 <?php
 echo $this->Html->link(

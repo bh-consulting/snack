@@ -16,6 +16,17 @@ class RadgroupsController extends AppController
             ),
         'Session');
 
+    public function isAuthorized($user) {
+        
+        if($user['role'] === 'admin' && in_array($this->action, array(
+            'index', 'view', 'add', 'edit',
+        ))){
+            return true;
+        }
+
+        return parent::isAuthorized($user);
+    }
+
 	public function index(){
         // Multiple delete/export
         if ($this->request->is('post')) {

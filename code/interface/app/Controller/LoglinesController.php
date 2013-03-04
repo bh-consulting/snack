@@ -9,6 +9,15 @@ class LoglinesController extends AppController {
         'Filters' => array('model' => 'Logline'),
     );
 
+    public function isAuthorized($user) {
+        
+        if($user['role'] === 'admin' && $this->action === 'index'){
+            return true;
+        }
+
+        return parent::isAuthorized($user);
+    }
+
     public function index() {
         $this->Filters->addSliderConstraint(array(
             'fields' => 'level', 
