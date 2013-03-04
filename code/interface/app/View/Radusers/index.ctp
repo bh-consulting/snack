@@ -6,58 +6,71 @@ $this->assign('users_active', 'active');
 
 <h1><? echo __('Users'); ?></h1>
 <?php
-echo $this->element('dropdownButton', array(
-    'buttonCount' => 1,
-    'class' => 'btn-primary',
-    'title' => __('Add user'),
-    'icon' => 'icon-user',
-    'items' => array(
-        _('Active') => array(
-            $this->Html->link(
-                '<i class="icon-plus-sign"></i> ' . __('Certificate'), 
-                array('action' => 'add_cert'),
-                array('escape' => false, 'class' => 'secure_auth')
-            ),
-            $this->Html->link(
-                '<i class="icon-plus-sign"></i> ' . __('Login / Password'), 
-                array('action' => 'add_loginpass'),
-                array('escape' => false, 'class' => 'warning_auth')
-            ),
+$dropdownUsersButtonItems = array(
+    _('Active') => array(
+        $this->Html->link(
+            '<i class="icon-plus-sign"></i> ' . __('Certificate'), 
+            array('action' => 'add_cert'),
+            array('escape' => false, 'class' => 'secure_auth')
         ),
-        _('Passive') => array(
-            $this->Html->link(
-                '<i class="icon-plus-sign"></i> ' . __('MAC address'), 
-                array('action' => 'add_mac'),
-                array('escape' => false)
-            )
+        $this->Html->link(
+            '<i class="icon-plus-sign"></i> ' . __('Login / Password'), 
+            array('action' => 'add_loginpass'),
+            array('escape' => false, 'class' => 'warning_auth')
         ),
-        _('Snack') => array(
-            $this->Html->link(
-                '<i class="icon-plus-sign"></i> ' . __('Admin'), 
-                array('action' => 'add_admin'),
-                array('escape' => false)
-            )
-        ),
-    )
-));
+    ),
+    _('Passive') => array(
+        $this->Html->link(
+            '<i class="icon-plus-sign"></i> ' . __('MAC address'), 
+            array('action' => 'add_mac'),
+            array('escape' => false)
+        )
+    ),
+    _('Snack') => array(
+        $this->Html->link(
+            '<i class="icon-plus-sign"></i> ' . __('Admin'), 
+            array('action' => 'add_admin'),
+            array('escape' => false)
+        )
+    ),
+);
+if(AuthComponent::user('role') != 'superadmin'){
+    unset($dropdownUsersButtonItems[__('Snack')]);
+}
+
+if(AuthComponent::user('role') != 'tech'){
+    echo $this->element('dropdownButton', array(
+        'buttonCount' => 1,
+        'class' => 'btn-primary',
+        'title' => __('Add user'),
+        'icon' => 'icon-user',
+        'items' => $dropdownUsersButtonItems,
+    ));
+}
+
+$dropdownCsvButtonItems = array(
+    $this->Html->link(
+        '<i class="icon-upload"></i> ' . __('Import users'),
+        array('action' => 'import_csv'),
+        array('escape' => false)
+    ),
+    $this->Html->link(
+        '<i class="icon-download"></i> ' . __('Export users'),
+        array('action' => 'export_csv'),
+        array('escape' => false)
+    ),
+);
+
+if(AuthComponent::user('role') === 'tech'){
+    unset($dropdownCsvButtonItems[0]);
+}
 
 echo $this->element('dropdownButton', array(
     'buttonCount' => 1,
     'class' => 'btn-primary',
     'title' => __('CSV'),
     'icon' => 'icon-file',
-    'items' => array(
-        $this->Html->link(
-            '<i class="icon-upload"></i> ' . __('Import users'),
-            array('action' => 'import_csv'),
-            array('escape' => false)
-        ),
-        $this->Html->link(
-            '<i class="icon-download"></i> ' . __('Export users'),
-            array('action' => 'export_csv'),
-            array('escape' => false)
-        ),
-    ),
+    'items' => $dropdownCsvButtonItems
 ));
 
 ?>
