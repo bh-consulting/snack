@@ -8,7 +8,7 @@ class BackupsController extends AppController {
 		'Filters' => array('model' => 'Backup'),
     );
 
-    private $git = '/home/pi/bh-consulting/trunk/code/db/backups-clone.git/';
+    private $git = '~snack/backups.git/';
 
     public function index($id = null) {
 		$this->loadModel('Nas');

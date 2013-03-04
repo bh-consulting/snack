@@ -10,6 +10,6 @@ $config = array (
     'certsPath' => '/home/snack/cert',
     'configurationEmail' => 'pi@bh.net',
     'errorEmail' => 'pi@bh.net',
-    'ipAddress' => '5.5.5.5',
+    'ipAddress' => '192.168.1.146',
   ),
 );
