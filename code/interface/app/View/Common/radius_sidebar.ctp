@@ -80,6 +80,7 @@ echo $this->Html->link(
 );
 ?>
 	</li>
+    <?php if(AuthComponent::user('role') == 'superadmin'){ ?>
 	<li class="<?php echo $this->fetch('param_active'); ?>">
 <?php
 echo $this->Html->link(
@@ -93,9 +94,14 @@ echo $this->Html->link(
 );
 ?>
 	</li>
+    <?php } ?>
     </ul>
-    <? } ?>
 <div id="content" class="content">
+    <?php } ?>
 <?php echo $this->Session->flash(); ?>
 <?php echo $this->fetch('content'); ?>
-</div>
+<?php
+if(AuthComponent::user('role') != 'tech'){
+    echo '</div>';
+}
+?>

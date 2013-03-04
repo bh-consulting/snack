@@ -118,22 +118,25 @@ if (!empty($radgroups)) {
 	);
 ?>
 	    </td>
+        <?php if(AuthComponent::user('role') == 'superadmin'){ ?>
 	    <td class="fit">
 		<i class="icon-remove"></i>
-<?php
-	echo $this->Html->link(
-	    __('Delete'),
-	    '#',
-	    array(
-		'onClick' => "if (confirm('" . __('Are you sure?') . "')) {"
-		. "$('#RadgroupsDeleteForm').attr('action',"
-		. "$('#RadgroupsDeleteForm').attr('action') + '/"
-		. $g['Radgroup']['id'] . "');"
-		. "$('#RadgroupsDeleteForm').submit(); }"
-	    )
-	);
+        <?php
+    	echo $this->Html->link(
+    	    __('Delete'),
+    	    '#',
+    	    array(
+    		'onClick' => "if (confirm('" . __('Are you sure?') . "')) {"
+    		. "$('#RadgroupsDeleteForm').attr('action',"
+    		. "$('#RadgroupsDeleteForm').attr('action') + '/"
+    		. $g['Radgroup']['id'] . "');"
+    		. "$('#RadgroupsDeleteForm').submit(); }"
+    	    )
+    	);
 ?>
 	    </td>
+
+        <?php } ?>
 	</tr>
 <?php
     }

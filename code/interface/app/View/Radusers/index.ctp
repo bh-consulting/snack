@@ -74,8 +74,13 @@ $columns = array(
     'role' => array('text' => __('Admin'), 'fit' => true),
 );
 
-echo $this->Form->create('Radusers', array('action' => 'delete'));
-echo $this->Form->end();
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->Form->create('Radusers', array('action' => 'delete'));
+    echo $this->Form->end();
+} else {
+    // hum hum (ala blank.gif)
+    echo '<div></div><br />';
+}
 
 echo $this->Form->create('MultiSelection', array('class' => 'form-inline'));
 ?>
@@ -119,9 +124,13 @@ foreach ($columns as $field => $info) {
     )
     . '</th>';
 }
-?>
-        <th class="fit"><? echo __('Edit'); ?></th>
-        <th class="fit"><? echo __('Delete'); ?></th>
+    if(in_array(AuthComponent::user('role'), array('superadmin', 'admin'))){
+        echo '<th class="fit">' . __('Edit') . '</th>';
+        if(AuthComponent::user('role') == 'superadmin'){
+            echo '<th class="fit">' . __('Delete') . '</th>';
+        }
+    }
+    ?>
     </tr>
     </thead>
 
@@ -191,6 +200,7 @@ if (!empty($radusers)) {
         echo __($rad['Raduser']['role']);
 ?>
         </td>
+    <?php if(in_array(AuthComponent::user('role'), array('superadmin', 'admin'))){ ?>
         <td class="fit">
             <i class="icon-edit"></i>
 <?php
@@ -203,6 +213,8 @@ if (!empty($radusers)) {
         );
 ?>
         </td>
+        <?php } ?>
+    <?php if(AuthComponent::user('role') =='superadmin'){ ?>
         <td class="fit">
             <i class="icon-remove"></i>
 <?php
@@ -219,6 +231,7 @@ if (!empty($radusers)) {
         );
 ?>
         </td>
+        <?php } ?>
     </tr>
 <?php
     }
@@ -237,19 +250,20 @@ if (!empty($radusers)) {
     </tbody>
 </table>
 <?php
-echo $this->element('dropdownButton', array(
-    'buttonCount' => 1,
-    'title' => 'Action',
-    'icon' => '',
-    'items' => array(
-        $this->Html->link(
-            '<i class="icon-remove"></i> ' . __('Delete selected'),
-            '#',
-            array(
-                'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
-                . "if (confirm('" . __('Are you sure?') . "')) {"
-                . "$('#MultiSelectionIndexForm').submit();}",
-                    'escape' => false,
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->element('dropdownButton', array(
+        'buttonCount' => 1,
+        'title' => 'Action',
+        'icon' => '',
+        'items' => array(
+            $this->Html->link(
+                '<i class="icon-remove"></i> ' . __('Delete selected'),
+                '#',
+                array(
+                    'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
+                    . "if (confirm('" . __('Are you sure?') . "')) {"
+                    . "$('#MultiSelectionIndexForm').submit();}",
+                        'escape' => false,
                 )
             ),
             $this->Html->link(
@@ -259,16 +273,18 @@ echo $this->element('dropdownButton', array(
                     'onClick' => "$('#selectionAction').attr('value', 'export');"
                     . "$('#MultiSelectionIndexForm').submit();",
                         'escape' => false,
-                    )
-                ),
-            )
+                )
+            ),
         )
-    );
-echo $this->Form->end(array(
-    'id' => 'selectionAction',
-    'name' => 'action',
-    'type' => 'hidden'
-));
+    ));
+
+    echo $this->Form->end(array(
+        'id' => 'selectionAction',
+        'name' => 'action',
+        'type' => 'hidden'
+    ));
+}
+
 echo $this->element('paginator_footer');
 unset($rad);
 ?>

@@ -85,16 +85,18 @@ $cakeDescription = __('SNACK');
                             array()
                         ) . '</li>';
 
-                    echo '<li class="' . $this->fetch('term_active') . '">' .
-                        $this->Html->link(
-                            __('Terminal'),
-                            array(
-                                'controller' => 'terminal',
-                                'action' => 'index',
-                            ),
-                            array()
-                        ) .
-                        '</li>';
+                    if(AuthComponent::user('role') == 'superadmin'){
+                        echo '<li class="' . $this->fetch('term_active') . '">' .
+                            $this->Html->link(
+                                __('Terminal'),
+                                array(
+                                    'controller' => 'terminal',
+                                    'action' => 'index',
+                                ),
+                                array()
+                            ) .
+                            '</li>';
+                    }
                 ?>
                 </ul>
                 <ul class="nav pull-right">
