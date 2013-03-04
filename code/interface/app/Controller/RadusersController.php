@@ -70,12 +70,15 @@ class RadusersController extends AppController {
     public function isAuthorized($user) {
         
         // All registered user can view users
-        if(in_array($this->action, array('index', 'view', 'export'))){
+        if(in_array($this->action, array(
+            'index', 'view_mac', 'view_cert', 'view_loginpass', 'export', 
+        ))){
             return true;
         }
         if($user['role'] === 'admin' && in_array($this->action, array(
-            'add_cert', 'add_loginpass', 'add_mac', 'view',
-            'edit_cert', 'edit_loginpass', 'edit_mac'
+            'view_cert', 'view_loginpass', 'view_mac',
+            'add_cert', 'add_loginpass', 'add_mac',
+            'edit_cert', 'edit_loginpass', 'edit_mac',
         ))){
             return true;
         }
