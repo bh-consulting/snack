@@ -1,5 +1,5 @@
 <?php
-	echo '<div id="filtersPan" onclick="toggleFiltersPan()">';
+	echo '<div class="toggleBlock" onclick="toggleBlock(this)">';
 	echo $this->Html->link(__('Filters'), '#');
 
 	if (count($this->params['url']) > 0) {

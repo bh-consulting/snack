@@ -1,7 +1,7 @@
-function toggleFiltersPan() {
-	$('#filtersForm').slideToggle();
-	$('#filtersPan').find('i').toggleClass('icon-chevron-up');
-	$('#filtersPan').find('i').toggleClass('icon-chevron-down');
+function toggleBlock(button) {
+	$(button).next().slideToggle();
+	$(button).find('i').toggleClass('icon-chevron-up');
+	$(button).find('i').toggleClass('icon-chevron-down');
 }
 
 $(window).resize(function() {

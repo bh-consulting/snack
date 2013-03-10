@@ -12,8 +12,7 @@ class BackupsController extends AppController {
 
     public function index($id = null) {
 		$this->loadModel('Nas');
-		$nas = new Nas($id);
-		$nas = $nas->read();
+		$nas = $this->Nas->findById($id);
 
 		$this->set('nasID', $nas['Nas']['id']);
 		$this->set('nasIP', $nas['Nas']['nasname']);
@@ -26,9 +25,11 @@ class BackupsController extends AppController {
 		));
 
 		$this->Filters->addStringConstraint(array(
-		    'column' => 'author', 
+		    'fields' => 'author', 
+		    'input' => 'author', 
 		));
 
+		$this->Filters->addArbitraryConstraint('1=1 GROUP BY commit');
 		$this->Filters->paginate();
     }
 
@@ -41,7 +42,7 @@ class BackupsController extends AppController {
 		    );
 		}
 
-        $commitA = $backupA['Backup']['commit'];
+		$commitA = $backupA['Backup']['commit'];
 
 		$this->set('dateA', $backupA['Backup']['datetime']);
 		$this->set('idA', $backupA['Backup']['id']);
@@ -111,11 +112,29 @@ class BackupsController extends AppController {
     public function view($id = null, $nas = null) {
 		try {
 		    if($id != null && $nas != null) {
-				$backup = $this->gitDiffNas($nas, $id);
+				$this->loadModel('Nas');
+				$nas = $this->Nas->findById($nas);
+
+				if(!$nas) {
+				    throw new BadBackupOrNasID(
+					'Please select an existant NAS.'
+				    );
+				}
+
+				$backup = $this->gitDiffNas($nas['Nas']['id'], $id);
 				$commit = $backup['Backup']['commit'];
 
-				exec("cd $this->git; git show $commit:testeuh", $output);
+				exec("cd $this->git; git show $commit:{$nas['Nas']['nasname']}", $output);
 				$this->set('config', implode("\n", $output));
+				$this->set('backupID', $id);
+
+				$this->Filters->addStringConstraint(array(
+				    'fields' => 'commit', 
+				    'input' => 'commit', 
+				    'value'  => $commit,
+				));
+
+				$this->Filters->paginate();
 
 		    } else {
 				throw new BadBackupOrNasID(

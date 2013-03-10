@@ -5,19 +5,23 @@
 	color: #680e0e;
 }
 
-#filtersPan {
+.toggleBlock {
 	background-color: rgb(245, 245, 245);
 	padding: 5px 10px;
 	margin-bottom: 10px;
 }
 
-#filtersPan:hover {
+.toggleBlock:hover {
 	background-color: rgb(238, 238, 238);
 }
 
-#filtersPan i {
+.toggleBlock i {
 	display: block;
 	float: right;
+}
+
+.hidden {
+    display: none;
 }
 
 .slider {
