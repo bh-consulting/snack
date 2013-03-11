@@ -47,7 +47,8 @@ if(isset($diff) && isset($config)):
     <i class="icon-chevron-down"></i>
 </div>
 
-<pre class="well" style="display: none">
+<div style="display: none">
+<pre class="well">
 <?php echo trim($config) ?>
 </pre>
 
@@ -69,6 +70,7 @@ if(!empty($diff)) {
 	);
 }
 ?>
+</div>
 
 <h2><?php echo __('Newer similar backups'); ?></h2>
 
