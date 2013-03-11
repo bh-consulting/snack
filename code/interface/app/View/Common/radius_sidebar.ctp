@@ -31,7 +31,7 @@ echo $this->Html->link(
 	<li class="<?php echo $this->fetch('nas_active'); ?>">
 <?php
 
-if($nasnotwritten)
+if($nasunwritten)
     $iconnas = '<i class="icon-hdd icon-red" title="' . __('There is at least one NAS not synchronized with the starting configuration.') . '"></i>';
 else
     $iconnas = '<i class="icon-hdd icon-green" title="' . __('All NAS seems synchronized with the starting configuration.') . '"></i>';

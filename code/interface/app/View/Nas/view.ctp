@@ -15,7 +15,7 @@ echo $this->element('viewInfo', array(
 
 echo '<strong>';
 
-if($isnowritten) {
+if($isunwritten) {
     echo '<i class="icon-camera icon-red"></i> ';
     echo __('There are %s not saved on the memory.',
 	$this->Html->link(

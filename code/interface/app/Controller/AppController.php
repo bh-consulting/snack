@@ -82,7 +82,7 @@ class AppController extends Controller {
             'desc' => 'icon-chevron-up',
         ));
 
-	$this->set('nasnotwritten', $this->BackupsChanges->areThereChangesNotWritten());
+	$this->set('nasunwritten', $this->BackupsChanges->areThereChangesUnwritten());
     }
 
     public function changeLang($lang) {

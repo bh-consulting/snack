@@ -49,30 +49,13 @@ class BackupsController extends AppController {
 
 		$this->set('users', $users);
 
-		$lastWrmem = $this->Backup->find('first', array(
-		    'conditions' => array(
-			'nas'    => $nas['Nas']['nasname'],
-			'action' => 'wrmem'
-		    ),
-		    'fields'     => array('id'),
-		    'order'      => array('id DESC'),
-		    'limit'      => 1
-		));
+		$notWrittenBackups = $this->BackupsChanges->backupsUnwrittenInThisNAS($nas);
+		$notWrittenIds = array();
 
-		$noWriteMemed = $this->Backup->find('all', array(
-		    'conditions' => array(
-			'nas'    => $nas['Nas']['nasname'],
-			'id >'   => $lastWrmem['Backup']['id']
-		    ),
-		    'fields'     => array('id')
-		));
+		foreach($notWrittenBackups AS $backup)
+		    $notWrittenIds[] = $backup['Backup']['id'];
 
-		$noWriteIds = array();
-
-		foreach($noWriteMemed AS $o)
-		    $noWriteIds[] = $o['Backup']['id'];
-
-		$this->set('nowriteids', $noWriteIds);
+		$this->set('unwrittenids', $notWrittenIds);
     }
 
     private function gitDiffNas($nas, $a, $b = null) {

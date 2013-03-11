@@ -56,14 +56,14 @@ class NasController extends AppController {
 
         $allnas = $this->Filters->paginate('nas');
 
-	$noWriteIds = array();
+	$unwrittenIds = array();
 
 	foreach($allnas AS $nas) {
-	    if($this->BackupsChanges->areThereChangesNotWrittenInThisNAS($nas))
-		$noWriteIds[] = $nas['Nas']['id'];
+	    if($this->BackupsChanges->areThereChangesUnwrittenInThisNAS($nas))
+		$unwrittenIds[] = $nas['Nas']['id'];
 	}
 
-	$this->set('nowriteids', $noWriteIds);
+	$this->set('unwrittenids', $unwrittenIds);
     }
 
     public function view($id = null) {
@@ -95,7 +95,7 @@ class NasController extends AppController {
             )
         );
 	
-	$this->set('isnowritten', $this->BackupsChanges->areThereChangesNotWrittenInThisNAS($nas));
+	$this->set('isunwritten', $this->BackupsChanges->areThereChangesUnwrittenInThisNAS($nas));
     }
 
     // method to display a warning field to restart the server after Nas changes

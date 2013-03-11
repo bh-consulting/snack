@@ -83,7 +83,7 @@ echo $this->element('MultipleAction', array('action' => 'start'));
 
 echo '<strong>';
 
-if($nasnotwritten) {
+if($nasunwritten) {
     echo '<i class="icon-camera icon-red"></i> ';
     echo __('There is at least one NAS not synchronized with the starting configuration.');
 } else {
@@ -188,9 +188,9 @@ if (!empty($nas)) {
             case 'backups':
                 if(AuthComponent::user('role') == 'superadmin'){
                     echo '<i class="icon-camera icon-' . (
-			    in_array($n['Nas']['id'], $nowriteids) ?
-				'red" title="' . __('There are some changes NOT saved on the memory.') :
-				'green" title="' . __('All changes saved on the memory.')
+			    in_array($n['Nas']['id'], $unwrittenids) ?
+				'red" title="' . __('Running configuration NOT synchronized with the starting one.') :
+				'green" title="' . __('Running configuration seems synchronized with the starting configuration.')
 			) . '"></i> ';
                     echo $this->Html->link(
                         __('Backups'),
