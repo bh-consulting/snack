@@ -14,6 +14,9 @@ $columns = array(
     'acctstoptime' => array(
         'text' => __('Stop'),
     ),
+    'duration' => array(
+        'text' => __('Durée'),
+    ),
     'username' => array(
         'text' => __('Username'),
     ),
@@ -213,6 +216,26 @@ if (!empty($radaccts)) {
 		if(empty($acct['Radacct'][$field]))
 		    echo '<em>'.__('still connected').'</em>';
 		echo $this->element('formatDates', array('date' => h($acct['Radacct'][$field])));
+		break;
+	    case 'duration':
+		$datetime1 = new DateTime($acct['Radacct']['acctstarttime']);
+		$datetime2 = new DateTime($acct['Radacct']['acctstoptime']);
+		$interval = $datetime1->diff($datetime2);
+
+		$years = $interval->format('%y');
+		$months = $interval->format('%m');
+		$days = $interval->format('%d');
+		$hours = $interval->format('%h');
+		$minutes = $interval->format('%m');
+		$seconds = $interval->format('%s');
+		
+		echo $years ? __('%dy', $years) : '';
+		echo $months ? __('%dm', $months) : '';
+		echo $days ? __('%dd', $days) : '';
+		echo $hours ? __('%dh', $hours) : '';
+		echo $minutes ? __('%dm', $minutes) : '';
+		echo $seconds ? __('%ds', $seconds) : '';
+
 		break;
             default:
                 echo h($acct['Radacct'][$field]);

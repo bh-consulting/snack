@@ -11,6 +11,7 @@ class NasController extends AppController {
     public $components = array(
         'Filters' => array('model' => 'Nas'),
         'Session',
+	'BackupsChanges',
         'MultipleAction' => array('model' => 'Nas', 'name' => 'nas'),
     );
 
@@ -23,30 +24,6 @@ class NasController extends AppController {
         }
 
         return parent::isAuthorized($user);
-    }
-
-    public function areThereChangesNotWrote($nas) {
-	$this->loadModel('Backup');
-
-	$lastWrmem = $this->Backup->find('first', array(
-	    'conditions' => array(
-		'nas'    => $nas['Nas']['nasname'],
-		'action' => 'wrmem'
-	    ),
-	    'fields'     => array('id'),
-	    'order'      => array('id DESC'),
-	    'limit'      => 1
-	));
-
-	$noWriteMemed = $this->Backup->find('count', array(
-	    'conditions' => array(
-		'nas'    => $nas['Nas']['nasname'],
-		'id >'   => $lastWrmem['Backup']['id']
-	    ),
-	    'fields'     => array('id')
-	));
-
-	return $noWriteMemed > 0;
     }
 
     public function index() {
@@ -82,7 +59,7 @@ class NasController extends AppController {
 	$noWriteIds = array();
 
 	foreach($allnas AS $nas) {
-	    if($this->areThereChangesNotWrote($nas))
+	    if($this->BackupsChanges->areThereChangesNotWrittenInThisNAS($nas))
 		$noWriteIds[] = $nas['Nas']['id'];
 	}
 
@@ -118,7 +95,7 @@ class NasController extends AppController {
             )
         );
 	
-	$this->set('isnowrote', $this->areThereChangesNotWrote($nas));
+	$this->set('isnowritten', $this->BackupsChanges->areThereChangesNotWrittenInThisNAS($nas));
     }
 
     // method to display a warning field to restart the server after Nas changes

@@ -22,6 +22,7 @@
 
 App::uses('Controller', 'Controller');
 App::uses('Utils', 'Lib');
+App::import('Model', 'Nas');
 
 /**
  * Application Controller
@@ -59,7 +60,8 @@ class AppController extends Controller {
                 )
             ),
             'authorize' => array('Controller'),
-        )
+        ),
+	'BackupsChanges'
     );
 
     public function beforeFilter() {
@@ -79,6 +81,8 @@ class AppController extends Controller {
             'asc' => 'icon-chevron-down',
             'desc' => 'icon-chevron-up',
         ));
+
+	$this->set('nasnotwritten', $this->BackupsChanges->areThereChangesNotWritten());
     }
 
     public function changeLang($lang) {

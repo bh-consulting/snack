@@ -15,18 +15,14 @@ $columns = array(
         'text' => __('ID'),
         'fit' => true,
     ),
-    'nasname' => array(
+    'shortname' => array(
         'text' => __('Name'),
     ),
-    'shortname' => array(
-        'text' => __('Short name'),
+    'nasname' => array(
+        'text' => __('IP address'),
     ),
     'description' => array(
         'text' => __('Description'),
-    ),
-    'type' => array(
-        'text' => __('Type'),
-        'fit' => true,
     ),
     'view' => array(
         'text' => __('View'),
@@ -84,7 +80,22 @@ echo $this->element(
 );
 
 echo $this->element('MultipleAction', array('action' => 'start'));
+
+echo '<strong>';
+
+if($nasnotwritten) {
+    echo '<i class="icon-camera icon-red"></i> ';
+    echo __('There is at least one NAS not synchronized with the starting configuration.');
+} else {
+    echo '<i class="icon-camera icon-green"></i> ';
+    echo __('All NAS seems synchronized with the starting configuration.');
+}
+
+echo '</strong>';
 ?>
+
+<br />
+<br />
 
 <table class="table">
     <thead>
