@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SNACK\n"
-"POT-Creation-Date: 2013-03-11 21:16+0000\n"
-"PO-Revision-Date: 2013-03-11 22:26+0100\n"
+"POT-Creation-Date: 2013-03-11 21:46+0000\n"
+"PO-Revision-Date: 2013-03-11 22:48+0100\n"
 "Last-Translator: Julien Guépin <julien@guepin.fr>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -309,6 +309,7 @@ msgstr "Le server %s ne peut pas redémarrer."
 #: Controller/Component/ChecksComponent.php:63
 #: View/Elements/cisco_common_fields.ctp:4
 #: View/Radusers/add_cert.ctp:65
+#: View/Radusers/add_loginpass.ctp:65
 #: View/Radusers/index.ctp:35
 msgid "Cisco"
 msgstr "Cisco"
@@ -763,9 +764,26 @@ msgstr "Droits Snack"
 
 #: View/Elements/snack_role_input.ctp:6
 #: View/Radusers/add_cert.ctp:67
+#: View/Radusers/add_loginpass.ctp:67
 #: View/Radusers/index.ctp:72
 msgid "Role"
 msgstr "Rôle"
+
+#: View/Elements/snack_role_input.ctp:11
+msgid "access to the network, not to the interface"
+msgstr "accès au réseau, pas à l'interface"
+
+#: View/Elements/snack_role_input.ctp:12
+msgid "view users, download certificates"
+msgstr "voir les utilisateurs, télécharger les certificats"
+
+#: View/Elements/snack_role_input.ctp:13
+msgid "view, create, update users"
+msgstr "voir, créer, mettre à jour les utilisateurs"
+
+#: View/Elements/snack_role_input.ctp:14
+msgid "view, create, update, delete all objects"
+msgstr "voir, créer, mettre à jour, supprimer tous les objets"
 
 #: View/Elements/viewInfo.ctp:10
 #: View/Nas/index.ctp:36;172
@@ -879,7 +897,7 @@ msgstr "Clé secrete"
 #: View/Nas/add.ctp:16
 #: View/Radgroups/add.ctp:24
 #: View/Radusers/add_cert.ctp:56
-#: View/Radusers/add_loginpass.ctp:56
+#: View/Radusers/add_loginpass.ctp:57
 #: View/Radusers/add_mac.ctp:25
 #: View/Radusers/add_snack.ctp:33
 msgid "Create"
@@ -1113,7 +1131,7 @@ msgstr "Utilisateurs sélectionnés"
 #: View/Radgroups/add.ctp:15
 #: View/Radgroups/edit.ctp:15
 #: View/Radusers/add_cert.ctp:37;64
-#: View/Radusers/add_loginpass.ctp:11
+#: View/Radusers/add_loginpass.ctp:11;64
 #: View/Radusers/add_mac.ctp:11
 #: View/Radusers/edit_cert.ctp:40
 #: View/Radusers/edit_loginpass.ctp:12
@@ -1124,7 +1142,7 @@ msgstr "Vérifications"
 #: View/Radgroups/add.ctp:20
 #: View/Radgroups/edit.ctp:20
 #: View/Radusers/add_cert.ctp:49;66
-#: View/Radusers/add_loginpass.ctp:50
+#: View/Radusers/add_loginpass.ctp:50;66
 #: View/Radusers/add_mac.ctp:19
 #: View/Radusers/edit_cert.ctp:67
 #: View/Radusers/edit_loginpass.ctp:54
@@ -1479,9 +1497,6 @@ msgstr "Le répertoire n'existe pas."
 
 #~ msgid "Create users"
 #~ msgstr "Créer des utilisateurs"
-
-#~ msgid "Create, Update, Delete users"
-#~ msgstr "Créer, mettre à jour, supprimer des utilisateurs"
 
 #~ msgid "No users yet."
 #~ msgstr "Pas encore d'utilisateurs."

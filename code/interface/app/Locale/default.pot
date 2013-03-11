@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-03-11 21:16+0000\n"
+"POT-Creation-Date: 2013-03-11 21:46+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -309,6 +309,7 @@ msgstr ""
 #: Controller/Component/ChecksComponent.php:63
 #: View/Elements/cisco_common_fields.ctp:4
 #: View/Radusers/add_cert.ctp:65
+#: View/Radusers/add_loginpass.ctp:65
 #: View/Radusers/index.ctp:35
 msgid "Cisco"
 msgstr ""
@@ -755,8 +756,25 @@ msgstr ""
 
 #: View/Elements/snack_role_input.ctp:6
 #: View/Radusers/add_cert.ctp:67
+#: View/Radusers/add_loginpass.ctp:67
 #: View/Radusers/index.ctp:72
 msgid "Role"
+msgstr ""
+
+#: View/Elements/snack_role_input.ctp:11
+msgid "access to the network, not to the interface"
+msgstr ""
+
+#: View/Elements/snack_role_input.ctp:12
+msgid "view users, download certificates"
+msgstr ""
+
+#: View/Elements/snack_role_input.ctp:13
+msgid "view, create, update users"
+msgstr ""
+
+#: View/Elements/snack_role_input.ctp:14
+msgid "view, create, update, delete all objects"
 msgstr ""
 
 #: View/Elements/viewInfo.ctp:10
@@ -871,7 +889,7 @@ msgstr ""
 #: View/Nas/add.ctp:16
 #: View/Radgroups/add.ctp:24
 #: View/Radusers/add_cert.ctp:56
-#: View/Radusers/add_loginpass.ctp:56
+#: View/Radusers/add_loginpass.ctp:57
 #: View/Radusers/add_mac.ctp:25
 #: View/Radusers/add_snack.ctp:33
 msgid "Create"
@@ -1105,7 +1123,7 @@ msgstr ""
 #: View/Radgroups/add.ctp:15
 #: View/Radgroups/edit.ctp:15
 #: View/Radusers/add_cert.ctp:37;64
-#: View/Radusers/add_loginpass.ctp:11
+#: View/Radusers/add_loginpass.ctp:11;64
 #: View/Radusers/add_mac.ctp:11
 #: View/Radusers/edit_cert.ctp:40
 #: View/Radusers/edit_loginpass.ctp:12
@@ -1116,7 +1134,7 @@ msgstr ""
 #: View/Radgroups/add.ctp:20
 #: View/Radgroups/edit.ctp:20
 #: View/Radusers/add_cert.ctp:49;66
-#: View/Radusers/add_loginpass.ctp:50
+#: View/Radusers/add_loginpass.ctp:50;66
 #: View/Radusers/add_mac.ctp:19
 #: View/Radusers/edit_cert.ctp:67
 #: View/Radusers/edit_loginpass.ctp:54
