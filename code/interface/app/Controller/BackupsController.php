@@ -5,7 +5,8 @@ class BackupsController extends AppController {
     public $paginate = array('limit' => 10, 'order' => array('id' => 'desc'));
     public $uses = array('Backup');
     public $components = array(
-		'Filters' => array('model' => 'Backup'),
+	'Filters' => array('model' => 'Backup'),
+        'Users' => array()
     );
 
     private $git = '~snack/backups.git/';
@@ -29,6 +30,12 @@ class BackupsController extends AppController {
 		    'input' => 'author', 
 		));
 
+		$this->Filters->addStringConstraint(array(
+		    'fields' => 'nas', 
+		    'input' => 'nas', 
+		    'value'  => $nas['Nas']['nasname'],
+		));
+
 		$this->Filters->addGroupConstraint('commit');
 
 		$backups = $this->Filters->paginate();
@@ -37,7 +44,7 @@ class BackupsController extends AppController {
 
 		foreach($backups AS $backup) {
 		    $users[$backup['Backup']['id']] =
-			$this->extendUsers($backup['Backup']['users']);
+			$this->Users->extendUsers($backup['Backup']['users']);
 		}
 
 		$this->set('users', $users);
@@ -68,31 +75,6 @@ class BackupsController extends AppController {
 		$this->set('nowriteids', $noWriteIds);
     }
 
-    private function extendUsers($str) {
-	$strUsers = explode(',', $str);
-	$users = array();
-
-	$this->loadModel('Raduser');
-
-	foreach($strUsers AS $strUser) {
-	    $user = $this->Raduser->findByUsername($strUser);
-	    
-	    if(empty($user)) {
-		array_push($users, array(
-		    'id' => -1,
-		    'username' => $strUser,
-		));
-	    } else {
-		array_push($users, array(
-		    'id' => $user['Raduser']['id'],
-		    'username' => $strUser,
-		));
-	    }
-	}
-
-	return $users;
-    }
-
     private function gitDiffNas($nas, $a, $b = null) {
 		$backupA = $this->Backup->findById($a);
 
@@ -107,7 +89,7 @@ class BackupsController extends AppController {
 		$this->set('dateA', $backupA['Backup']['datetime']);
 		$this->set('idA', $backupA['Backup']['id']);
 		$this->set('actionA', $backupA['Backup']['action']);
-		$this->set('usersA', $this->extendUsers($backupA['Backup']['users']));
+		$this->set('usersA', $this->Users->extendUsers($backupA['Backup']['users']));
 
 		if ($b != null) {
 		    $b = $this->params['url']['b'];
@@ -198,12 +180,18 @@ class BackupsController extends AppController {
 				    'value'  => $commit,
 				));
 
+				$this->Filters->addStringConstraint(array(
+				    'fields' => 'nas', 
+				    'input' => 'nas', 
+				    'value'  => $nas['Nas']['nasname'],
+				));
+
 				$backups = $this->Filters->paginate();
 				$users = array();
 
 				foreach($backups AS $backup) {
 				    $users[$backup['Backup']['id']] =
-					$this->extendUsers($backup['Backup']['users']);
+					$this->Users->extendUsers($backup['Backup']['users']);
 				}
 
 				$this->set('users', $users);

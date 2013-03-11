@@ -5,10 +5,9 @@ $this->assign('nas_active', 'active');
 
 $columns = array(
     'id' => __('ID'),
-    'datetime' => __('Date'),
-    'nas' => __('NAS'),
-    'action' => __('Action'),
-    'users' => __('Users'),
+    'datetime' => __('When'),
+    'action' => __('Why'),
+    'users' => __('Who'),
 );
 ?>
 
@@ -91,7 +90,27 @@ for($i = 0; $i < count($backups); $i++) {
 	    echo $this->element('formatUsersList', array(
 		'users' => $users[$backup['Backup']['id']]
 	    ));
-	} else 
+	} else if($field == 'datetime') {
+	    echo $this->element('formatDates', array(
+		'date' => $backup['Backup'][$field]
+	    ));
+	} else if($field == 'action') {
+	    echo '<strong>';
+	    switch($backup['Backup'][$field]) {
+		case 'logoff':
+		    echo __('Log off');
+		    break;
+		case 'login':
+		    echo __('Log in');
+		    break;
+		case 'wrmem':
+		    echo __('Write memory');
+		    break;
+		default:
+		    echo $backup['Backup'][$field];
+	    }
+	    echo '</strong>';
+	} else
 	    echo $backup['Backup'][$field];
 
 	echo '</td>';
@@ -157,7 +176,7 @@ for($i = 0; $i < count($backups); $i++) {
 ?>
 	<?php else: ?>
 		<tr>
-		<td colspan="5">
+		<td colspan="<?php echo count($columns) + 4; ?>" style="text-align: center">
 <?php
 echo __('No backups found').' (';
 

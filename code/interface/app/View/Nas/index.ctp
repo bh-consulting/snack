@@ -178,8 +178,8 @@ if (!empty($nas)) {
                 if(AuthComponent::user('role') == 'superadmin'){
                     echo '<i class="icon-camera icon-' . (
 			    in_array($n['Nas']['id'], $nowriteids) ?
-				'red' :
-				'green'
+				'red" title="' . __('There are some changes NOT saved on the memory.') :
+				'green" title="' . __('All changes saved on the memory.')
 			) . '"></i> ';
                     echo $this->Html->link(
                         __('Backups'),
@@ -219,7 +219,7 @@ if (!empty($nas)) {
 } else {
 ?>
     <tr>
-        <td colspan="<?php echo count($columns); ?>">
+        <td colspan="<?php echo count($columns); ?>" style="text-align: center">
 <?php
     echo __('No NAS found.');
 ?>

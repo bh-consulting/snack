@@ -309,7 +309,7 @@ if (!empty($radusers)) {
 } else {
 ?>
     <tr>
-        <td colspan="<?php echo count($columns); ?>">
+        <td colspan="<?php echo count($columns) + 3; ?>" style="text-align: center">
 <?php
     echo __('No user found.');
 ?>

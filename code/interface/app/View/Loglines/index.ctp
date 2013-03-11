@@ -101,7 +101,7 @@ if (!empty($loglines)) {
             switch ($field) {
             case 'datetime':
                 echo $this->Html->link(
-                    __($logline['Logline'][$field]),
+                    $this->element('formatDates', array('date' => $logline['Logline'][$field])),
                     '#',
                     array(
                         'onclick' => 'logsSearchFromDate($(this))',
@@ -110,14 +110,16 @@ if (!empty($loglines)) {
                 );
                 break;
             case 'level':
+		echo '<strong>';
                 echo $this->Html->link(
-                    __($logline['Logline'][$field]),
+                    $logline['Logline'][$field],
                     '#',
                     array(
                         'onclick' => 'logsSearchFromSeverity($(this))',
                         'title' => __('Search from this severity')
                     )
                 );
+		echo '</strong>';
                 break;
             default:
                 echo $logline['Logline'][$field];
@@ -131,7 +133,7 @@ if (!empty($loglines)) {
 } else {
 ?>
         <tr>
-            <td colspan="<?php echo count($columns); ?>">
+            <td colspan="<?php echo count($columns); ?>" style="text-align: center">
 <?php
     echo __('No logs found').' (';
 

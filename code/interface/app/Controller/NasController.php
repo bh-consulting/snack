@@ -115,10 +115,10 @@ class NasController extends AppController {
                 'Description',
                 'Type',
                 'Ports',
-                'Virtual server',
-                'Community'
             )
         );
+	
+	$this->set('isnowrote', $this->areThereChangesNotWrote($nas));
     }
 
     // method to display a warning field to restart the server after Nas changes

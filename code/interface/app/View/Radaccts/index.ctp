@@ -8,10 +8,11 @@ $columns = array(
         'id' => 'radacctid',
         'fit' => true,
     ),
-    'acctuniqueid' => array(
-        'id' => 'radacctid',
-        'text' => __('ID'),
-        'fit' => true,
+    'acctstarttime' => array(
+        'text' => __('Start'),
+    ),
+    'acctstoptime' => array(
+        'text' => __('Stop'),
     ),
     'username' => array(
         'text' => __('Username'),
@@ -20,16 +21,9 @@ $columns = array(
         'text' => __('User station'),
         'fit' => true,
     ),
-    'acctstarttime' => array(
-        'text' => __('Start'),
-    ),
-    'acctstoptime' => array(
-        'text' => __('Stop'),
-    ),
     'nasipaddress' => array(
         'text' => __('NAS'),
         'port' => 'nasportid',
-        'fit' => true,
     ),
     'nasporttype' => array(
         'text' => __('Port type'),
@@ -73,7 +67,7 @@ echo $this->element('filters_panel', array(
 	array(
 	    'name' => 'text',
 	    'label' => __('Contains (accept regex)'),
-        'autoComplete' => true,
+	    'autoComplete' => true,
 	))
     )
 );
@@ -176,23 +170,50 @@ if (!empty($radaccts)) {
                     )
                 );
                 break;
-            case 'acctuniqueid':
-                echo $this->Html->link(
-                    h($acct['Radacct'][$field]),
-                    array(
-                        'controller' => 'Radaccts',
-                        'action' => 'view',
-                        $acct['Radacct'][$info['id']]
-                    )
-                );
-                break;
             case 'nasipaddress':
-                echo h($acct['Radacct'][$field]);
+		echo $this->element('formatNasLink', array(
+		    'nas' => $devices[$acct['Radacct']['radacctid']]
+		));
 
                 if (!empty($acct['Radacct'][$info['port']])) {
-                    echo ":" . $acct['Radacct'][$info['port']];
+		    echo ':' . (strpos($acct['Radacct'][$info['port']], '500') !== false ?
+			$acct['Radacct'][$info['port']] - 50000 :
+			h($acct['Radacct'][$info['port']]));
                 }
                 break;
+	    case 'username':
+		echo $this->element('formatUsersList', array(
+		    'users' => $users[$acct['Radacct']['radacctid']]
+		));
+
+		break;
+	    case 'callingstationid':
+                echo str_replace('-', ':', h($acct['Radacct'][$field]));
+		break;
+	    case 'nasporttype':
+
+		switch($acct['Radacct'][$field]) {
+		    case 'Virtual':
+			echo 'Telnet/SSH';
+			break;
+
+		    case 'Ethernet':
+			echo '802.1x';
+			break;
+
+		    case 'Async':
+			echo 'Console';
+			break;
+		}
+		break;
+	    case 'acctstarttime':
+		echo $this->element('formatDates', array('date' => h($acct['Radacct'][$field])));
+		break;
+	    case 'acctstoptime':
+		if(empty($acct['Radacct'][$field]))
+		    echo '<em>'.__('still connected').'</em>';
+		echo $this->element('formatDates', array('date' => h($acct['Radacct'][$field])));
+		break;
             default:
                 echo h($acct['Radacct'][$field]);
                 break;
@@ -205,7 +226,7 @@ if (!empty($radaccts)) {
 } else {
 ?>
     <tr>
-        <td colspan="<?php echo count($columns); ?>">
+        <td colspan="<?php echo count($columns); ?>" style="text-align: center">
 <?php
     echo __('No session found.');
 ?>

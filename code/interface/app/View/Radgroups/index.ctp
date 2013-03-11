@@ -145,7 +145,7 @@ if (!empty($radgroups)) {
 } else {
 ?>
 	<tr>
-	    <td colspan="<?php echo count($columns) + 3; ?>">
+	    <td colspan="<?php echo count($columns) + 3; ?>" style="text-align: center">
 <?php
     echo __('No groups yet.');
 ?>

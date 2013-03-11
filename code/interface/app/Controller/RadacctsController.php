@@ -4,10 +4,12 @@ class RadacctsController extends AppController {
     public $helpers = array('Html', 'Form');
     public $paginate = array(
         'limit' => 10,
-        'order' => array('acctuniqueid' => 'asc')
+        'order' => array('acctstarttime' => 'desc')
     );
     public $components = array(
-        'Filters' => array('model' => 'Radacct')
+        'Filters' => array('model' => 'Radacct'),
+        'Users' => array(),
+        'Nas' => array(),
     );
 
     public function isAuthorized($user) {
@@ -104,7 +106,22 @@ class RadacctsController extends AppController {
             'title' => __('Select a port type...'),
         ));
 
-        $this->Filters->paginate();
+        $sessions = $this->Filters->paginate();
+
+	$users = array();
+	$devices = array();
+
+	foreach($sessions AS $session) {
+	    $users[$session['Radacct']['radacctid']] =
+		$this->Users->extendUsers($session['Radacct']['username']);
+
+	    $devices[$session['Radacct']['radacctid']] =
+		$this->Nas->extendNasByIP($session['Radacct']['nasipaddress']);
+	}
+
+	$this->set('users', $users);
+	$this->set('devices', $devices);
+
     }
 
     public function view($id = null) {
