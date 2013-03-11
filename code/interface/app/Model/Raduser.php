@@ -8,6 +8,13 @@ class Raduser extends AppModel {
     public $displayField = 'username';
     public $name = 'Raduser';
 
+    public $roles = array(
+        'user' => 'User',
+        'tech' => 'Tech',
+        'admin' => 'Admin',
+        'superadmin' => 'Super admin',
+    );
+
     public $validationDomain = 'validation';
     
     public $validate = array(

@@ -438,6 +438,7 @@ class RadusersController extends AppController {
             'groups',
             $groups->find('list', array('fields' => array('groupname')))
         );
+        $this->set('roles', $this->Raduser->roles);
     }
 
     /**
@@ -731,6 +732,7 @@ class RadusersController extends AppController {
             $values[$u['Raduser']['id']]= $u['Raduser']['username'];
         }
         $this->set('users', $values);
+        $this->set('roles', $this->Raduser->roles);
     }
 
     private function edit($success) {
@@ -775,6 +777,8 @@ class RadusersController extends AppController {
                 $this->request
             );
         }
+        
+        $this->set('roles', $this->Raduser->roles);
     }
 
     public function edit_loginpass($id = null) {
@@ -948,6 +952,7 @@ class RadusersController extends AppController {
             $this->redirect(array('action' => 'index'));
         }
         $this->request->data = $this->Raduser->read();
+        $this->set('roles', $this->Raduser->roles);
     }
 
     public function delete ($id = null) {

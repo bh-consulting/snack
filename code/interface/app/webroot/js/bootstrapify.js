@@ -102,11 +102,9 @@ var Boostrapify = {
 			language: 'fr'
 		});
 
-		// SLIDER MAX
-		$('<div class="slider"><div></div><span></span></div>')
-		.insertAfter('.slidermax');
-		$('.slidermax + div :first-child').each(function(index) {
-			var select = $(this).parent().prev();
+		// SLIDER
+		function applySlider(index, elt, range) {
+			var select = $(elt).parent().prev();
 			var iSelected = select.find('option')
 			.index(select.children('option[selected]'));
 
@@ -124,27 +122,41 @@ var Boostrapify = {
 
 			var labelColor = select.children('option[selected]')
 			.attr('label-color');
-			$(this).next()
+			$(elt).next()
 			.css('color', labelColor === undefined ? '#000' : labelColor);
-			$(this).next()
+			$(elt).next()
 			.text( label(iSelected) );
 
-			$(this).slider({
-				range: 'max',
+			$(elt).slider({
+				range: range,
 				value: iSelected,
 				min: 0,
 				max: select.find('option').size() - 1,
 				step: 1,
 				slide: function(event, ui) {
 					select.val( value(ui.value) );
-					$(this).next().text( label(ui.value) );
+					$(elt).next().text( label(ui.value) );
 
 					var labelColor = select.children('option[selected]')
 					.attr('label-color');
-					$(this).next()
+					$(elt).next()
 					.css('color', labelColor === undefined ? '#000' : labelColor);
 				}
 			});
+		}
+
+		// slider max
+		$('<div class="slider"><div></div><span></span></div>')
+		.insertAfter('.slidermax');
+		$('.slidermax + div :first-child').each(function(index, elt){
+			applySlider(index, elt, 'max');
+		});
+
+		// slider min
+		$('<div class="slider"><div></div><span></span></div>')
+		.insertAfter('.slidermin');
+		$('.slidermin + div :first-child').each(function(index, elt){
+			applySlider(index, elt, 'min');
 		});
 	}
 };
