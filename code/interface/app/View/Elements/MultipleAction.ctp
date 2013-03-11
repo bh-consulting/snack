@@ -26,23 +26,45 @@ case 'line':
     );
 break;
 case 'end':
+    $items = array();
+
+    if (isset($options) && is_array($options)) {
+        foreach ($options as $option) {
+            switch ($option) {
+            case 'delete':
+                $items[] = $this->Html->link(
+                    '<i class="icon-remove"></i> ' . __('Delete selected'),
+                    '#',
+                    array(
+                        'onClick' => "$('#selectionAction').attr('value', 'delete');"
+                        . "if (confirm('" . __('Are you sure?') . "')) {"
+                        . "$('#MultiSelectionIndexForm').submit();}",
+                        'escape' => false,
+                    )
+                );
+                break;
+            case 'export':
+                $items[] = $this->Html->link(
+                    '<i class="icon-download"></i> ' . __('Export selected'),
+                    '#',
+                    array(
+                        'onClick' => "$('#selectionAction').attr('value', 'export');"
+                        . "$('#MultiSelectionIndexForm').submit();",
+                        'escape' => false,
+                    )
+                );
+                break;
+            }
+        }
+    }
+
     echo $this->element('dropdownButton', array(
         'buttonCount' => 1,
         'title' => __('Action'),
         'icon' => '',
-        'items' => array(
-            $this->Html->link(
-                '<i class="icon-remove"></i> ' . __('Delete selected'),
-                '#',
-                array(
-                    'onClick' => "$('#selectionAction').attr('value', 'delete');"
-                    . "if (confirm('" . __('Are you sure?') . "')) {"
-                    . "$('#MultiSelectionIndexForm').submit();}",
-                    'escape' => false,
-                )
-            ),
-        )
+        'items' => $items,
     ));
+
     echo $this->Form->end(array(
         'id' => 'selectionAction',
         'name' => 'action',

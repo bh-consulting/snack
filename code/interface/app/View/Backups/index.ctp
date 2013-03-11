@@ -16,7 +16,7 @@ $columns = array(
 
 <?php
 echo $this->element('filters_panel', array(
-    'controller' => 'nas/backups',
+    'controller' => 'backups/index',
     'inputs' => array(
 	array(
 	    'name' => 'datefrom',

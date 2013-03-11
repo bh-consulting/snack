@@ -47,12 +47,6 @@ class Raduser extends AppModel {
                 'message' => 'MAC already used',
             ),
         ),
-        'mac_active' => array(
-            'macFormat' => array(
-                'rule' => 'isMACFormat',
-                'message' => 'This is not a MAC address format.'
-            )
-        ),
         'country' => array(
             'notEmpty' => array(
                 'rule' => 'notEmpty',
@@ -98,6 +92,10 @@ class Raduser extends AppModel {
         ),
     );
 
+    /*
+     * Authentication functions.
+     */
+
     public function isUser($id){
         $user = $this->findById($id);
         $role = $user['Raduser']['role'];
@@ -133,52 +131,52 @@ class Raduser extends AppModel {
         return $user['Raduser']['role'];
     }
 
-    public function identicalFieldValues($field=array(), $compare_field=null) {
-        foreach ($field as $key => $value) { 
-            if (!isset($this->data[$this->name][$compare_field])) {
-                continue;
-            }
+    /*
+     * Validation functions.
+     */
 
-            $v1 = $value; 
-            $v2 = $this->data[$this->name][$compare_field];
-            if ($v1 !== $v2) { 
+    public function identicalFieldValues($fields = array(), $compare_field) {
+        if (!isset($this->data[$this->name][$compare_field]) || empty($fields)) {
+            return false;
+        }
+
+        foreach ($fields as $key => $value) { 
+            if ($value !== $this->data[$this->name][$compare_field]) { 
                 return false; 
             }
         } 
+
         return true; 
     } 
 
-    public function isMACFormat($field=array()) {
-        $value = array_shift($field);
-        if (!Utils::isMAC($value) && !empty($value)) { 
-            return false; 
-        }
-        return true; 
+    public function isMACFormat($fields = array()) {
+        return Utils::isMAC(array_shift($fields));
     }
 
-    public function isUniqueMAC($field=array()) {
-        $value = array_shift($field);
-        $value = str_replace(':', '', $value);
-        $value = str_replace('-', '', $value);
-	if ($this->find('count', array(
-		'conditions' => array('username' => $value)
-	    )
-	)) {
-            return false;
-        }
-        return true;
+    public function isUniqueMAC($fields = array()) {
+        $username = preg_replace('#:|-#', '', array_shift($fields));
+        $userCount = $this->find(
+            'count',
+            array(
+                'conditions' => array(
+                    'username' => $username
+                ),
+            )
+        );
+
+        return $userCount == 0;
     }
 
-    public function notEmptyIfCiscoOrLoginpass($field=array(), $was_cisco=null) {
+    public function notEmptyIfCiscoOrLoginpass($fields = array(), $was_cisco = null) {
         $value = array_shift($field);
-        if(isset($this->data[$this->name][$was_cisco])){
+        if (isset($this->data[$this->name][$was_cisco])) {
             $was_cisco = $this->data[$this->name][$was_cisco];
         } else {
             $was_cisco = false;
         }
 
         // NEW raduser (no id set)
-        if(!isset($this->data[$this->name]['id'])){
+        if (!isset($this->data[$this->name]['id'])) {
             if (empty($value) 
                 && ($this->data[$this->name]['is_cisco'] == 1
                 || $this->data[$this->name]['is_loginpass'] == 1
@@ -186,7 +184,7 @@ class Raduser extends AppModel {
             ) {
                 return false;
             }
-        // raduser UPDATE (id isset)
+        // UPDATE raduser (id isset)
         } else {
             if(isset($this->data[$this->name]['is_cisco'])){
                 if(empty($value)
@@ -199,13 +197,19 @@ class Raduser extends AppModel {
                 }
             }
         }
+
         return true;
     }
+
+    /*
+     * Model functions.
+     */
 
     public function beforeSave($options = array()) {
         if (empty($this->data[$this->name]['passwd'])) {
             unset($this->data[$this->name]['passwd']);
         }
+
         return true;
     }
 }

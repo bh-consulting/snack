@@ -16,6 +16,7 @@ class RadusersController extends AppController {
         'order' => array('Raduser.id' => 'asc')
     );
     public $components = array(
+        'Filters' => array('model' => 'Raduser'),
         'Checks' => array(
             'displayName' => 'username',
             'baseClass' => 'Raduser',
@@ -27,16 +28,23 @@ class RadusersController extends AppController {
     );
 
     public function login() {
-        if($this->request->is('post')){
-            if($this->checkAuthentication(
+        if ($this->request->is('post')) {
+            if ($this->checkAuthentication(
                 $this->request->data['Raduser']['username'],
                 $this->request->data['Raduser']['passwd']
-            )){
+            )) {
                 $this->Auth->login($this->request->data['Raduser']);
                 Utils::userlog(__('logged in'));
-                return $this->redirect($this->Auth->redirect());
+
+                $this->redirect($this->Auth->redirect());
             } else {
-                $this->Session->setFlash(__('Username or password is incorrect, or user is not authorized to access Snack interface.'), 'default', array(), 'auth');
+                $this->Session->setFlash(
+                    __('Username or password is incorrect,'
+                    . ' or user is not authorized to access Snack interface.'),
+                    'default',
+                    array(),
+                    'auth'
+                );
             }
         }
     }
@@ -47,15 +55,16 @@ class RadusersController extends AppController {
     }
 
     private function checkAuthentication($username, $passwd) {
-        $user = $this->Raduser->findByUsername($this->request->data['Raduser']['username']);
-        if(isset($user) && !empty($user)){
+        $user = $this->Raduser
+            ->findByUsername($this->request->data['Raduser']['username']);
+        if (isset($user) && !empty($user)) {
             $role = $this->Raduser->getRole($user['Raduser']['id']);
-            if($role != 'user'){
+            if ($role != 'user') {
                 $this->request->data['Raduser']['role'] = $role;
                 $checks = $this->Checks->getChecks($user['Raduser']['id']);
                 foreach ($checks as $check) {
-                    if($check['Radcheck']['attribute'] == 'Cleartext-Password'){
-                        if($check['Radcheck']['value'] == $passwd){
+                    if ($check['Radcheck']['attribute'] == 'Cleartext-Password') {
+                        if ($check['Radcheck']['value'] == $passwd) {
                             return true;
                         }
                     }
@@ -64,22 +73,24 @@ class RadusersController extends AppController {
                 return false;
             }
         }
+
         return false;
     }
 
     public function isAuthorized($user) {
         
         // All registered user can view users
-        if(in_array($this->action, array(
+        if (in_array($this->action, array(
             'index', 'view_mac', 'view_cert', 'view_loginpass', 'export', 
-        ))){
+        ))) {
             return true;
         }
-        if($user['role'] === 'admin' && in_array($this->action, array(
+
+        if ($user['role'] === 'admin' && in_array($this->action, array(
             'view_cert', 'view_loginpass', 'view_mac',
             'add_cert', 'add_loginpass', 'add_mac',
             'edit_cert', 'edit_loginpass', 'edit_mac',
-        ))){
+        ))) {
             return true;
         }
 
@@ -98,7 +109,7 @@ class RadusersController extends AppController {
     public function index() {
         // Multiple delete/export
         if ($this->request->is('post')) {
-            if(isset($this->request->data['action'])){
+            if (isset($this->request->data['action'])) {
                 switch ($this->request->data['action']) {
                     case "delete":
                         $this->multipleDelete(
@@ -114,16 +125,32 @@ class RadusersController extends AppController {
             }
         }
 
-        $radusers = $this->paginate('Raduser');
+        $this->Filters->addStringConstraint(array(
+            'fields' => array(
+                'id',
+                'username',
+                'comment',
+            ),
+            'input' => 'text',
+            'ahead' => array('username'),
+        ));
 
-        if($radusers != null){
-            foreach ($radusers as &$r) {
-                $r['Raduser']['ntype'] = $this->Checks->getType($r['Raduser'], true);
-                $r['Raduser']['type'] = $this->Checks->getType($r['Raduser'], false);
+        $radusers = $this->Filters->paginate('radusers');
 
-                if( $r['Raduser']['type'] == "mac" ) {
-                    $r['Raduser']['username'] = Utils::formatMAC(
-                        $r['Raduser']['username']
+        if ($radusers != null) {
+            foreach ($radusers as &$user) {
+                $user['Raduser']['ntype'] = $this->Checks->getType(
+                    $user['Raduser'],
+                    true
+                );
+                $user['Raduser']['type'] = $this->Checks->getType(
+                    $user['Raduser'],
+                    false
+                );
+
+                if ($user['Raduser']['type'] == "mac") {
+                    $user['Raduser']['username'] = Utils::formatMAC(
+                        $user['Raduser']['username']
                     );
                 }
             }
@@ -137,7 +164,7 @@ class RadusersController extends AppController {
      *
      * @param ids - array of user ID.
      */
-    private function multipleDelete($ids=array()) {
+    private function multipleDelete($ids = array()) {
         if (isset($ids) && is_array($ids)) {
             try {
                 foreach ($ids as $userId) {

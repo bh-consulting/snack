@@ -29,7 +29,8 @@ class BackupsController extends AppController {
 		    'input' => 'author', 
 		));
 
-		$this->Filters->addArbitraryConstraint('1=1 GROUP BY commit');
+		$this->Filters->addGroupConstraint('commit');
+
 		$backups = $this->Filters->paginate();
 
 		$users = array();

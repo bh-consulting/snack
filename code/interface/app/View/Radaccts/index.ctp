@@ -85,7 +85,7 @@ if(AuthComponent::user('role') == 'superadmin'){
     );
 }
 
-echo $this->Form->create('MultiSelection', array('class' => 'form-inline'));
+echo $this->element('MultipleAction', array('action' => 'start'));
 ?>
 
 <table class="table">
@@ -219,7 +219,13 @@ if (!empty($radaccts)) {
 
 <?php
 if(AuthComponent::user('role') == 'superadmin'){
-    echo $this->element('MultipleAction', array('action' => 'end'));
+    echo $this->element(
+        'MultipleAction',
+        array(
+            'action' => 'end',
+            'options' => array('delete'),
+        )
+    );
 }
 echo $this->element('paginator_footer');
 unset($acct);

@@ -2,10 +2,83 @@
 $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
+
+$columns = array(
+    'checkbox' => array(
+        'id' => 'id',
+        'fit' => true,
+    ),
+    'id' => array(
+        'id' => 'id',
+        'text' => __('ID'),
+        'fit' => true,
+    ),
+    'username' => array(
+        'text' => __('Username'),
+    ),
+    'comment' => array(
+        'text' => __('Comment'),
+    ),
+    'is_cert' => array(
+        'text' => __('Certificate'),
+        'fit' => true,
+    ),
+    'is_loginpass' => array(
+        'text' => __('Login / Password'),
+        'fit' => true,
+    ),
+    'is_mac' => array(
+        'text' => __('MAC'),
+        'fit' => true,
+    ),
+    'is_cisco' => array(
+        'text' => __('Cisco'),
+        'fit' => true,
+    ),
+    'role' => array(
+        'text' => __('Admin'),
+        'fit' => true,
+    ),
+    'view' => array(
+        'id' => 'id',
+        'text' => __('View'),
+        'fit' => true,
+    ),
+    'edit' => array(
+        'id' => 'id',
+        'text' => __('Edit'),
+        'fit' => true,
+    ),
+    'delete' => array(
+        'id' => 'id',
+        'text' => __('Delete'),
+        'fit' => true,
+    ),
+);
 ?>
 
 <h1><? echo __('Users'); ?></h1>
+
 <?php
+echo $this->element('filters_panel', array(
+    'controller' => 'radusers/index',
+    'inputs' => array(
+	array(
+	    'name' => 'authtype',
+	    'label' => __('Authentication type'),
+	),
+	array(
+	    'name' => 'role',
+	    'label' => __('Role'),
+	),
+	array(
+	    'name' => 'text',
+	    'label' => __('Contains (accept regex)'),
+        'autoComplete' => true,
+	))
+    )
+);
+
 $dropdownUsersButtonItems = array(
     _('Active') => array(
         $this->Html->link(
@@ -34,6 +107,7 @@ $dropdownUsersButtonItems = array(
         )
     ),
 );
+
 if(AuthComponent::user('role') != 'superadmin'){
     unset($dropdownUsersButtonItems[__('Snack')]);
 }
@@ -76,52 +150,28 @@ echo $this->element('dropdownButton', array(
 ?>
 
 <?php
-$columns = array(
-    'id' => array('text' => __('ID'), 'fit' => true),
-    'username' => array('text' => __('Username')),
-    'comment' => array('text' => __('Comment')),
-    'is_cert' => array('text' => __('Certificate'), 'fit' => true),
-    'is_loginpass' => array('text' => __('Login / Password'), 'fit' => true),
-    'is_mac' => array('text' => __('MAC'), 'fit' => true),
-    'is_cisco' => array('text' => __('Cisco'), 'fit' => true),
-    'role' => array('text' => __('Admin'), 'fit' => true),
-);
-
 if(AuthComponent::user('role') == 'superadmin'){
-    echo $this->Form->create('Radusers', array('action' => 'delete'));
-    echo $this->Form->end();
-} else {
-    // hum hum (ala blank.gif)
-    echo '<div></div><br />';
+    echo $this->element(
+        'delete_links',
+        array('action' => 'form', 'model' => 'Raduser')
+    );
 }
 
-echo $this->Form->create('MultiSelection', array('class' => 'form-inline'));
+echo $this->element('MultipleAction', array('action' => 'start'));
 ?>
 
 <table class="table">
     <thead>
     <tr>
-        <th class="fit">
-<?php
-echo $this->Form->select(
-    'All',
-    array('all' => ''),
-    array(
-        'class' => 'checkbox rangeAll',
-        'multiple' => 'checkbox',
-        'hiddenField' => false
-    )
-);
-?>
-        </th>
 <?php
 foreach ($columns as $field => $info) {
-    $sort = '';
-
-    if (preg_match("#$field$#", $this->Paginator->sortKey())) {
-        $sort = '<i class="'
-            .  $sortIcons[$this->Paginator->sortDir()]
-            . '"></i>';
+    if (($field == 'edit'
+        && !in_array(AuthComponent::user('role'), array('superadmin', 'admin')))
+        ||
+        ($field == 'delete'
+        && AuthComponent::user('role') != 'superadmin')
+    ) {
+        break;
     }
 
     if (isset($info['fit']) && $info['fit']) {
@@ -130,176 +180,155 @@ foreach ($columns as $field => $info) {
         echo '<th>';
     }
 
-    echo $this->Paginator->sort(
-        $field,
-        $info['text'] . ' '. $sort,
-        array('escape' => false)
-    )
-    . '</th>';
-}
-    if(in_array(AuthComponent::user('role'), array('superadmin', 'admin'))){
-        echo '<th class="fit">' . __('Edit') . '</th>';
-        if(AuthComponent::user('role') == 'superadmin'){
-            echo '<th class="fit">' . __('Delete') . '</th>';
+    switch ($field) {
+    case 'checkbox':
+        echo $this->element('MultipleAction', array('action' => 'head'));
+        break;
+    case 'view':
+    case 'edit':
+    case 'delete':
+        echo h($info['text']);
+        break;
+    default:
+        $sort = '';
+
+        if (preg_match("#$field$#", $this->Paginator->sortKey())) {
+            $sort = '<i class="'
+                .  $sortIcons[$this->Paginator->sortDir()]
+               . '"></i>';
         }
+
+        echo $this->Paginator->sort(
+            $field,
+            $info['text'] . ' '. $sort,
+            array('escape' => false)
+        );
+        break;
     }
-    ?>
+
+    echo '</th>';
+}
+?>
     </tr>
     </thead>
 
     <tbody>
 <?php
 if (!empty($radusers)) {
-    foreach ($radusers as $rad) {
-?>
-    <tr>
-        <td class="fit">
-<?php
-        echo $this->Form->select(
-            'users',
-            array($rad['Raduser']['id'] => ''),
-            array(
-                'class' => 'checkbox range',
-                'multiple' => 'checkbox',
-                'hiddenField' => false,
-            )
-        );
-?>
-        </td>
-        <td class="fit">
-<?php
-        echo $this->Html->link(
-            $rad['Raduser']['id'],
-            array(
-                'controller' => 'Radusers',
-                'action' => 'view_' . $rad['Raduser']['type'],
-                $rad['Raduser']['id']
-            )
-        );
-?>
-        </td>
-        <td>
-<?php
-        echo $rad['Raduser']['username'];
-?>
-        </td>
-        <td>
-<?php
-        echo $rad['Raduser']['comment'];
-?>
-        </td>
-        <td class="fit" style="text-align:center;">
-<?php
-        echo $rad['Raduser']['is_cert'] ? '<i class="icon-ok"></i>' : '';
-?>
-        </td>
-        <td class="fit" style="text-align:center;">
-<?php
-        echo $rad['Raduser']['is_loginpass'] ? '<i class="icon-ok"></i>' : '';
-?>
-        </td>
-        <td class="fit" style="text-align:center;">
-<?php
-        echo $rad['Raduser']['is_mac'] ? '<i class="icon-ok"></i>' : '';
-?>
-        </td>
-        <td class="fit" style="text-align:center;">
-<?php
-        echo $rad['Raduser']['is_cisco'] ? '<i class="icon-ok"></i>' : '';
-?>
-        </td>
-        <td class="fit" style="text-align:center;">
-<?php
-        echo __($rad['Raduser']['role']);
-?>
-        </td>
-    <?php if(in_array(AuthComponent::user('role'), array('superadmin', 'admin'))){ ?>
-        <td class="fit">
-<?php
-        if(!(AuthComponent::user('role') === 'admin'
-            && $rad['Raduser']['type'] === 'snack')
-        ){
-            echo $this->Html->link(
-                '<i class="icon-edit"></i>' . __('Edit'),
-                array(
-                    'action' => 'edit_' . $rad['Raduser']['type'],
-                    $rad['Raduser']['id']
-                ),
-                array('escape' => false)
-            );
+    foreach ($radusers as $user) {
+        echo '<tr>';
+
+        foreach ($columns as $field=>$info) {
+            if (($field == 'edit'
+                && (!in_array(AuthComponent::user('role'), array('superadmin', 'admin'))
+                    || (AuthComponent::user('role') === 'admin'
+                    && $rad['Raduser']['type'] === 'snack')))
+                ||
+                ($field == 'delete'
+                && AuthComponent::user('role') != 'superadmin')
+            ) {
+                break;
+            }
+
+            if (isset($info['fit']) && $info['fit']) {
+                echo '<td class="fit">';
+            } else {
+                echo '<td>';
+            }
+
+            switch ($field) {
+            case 'checkbox':
+                echo $this->element(
+                    'MultipleAction',
+                    array(
+                        'action' => 'line',
+                        'name' => 'users',
+                        'id' => $user['Raduser'][$info['id']]
+                    )
+                );
+                break;
+            case 'view':
+		        echo '<i class="icon-eye-open"></i> ';
+                echo $this->Html->link(
+                    __('View'),
+                    array(
+                        'action' => 'view_' . $user['Raduser']['type'],
+                        'controller' => 'radusers',
+                        $user['Raduser'][$info['id']],
+                    )
+                );
+                break;
+            case 'edit':
+                echo '<i class="icon-edit"></i> ';
+                echo $this->Html->link(
+                    __('Edit'),
+                    array(
+                        'action' => 'edit_' . $user['Raduser']['type'],
+                        $user['Raduser'][$info['id']]
+                    )
+                );
+                break;
+            case 'delete':
+                echo '<i class="icon-remove"></i> ';
+                echo $this->element(
+                    'delete_links',
+                    array(
+                        'model' => 'Raduser',
+                        'action' => 'link',
+                        'id' => $user['Raduser'][$info['id']],
+                    )
+                );
+                break;
+            case 'id':
+                echo $this->Html->link(
+                    h($user['Raduser'][$field]),
+                    array(
+                        'controller' => 'Radusers',
+                        'action' => 'view_' . $user['Raduser']['type'],
+                        $user['Raduser'][$info['id']]
+                    )
+                );
+                break;
+            case (preg_match("#is_(cert|loginpass|mac|cisco)#i", $field)
+                ? $field : !$field):
+                echo $user['Raduser'][$field] ? '<i class="icon-ok"></i>' : '';
+                break;
+            case 'role':
+                // TODO: do not use __() with dynamic value
+                echo __($user['Raduser'][$field]);
+                break;
+            default:
+                echo h($user['Raduser'][$field]);
+                break;
+            }
+
+            echo '</td>';
         }
-?>
-        </td>
-        <?php } ?>
-    <?php if(AuthComponent::user('role') =='superadmin'){ ?>
-        <td class="fit">
-            <i class="icon-remove"></i>
-<?php
-        echo $this->Html->link(
-            __('Delete'),
-            '#',
-            array(
-                'onClick' => "if (confirm('" . __('Are you sure?') . "')) {"
-                . "$('#RadusersDeleteForm').attr('action',"
-                . "$('#RadusersDeleteForm').attr('action') + '/"
-                . $rad['Raduser']['id'] . "');"
-                . "$('#RadusersDeleteForm').submit(); }"
-            )
-        );
-?>
-        </td>
-        <?php } ?>
-    </tr>
-<?php
+        echo '</tr>';
     }
 } else {
 ?>
     <tr>
-        <td colspan="<?php echo count($columns) + 3; ?>">
+        <td colspan="<?php echo count($columns); ?>">
 <?php
-    echo __('No users yet.');
+    echo __('No user found.');
 ?>
         </td>
     </tr>
-<?
+<?php
 }
 ?>
     </tbody>
 </table>
 <?php
 if(AuthComponent::user('role') == 'superadmin'){
-    echo $this->element('dropdownButton', array(
-        'buttonCount' => 1,
-        'title' => 'Action',
-        'icon' => '',
-        'items' => array(
-            $this->Html->link(
-                '<i class="icon-remove"></i> ' . __('Delete selected'),
-                '#',
-                array(
-                    'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
-                    . "if (confirm('" . __('Are you sure?') . "')) {"
-                    . "$('#MultiSelectionIndexForm').submit();}",
-                        'escape' => false,
-                )
-            ),
-            $this->Html->link(
-                '<i class="icon-download"></i> ' . __('Export selected'),
-                '#',
-                array(
-                    'onClick' => "$('#selectionAction').attr('value', 'export');"
-                    . "$('#MultiSelectionIndexForm').submit();",
-                        'escape' => false,
-                )
-            ),
+    echo $this->element(
+        'MultipleAction',
+        array(
+            'options' => array('delete', 'export'),
+            'action' => 'end',
         )
-    ));
-
-    echo $this->Form->end(array(
-        'id' => 'selectionAction',
-        'name' => 'action',
-        'type' => 'hidden'
-    ));
+    );
 }
 
 echo $this->element('paginator_footer');
