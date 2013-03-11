@@ -210,12 +210,12 @@ if (!empty($radaccts)) {
 		}
 		break;
 	    case 'acctstarttime':
-		echo $this->element('formatDates', array('date' => h($acct['Radacct'][$field])));
+		echo $this->element('formatDates', array('date' => $acct['Radacct'][$field]));
 		break;
 	    case 'acctstoptime':
 		if(empty($acct['Radacct'][$field]))
 		    echo '<em>'.__('still connected').'</em>';
-		echo $this->element('formatDates', array('date' => h($acct['Radacct'][$field])));
+		echo $this->element('formatDates', array('date' => $acct['Radacct'][$field]));
 		break;
 	    case 'duration':
 		$datetime1 = new DateTime($acct['Radacct']['acctstarttime']);
@@ -229,11 +229,11 @@ if (!empty($radaccts)) {
 		$minutes = $interval->format('%m');
 		$seconds = $interval->format('%s');
 		
-		echo $years ? __('%dy', $years) : '';
-		echo $months ? __('%dm', $months) : '';
-		echo $days ? __('%dd', $days) : '';
-		echo $hours ? __('%dh', $hours) : '';
-		echo $minutes ? __('%dm', $minutes) : '';
+		echo $years ? __('%dy', $years).'&nbsp;' : '';
+		echo $months ? __('%dm', $months).'&nbsp;' : '';
+		echo $days ? __('%dd', $days).'&nbsp;' : '';
+		echo $hours ? __('%dh', $hours).'&nbsp;' : '';
+		echo $minutes ? __('%dm', $minutes).'&nbsp;' : '';
 		echo $seconds ? __('%ds', $seconds) : '';
 
 		break;

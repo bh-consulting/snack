@@ -106,7 +106,8 @@ if (!empty($loglines)) {
                     array(
                         'onclick' => 'logsSearchFromDate($(this))',
                         'title' => __('Search from this date'),
-			'datetime' => $logline['Logline'][$field]
+			'datetime' => $logline['Logline'][$field],
+			'escape' => false
                     )
                 );
                 break;
