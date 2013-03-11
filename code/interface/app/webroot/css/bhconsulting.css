@@ -128,3 +128,8 @@ div.menutopphone {
     max-width: 500px;
     margin: 0 auto 0;
 }
+
+.next {
+    float: left;
+    margin-left: 10px;
+}
