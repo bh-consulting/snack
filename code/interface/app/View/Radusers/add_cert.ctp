@@ -48,6 +48,9 @@ echo '<fieldset>';
 echo '<legend>' . __('Replies') . '</legend>';
 echo $this->element('reply_common_fields');
 echo '</fieldset>';
+
+echo $this->element('snack_role_input');
+
 echo $this->Form->end(__('Create'));
 ?>
 

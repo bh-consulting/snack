@@ -55,7 +55,7 @@ echo '<legend>' . __('Replies') . '</legend>';
 echo $this->element('reply_common_fields');
 echo '</fieldset>';
 
-echo $this->element('snack_edit_form');
+echo $this->element('snack_role_input');
 
 echo $this->Form->input('id', array('type' => 'hidden'));
 echo $this->Form->input('username', array('type' => 'hidden'));

@@ -28,17 +28,6 @@ echo $this->Form->input('passwd', array('type' => 'password', 'label' => __('Pas
 echo $this->Form->input('confirm_password', array('type' => 'password', 'label' => __('Confirm password')));
 echo '</fieldset>';
 
-echo '<fieldset>';
-echo '<legend>' . __('Admin rights') . '</legend>';
-echo $this->Form->input('role', array(
-    // 'type' => 'radio',
-    'options' => array(
-        'tech' => __('Tech: view users, download certificates'),
-        'admin' => __('Admin: view, create, update users'),
-        'superadmin' => __('Super admin: view, create, update, delete all objects'),
-    ),
-    'legend' => false,
-));
-echo '</fieldset>';
+echo $this->element('snack_role_input');
 
 echo $this->Form->end(__('Create'));

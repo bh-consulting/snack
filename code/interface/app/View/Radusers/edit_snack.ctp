@@ -14,7 +14,7 @@ echo $this->Form->input('passwd', array('type' => 'password', 'label' => __('Pas
 echo $this->Form->input('confirm_password', array('type' => 'password', 'label' => __('Confirm password')));
 echo '</fieldset>';
 
-echo $this->element('snack_edit_form');
+echo $this->element('snack_role_input');
 
 echo $this->Form->input('id', array('type' => 'hidden'));
 echo $this->Form->input('username', array('type' => 'hidden'));

@@ -301,6 +301,7 @@ class RadusersController extends AppController {
             'Groups',
             'Cisco',
             'MAC address',
+            'Role',
         );
         $raduser = $this->Raduser->findById($id);
         if($raduser['Raduser']['is_cisco']){
@@ -324,6 +325,7 @@ class RadusersController extends AppController {
             'Groups',
             'Cisco',
             'MAC address',
+            'Role',
         );
 
         $raduser = $this->Raduser->findById($id);
@@ -349,6 +351,7 @@ class RadusersController extends AppController {
                 'Expiration',
                 'Simultaneous-Use',
                 'Groups',
+                'Role',
             )
         );
         $this->view($id, array( 'Authentication type' => 'MAC address' ));
