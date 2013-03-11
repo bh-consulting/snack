@@ -116,6 +116,14 @@ div.menutopphone {
     position: absolute;
 }
 
+.icon-red {
+    background-image: url("../img/glyphicons-halflings-red.png");
+}
+
+.icon-green {
+    background-image: url("../img/glyphicons-halflings-green.png");
+}
+
 .form-signin {
     max-width: 500px;
     margin: 0 auto 0;

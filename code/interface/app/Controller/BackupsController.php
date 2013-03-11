@@ -30,7 +30,66 @@ class BackupsController extends AppController {
 		));
 
 		$this->Filters->addArbitraryConstraint('1=1 GROUP BY commit');
-		$this->Filters->paginate();
+		$backups = $this->Filters->paginate();
+
+		$users = array();
+
+		foreach($backups AS $backup) {
+		    $users[$backup['Backup']['id']] =
+			$this->extendUsers($backup['Backup']['users']);
+		}
+
+		$this->set('users', $users);
+
+		$lastWrmem = $this->Backup->find('first', array(
+		    'conditions' => array(
+			'nas'    => $nas['Nas']['nasname'],
+			'action' => 'wrmem'
+		    ),
+		    'fields'     => array('id'),
+		    'order'      => array('id DESC'),
+		    'limit'      => 1
+		));
+
+		$noWriteMemed = $this->Backup->find('all', array(
+		    'conditions' => array(
+			'nas'    => $nas['Nas']['nasname'],
+			'id >'   => $lastWrmem['Backup']['id']
+		    ),
+		    'fields'     => array('id')
+		));
+
+		$noWriteIds = array();
+
+		foreach($noWriteMemed AS $o)
+		    $noWriteIds[] = $o['Backup']['id'];
+
+		$this->set('nowriteids', $noWriteIds);
+    }
+
+    private function extendUsers($str) {
+	$strUsers = explode(',', $str);
+	$users = array();
+
+	$this->loadModel('Raduser');
+
+	foreach($strUsers AS $strUser) {
+	    $user = $this->Raduser->findByUsername($strUser);
+	    
+	    if(empty($user)) {
+		array_push($users, array(
+		    'id' => -1,
+		    'username' => $strUser,
+		));
+	    } else {
+		array_push($users, array(
+		    'id' => $user['Raduser']['id'],
+		    'username' => $strUser,
+		));
+	    }
+	}
+
+	return $users;
     }
 
     private function gitDiffNas($nas, $a, $b = null) {
@@ -46,6 +105,8 @@ class BackupsController extends AppController {
 
 		$this->set('dateA', $backupA['Backup']['datetime']);
 		$this->set('idA', $backupA['Backup']['id']);
+		$this->set('actionA', $backupA['Backup']['action']);
+		$this->set('usersA', $this->extendUsers($backupA['Backup']['users']));
 
 		if ($b != null) {
 		    $b = $this->params['url']['b'];
@@ -61,6 +122,8 @@ class BackupsController extends AppController {
 
 		    $this->set('dateB', $backupB['Backup']['datetime']);
 		    $this->set('idB', $backupB['Backup']['id']);
+		    $this->set('actionB', $backupB['Backup']['action']);
+		    $this->set('usersB', $backupB['Backup']['users']);
 
 		} else
 		    $commitB = null; // last
@@ -134,8 +197,15 @@ class BackupsController extends AppController {
 				    'value'  => $commit,
 				));
 
-				$this->Filters->paginate();
+				$backups = $this->Filters->paginate();
+				$users = array();
 
+				foreach($backups AS $backup) {
+				    $users[$backup['Backup']['id']] =
+					$this->extendUsers($backup['Backup']['users']);
+				}
+
+				$this->set('users', $users);
 		    } else {
 				throw new BadBackupOrNasID(
 				    'Please select a NAS and a configuration version.'

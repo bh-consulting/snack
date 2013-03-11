@@ -7,18 +7,31 @@ if(isset($diff) && isset($config)):
 ?>
 
 <h1><?php echo __('View and restore'); ?></h1>
-<h2><?php echo __('Configuration'); ?></h2>
+<h2><?php echo __('Context'); ?></h2>
 
 <ul>
+    <li><?php echo $this->Html->link(
+	    "<i class='icon-hdd'></i> $nasShortname",
+		array(
+		    'controller' => 'nas',
+		    'action' => 'view',
+		    $nasID,
+		),
+		array(
+		    'escape' => false,
+		)
+	    ) ?> (<?php echo $nasIP ?>)</li>
     <li><?php echo __('<strong>%s:</strong> %s',
-			__('NAS'),
-			$nasShortname) ?></li>
-    <li><?php echo __('<strong>%s:</strong> %s',
-			__('IP'),
-			$nasIP) ?></li>
-    <li><?php echo __('<strong>%s:</strong> %s',
-			__('Date'),
+			__('When'),
 			$dateA) ?></li>
+    <li><?php echo __('<strong>%s:</strong> %s',
+			__('Who'),
+			$this->element('formatUsersList', array(
+			    'users' => $usersA
+			))) ?></li>
+    <li><?php echo __('<strong>%s:</strong> %s',
+			__('Why'),
+			$actionA) ?></li>
 
     <?php if(empty($diff)): ?>
     <li><strong><?php echo __('This is the current configuration.') ?></strong></li>
@@ -120,7 +133,13 @@ for($i = 0; $i < count($backups); $i++) {
 	else
 	    echo '<td style="font-style: italic">';
 
-	echo $backup['Backup'][$field];
+	if($field == 'users') {
+	    echo $this->element('formatUsersList', array(
+		'users' => $users[$backup['Backup']['id']]
+	    ));
+	} else 
+	    echo $backup['Backup'][$field];
+
 	echo '</td>';
     }
 

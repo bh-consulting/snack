@@ -176,7 +176,11 @@ if (!empty($nas)) {
                 break;
             case 'backups':
                 if(AuthComponent::user('role') == 'superadmin'){
-                    echo '<i class="icon-camera"></i> ';
+                    echo '<i class="icon-camera icon-' . (
+			    in_array($n['Nas']['id'], $nowriteids) ?
+				'red' :
+				'green'
+			) . '"></i> ';
                     echo $this->Html->link(
                         __('Backups'),
                         array(

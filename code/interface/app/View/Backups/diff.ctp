@@ -7,21 +7,50 @@ if(isset($diff)):
 ?>
 
 <h1><?php echo __('Compare'); ?></h1>
-<h2><?php echo __('Configurations'); ?></h2>
+<h2><?php echo __('Context'); ?></h2>
 
 <ul>
-    <li><?php echo __('<strong>%s:</strong> %s',
-			__('NAS'),
-			$nasShortname) ?></li>
-    <li><?php echo __('<strong>%s:</strong> %s',
-			__('IP'),
-			$nasIP) ?></li>
+    <li><?php echo $this->Html->link(
+	    "<i class='icon-hdd'></i> $nasShortname",
+		array(
+		    'controller' => 'nas',
+		    'action' => 'view',
+		    $nasID,
+		),
+		array(
+		    'escape' => false,
+		)
+	    ) ?> (<?php echo $nasIP ?>)</li>
     <li><?php echo __('<strong>%s:</strong> %s',
 			__('From'),
-			$dateB) ?></li>
+			$this->Html->link(
+				"<i class='icon-camera'></i> $dateB",
+				array(
+				    'controller' => 'backups',
+				    'action' => 'view',
+				    $idB,
+				    $nasID,
+				),
+				array (
+				    'escape' => false,
+				)
+			    )
+			) ?></li>
     <li><?php echo __('<strong>%s:</strong> %s',
 			__('To'),
-			$dateA) ?></li>
+			$this->Html->link(
+				"<i class='icon-camera'></i> $dateA",
+				array(
+				    'controller' => 'backups',
+				    'action' => 'view',
+				    $idA,
+				    $nasID,
+				),
+				array (
+				    'escape' => false,
+				)
+			    )
+			) ?></li>
 </ul>
 
 <h2><?php echo __('Differences'); ?></h2>

@@ -283,13 +283,16 @@ class FiltersComponent extends Component {
 	$dataTitle = is_null($dataTitle) ? strtolower($this->modelName).'s'
 	    : $dataTitle;
 
+	$data =	$this->controller->paginate(
+		$this->modelName,
+		$this->constraints
+	    );
+
 	$this->controller->set(
 		$dataTitle,
-		$this->controller->paginate(
-		    $this->modelName,
-		    $this->constraints
-		    )
-		);
+		$data
+	    );
+
 	$this->controller->set(
 		'sortIcons',
 		array(
@@ -297,6 +300,8 @@ class FiltersComponent extends Component {
 		    'desc' => 'icon-chevron-up'
 		    )
 		);
+	
+	return $data;
     }
 }
 

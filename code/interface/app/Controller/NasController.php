@@ -25,6 +25,30 @@ class NasController extends AppController {
         return parent::isAuthorized($user);
     }
 
+    public function areThereChangesNotWrote($nas) {
+	$this->loadModel('Backup');
+
+	$lastWrmem = $this->Backup->find('first', array(
+	    'conditions' => array(
+		'nas'    => $nas['Nas']['nasname'],
+		'action' => 'wrmem'
+	    ),
+	    'fields'     => array('id'),
+	    'order'      => array('id DESC'),
+	    'limit'      => 1
+	));
+
+	$noWriteMemed = $this->Backup->find('count', array(
+	    'conditions' => array(
+		'nas'    => $nas['Nas']['nasname'],
+		'id >'   => $lastWrmem['Backup']['id']
+	    ),
+	    'fields'     => array('id')
+	));
+
+	return $noWriteMemed > 0;
+    }
+
     public function index() {
         $this->MultipleAction->process(
             array(
@@ -53,7 +77,16 @@ class NasController extends AppController {
             'ahead' => array('nasname','shortname'),
         ));
 
-        $this->Filters->paginate('nas');
+        $allnas = $this->Filters->paginate('nas');
+
+	$noWriteIds = array();
+
+	foreach($allnas AS $nas) {
+	    if($this->areThereChangesNotWrote($nas))
+		$noWriteIds[] = $nas['Nas']['id'];
+	}
+
+	$this->set('nowriteids', $noWriteIds);
     }
 
     public function view($id = null) {

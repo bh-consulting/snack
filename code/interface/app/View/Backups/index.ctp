@@ -6,7 +6,6 @@ $this->assign('nas_active', 'active');
 $columns = array(
     'id' => __('ID'),
     'datetime' => __('Date'),
-//    'commit' => __('Commit'),
     'nas' => __('NAS'),
     'action' => __('Action'),
     'users' => __('Users'),
@@ -65,6 +64,7 @@ foreach ($columns as $field => $text) {
 	. '</th>';
 
     if ($field == 'id') {
+	echo '<th class="smallCol"><i class="icon-ok-circle" title="' . __('Write memory') . '"></i></th>';
 	echo '<th class="smallCol" colspan="2"><i class="icon-zoom-in"></i></th>';
     }
 }
@@ -77,6 +77,8 @@ echo '<th class="smallCol">' . __('View') . '</th>';
 	<tbody>
 	<?php if (!empty($backups)): ?>
 <?php
+$n = 0;
+
 for($i = 0; $i < count($backups); $i++) {
     $backup = $backups[$i];
 
@@ -84,10 +86,27 @@ for($i = 0; $i < count($backups); $i++) {
 
     foreach ($columns as $field => $text) {
 	echo '<td '.($field == 'id' ? 'class="smallCol fit" style="font-weight: bold"' : '').'>';
-	echo $backup['Backup'][$field];
+
+	if($field == 'users') {
+	    echo $this->element('formatUsersList', array(
+		'users' => $users[$backup['Backup']['id']]
+	    ));
+	} else 
+	    echo $backup['Backup'][$field];
+
 	echo '</td>';
 
 	if ($field == 'id') {
+	    if(in_array($backup['Backup']['id'], $nowriteids)) {
+		echo '<td class="smallCol fit" title="' . __('NOT saved as starting') .'">';
+		echo '<i class="icon-exclamation-sign icon-red"></i>';
+	    } else {
+		echo '<td class="smallCol fit" title="' . __('Saved as starting') .'">';
+		echo '<i class="icon-ok-sign icon-green"></i>';
+	    }
+
+	    echo '</td>';
+
 	    echo '<td class="smallCol fit">';
 
 	    if ($i != 0)
@@ -97,6 +116,7 @@ for($i = 0; $i < count($backups); $i++) {
 		    array(
 			'hiddenField' => false,
 			'checked' => $i == 1,
+			'set' => $n
 		    )
 		);
 	    
@@ -109,6 +129,7 @@ for($i = 0; $i < count($backups); $i++) {
 		    array(
 			'hiddenField' => false,
 			'checked' => $i == 0,
+			'set' => $n
 		    )
 		);
 
@@ -117,6 +138,7 @@ for($i = 0; $i < count($backups); $i++) {
     }
 
     echo '<td class="smallCol"><i class="icon-eye-open"></i> ';
+
     echo $this->Html->link(
 	__('View'),
 	array(
@@ -126,9 +148,11 @@ for($i = 0; $i < count($backups); $i++) {
 	    $nasID,
 	)
     );
-    echo '</td>';
 
+    echo '</td>';
     echo '</tr>';
+
+    $n++;
 }
 ?>
 	<?php else: ?>
