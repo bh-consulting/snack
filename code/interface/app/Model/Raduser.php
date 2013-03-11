@@ -100,17 +100,32 @@ class Raduser extends AppModel {
 
     public function isUser($id){
         $user = $this->findById($id);
-        return $user['Raduser']['role'] == 'user';
+        $role = $user['Raduser']['role'];
+        return $role == 'user'
+            || $role == 'tech'
+            || $role == 'admin'
+            || $role == 'superadmin';
+    }
+
+    public function isTech($id){
+        $user = $this->findById($id);
+        $role = $user['Raduser']['role'];
+        return $role == 'tech'
+            || $role == 'admin'
+            || $role == 'superadmin';
     }
 
     public function isAdmin($id){
         $user = $this->findById($id);
-        return $user['Raduser']['role'] == 'admin';
+        $role = $user['Raduser']['role'];
+        return $role == 'admin'
+            || $role == 'superadmin';
     }
 
     public function isSuperAdmin($id){
         $user = $this->findById($id);
-        return $user['Raduser']['role'] == 'superadmin';
+        $role = $user['Raduser']['role'];
+        return $role == 'superadmin';
     }
 
     public function getRole($id) {
@@ -173,13 +188,15 @@ class Raduser extends AppModel {
             }
         // raduser UPDATE (id isset)
         } else {
-            if(empty($value)
-                && !$was_cisco
-                && $this->data[$this->name]['is_cisco']
-                && !(isset($this->data[$this->name]['is_loginpass'])
-                    && $this->data[$this->name]['is_loginpass'])
-            ){
-                return false;
+            if(isset($this->data[$this->name]['is_cisco'])){
+                if(empty($value)
+                    && !$was_cisco
+                    && $this->data[$this->name]['is_cisco']
+                    && !(isset($this->data[$this->name]['is_loginpass'])
+                        && $this->data[$this->name]['is_loginpass'])
+                ){
+                    return false;
+                }
             }
         }
         return true;

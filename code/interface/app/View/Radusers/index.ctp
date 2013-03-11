@@ -29,7 +29,7 @@ $dropdownUsersButtonItems = array(
     _('Snack') => array(
         $this->Html->link(
             '<i class="icon-plus-sign"></i> ' . __('Admin'), 
-            array('action' => 'add_admin'),
+            array('action' => 'add_snack'),
             array('escape' => false)
         )
     ),
@@ -38,7 +38,7 @@ if(AuthComponent::user('role') != 'superadmin'){
     unset($dropdownUsersButtonItems[__('Snack')]);
 }
 
-if(AuthComponent::user('role') != 'tech'){
+if(AuthComponent::user('role') == 'admin' || AuthComponent::user('role') == 'superadmin'){
     echo $this->element('dropdownButton', array(
         'buttonCount' => 1,
         'class' => 'btn-primary',
@@ -61,7 +61,7 @@ $dropdownCsvButtonItems = array(
     ),
 );
 
-if(AuthComponent::user('role') === 'tech'){
+if(AuthComponent::user('role') != 'admin' && AuthComponent::user('role') != 'superadmin'){
     unset($dropdownCsvButtonItems[0]);
 }
 
@@ -215,15 +215,19 @@ if (!empty($radusers)) {
         </td>
     <?php if(in_array(AuthComponent::user('role'), array('superadmin', 'admin'))){ ?>
         <td class="fit">
-            <i class="icon-edit"></i>
 <?php
-        echo $this->Html->link(
-            __('Edit'),
-            array(
-                'action' => 'edit_' . $rad['Raduser']['type'],
-                $rad['Raduser']['id']
-            )
-        );
+        if(!(AuthComponent::user('role') === 'admin'
+            && $rad['Raduser']['type'] === 'snack')
+        ){
+            echo $this->Html->link(
+                '<i class="icon-edit"></i>' . __('Edit'),
+                array(
+                    'action' => 'edit_' . $rad['Raduser']['type'],
+                    $rad['Raduser']['id']
+                ),
+                array('escape' => false)
+            );
+        }
 ?>
         </td>
         <?php } ?>

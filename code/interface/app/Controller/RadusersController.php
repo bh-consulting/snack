@@ -258,6 +258,7 @@ class RadusersController extends AppController {
             $attributes['Username'] = $views['base']['Raduser']['username'];
         }
         $attributes['Comment'] = $views['base']['Raduser']['comment'];
+        $attributes['Role'] = $views['base']['Raduser']['role'];
         $attributes['Certificate path'] = Configure::read('Parameters.certsPath')
                     . '/users/' . $views['base']['Raduser']['username'] . '_';
         $attributes['Cisco'] = $views['base']['Raduser']['is_cisco'] 
@@ -351,6 +352,21 @@ class RadusersController extends AppController {
             )
         );
         $this->view($id, array( 'Authentication type' => 'MAC address' ));
+    }
+
+    /**
+     * View a user of the interface
+     * @param  $id - user id
+     */
+    public function view_snack($id = null) {
+        $this->set(
+            'showedAttr',
+            array(
+                'Role',
+                'Comment',
+            )
+        );
+        $this->view($id, array( 'Authentication type' => 'None' ));
     }
 
     /**
@@ -615,9 +631,9 @@ class RadusersController extends AppController {
     }
 
     /**
-     * Controller method to add an admin user
+     * Controller method to add a Snack user
      */
-    public function add_admin() {
+    public function add_snack() {
         if($this->request->is('post')){
             $found = false;
             $Radcheck = new Radcheck;
@@ -863,6 +879,45 @@ class RadusersController extends AppController {
         }
 
         $this->edit($success);
+    }
+
+    /**
+     * Controller method to edit a Snack user
+     */
+    public function edit_snack($id=null) {
+        $this->Raduser->id = $id;
+        $success = false;
+
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Raduser->read();
+        } else {
+            try {
+                if(!$this->Raduser->save($this->request->data)){
+                    throw new EditException('Raduser', $id, $this->request->data['Raduser']['username']);
+                }
+
+                // TODO: update password
+
+            } catch(UserGroupException $e) {
+                $this->Session->setFlash(
+                    $e->getMessage(),
+                    'flash_error'
+                );
+                Utils::userlog(__('error while editing Snack user %s', $this->Raduser->id), 'error');
+                $success = false;
+            }
+            $success = true;
+        }
+
+        if ($success) {
+            $this->Session->setFlash(
+                __('User has been updated.'),
+                'flash_success');
+
+            Utils::userlog(__('edited user %s', $this->Raduser->id));
+            $this->redirect(array('action' => 'index'));
+        }
+        $this->request->data = $this->Raduser->read();
     }
 
     public function delete ($id = null) {

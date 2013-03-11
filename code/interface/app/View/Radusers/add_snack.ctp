@@ -33,9 +33,9 @@ echo '<legend>' . __('Admin rights') . '</legend>';
 echo $this->Form->input('role', array(
     // 'type' => 'radio',
     'options' => array(
-        'tech' => __('View users'),
-        'admin' => __('Create, Update, View users'),
-        'superadmin' => __('Create, Update, Delete all objects'),
+        'tech' => __('Tech: view users, download certificates'),
+        'admin' => __('Admin: view, create, update users'),
+        'superadmin' => __('Super admin: view, create, update, delete all objects'),
     ),
     'legend' => false,
 ));

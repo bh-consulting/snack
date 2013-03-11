@@ -74,7 +74,7 @@ class ChecksComponent extends Component {
             return $types[2][$nice];
         if($rad['is_cisco'])
             return $types[0][$nice];
-        return "";
+        return "snack";
     }
 
     /**
@@ -631,23 +631,6 @@ class ChecksComponent extends Component {
                     break;
             }
         }
-    }
-
-    // FIXME
-    public function login()
-    {
-        if ($request->is('post')) {
-            if ($this->Auth->login()) {
-                $this->redirect($this->Auth->redirect());
-            } else {
-                $this->Session->setFlash(__('Invalid username or password, try again.'));
-            }
-        }
-    }
-
-    public function logout()
-    {
-        $this->redirect($this->Auth->logout());
     }
 
 }
