@@ -29,6 +29,7 @@ $cakeDescription = __('SNACK');
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <?php
     echo $this->Html->meta('icon');
+    echo $this->fetch('meta');
 
     echo $this->Html->css('bootstrap.min');
     echo $this->Html->css('mybootstrap');
@@ -41,14 +42,8 @@ $cakeDescription = __('SNACK');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
     echo $this->Html->css('flags.css');
     echo $this->Html->css('jquery.terminal.css');
-    
-    echo $this->Html->script('jquery.min');
-
-    echo $this->fetch('meta');
     echo $this->fetch('css');
-    echo $this->fetch('script');
-    ?>
-
+?>
     <style>
         body {
             padding-top: 60px;
@@ -145,6 +140,7 @@ $cakeDescription = __('SNACK');
 </div>
 <?php
 echo $this->element('sql_dump');
+echo $this->Html->script('jquery.min');
 echo $this->Html->script('jquery-ui.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapify');
@@ -157,7 +153,7 @@ echo $this->Html->script('bhconsulting');
 echo $this->Html->script('jquery.terminal.min.js');
 echo $this->Html->script('jquery.mousewheel-min.js');
 echo $this->Html->script('myterm.js');
+echo $this->fetch('script');
 ?>
-</script>
 </body>
 </html>

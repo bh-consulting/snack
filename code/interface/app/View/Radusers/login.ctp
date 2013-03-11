@@ -1,4 +1,4 @@
-<div class="form well">
+<div class="form form-signin well">
     <?php echo $this->Session->flash('auth'); ?>
     <?php echo $this->Form->create('Raduser'); ?>
 
@@ -30,8 +30,11 @@ echo $this->Form->input(
     <? echo $this->Form->end(__('Sign in')); ?>
 </div>
 
+<?php $this->start('script'); ?>
 <script type="text/javascript">
-$(function(){
+//$('#username_field').focus();
+$(document).ready(function(){
     $('#username_field').focus();
 });
 </script>
+<?php $this->end(); ?>

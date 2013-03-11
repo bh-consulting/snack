@@ -37,12 +37,24 @@ class AppController extends Controller {
     public $components = array(
         'Session',
         'Auth' => array(
-            'loginAction' => array('controller' => 'radusers', 'action' => 'login'),
-            'loginRedirect' => array('controller' => 'radusers', 'action' => 'index'),
-            'logoutRedirect' => array('controller' => 'radusers', 'action' => 'index'),
+            'loginAction' => array(
+                'controller' => 'radusers',
+                'action' => 'login',
+            ),
+            'loginRedirect' => array(
+                'controller' => 'radusers',
+                'action' => 'index',
+            ),
+            'logoutRedirect' => array(
+                'controller' => 'radusers',
+                'action' => 'index',
+            ),
             'authenticate' => array(
                 'Form' => array(
-                    'fields' => array('username' => 'username', 'password' => 'passwd'),
+                    'fields' => array(
+                        'username' => 'username',
+                        'password' => 'passwd',
+                    ),
                     'userModel' => 'Raduser'
                 )
             ),
@@ -78,9 +90,10 @@ class AppController extends Controller {
 
     public function isAuthorized($user) {
         // Super admin can access everything
-        if(isset($user['role']) && $user['role'] === 'superadmin'){
+        if (isset($user['role']) && $user['role'] === 'superadmin') {
             return true;
         }
+
         // default deny
         $this->Session->setFlash(
             __('You are not authorized to access this page!'),

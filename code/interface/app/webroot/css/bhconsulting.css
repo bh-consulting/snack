@@ -115,3 +115,8 @@ ul.menuphone {
 div.menutopphone {
     position: absolute;
 }
+
+.form-signin {
+    max-width: 500px;
+    margin: 0 auto 0;
+}
