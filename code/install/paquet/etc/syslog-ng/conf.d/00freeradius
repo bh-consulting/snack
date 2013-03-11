@@ -3,7 +3,7 @@ filter f_freeradius { facility(local2); };
 destination d_mysql {
         sql(type(mysql)
         host("localhost") username("logsfreeradius") password("logsfreeradius")
-        database("raddb")
+        database("radius")
         table("logs")
         columns("host", "facility", "priority", "level", "tag", "datetime", "program", "msg")
         values("$HOST_FROM", "$FACILITY", "$PRIORITY", "$LEVEL", "$TAG", "$YEAR-$MONTH-$DAY $HOUR:$MIN:$SEC", "$PROGRAM", "$MSG")
