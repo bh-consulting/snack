@@ -3,21 +3,21 @@
 App::import('Model', 'Radgroupcheck');
 App::import('Model', 'Raduser');
 
-class RadgroupsController extends AppController
-{
+class RadgroupsController extends AppController {
+
     public $helpers = array('Html', 'Form', 'JqueryEngine');
     public $paginate = array('limit' => 10, 'order' => array('Radgroup.id' => 'asc'));
     public $components = array(
+        'Filters',
         'Checks' => array(
             'displayName' => 'groupname',
             'baseClass' => 'Radgroup',
             'checkClass' => 'Radgroupcheck',
             'replyClass' => 'Radgroupreply'
-            ),
+        ),
         'Session');
 
     public function isAuthorized($user) {
-        
         if($user['role'] === 'admin' && in_array($this->action, array(
             'index', 'view', 'add', 'edit',
         ))){
@@ -27,6 +27,10 @@ class RadgroupsController extends AppController
         return parent::isAuthorized($user);
     }
 
+    public function beforeValidateForFilters() {
+        unset($this->Radgroup->validate['groupname']['notEmpty']['required']);
+    }
+    
 	public function index(){
         // Multiple delete/export
         if ($this->request->is('post')) {
@@ -39,7 +43,33 @@ class RadgroupsController extends AppController
             }
         }
 
-		$this->set('radgroups', $this->paginate('Radgroup'));
+        // Filters
+        $this->Filters->addStringConstraint(array(
+            'fields' => array(
+                'id',
+                'groupname',
+                'comment',
+            ),
+            'input' => 'text',
+            'ahead' => array('groupname'),
+        ));
+
+        $radgroups = $this->Filters->paginate();
+
+        if ($radgroups != null) {
+            foreach ($radgroups as &$group) {
+                $radug = new Radusergroup();
+                $group['Radgroup']['membercount'] = $radug->find(
+                    'count',
+                    array(
+                        'fields' => 'username',
+                        'conditions' => array('groupname' => $group['Radgroup']['groupname']),
+                    )
+                );
+            }
+        }
+
+        $this->set('radgroups', $radgroups);
 	}
 
     /**

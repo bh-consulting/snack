@@ -16,7 +16,7 @@ class RadusersController extends AppController {
         'order' => array('Raduser.id' => 'asc')
     );
     public $components = array(
-        'Filters' => array('model' => 'Raduser'),
+        'Filters',
         'Checks' => array(
             'displayName' => 'username',
             'baseClass' => 'Raduser',
@@ -154,16 +154,16 @@ class RadusersController extends AppController {
         $this->Filters->addSelectConstraint(array(
             'fields' => array('role'),
             'items' => array(
-                'user' => __('User'),
-                'tech' => __('Technician'),
-                'admin' => __('Admin'),
-                'superadmin' => __('Super Admin'),
+                'user' => $this->Raduser->roles['user'],
+                'tech' => $this->Raduser->roles['tech'],
+                'admin' => $this->Raduser->roles['admin'],
+                'superadmin' => $this->Raduser->roles['superadmin'],
             ),
-            'input' => 'role',
+            'input' => 'rolefilter',
             'title' => false,
         ));
 
-        $radusers = $this->Filters->paginate('radusers');
+        $radusers = $this->Filters->paginate();
 
         if ($radusers != null) {
             foreach ($radusers as &$user) {

@@ -8,12 +8,7 @@ class Raduser extends AppModel {
     public $displayField = 'username';
     public $name = 'Raduser';
 
-    public $roles = array(
-        'user' => 'User',
-        'tech' => 'Tech',
-        'admin' => 'Admin',
-        'superadmin' => 'Super admin',
-    );
+    public $roles = array();
 
     public $validationDomain = 'validation';
     
@@ -98,6 +93,17 @@ class Raduser extends AppModel {
             'allowEmpty' => true,
         ),
     );
+
+    public function __construct($id = false, $table = null, $ds = null) {
+        $this->roles = array(
+            'user' => __('User'),
+            'tech' => __('Technician'),
+            'admin' => __('Manager'),
+            'superadmin' => __('Administrator'),
+        );
+
+        parent::__construct($id, $table, $ds);
+    }
 
     /*
      * Authentication functions.

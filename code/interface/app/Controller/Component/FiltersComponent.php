@@ -8,7 +8,8 @@ class FiltersComponent extends Component {
 
     public function __construct($collection, $params) {
         $this->controller = $collection->getController();
-        $this->modelName = $params['model'];
+        $this->modelName = isset($params['model'])
+            ? $params['model'] : substr($this->controller->name, 0, -1);
 
         if (!isset($this->controller->request->data[$this->modelName])) {
             $this->controller->request->data[$this->modelName] = array();

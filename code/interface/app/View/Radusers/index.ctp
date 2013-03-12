@@ -146,7 +146,7 @@ echo $this->element('filters_panel', array(
             'type' => 'checkgroup check-horizontal',
         ),
         array(
-            'name' => 'role',
+            'name' => 'rolefilter',
             'label' => __('Role'),
             'multiple' => 'checkbox',
             'type' => 'checkgroup check-horizontal',
@@ -222,7 +222,7 @@ if (!empty($radusers)) {
 
         foreach ($columns as $field=>$info) {
             if (isset($info['fit']) && $info['fit']) {
-		echo '<td class="fit"'.($field == 'role' ? ' style="font-weight: bold"' : '').'>';
+                echo '<td class="fit">';
             } else {
                 echo '<td>';
             }
@@ -288,7 +288,9 @@ if (!empty($radusers)) {
                 echo $user['Raduser'][$field] ? '<i class="icon-ok"></i>' : '';
                 break;
             case 'role':
-                echo __($roles[$user['Raduser'][$field]]);
+                echo '<strong>'
+                    . $roles[$user['Raduser'][$field]]
+                    . '</span>';
                 break;
             default:
                 echo h($user['Raduser'][$field]);
@@ -302,7 +304,7 @@ if (!empty($radusers)) {
 } else {
 ?>
     <tr>
-        <td colspan="<?php echo count($columns) + 3; ?>" style="text-align: center">
+        <td colspan="<?php echo count($columns); ?>" style="text-align: center">
 <?php
     echo __('No user found.');
 ?>
@@ -325,5 +327,5 @@ if(AuthComponent::user('role') == 'superadmin'){
 }
 
 echo $this->element('paginator_footer');
-unset($rad);
+unset($radusers);
 ?>

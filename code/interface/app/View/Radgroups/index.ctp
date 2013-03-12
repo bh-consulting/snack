@@ -2,6 +2,50 @@
 $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('groups_active', 'active');
+
+$columns = array(
+    'checkbox' => array(
+        'id' => 'id',
+        'fit' => true,
+    ),
+    'id' => array(
+        'text' => __('ID'),
+        'fit' => true,
+    ),
+    'groupname' => array(
+        'text' => __('Name'),
+    ),
+    'membercount' => array(
+        'id' => 'id',
+        'text' => __('Members'),
+        'fit' => true,
+    ),
+    'comment' => array(
+        'text' => __('Comment'),
+    ),
+   'view' => array(
+        'id' => 'id',
+        'text' => __('View'),
+        'fit' => true,
+    ),
+    'edit' => array(
+        'id' => 'id',
+        'text' => __('Edit'),
+        'fit' => true,
+    ),
+    'delete' => array(
+        'id' => 'id',
+        'text' => __('Delete'),
+        'fit' => true,
+    ),
+);
+
+if(AuthComponent::user('role') != 'superadmin'){
+    unset($columns['delete']);
+}
+if(!in_array(AuthComponent::user('role'), array('superadmin', 'admin'))){
+    unset($columns['edit']);
+}
 ?>
 
 <h1><? echo __('Groups'); ?></h1>
@@ -12,145 +56,147 @@ echo $this->Html->link(
     array('escape' => false, 'class' => 'btn btn-primary')
 );
 
-$columns = array(
-    'id' => array('text' => __('ID'), 'fit' => true),
-    'groupname' => array('text' => __('Name')),
-    'comment' => array('text' => __('Comment'))
+echo $this->element('filters_panel', array(
+    'controller' => 'radgroups/index',
+    'inputs' => array(
+        array(
+            'name' => 'text',
+            'label' => __('Contains (accept regex)'),
+            'autoComplete' => true,
+        ))
+    )
 );
 
-echo $this->Form->create('Radgroups', array('action' => 'delete'));
-echo $this->Form->end();
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->element(
+        'delete_links',
+        array('action' => 'form', 'model' => 'Radgroup')
+    );
+}
 
-echo $this->Form->create('MultiSelection', array('class' => 'form-inline'));
+echo $this->element('MultipleAction', array('action' => 'start'));
 ?>
 <table class="table">
     <thead>
 	<tr>
-	    <th class="fit">
-<?php
-echo $this->Form->select(
-    'All',
-    array('all' => ''),
-    array(
-	'class' => 'checkbox rangeAll',
-	'multiple' => 'checkbox',
-	'hiddenField' => false,
-    )
-);
-?>
-	    </th>
 <?php
 foreach ($columns as $field => $info) {
-    $sort = '';
-
-    if (preg_match("#$field$#", $this->Paginator->sortKey())) {
-	$sort = '<i class="'
-	    . $sortIcons[$this->Paginator->sortDir()]
-	    . '"></i>';
-    }
-
     if (isset($info['fit']) && $info['fit']) {
-	echo '<th class="fit">';
+        echo '<th class="fit">';
     } else {
-	echo '<th>';
+        echo '<th>';
     }
 
-    echo $this->Paginator->sort(
-	$field,
-	$info['text'] . ' '. $sort,
-	array('escape' => false)
-    )
-    . '</th>';
+    switch ($field) {
+    case 'checkbox':
+        echo $this->element('MultipleAction', array('action' => 'head'));
+        break;
+    case 'view':
+    case 'edit':
+    case 'delete':
+        echo h($info['text']);
+        break;
+    default:
+        $sort = '';
+
+        if (preg_match("#$field$#", $this->Paginator->sortKey())) {
+            $sort = '<i class="'
+                .  $sortIcons[$this->Paginator->sortDir()]
+               . '"></i>';
+        }
+
+        echo $this->Paginator->sort(
+            $field,
+            $info['text'] . ' '. $sort,
+            array('escape' => false)
+        );
+        break;
+    }
+
+    echo '</th>';
 }
 ?>
-	    <th class="fit"><? echo __('Edit'); ?></th>
-        <?php if(AuthComponent::user('role') == 'superadmin'){
-            echo '<th class="fit">' . __('Delete') . '</th>';
-        } ?>
 	</tr>
     </thead>
 
     <tbody>
 <?php
 if (!empty($radgroups)) {
-    foreach ($radgroups as $g) {
-?>
-	<tr>
-	    <td class="fit">
-<?php
-	echo $this->Form->select(
-	    'groups',
-	    array($g['Radgroup']['id'] => ''),
-	    array(
-		'class' => 'checkbox range',
-		'multiple' => 'checkbox',
-		'hiddenField' => false,
-	    )
-	);
-?>
-	    </td>
-	    <td class="fit">
-<?php
-	echo $this->Html->link(
-	    $g['Radgroup']['id'],
-	    array(
-		'controller' => 'Radgroups',
-		'action' => 'view',
-		$g['Radgroup']['id'],
-	    )
-	);
-?>
-	    </td>
-	    <td>
-<?php
-	echo $g['Radgroup']['groupname'];
-?>
-	    </td>
-	    <td>
-<?php
-	echo $g['Radgroup']['comment'];
-?>
-	    </td>
-	    <td class="fit">
-		<i class="icon-edit"></i>
-<?php
-	echo $this->Html->link(
-	    __('Edit'),
-	    array('action' => 'edit', $g['Radgroup']['id'])
-	);
-?>
-	    </td>
-        <?php if(AuthComponent::user('role') == 'superadmin'){ ?>
-	    <td class="fit">
-		<i class="icon-remove"></i>
-        <?php
-    	echo $this->Html->link(
-    	    __('Delete'),
-    	    '#',
-    	    array(
-    		'onClick' => "if (confirm('" . __('Are you sure?') . "')) {"
-    		. "$('#RadgroupsDeleteForm').attr('action',"
-    		. "$('#RadgroupsDeleteForm').attr('action') + '/"
-    		. $g['Radgroup']['id'] . "');"
-    		. "$('#RadgroupsDeleteForm').submit(); }"
-    	    )
-    	);
-?>
-	    </td>
+    foreach ($radgroups as $group) {
+        echo '<tr>';
 
-        <?php } ?>
-	</tr>
-<?php
+        foreach ($columns as $field=>$info) {
+            if (isset($info['fit']) && $info['fit']) {
+                echo '<td class="fit">';
+            } else {
+                echo '<td>';
+            }
+
+            switch ($field) {
+            case 'checkbox':
+                echo $this->element(
+                    'MultipleAction',
+                    array(
+                        'action' => 'line',
+                        'name' => 'groups',
+                        'id' => $group['Radgroup'][$info['id']]
+                    )
+                );
+                break;
+            case 'view':
+		        echo '<i class="icon-eye-open"></i> ';
+                echo $this->Html->link(
+                    __('View'),
+                    array(
+                        'action' => 'view',
+                        'controller' => 'radgroups',
+                        $group['Radgroup'][$info['id']],
+                    )
+                );
+                break;
+            case 'edit':
+                echo '<i class="icon-edit"></i> ';
+                echo $this->Html->link(
+                    __('Edit'),
+                    array(
+                        'action' => 'edit',
+                        $group['Radgroup'][$info['id']]
+                    )
+                );
+                break;
+            case 'delete':
+                echo '<i class="icon-remove"></i> ';
+                echo $this->element(
+                    'delete_links',
+                    array(
+                        'model' => 'Radgroup',
+                        'action' => 'link',
+                        'id' => $group['Radgroup'][$info['id']],
+                    )
+                );
+                break;
+            case 'id':
+            case 'membercount':
+                echo '<strong>' . h($group['Radgroup'][$field]) . '</strong>';
+                break;
+            default:
+                echo h($group['Radgroup'][$field]);
+                break;
+            }
+
+            echo '</td>';
+        }
+        echo '</tr>';
     }
 } else {
 ?>
-	<tr>
-	    <td colspan="<?php echo count($columns) + 3; ?>" style="text-align: center">
+    <tr>
+        <td colspan="<?php echo count($columns); ?>" style="text-align: center">
 <?php
-    echo __('No groups yet.');
+    echo __('No group found.');
 ?>
-	    </td>
-	</tr>
+        </td>
+    </tr>
 <?php
 }
 ?>
@@ -158,32 +204,15 @@ if (!empty($radgroups)) {
 </table>
 
 <?php
-
 if(AuthComponent::user('role') == 'superadmin'){
-    echo $this->element('dropdownButton', array(
-        'buttonCount' => 1,
-        'title' => __('Action'),
-        'icon' => '',
-        'items' => array(
-    	$this->Html->link(
-    	    '<i class="icon-remove"></i> ' . __('Delete selected'),
-    	    '#',
-    	    array(
-    		'onClick' =>	"$('#selectionAction').attr('value', 'delete');"
-    		. "if (confirm('" . __('Are you sure?') . "')) {"
-    		. "$('#MultiSelectionIndexForm').submit();}",
-    		    'escape' => false,
-    		)
-    	    ),
-    	)
-        ));
-    echo $this->Form->end(array(
-        'id' => 'selectionAction',
-        'name' => 'action',
-        'type' => 'hidden',
-        'value' => 'delete'
-    ));
+    echo $this->element(
+        'MultipleAction',
+        array(
+            'options' => array('delete', 'export'),
+            'action' => 'end',
+        )
+    );
 }
 echo $this->element('paginator_footer');
-unset($g);
+unset($radgroups);
 ?>
