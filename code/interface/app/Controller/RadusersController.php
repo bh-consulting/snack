@@ -301,22 +301,22 @@ class RadusersController extends AppController {
         $this->set('radgroups', $views['groups']);
 
         $attributes = $type;
+        $username = $views['base']['Raduser']['username'];
 
         // Raduser
         if( $views['base']['Raduser']['type'] == 'mac'
-            && strlen( $views['base']['Raduser']['username'] ) == 12
+            && strlen($username) == 12
         ) {
-            $attributes['MAC address'] = Utils::formatMAC(
-                $views['base']['Raduser']['username']
-            );
+            $attributes['MAC address'] = Utils::formatMAC($username);
 
         } else {
-            $attributes['Username'] = $views['base']['Raduser']['username'];
+            $attributes['Username'] = $username;
         }
         $attributes['Comment'] = $views['base']['Raduser']['comment'];
         $attributes['Role'] = $views['base']['Raduser']['role'];
-        $attributes['Certificate path'] = Configure::read('Parameters.certsPath')
-                    . '/users/' . $views['base']['Raduser']['username'] . '_';
+        $certsPath = Utils::getUserCertsPath($username);
+        $attributes['Certificate path'] = $certsPath['public'];
+        $attributes['Key path'] = $certsPath['key'];
         $attributes['Cisco'] = $views['base']['Raduser']['is_cisco'] 
             ? _('Yes') : _('No');
 
@@ -351,6 +351,7 @@ class RadusersController extends AppController {
             'Username',
             'Comment',
             'Certificate path',
+            'Key path',
             'EAP-Type',
             'Expiration',
             'Simultaneous-Use', 
@@ -1080,16 +1081,16 @@ class RadusersController extends AppController {
         $result = Utils::shell($command);
         Utils::userlog(__('created certificate for user %s', $userID));
 
-        // switch ($result['code']) {
-        // case 1:
-        //     throw new RSAKeyException($userID, $username);
-        // case 2:
-        //     throw new CertificateException($userID, $username);
-        // case 3:
-        //     throw new CertificateSignException($userID, $username);
-        // case 4:
-        //     throw new CRLException($userID, $username);
-        // }
+        switch ($result['code']) {
+        case 1:
+            throw new RSAKeyException($userID, $username);
+        case 2:
+            throw new CertificateException($userID, $username);
+        case 3:
+            throw new CertificateSignException($userID, $username);
+        case 4:
+            throw new CRLException($userID, $username);
+        }
     }
 
     /*

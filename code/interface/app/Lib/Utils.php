@@ -128,7 +128,7 @@ class Utils {
 	}
 
     public static function getUserCertsPath($username) {
-        $base = Configure::read('Parameters.certsPath') . '/' . $username;
+        $base = Configure::read('Parameters.certsPath') . '/users/' . $username;
         return array(
             'public' => $base . '_cert.pem',
             'key' => $base . '_key.pem',
