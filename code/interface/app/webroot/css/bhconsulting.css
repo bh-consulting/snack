@@ -134,7 +134,7 @@ div.menutopphone {
     margin-left: 20px;
 }
 
-.next {
+.next.wizard {
     float: left;
     margin-left: 10px;
 }
