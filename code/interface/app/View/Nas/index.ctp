@@ -88,7 +88,7 @@ if($nasunwritten) {
     echo __('There is at least one NAS not synchronized with the starting configuration.');
 } else {
     echo '<i class="icon-camera icon-green"></i> ';
-    echo __('All NAS seems synchronized with the starting configuration.');
+    echo __('All NAS seem synchronized with the starting configuration.');
 }
 
 echo '</strong>';

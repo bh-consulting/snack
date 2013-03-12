@@ -129,8 +129,6 @@ class NasController extends AppController {
                 );
                 Utils::userlog(__('error while adding NAS'), 'error');
             }
-        } else {
-            echo 'lol';
         }
     }
 
