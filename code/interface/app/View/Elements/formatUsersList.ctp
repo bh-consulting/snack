@@ -7,8 +7,8 @@ foreach($users AS $user) {
         $usersList[] = $this->Html->link(
     	"<i class='icon-user'></i> {$user['username']}",
     	array(
-    	    'controller' => 'raduser',
-    	    'action' => 'edit',
+    	    'controller' => 'radusers',
+    	    'action' => 'view_snack',
     	    $user['id'],
     	),
     	array(
