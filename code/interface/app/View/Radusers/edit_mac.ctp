@@ -7,21 +7,35 @@ echo '<h1>' . __('Edit') . ' ' . $this->data['Raduser']['username'] . ' ' . __('
 
 echo $this->Form->create('Raduser', array('action' => 'edit_mac'));
 
-echo '<fieldset>';
-echo '<legend>' . __('Checks') . '</legend>';
-echo $this->element('check_common_fields');
-echo $this->element('doubleListsSelector', array('leftTitle' => 'Groups', 'rightTitle' => 'Selected groups', 'contents' => $groups, 'selectedContents' => $selectedGroups));
-echo $this->Form->input('groups', array('type' => 'select', 'id' => 'select-right', 'label' => '', 'class' => 'hidden', 'multiple' => 'multiple'));
-echo '</fieldset>';
+$checks = '<fieldset>';
+$checks .= '<legend>' . __('Checks') . '</legend>';
+$checks .= $this->element('check_common_fields');
+$checks .= $this->element('doubleListsSelector', array('leftTitle' => 'Groups', 'rightTitle' => 'Selected groups', 'contents' => $groups, 'selectedContents' => $selectedGroups));
+$checks .= $this->Form->input('groups', array('type' => 'select', 'id' => 'select-right', 'label' => '', 'class' => 'hidden', 'multiple' => 'multiple'));
+$checks .= '</fieldset>';
 
-echo '<fieldset>';
-echo '<legend>' . __('Replies') . '</legend>';
-echo $this->element('reply_common_fields');
-echo '</fieldset>';
+$replies = '<fieldset>';
+$replies .= '<legend>' . __('Replies') . '</legend>';
+$replies .= $this->element('reply_common_fields');
+$replies .= '</fieldset>';
 
-echo $this->element('snack_role_input');
+$role = $this->element('snack_role_input');
 
-echo $this->Form->input('id', array('type' => 'hidden'));
-echo $this->Form->input('username', array('type' => 'hidden'));
-echo $this->Form->end(__('Update'));
+$finish = $this->Form->input('id', array('type' => 'hidden'));
+$finish .= $this->Form->input('username', array('type' => 'hidden'));
+$finish .= $this->Form->end(array(
+    'label' => __('Update'),
+    'class' => 'next finish',
+    'style' => 'display:none;',
+));
+
+echo $this->element('wizard', array(
+    'steps' => array(
+        __('Checks') => $checks,
+        __('Replies') => $replies,
+        __('Role') => $role,
+    ),
+    'finishButton' => $finish,
+));
+
 ?>

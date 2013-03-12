@@ -7,20 +7,34 @@ $this->assign('users_active', 'active');
 <?php
 echo $this->Form->create('Raduser');
 
-echo '<fieldset>';
-echo '<legend>' . __('Checks') . '</legend>';
-echo $this->Form->input('mac', array('label' => __('MAC address')));
-echo $this->element('check_common_fields');
-echo $this->element('doubleListsSelector', array('leftTitle' => __('Groups'), 'rightTitle' => __('Selected groups'), 'contents' => $groups, 'selectedContents' => array()));
-echo $this->Form->input('groups', array('type' => 'select', 'id' => 'select-right', 'label' => '', 'class' => 'hidden', 'multiple' => 'multiple'));
-echo '</fieldset>';
+$checks = '<fieldset>';
+$checks .='<legend>' . __('Checks') . '</legend>';
+$checks .= $this->Form->input('mac', array('label' => __('MAC address')));
+$checks .= $this->element('check_common_fields');
+$checks .= $this->element('doubleListsSelector', array('leftTitle' => __('Groups'), 'rightTitle' => __('Selected groups'), 'contents' => $groups, 'selectedContents' => array()));
+$checks .= $this->Form->input('groups', array('type' => 'select', 'id' => 'select-right', 'label' => '', 'class' => 'hidden', 'multiple' => 'multiple'));
+$checks .= '</fieldset>';
 
-echo '<fieldset>';
-echo '<legend>' . __('Replies') . '</legend>';
-echo $this->element('reply_common_fields');
-echo '</fieldset>';
+$replies = '<fieldset>';
+$replies .= '<legend>' . __('Replies') . '</legend>';
+$replies .= $this->element('reply_common_fields');
+$replies .= '</fieldset>';
 
-echo $this->element('snack_role_input');
+$role = $this->element('snack_role_input');
 
-echo $this->Form->end(__('Create'));
+$finish = $this->Form->end(array(
+    'label' => __('Create'),
+    'class' => 'next finish',
+    'style' => 'display:none;',
+));
+
+echo $this->element('wizard', array(
+    'steps' => array(
+        __('Checks') => $checks,
+        __('Replies') => $replies,
+        __('Role') => $role,
+    ),
+    'finishButton' => $finish,
+));
+
 ?>

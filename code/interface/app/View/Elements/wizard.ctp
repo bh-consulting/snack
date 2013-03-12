@@ -3,7 +3,7 @@
         <?php
         $i = 0;
         foreach($steps as $title => $content){
-            $arrow = ($i != count($steps) - 1) ? '<i class="icon-chevron-right"></i>' : '';
+            $arrow = ($i != count($steps) - 1) ? ' <i class="icon-chevron-right"></i>' : '';
             echo '<li><a href="#tab' . $i . '" data-toggle="tab">' . $title . $arrow . '</a></li>';
             $i++;
         }

@@ -27,7 +27,9 @@ $(document).ready(function() {
         var $total = navigation.find('li').length;
         var $current = index+1;
         var $percent = ($current/$total) * 100;
-        $('#rootwizard').find('.bar').css({width:$percent+'%'});
+        if($percent != 0){
+            $('#rootwizard').find('.bar').css({width:$percent+'%'});
+        }
 
         // If it's the last tab then hide the last button and show the finish instead
         if($current >= $total) {

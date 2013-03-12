@@ -12,35 +12,35 @@ echo '<h1>'
 
 echo $this->Form->create('Raduser', array('action' => 'edit_cert'));
 
-echo '<fieldset>';
-echo '<legend>' . __('Certificate') . '</legend>';
-echo $this->Form->input(
+$certs = '<fieldset>';
+$certs .= '<legend>' . __('Certificate') . '</legend>';
+$certs .= $this->Form->input(
     'cert_gen',
     array('type' => 'checkbox', 'label' => __('Generate a new certificate'))
 );
-echo $this->Form->input(
+$certs .= $this->Form->input(
     'country',
     array('default' => Configure::read('Parameters.countryName'))
 );
-echo $this->Form->input(
+$certs .= $this->Form->input(
     'province',
     array('default' => Configure::read('Parameters.stateOrProvinceName'))
 );
-echo $this->Form->input(
+$certs .= $this->Form->input(
     'locality',
     array('default' => Configure::read('Parameters.localityName'))
 );
-echo $this->Form->input(
+$certs .= $this->Form->input(
     'organization',
     array('default' => Configure::read('Parameters.organizationName'))
 );
-echo '</fieldset>';
+$certs .= '</fieldset>';
 
-echo '<fieldset>';
-echo '<legend>' . __('Checks') . '</legend>';
-echo $this->Form->input('calling-station-id', array('label' => __('MAC address')));
-echo $this->element('check_common_fields');
-echo $this->element(
+$checks = '<fieldset>';
+$checks .= '<legend>' . __('Checks') . '</legend>';
+$checks .= $this->Form->input('calling-station-id', array('label' => __('MAC address')));
+$checks .= $this->element('check_common_fields');
+$checks .= $this->element(
     'doubleListsSelector',
     array(
 	'leftTitle' => __('Groups'),
@@ -49,7 +49,7 @@ echo $this->element(
 	'selectedContents' => $selectedGroups,
     )
 );
-echo $this->Form->input(
+$checks .= $this->Form->input(
     'groups',
     array(
 	'type' => 'select',
@@ -59,20 +59,36 @@ echo $this->Form->input(
 	'multiple' => 'multiple',
     )
 );
-echo '</fieldset>';
+$checks .= '</fieldset>';
 
-echo $this->element('cisco_common_fields', array('type' => 'cert'));
+$cisco = $this->element('cisco_common_fields', array('type' => 'cert'));
 
-echo '<fieldset>';
-echo '<legend>' . __('Replies') . '</legend>';
-echo $this->element('reply_common_fields');
-echo '</fieldset>';
+$replies = '<fieldset>';
+$replies .= '<legend>' . __('Replies') . '</legend>';
+$replies .= $this->element('reply_common_fields');
+$replies .= '</fieldset>';
 
-echo $this->element('snack_role_input');
+$role = $this->element('snack_role_input');
 
-echo $this->Form->input('id', array('type' => 'hidden'));
-echo $this->Form->input('username', array('type' => 'hidden'));
-echo $this->Form->input('was_cisco', array('type' => 'hidden'));
+$finish = $this->Form->input('id', array('type' => 'hidden'));
+$finish .= $this->Form->input('username', array('type' => 'hidden'));
+$finish .= $this->Form->input('was_cisco', array('type' => 'hidden'));
 
-echo $this->Form->end(__('Update'));
+$finish .= $this->Form->end(array(
+    'label' => __('Update'),
+    'class' => 'next finish',
+    'style' => 'display:none;',
+));
+
+echo $this->element('wizard', array(
+    'steps' => array(
+        __('Certificate') => $certs,
+        __('Checks') => $checks,
+        __('Cisco') => $cisco,
+        __('Replies') => $replies,
+        __('Role') => $role,
+    ),
+    'finishButton' => $finish,
+));
+
 ?>
