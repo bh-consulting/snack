@@ -440,15 +440,15 @@ class RadusersController extends AppController {
                 if (isset($this->request->data['Raduser']['is_cert'])
                     && $this->request->data['Raduser']['is_cert'] == 1
                 ) {
+                    $username = $this->request->data['Raduser']['username'];
                     $certs = Utils::getUserCertsPath(
-                        $this->request->data['Raduser']['username']
+                        $username
                     );
 
                     $this->Session->setFlash(__(
                         'New user added. His certificates are %s and %s.',
-
-                        '<a href="certs/get_cert/' . $this->request->data['Raduser']['username'] .'_cert.pem">' . $certs['public'] . '</a>',
-                        '<a href="certs/get_cert/' . $this->request->data['Raduser']['username'] .'_key.pem">' . $certs['key'] . '</a>',
+                        '<a href="certs/get_cert/' . $username  . '">' . $certs['public'] . '</a>',
+                        '<a href="certs/get_key/' . $username . '">' . $certs['key'] . '</a>',
                         'flash_success'
                     ));
                 } else {

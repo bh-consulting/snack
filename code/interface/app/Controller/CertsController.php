@@ -2,10 +2,15 @@
 
 class CertsController extends AppController {
 
-    public function get_cert($id) {
-        echo $id;
-        $this->response->file(Utils::getUserCertsPath('e'));
-        //Return reponse object to prevent controller from trying to render a view
+    public function get_cert($user) {
+        $userCert = Utils::getUserCertsPath('e');
+        $this->response->file($userCert['cert']);
+        return $this->response;
+    }
+
+    public function get_key($user) {
+        $userCert = Utils::getUserCertsPath('e');
+        $this->response->file($userCert['key']);
         return $this->response;
     }
 }

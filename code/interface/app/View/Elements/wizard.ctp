@@ -26,8 +26,8 @@
         </div>
 
         <ul class="pager wizard">
-            <li class="previous wizard"><a href="#">&laquo; <?php echo __('Previous'); ?></a></li>
-            <li class="next wizard"><a href="#"><?php echo __('Next'); ?> &raquo;</i></a></li>
+            <li class="previous"><a href="#">&laquo; <?php echo __('Previous'); ?></a></li>
+            <li class="next"><a href="#"><?php echo __('Next'); ?> &raquo;</i></a></li>
 
             <?php echo $finishButton; ?>
         </ul>
