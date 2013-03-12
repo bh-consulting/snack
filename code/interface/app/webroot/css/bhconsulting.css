@@ -133,3 +133,9 @@ div.menutopphone {
     float: left;
     margin-left: 10px;
 }
+
+.unknown {
+    color: red;
+    display: inline;
+    white-space: nowrap;
+}

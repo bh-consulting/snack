@@ -12,7 +12,7 @@ if (preg_match(
    ) {
 
    printf(
-        '%02d/%02d/%d&nbsp;' . __('à') . '&nbsp;%02dh%02d&nbsp;' . __('et') . '&nbsp;%ss',
+        '%02d/%02d/%d&nbsp;' . __('à') . '&nbsp;%02d:%02d:%02d',
         $fields['day'],
         $fields['mon'],
         $fields['year'],
