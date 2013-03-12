@@ -161,3 +161,15 @@ div.menutopphone {
 .tooltip {
     white-space: normal;
 }
+
+.bhbody {
+    min-height: 270px;
+}
+
+.modal-header {
+    text-align: left;
+}
+
+.modal-body {
+    text-align: center;
+}

@@ -170,6 +170,17 @@ var Boostrapify = {
 
 		// TOOLTIPS
 		$('*[title]').tooltip();
+
+		// SWITCHS
+		$('.switch').each(function() {
+		    $(this).parent().css('padding-left', '0');
+		    $(this).wrap('<div class="switchwrap">');
+		    $(this).parent().toggleButtons({
+			height: 23,
+			width: 80,
+			transitionspeed: "500%",
+		    });
+		});
 	}
 };
 

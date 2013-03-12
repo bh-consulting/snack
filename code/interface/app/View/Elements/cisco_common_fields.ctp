@@ -7,7 +7,8 @@ echo $this->Form->input(
     'cisco',
     array(
 	'type' => 'checkbox',
-	'label' => __('Cisco user')
+	'label' => __('Cisco user'),
+	'class' => 'switch'
     )
 );
 

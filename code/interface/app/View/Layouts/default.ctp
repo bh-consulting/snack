@@ -42,6 +42,7 @@ $cakeDescription = __('SNACK');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
     echo $this->Html->css('flags.css');
     echo $this->Html->css('jquery.terminal.css');
+    echo $this->Html->css('bootstrap-toggle-buttons.css');
     echo $this->fetch('css');
 ?>
     <style>
@@ -121,7 +122,7 @@ $cakeDescription = __('SNACK');
 
 
 <div class="container-fluid">
-    <div class="row-fluid">
+    <div class="row-fluid bhbody">
 
     <? echo $this->fetch('content'); ?>
 
@@ -148,6 +149,7 @@ echo $this->Html->script('jquery.min');
 echo $this->Html->script('jquery-ui.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapify');
+echo $this->Html->script('jquery.toggle.buttons');
 echo $this->Html->script('bootstrap-datetimepicker.min');
 echo $this->Html->script('doubleListsSelector');
 echo $this->Html->script('loglines');
