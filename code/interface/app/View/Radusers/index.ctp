@@ -1,4 +1,9 @@
 <?php 
+/* TODO: change role to a nice output
+remove link from id, set blank
+shorter name for role in fr
+*/
+
 $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
@@ -36,7 +41,7 @@ $columns = array(
         'fit' => true,
     ),
     'role' => array(
-        'text' => __('Admin'),
+        'text' => __('Role'),
         'fit' => true,
     ),
     'view' => array(

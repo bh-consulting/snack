@@ -61,6 +61,12 @@ class Parameter extends AppModel {
             'default' => '',
             'length' => '255',
         ),
+        'paginationCount' => array(
+            'type' => 'integer',
+            'null' => false,
+            'default' => 10,
+            'length' => 5,
+        )
     );
 
     public $validate = array(
@@ -98,6 +104,10 @@ class Parameter extends AppModel {
                 'message' => 'Directory does not exist.',
                 'required' => true
             )
+        ),
+        'paginationCount' => array(
+            'rule' => 'numeric',
+            'message' => 'The pagination count must be a number.'
         ),
     );
 

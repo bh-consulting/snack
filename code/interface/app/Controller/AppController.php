@@ -23,6 +23,7 @@
 App::uses('Controller', 'Controller');
 App::uses('Utils', 'Lib');
 App::import('Model', 'Nas');
+Configure::load('parameters');
 
 /**
  * Application Controller
@@ -75,6 +76,11 @@ class AppController extends Controller {
             $this->Session->read('Config.language')
         );
 
+        // set the pagination count from the parameters file
+        if (isset($this->paginate) && isset($this->paginate['limit'])) {
+            $this->paginate['limit'] = Configure::read('Parameters.paginationCount');
+        }
+
         // set class for sort icons, used in all indexes to display
         // sorted tables of elements
         $this->set('sortIcons', array(
@@ -82,7 +88,7 @@ class AppController extends Controller {
             'desc' => 'icon-chevron-up',
         ));
 
-	$this->set('nasunwritten', $this->BackupsChanges->areThereChangesUnwritten());
+    	$this->set('nasunwritten', $this->BackupsChanges->areThereChangesUnwritten());
     }
 
     public function changeLang($lang) {

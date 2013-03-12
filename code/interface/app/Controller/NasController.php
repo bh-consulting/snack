@@ -3,11 +3,11 @@ App::import('Model', 'Backup');
 
 class NasController extends AppController {
     public $helpers = array('Html', 'Form', 'JqueryEngine');
+    public $uses = array('Nas');
     public $paginate = array(
         'limit' => 10,
         'order' => array('Nas.id' => 'asc')
     );
-    public $uses = array('Nas');
     public $components = array(
         'Filters' => array('model' => 'Nas'),
         'Session',

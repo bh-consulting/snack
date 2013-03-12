@@ -3,7 +3,7 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('param_active', 'active');
 
-echo '<h2>' . __('Edit server parameters') . '</h2>';
+echo '<h1>' . __('Edit server parameters') . '</h1>';
 
 echo $this->Form->create('Parameter', array('action' => 'edit'));
 
@@ -53,6 +53,7 @@ echo $this->Form->input(
     'organizationName',
     array('label' => __('Organization'))
 );
+echo $this->Form->input('paginationCount', array('label' => __('Pagination count')));
 
 echo $this->Form->end(__('Update'));
 ?>

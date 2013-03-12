@@ -82,3 +82,13 @@ echo empty($organizationName) ?
 ?>
     </dd>
 </dl>
+
+<h4><?php echo __('Snack configuration:'); ?></h4>
+<dl class="well dl-horizontal">
+    <dt><?php echo __('Pagination count'); ?></dt>
+    <dd>
+<?php
+echo empty($paginationCount) ? __('Not set.') : $paginationCount;
+?>
+    </dd>
+</dl>

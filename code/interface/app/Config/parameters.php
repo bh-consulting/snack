@@ -7,9 +7,10 @@ $config = array (
     'localityName' => 'Nancy',
     'organizationName' => 'Be Happy',
     'scriptsPath' => '/var/www/interface/cert',
-    'certsPath' => '/home/snack/cert',
+    'certsPath' => '/home/julien/cert',
     'configurationEmail' => 'pi@bh.net',
     'errorEmail' => 'pi@bh.net',
     'ipAddress' => '192.168.1.146',
+    'paginationCount' => '15',
   ),
 );
