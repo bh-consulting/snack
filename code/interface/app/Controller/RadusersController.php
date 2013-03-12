@@ -156,6 +156,7 @@ class RadusersController extends AppController {
             }
         }
 
+        $this->set('roles', $this->Raduser->roles);
         $this->set('radusers', $radusers);
     }
 

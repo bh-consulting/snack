@@ -85,31 +85,27 @@ echo $this->element('filters_panel', array(
 );
 
 $dropdownUsersButtonItems = array(
-    _('Active') => array(
+    __('Active') => array(
         $this->Html->link(
-            '<i class="icon-plus-sign"></i> ' . __('Certificate'), 
+            __('Certificate'), 
             array('action' => 'add_cert'),
             array('escape' => false, 'class' => 'secure_auth')
         ),
         $this->Html->link(
-            '<i class="icon-plus-sign"></i> ' . __('Login / Password'), 
+            __('Login / Password'), 
             array('action' => 'add_loginpass'),
             array('escape' => false, 'class' => 'warning_auth')
         ),
     ),
-    _('Passive') => array(
-        $this->Html->link(
-            '<i class="icon-plus-sign"></i> ' . __('MAC address'), 
-            array('action' => 'add_mac'),
-            array('escape' => false)
-        )
+    $this->Html->link(
+        __('Passive (MAC)'), 
+        array('action' => 'add_mac'),
+        array('escape' => false)
     ),
-    _('Snack') => array(
-        $this->Html->link(
-            '<i class="icon-plus-sign"></i> ' . __('Admin'), 
-            array('action' => 'add_snack'),
-            array('escape' => false)
-        )
+    $this->Html->link(
+        __('Snack'), 
+        array('action' => 'add_snack'),
+        array('escape' => false)
     ),
 );
 
@@ -299,8 +295,7 @@ if (!empty($radusers)) {
                 echo $user['Raduser'][$field] ? '<i class="icon-ok"></i>' : '';
                 break;
             case 'role':
-                // TODO: do not use __() with dynamic value
-                echo __($user['Raduser'][$field]);
+                echo __($roles[$user['Raduser'][$field]]);
                 break;
             default:
                 echo h($user['Raduser'][$field]);
