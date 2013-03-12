@@ -136,7 +136,7 @@ $cakeDescription = __('SNACK');
 	    </p>
             <!-- Flag sprites downloaded from http://flag-sprites.com/ (CC by-sa) -->
             <span class="flags">
-                <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-fr', 'alt' => __('French'))), array('controller' => 'app', 'action' => 'changeLang', 'fre'), array('escape' => false)); ?>
+                <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-fr', 'alt' => __('French'))), array('controller' => 'app', 'action' => 'changeLang', 'fra'), array('escape' => false)); ?>
                 <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-us', 'alt' => __('English'))), array('controller' => 'app', 'action' => 'changeLang', 'eng'), array('escape' => false)); ?>
             </span>
         </p>

@@ -82,7 +82,7 @@ class Utils {
         $result .= ($moctets) ? $moctetss . ' Mo ' : '';
         $result .= ($koctets) ? $koctets . ' Ko ' : '';
         $result .= ($octets) ? $octets . ' '
-            . __n(__("octet"), __("octets"), $octets)
+            . __n(__("byte"), __("bytes"), $octets)
             . ' ' : '';
 
         return $result;
@@ -156,7 +156,7 @@ class Utils {
 
     public static function getISOCode($httpAcceptLanguage) {
         $langs = array(
-            'fr-FR' => 'fre',
+            'fr-FR' => 'fra',
             'en-US' => 'eng'
         );
 

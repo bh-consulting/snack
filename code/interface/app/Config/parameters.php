@@ -11,6 +11,6 @@ $config = array (
     'configurationEmail' => 'pi@bh.net',
     'errorEmail' => 'pi@bh.net',
     'ipAddress' => '192.168.1.146',
-    'paginationCount' => '15',
+    'paginationCount' => '10',
   ),
 );
