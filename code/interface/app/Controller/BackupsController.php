@@ -83,6 +83,7 @@ class BackupsController extends AppController {
 		$this->Filters->addStringConstraint(array(
 		    'fields' => 'users', 
 		    'input' => 'author', 
+            'ahead' => array('users'),
 		));
 
 		$this->Filters->addStringConstraint(array(

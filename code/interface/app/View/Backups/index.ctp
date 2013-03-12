@@ -4,10 +4,34 @@ $this->assign('radius_active', 'active');
 $this->assign('nas_active', 'active');
 
 $columns = array(
-    'id' => __('ID'),
-    'datetime' => __('When'),
-    'action' => __('Why'),
-    'users' => __('Who'),
+    'id' => array(
+        'text' => __('ID'),
+        'fit' => true,
+    ),
+    'sync' => array(
+        'text' => '<i class="icon-ok-circle" title="'
+        . __('Write memory') . '"></i>',
+        'fit' => true,
+        'id' => 'id',
+    ),
+    'compare' => array(
+        'text' => '<i class="icon-zoom-in"></i>',
+        'fit' => true,
+    ),
+    'datetime' => array(
+        'text' => __('When'),
+    ),
+    'action' => array(
+        'text' => __('Why'),
+    ),
+    'users' => array(
+        'text' => __('Who'),
+    ),
+    'view' => array(
+        'text' => __('View'),
+        'fit' => true,
+        'id' => 'id',
+    ),
 );
 ?>
 
@@ -32,7 +56,8 @@ echo $this->element('filters_panel', array(
         array(
             'name' => 'author',
             'label' => __('Author contains (accept regex)'),
-            'options' => array('id' => 'author')
+            'options' => array('id' => 'author'),
+            'autoComplete' => true,
         ),
         array(
             'name' => 'action',
@@ -64,151 +89,184 @@ echo $this->Form->create('SelectDiff', array(
 	<thead>
 	    <tr>
 <?php
-foreach ($columns as $field => $text) {
-    $sort = '';
+foreach ($columns as $field => $info) {
+    $colspan = ($field == 'compare') ? 2 :1;
 
-    if (preg_match("#$field$#", $this->Paginator->sortKey())) {
-	$sort = '<i class="' . $sortIcons[$this->Paginator->sortDir()] . '"></i>';
+    if (isset($info['fit']) && $info['fit']) {
+        echo '<th class="fit" colspan="' . $colspan . '">';
+    } else {
+        echo '<th colspan="' . $colspan . '">';
     }
 
-    echo '<th '.($field == 'id' ? 'class="smallCol fit"' : '').'>'
-	. $this->Paginator->sort($field, "$text $sort", array('escape' => false))
-	. '</th>';
+    switch ($field) {
+    case 'view':
+        echo h($info['text']);
+        break;
+    case 'sync':
+    case 'compare':
+        echo $info['text'];
+        break;
+    default:
+        $sort = '';
 
-    if ($field == 'id') {
-	echo '<th class="smallCol"><i class="icon-ok-circle" title="' . __('Write memory') . '"></i></th>';
-	echo '<th class="smallCol" colspan="2"><i class="icon-zoom-in"></i></th>';
+        if (preg_match("#$field$#", $this->Paginator->sortKey())) {
+            $sort = '<i class="'
+                .  $sortIcons[$this->Paginator->sortDir()]
+               . '"></i>';
+        }
+
+        echo $this->Paginator->sort(
+            $field,
+            $info['text'] . ' '. $sort,
+            array('escape' => false)
+        );
+        break;
     }
+
+    echo '</th>';
 }
-
-echo '<th class="smallCol">' . __('View') . '</th>';
 ?>
 	    </tr>
 	</thead>
 
 	<tbody>
-	<?php if (!empty($backups)): ?>
 <?php
-$n = 0;
+if (!empty($backups)) {
+    $n = 0;
+    for($i = 0; $i < count($backups); $i++) {
+        $backup = $backups[$i];
+        echo '<tr>';
 
-for($i = 0; $i < count($backups); $i++) {
-    $backup = $backups[$i];
+        foreach ($columns as $field=>$info) {
+            if (isset($info['fit']) && $info['fit']) {
+                echo '<td class="fit">';
+            } else {
+                echo '<td>';
+            }
 
-    echo '<tr>';
+            switch ($field) {
+            case 'view':
+		        echo '<i class="icon-eye-open"></i> ';
+                echo $this->Html->link(
+                    __('View'),
+                    array(
+                        'action' => 'view',
+                        'controller' => 'backups',
+                        $backup['Backup'][$info['id']],
+                        $nasID,
+                    )
+                );
+                break;
+            case 'id':
+                echo '<strong>' . h($backup['Backup'][$field]) . '</strong>';
+                break;
+            case 'datetime':
+                echo $this->element('formatDates', array(
+                    'date' => $backup['Backup'][$field]
+                ));
+                break;
+            case 'users':
+                echo $this->element('formatUsersList', array(
+                    'users' => $users[$backup['Backup']['id']]
+                ));
+                break;
+            case 'sync':
+                if(in_array($backup['Backup'][$info['id']], $unwrittenids)) {
+                    echo '<i class="icon-exclamation-sign icon-red" title="'
+                        . __('Configuration NOT loaded if the device restart.')
+                        . '"></i>';
+                } else {
+                    echo '<i class="icon-ok-sign icon-green" title="'
+                        . __('Seems saved as starting configuration.')
+                        . '"></i>';
+                }
+                break;
+            case 'compare':
+                if ($i != 0) {
+                    echo $this->Form->radio(
+                        'b',
+                        array($backup['Backup']['id'] => ''),
+                        array(
+                            'hiddenField' => false,
+                            'checked' => $i == 1,
+                            'set' => $n
+                        )
+                    );
+                }
 
-    foreach ($columns as $field => $text) {
-	echo '<td '.($field == 'id' ? 'class="smallCol fit" style="font-weight: bold"' : '').'>';
+                echo '</td>';
 
-	if($field == 'users') {
-	    echo $this->element('formatUsersList', array(
-		'users' => $users[$backup['Backup']['id']]
-	    ));
-	} else if($field == 'datetime') {
-	    echo $this->element('formatDates', array(
-		'date' => $backup['Backup'][$field]
-	    ));
-	} else if($field == 'action') {
-	    echo '<strong>';
-	    switch($backup['Backup'][$field]) {
-		case 'logoff':
-		    echo __('Log off');
-		    break;
-		case 'login':
-		    echo __('Log in');
-		    break;
-		case 'wrmem':
-		    echo __('Write memory');
-		    break;
-		default:
-		    echo $backup['Backup'][$field];
-	    }
-	    echo '</strong>';
-	} else
-	    echo $backup['Backup'][$field];
+                if (isset($info['fit']) && $info['fit']) {
+                    echo '<td class="fit">';
+                } else {
+                    echo '<td>';
+                }
 
-	echo '</td>';
+                if ($i != count($backups)-1) {
+                    echo $this->Form->radio(
+                        'a',
+                        array($backup['Backup']['id'] => ''),
+                        array(
+                            'hiddenField' => false,
+                            'checked' => $i == 0,
+                            'set' => $n
+                        )
+                    );
+                }
+                break;
+            case 'action':
+                echo '<strong>';
+                switch ($backup['Backup'][$field]) {
+                case 'logoff':
+                    echo __('Log off');
+                    break;
+                case 'login':
+                    echo __('Log in');
+                    break;
+                case 'wrmem':
+                    echo __('Write memory');
+                    break;
+                default:
+                    echo $backup['Backup'][$field];
+                }
+                echo '</strong>';
+                break;
+            default:
+                echo h($backup['Backup'][$field]);
+                break;
+            }
 
-	if ($field == 'id') {
-	    if(in_array($backup['Backup']['id'], $unwrittenids)) {
-		echo '<td class="smallCol fit">';
-		echo '<i class="icon-exclamation-sign icon-red" title="' . __('Configuration NOT loaded if the device restart.') .'"></i>';
-	    } else {
-		echo '<td class="smallCol fit">';
-		echo '<i class="icon-ok-sign icon-green" title="' . __('Seems saved as starting configuration.') .'"></i>';
-	    }
+            echo '</td>';
+        }
+        echo '</tr>';
+        ++$n;
+    }
+} else {
+?>
+    <tr>
+        <td colspan="<?php echo count($columns); ?>" style="text-align: center">
+<?php
+    echo __('No backup found.');
 
-	    echo '</td>';
-
-	    echo '<td class="smallCol fit">';
-
-	    if ($i != 0)
-		echo $this->Form->radio(
-		    'b',
-		    array($backup['Backup']['id'] => ''),
-		    array(
-			'hiddenField' => false,
-			'checked' => $i == 1,
-			'set' => $n
-		    )
-		);
-	    
-	    echo '</td><td class="smallCol fit">';
-
-	    if ($i != count($backups)-1)
-		echo $this->Form->radio(
-		    'a',
-		    array($backup['Backup']['id'] => ''),
-		    array(
-			'hiddenField' => false,
-			'checked' => $i == 0,
-			'set' => $n
-		    )
-		);
-
-	    echo '</td>';
-	}
+    if (count($this->params['url']) > 0) {
+        echo $this->Html->link(__('retry with no filters'), '.');
+    } else {
+        echo __('no filters');
     }
 
-    echo '<td class="smallCol"><i class="icon-eye-open"></i> ';
-
-    echo $this->Html->link(
-	__('View'),
-	array(
-	    'controller' => 'backups',
-	    'action' => 'view',
-	    $backup['Backup']['id'],
-	    $nasID,
-	)
-    );
-
-    echo '</td>';
-    echo '</tr>';
-
-    $n++;
+    echo ').';
+?>
+        </td>
+    </tr>
+<?php
 }
 ?>
-	<?php else: ?>
-		<tr>
-		<td colspan="<?php echo count($columns) + 4; ?>" style="text-align: center">
-<?php
-echo __('No backups found').' (';
-
-if(count($this->params['url']) > 0)
-    echo $this->Html->link(__('retry with no filters'), '.');
-else
-    echo __('no filters');
-
-echo ').';
-?>
-		</td>
-		</tr>
-	<?php endif; ?>
 	</tbody>
 </table>
 
 <?php
-
-echo $this->Form->button('<i class="icon-zoom-in icon-white"></i> ' . __('Compare'),
+echo $this->Form->button(
+    '<i class="icon-zoom-in icon-white"></i> ' . __('Compare'),
     array(
 	'type' => 'submit',
 	'escape' => false,
@@ -222,8 +280,5 @@ echo $this->Form->hidden('nas',
 
 echo $this->Form->end();
 
-?>
-
-<?php
-    echo $this->element('paginator_footer');
+echo $this->element('paginator_footer');
 ?>
