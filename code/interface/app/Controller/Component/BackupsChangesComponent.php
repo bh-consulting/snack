@@ -11,25 +11,16 @@ class BackupsChangesComponent extends Component {
     public function areThereChangesUnwrittenInThisNAS($nas) {
         $backup = new Backup();
 
-        $lastWrmem = $backup->find('first', array(
+        $writtenCount = $backup->find('count', array(
             'conditions' => array(
-                'nas'    => $nas['Nas']['nasname'],
-                'action' => 'wrmem'
+                "id = (SELECT MAX(id) FROM backups GROUP BY nas HAVING nas='"
+		    . Sanitize::escape($nas['Nas']['nasname'])
+		    . "')",
+                'action !=' => 'wrmem'
             ),
-            'fields'     => array('id'),
-            'order'      => array('id DESC'),
-            'limit'      => 1
         ));
 
-        $unwrittenCount = $backup->find('count', array(
-            'conditions' => array(
-                'nas'    => $nas['Nas']['nasname'],
-                'id >'   => !empty($lastWrmem['Backup']) ? $lastWrmem['Backup']['id'] : 0
-            ),
-            'fields'     => array('id')
-        ));
-
-        return $unwrittenCount > 0;
+        return $writtenCount != 0;
     }
 
     public function backupsUnwrittenInThisNAS($nas, $inverse = false) {
@@ -46,6 +37,7 @@ class BackupsChangesComponent extends Component {
         ));
 
         $condition = ($inverse) ? 'id <' : 'id >';
+
         $unwrittenBackups = $backup->find('all', array(
             'conditions' => array(
                 'nas'    => $nas['Nas']['nasname'],
@@ -58,15 +50,16 @@ class BackupsChangesComponent extends Component {
     }
 
     public function areThereChangesUnwritten() {
-        $nas = new Nas();
-        $allnas = $nas->find('all');
+        $backup = new Backup();
 
-        foreach($allnas AS $nas) {
-            if($this->areThereChangesUnwrittenInThisNAS($nas))
-                return true;
-        }
+        $writtenNasCount = $backup->find('count', array(
+            'conditions' => array(
+                'id IN (SELECT MAX(id) FROM backups GROUP BY nas)',
+                'action !=' => 'wrmem'
+            ),
+        ));
 
-        return false;
+        return $writtenNasCount != 0;
     }
 }
 
