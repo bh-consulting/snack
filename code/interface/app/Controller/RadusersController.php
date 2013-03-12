@@ -404,21 +404,23 @@ class RadusersController extends AppController {
      * Display user add form.
      *
      * @param $success - determine if user was well added.
-     * @param $cert - certificate path if user added has a certificate.
      */
     private function add($success) {
         if($this->request->is('post')){
             if ($success) {
+
                 if (isset($this->request->data['Raduser']['is_cert'])
                     && $this->request->data['Raduser']['is_cert'] == 1
                 ) {
                     $certs = Utils::getUserCertsPath(
                         $this->request->data['Raduser']['username']
                     );
+
                     $this->Session->setFlash(__(
                         'New user added. His certificates are %s and %s.',
-                        $certs['public'],
-                        $certs['key'],
+
+                        '<a href="certs/get_cert/' . $this->request->data['Raduser']['username'] .'_cert.pem">' . $certs['public'] . '</a>',
+                        '<a href="certs/get_cert/' . $this->request->data['Raduser']['username'] .'_key.pem">' . $certs['key'] . '</a>',
                         'flash_success'
                     ));
                 } else {
@@ -1050,16 +1052,16 @@ class RadusersController extends AppController {
         $result = Utils::shell($command);
         Utils::userlog(__('created certificate for user %s', $userID));
 
-        switch ($result['code']) {
-        case 1:
-            throw new RSAKeyException($userID, $username);
-        case 2:
-            throw new CertificateException($userID, $username);
-        case 3:
-            throw new CertificateSignException($userID, $username);
-        case 4:
-            throw new CRLException($userID, $username);
-        }
+        // switch ($result['code']) {
+        // case 1:
+        //     throw new RSAKeyException($userID, $username);
+        // case 2:
+        //     throw new CertificateException($userID, $username);
+        // case 3:
+        //     throw new CertificateSignException($userID, $username);
+        // case 4:
+        //     throw new CRLException($userID, $username);
+        // }
     }
 
     /*
