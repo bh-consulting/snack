@@ -21,6 +21,7 @@ db_name=$(extract_db database)
 db_host=$(extract_db host)
 db_prefix=$(extract_db prefix)
 
+
 read NAS_IP_ADDRESS
 for i in {1..3}; do read void; done
 read ccmHistoryEventCommandSource
@@ -61,7 +62,7 @@ if [[\
 
     ~snack/scripts/backup_create.sh
 
-# Trap tftp done
+# Trap tftp done when receiving configuration (backup).
 elif [[\
     "$ccmHistoryEventCommandSource" =~ $oid_ccmHistoryEventCommandSource.[0-9]+\ 2 \
     && "$ccmHistoryEventConfigSource" =~ $oid_ccmHistoryEventConfigSource.[0-9]+\ 3 \
@@ -77,6 +78,22 @@ elif [[\
 
     /usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
 	-e "$(printf "$sql_tftpdone" $commit)"
+    #if a restaure is currently waiting, let it continue
+    if test -e $NAS_IP_ADDRESS.pid
+    then
+	sonPID=`cat $NAS_IP_ADDRESS.pid`
+	kill -10 $sonPID
+    fi
+
+# Trap tftp done when sending configuration (restore).
+elif [[\
+    "$ccmHistoryEventCommandSource" =~ $oid_ccmHistoryEventCommandSource.[0-9]+\ 2 \
+    && "$ccmHistoryEventConfigSource" =~ $oid_ccmHistoryEventConfigSource.[0-9]+\ 6 \
+    && "$ccmHistoryEventConfigDestination" =~ $oid_ccmHistoryEventConfigDestination.[0-9]+\ 4 \
+]]; then
+    
+    cd ~snack/backups.git/
+    rm $NAS_IP_ADDRESS.pid
 fi
 
 exit 0

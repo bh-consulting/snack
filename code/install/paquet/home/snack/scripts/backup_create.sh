@@ -8,11 +8,19 @@ function extract_db() {
 }
 
 function backup() {
-    /usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
-	-e "$(printf "$sqline" $1 ${USER_NAME//\"})"
+    if [ $1 = restore ]
+    then
+    	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
+		-e "$(printf "$sqline_restore" $1 ${USER_NAME//\"} $RESTORE_VALUE)"
+
+    else
+    	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
+		-e "$(printf "$sqline" $1 ${USER_NAME//\"})"
+    fi
 
     /usr/bin/snmpset -t 5 -c private -v 2c $NAS_IP_ADDRESS\
 	$oid_writeNet.$ip_address s $NAS_IP_ADDRESS
+
 }
 
 ## VARIABLES
@@ -34,6 +42,12 @@ read sqline <<SQL
     VALUES(NOW(), '$NAS_IP_ADDRESS', '%s', '%s')\\
 SQL
 
+read sqline_restore <<SQL
+    INSERT INTO\\
+    ${db_prefix}backups(datetime, nas, action, users,restore)\\
+    VALUES(NOW(), '$NAS_IP_ADDRESS', '%s', '%s', '%s')\\
+SQL
+
 ## PROGRAM
 
 case "$ACCT_STATUS_TYPE" in
@@ -47,6 +61,10 @@ case "$ACCT_STATUS_TYPE" in
 
     Write)
 	backup wrmem
+    ;;
+
+    Restore)
+	backup restore
     ;;
 esac
 

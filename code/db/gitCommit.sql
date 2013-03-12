@@ -5,5 +5,6 @@ CREATE TABLE radius.backups (
   nas varchar(100)  NOT NULL,
   action varchar(50) NOT NULL ,
   users varchar(256) NOT NULL ,
+  restore varchar(64) DEFAULT NULL,
   PRIMARY KEY  (id)
 ) ;
