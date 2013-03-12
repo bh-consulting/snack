@@ -2,7 +2,7 @@
 
 if($nas['id'] != -1) {
     $nas = $this->Html->link(
-	"<i class='icon-hdd' title='{$nas['ip']}'></i>&nbsp;{$nas['name']}",
+	"<span title='{$nas['ip']}'><i class='icon-hdd'></i>&nbsp;{$nas['name']}</span>",
 	array(
 	    'controller' => 'nas',
 	    'action' => 'view',
@@ -13,7 +13,7 @@ if($nas['id'] != -1) {
 	)
     );
 } else {
-    $nas = "<span class='unknown'><i class='icon-hdd icon-red' title='{$nas['ip']}'></i>&nbsp;{$nas['name']}</span>";
+    $nas = "<span class='unknown'><i class='icon-hdd icon-red'></i>&nbsp;{$nas['ip']}</span>";
 }
 
 echo $nas;
