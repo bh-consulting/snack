@@ -21,6 +21,10 @@ $columns = array(
     'username' => array(
         'text' => __('Username'),
     ),
+    'role' => array(
+        'text' => __('Role'),
+        'fit' => true,
+    ),
     'comment' => array(
         'text' => __('Comment'),
     ),
@@ -40,11 +44,7 @@ $columns = array(
         'text' => __('Cisco'),
         'fit' => true,
     ),
-    'role' => array(
-        'text' => __('Role'),
-        'fit' => true,
-    ),
-    'view' => array(
+   'view' => array(
         'id' => 'id',
         'text' => __('View'),
         'fit' => true,
@@ -232,7 +232,7 @@ if (!empty($radusers)) {
             }
 
             if (isset($info['fit']) && $info['fit']) {
-                echo '<td class="fit">';
+		echo '<td class="fit"'.($field == 'role' ? ' style="font-weight: bold"' : '').'>';
             } else {
                 echo '<td>';
             }
