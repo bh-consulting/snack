@@ -67,12 +67,19 @@ echo $this->element('filters_panel', array(
     'controller' => 'nas/index',
     'inputs' => array(
         array(
+            'name' => 'writemem',
+            'label' => __('Synchronization'),
+            'multiple' => 'checkbox',
+            'type' => 'checkgroup check-horizontal',
+            'escape' => false,
+        ),
+        array(
             'name' => 'text',
             'label' => __('Contains (accept regex)'),
             'autoComplete' => 'true',
-        ))
+        ),
     )
-);
+));
 
 echo $this->element(
     'delete_links',

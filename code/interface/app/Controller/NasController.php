@@ -31,6 +31,55 @@ class NasController extends AppController {
         unset($this->Nas->validate['shortname']['notEmpty']['required']);
         unset($this->Nas->validate['secret']['notEmpty']['required']);
     }
+
+    public function getRegexSynchronisation($args = array()) {
+        if (!empty($args['input'])) {
+            $data = &$this->request->data['Nas'][$args['input']];
+            $regex = '(1 = 1';
+            $ids = array();
+
+            foreach ((array)$data as $choice) {
+                switch ($choice) {
+                case 'changed':
+                    $ids = array_merge($ids, (array)$this->getUnwrittenNas());
+                    break;
+                case 'notchanged':
+                    $ids = array_merge($ids, (array)$this->getUnwrittenNas(true));
+                    break;
+                }
+            }
+
+            if (!empty($ids)) {
+                $regex .= ' AND id IN ('
+                    . implode($ids, ',')
+                    . ')';
+            }
+
+            $regex .= ")";
+
+            if (!empty($regex) && $regex != '(1 = 1)') {
+                return $regex;
+            }
+        }
+    }
+
+    public function getUnwrittenNas($inverse = false) {
+        $allnas = $this->Nas->find('all');
+
+    	$unwrittenIds = array();
+
+    	foreach ($allnas as $nas) {
+            $changes = $this->BackupsChanges
+                ->areThereChangesUnwrittenInThisNAS($nas);
+            if ((!$inverse && $changes)
+                || ($inverse && !$changes)
+            ) {
+                $unwrittenIds[] = $nas['Nas']['id'];
+            }
+    	}
+
+        return $unwrittenIds;
+    }
     
     public function index() {
         $this->MultipleAction->process(
@@ -60,16 +109,26 @@ class NasController extends AppController {
             'ahead' => array('nasname','shortname'),
         ));
 
-        $allnas = $this->Filters->paginate('nas');
+        $this->Filters->addComplexConstraint(array(
+            'select' => array(
+                'items' => array(
+                    'notchanged' => '<i class="icon-camera icon-green"></i> '
+                    . __('Synchronized'),
+                    'changed' => ' <i class="icon-camera icon-red"></i> '
+                    . __('Not synchronized'),
+                ),
+                'input' => 'writemem',
+                'title' => false,
+            ),
+            'callback' => array(
+                'getRegexSynchronisation',
+                array('input' => 'writemem'),
+            )
+        ));
 
-    	$unwrittenIds = array();
+        $this->Filters->paginate('nas');
 
-    	foreach($allnas AS $nas) {
-    	    if($this->BackupsChanges->areThereChangesUnwrittenInThisNAS($nas))
-        		$unwrittenIds[] = $nas['Nas']['id'];
-    	}
-
-    	$this->set('unwrittenids', $unwrittenIds);
+    	$this->set('unwrittenids', $this->getUnwrittenNas());
     }
 
     public function view($id = null) {

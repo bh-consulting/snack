@@ -31,6 +31,7 @@
 			'label' => $input['label'],
 			'class' => isset($input['type']) ? $input['type'] : null,
 			'multiple' => isset($input['multiple']) ? $input['multiple'] : false,
+			'escape' => isset($input['escape']) ? $input['escape'] : true,
 		);
 
         $data = $input['name'] . 'Data';

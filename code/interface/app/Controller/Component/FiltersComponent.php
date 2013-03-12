@@ -48,10 +48,37 @@ class FiltersComponent extends Component {
             $constraint .= ")";
 
             if (!empty($constraint) && $constraint != "(1 = 0)") {
-                array_push(
-                    $this->constraints,
-                    $constraint
-                );
+                $this->constraints[] = $constraint;
+            }
+        }
+    }
+
+    public function addComplexConstraint($options) {
+        foreach ($options as $action=>$params) {
+            switch ($action) {
+            case 'select':
+                $this->addSelectConstraint($params);
+                break;
+            case 'boolean':
+                $this->addBooleanConstraint($params);
+                break;
+            case 'complex':
+                $this->addComplexConstraint($params);
+                break;
+            case 'slider':
+                $this->addSliderConstraint($params);
+                break;
+            case 'string':
+                $this->addStringConstraint($params);
+                break;
+            case 'callback':
+                if (!empty($params[0])
+                    && !is_array($params[0])
+                    && isset($params[1])
+                ) {
+                    $this->constraints[] = $this->controller->$params[0]($params[1]);
+                }
+                break;
             }
         }
     }
