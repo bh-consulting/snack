@@ -26,6 +26,12 @@ class NasController extends AppController {
         return parent::isAuthorized($user);
     }
 
+    public function beforeValidateForFilters() {
+        unset($this->Nas->validate['nasname']['notEmpty']['required']);
+        unset($this->Nas->validate['shortname']['notEmpty']['required']);
+        unset($this->Nas->validate['secret']['notEmpty']['required']);
+    }
+    
     public function index() {
         $this->MultipleAction->process(
             array(

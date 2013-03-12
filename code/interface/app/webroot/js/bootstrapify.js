@@ -36,6 +36,15 @@ var Boostrapify = {
 		});
 		$('label.checkbox').wrap('<div class="controls"/>');
 		$('label:empty').remove();
+        $('.checkgroup').children('label').each(function() {
+			var content = $(this).html();
+            $(this).removeClass('control-label').addClass('checkbox inline');
+            $(this).prev('input').prependTo($(this));
+        });
+        $('div.select').each(function() {
+            $(this).children('.checkgroup').wrapAll('<div class="controls"/>');
+        });
+        $('div.check-horizontal').contents().unwrap().wrap("<span class='checkgroup check-horizontal'/>");
 
 		$('input[type="radio"]').wrap('<label class="radio">');
 		$('div.radio').removeClass('radio');

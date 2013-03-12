@@ -129,6 +129,10 @@ div.menutopphone {
     margin: 0 auto 0;
 }
 
+.check-horizontal + .check-horizontal {
+    margin-left: 20px;
+}
+
 .next {
     float: left;
     margin-left: 10px;

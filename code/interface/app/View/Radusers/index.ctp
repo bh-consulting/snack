@@ -60,30 +60,18 @@ $columns = array(
         'fit' => true,
     ),
 );
+
+if(AuthComponent::user('role') != 'superadmin'){
+    unset($columns['delete']);
+}
+if(!in_array(AuthComponent::user('role'), array('superadmin', 'admin'))){
+    unset($columns['edit']);
+}
 ?>
 
 <h1><? echo __('Users'); ?></h1>
 
 <?php
-echo $this->element('filters_panel', array(
-    'controller' => 'radusers/index',
-    'inputs' => array(
-	array(
-	    'name' => 'authtype',
-	    'label' => __('Authentication type'),
-	),
-	array(
-	    'name' => 'role',
-	    'label' => __('Role'),
-	),
-	array(
-	    'name' => 'text',
-	    'label' => __('Contains (accept regex)'),
-        'autoComplete' => true,
-	))
-    )
-);
-
 $dropdownUsersButtonItems = array(
     __('Active') => array(
         $this->Html->link(
@@ -148,6 +136,28 @@ echo $this->element('dropdownButton', array(
     'items' => $dropdownCsvButtonItems
 ));
 
+echo $this->element('filters_panel', array(
+    'controller' => 'radusers/index',
+    'inputs' => array(
+        array(
+            'name' => 'authtype',
+            'label' => __('Authentication type'),
+            'multiple' => 'checkbox',
+            'type' => 'checkgroup check-horizontal',
+        ),
+        array(
+            'name' => 'role',
+            'label' => __('Role'),
+            'multiple' => 'checkbox',
+            'type' => 'checkgroup check-horizontal',
+        ),
+        array(
+            'name' => 'text',
+            'label' => __('Contains (accept regex)'),
+            'autoComplete' => true,
+        ))
+    )
+);
 ?>
 
 <?php
@@ -166,15 +176,6 @@ echo $this->element('MultipleAction', array('action' => 'start'));
     <tr>
 <?php
 foreach ($columns as $field => $info) {
-    if (($field == 'edit'
-        && !in_array(AuthComponent::user('role'), array('superadmin', 'admin')))
-        ||
-        ($field == 'delete'
-        && AuthComponent::user('role') != 'superadmin')
-    ) {
-        break;
-    }
-
     if (isset($info['fit']) && $info['fit']) {
         echo '<th class="fit">';
     } else {
@@ -220,17 +221,6 @@ if (!empty($radusers)) {
         echo '<tr>';
 
         foreach ($columns as $field=>$info) {
-            if (($field == 'edit'
-                && (!in_array(AuthComponent::user('role'), array('superadmin', 'admin'))
-                    || (AuthComponent::user('role') === 'admin'
-                    && $rad['Raduser']['type'] === 'snack')))
-                ||
-                ($field == 'delete'
-                && AuthComponent::user('role') != 'superadmin')
-            ) {
-                break;
-            }
-
             if (isset($info['fit']) && $info['fit']) {
 		echo '<td class="fit"'.($field == 'role' ? ' style="font-weight: bold"' : '').'>';
             } else {
@@ -260,14 +250,24 @@ if (!empty($radusers)) {
                 );
                 break;
             case 'edit':
-                echo '<i class="icon-edit"></i> ';
-                echo $this->Html->link(
-                    __('Edit'),
-                    array(
-                        'action' => 'edit_' . $user['Raduser']['type'],
-                        $user['Raduser'][$info['id']]
-                    )
-                );
+                if (AuthComponent::user('role') === 'admin'
+                    && $user['Raduser']['type'] === 'snack'
+                ) {
+                    echo '<span class="unknown" title="'
+                        . __('Not allowed!')
+                        . '">'
+                        . '<i class="icon-edit icon-red"></i> '
+                        . __('Edit') . '</span>';
+                } else {
+                    echo '<i class="icon-edit"></i> ';
+                    echo $this->Html->link(
+                        __('Edit'),
+                        array(
+                            'action' => 'edit_' . $user['Raduser']['type'],
+                            $user['Raduser'][$info['id']]
+                        )
+                    );
+                }
                 break;
             case 'delete':
                 echo '<i class="icon-remove"></i> ';
@@ -281,14 +281,7 @@ if (!empty($radusers)) {
                 );
                 break;
             case 'id':
-                echo $this->Html->link(
-                    h($user['Raduser'][$field]),
-                    array(
-                        'controller' => 'Radusers',
-                        'action' => 'view_' . $user['Raduser']['type'],
-                        $user['Raduser'][$info['id']]
-                    )
-                );
+                echo '<strong>' . h($user['Raduser'][$field]) . '</strong>';
                 break;
             case (preg_match("#is_(cert|loginpass|mac|cisco)#i", $field)
                 ? $field : !$field):

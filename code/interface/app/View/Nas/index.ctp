@@ -52,6 +52,14 @@ if(AuthComponent::user('role') != 'superadmin'){
 <h1><?php echo __('NAS'); ?></h1>
 
 <?php
+if(AuthComponent::user('role') == 'superadmin'){
+    echo $this->Html->link(
+        '<i class="icon-hdd icon-white"></i> ' . __('Add a NAS'),
+        array('controller' => 'nas', 'action' => 'add'),
+        array('escape' => false, 'class' => 'btn btn-primary')
+    );
+}
+
 /*
  * Show a filter panel.
  */
@@ -65,14 +73,6 @@ echo $this->element('filters_panel', array(
         ))
     )
 );
-
-if(AuthComponent::user('role') == 'superadmin'){
-    echo $this->Html->link(
-        '<i class="icon-hdd icon-white"></i> ' . __('Add a NAS'),
-        array('controller' => 'nas', 'action' => 'add'),
-        array('escape' => false, 'class' => 'btn btn-primary')
-    );
-}
 
 echo $this->element(
     'delete_links',

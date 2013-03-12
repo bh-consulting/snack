@@ -101,6 +101,10 @@ class RadusersController extends AppController {
         $this->Auth->allow('login', 'logout');
         parent::beforeFilter();
     }
+
+    public function beforeValidateForFilters() {
+        unset($this->Raduser->validate['username']['notEmpty']['required']);
+    }
     
     /**
      * Display users list.
@@ -125,6 +129,7 @@ class RadusersController extends AppController {
             }
         }
 
+        // Filters
         $this->Filters->addStringConstraint(array(
             'fields' => array(
                 'id',
@@ -133,6 +138,29 @@ class RadusersController extends AppController {
             ),
             'input' => 'text',
             'ahead' => array('username'),
+        ));
+
+        $this->Filters->addBooleanConstraint(array(
+            'fields' => array('is_loginpass', 'is_mac', 'is_cisco', 'is_cert'),
+            'input' => 'authtype',
+            'items' => array(
+                'is_cisco' => __('Cisco'),
+                'is_mac' => __('MAC'),
+                'is_loginpass' => __('Login/Password'),
+                'is_cert' => __('Certificate'),
+            ),
+        ));
+
+        $this->Filters->addSelectConstraint(array(
+            'fields' => array('role'),
+            'items' => array(
+                'user' => __('User'),
+                'tech' => __('Technician'),
+                'admin' => __('Admin'),
+                'superadmin' => __('Super Admin'),
+            ),
+            'input' => 'role',
+            'title' => false,
         ));
 
         $radusers = $this->Filters->paginate('radusers');

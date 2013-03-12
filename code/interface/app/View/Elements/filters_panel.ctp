@@ -29,7 +29,8 @@
 	foreach ($inputs as $input) {
 		$options = array(
 			'label' => $input['label'],
-			'class' => isset($input['type']) ? $input['type'] : null
+			'class' => isset($input['type']) ? $input['type'] : null,
+			'multiple' => isset($input['multiple']) ? $input['multiple'] : false,
 		);
 
         $data = $input['name'] . 'Data';

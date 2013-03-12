@@ -19,6 +19,10 @@ class FiltersComponent extends Component {
             $this->controller->params['url']
         );
 
+        if (in_array('beforeValidateForFilters', $this->controller->methods)) {
+            $this->controller->beforeValidateForFilters();
+        }
+
         if ($this->controller->{$this->modelName}->validates()) {
             $this->controller->set('filtersPanOpen', false);
         } else {
@@ -27,41 +31,22 @@ class FiltersComponent extends Component {
     }
 
     private function addConstraint($template, $fields, $value) {
-        if (!empty($fields) && !empty($value)) {
-            if (is_array($fields)) {
-                $constraint = "(1=0";
-                foreach ($fields as $field) {
-                    if (!empty($field)) {
-                        $atom = str_replace(
-                            "%field",
-                            $field,
-                            $template
-                        );
-                        $atom = str_replace(
-                            "%value",
-                            Sanitize::escape($value),
-                            $atom
-                        );
+        if (isset($fields) && isset($value)) {
+            $constraint = "(1 = 0";
+            foreach ((array)$fields as $field) {
+                if (!empty($field) && !is_array($value) && !empty($value)) {
+                    $atom = preg_replace(
+                        array("/%field/", "/%value/"),
+                        array($field, Sanitize::escape($value)),
+                        $template
+                    );
 
-                        $constraint .= " OR " . $atom;
-                    }
+                    $constraint .= " OR " . $atom;
                 }
-                $constraint .= ")";
-            } else {
-                $atom = str_replace(
-                    "%field",
-                    $fields,
-                    $template
-                );
-                $atom = str_replace(
-                    "%value",
-                    Sanitize::escape($value),
-                    $atom
-                );
-                $constraint = "(" . $atom . ")";
             }
+            $constraint .= ")";
 
-            if (!empty($constraint) && $constraint != "(1=0)") {
+            if (!empty($constraint) && $constraint != "(1 = 0)") {
                 array_push(
                     $this->constraints,
                     $constraint
@@ -70,30 +55,81 @@ class FiltersComponent extends Component {
         }
     }
 
-    public function addSelectConstraint($options) {
-        $data =  $this->controller->request->data[$this->modelName];
-        $title = empty($options['title']) ? __('Select an option..')
-            : $options['title'];
-        $items = array();
-        $emptyValue = isset($options['empty']) ? $options['empty'] : false;
+    public function addBooleanConstraint($options) {
+        if (isset($options['input']) && !is_array($options['input'])) {
+            $data = &$this->controller->request
+                ->data[$this->modelName][$options['input']];
+            $url = $this->controller->params['url'];
 
-        if (!empty($options['input']) && !empty($options['fields'])) {
+            // Set the list of choices.
+            if (isset($options['items'])) {
+                $this->controller->set(
+                    $options['input'] . 's',
+                    $options['items']
+                );
+            }
+
+            // Set default value.
             if (isset($options['default'])
-                && empty($this->controller->params['url'][$options['input']])
+                && !isset($url[$options['input']])
             ) {
-                $data[$options['input']] = $options['default'];
+                foreach ((array)$options['default'] as $default) {
+                    $data[] = $default;
+                }
             }
 
-            $items[''] = $title;
+            // Filter results.
+            if (!empty($options['fields'])
+                && isset($data)
+            ) {
+                $selected = array();
 
-            if (!empty($options['options'])) {
-                $items = array_merge($items, $options['options']);
+                foreach ((array)$options['fields'] as $field) {
+                    if (!is_array($field) && in_array($field, (array)$data)) {
+                        $selected[] = $field;
+                    }
+                }
+
+                $this->addStringConstraint(array(
+                    'fields' => $selected,
+                    'input' => $options['input'],
+                    'value' => '1',
+                    'strict' => true,
+                ));
+            }
+        }
+    }
+
+    public function addSelectConstraint($options) {
+        if (isset($options['input']) && !is_array($options['input'])) {
+            $data =  &$this->controller->request
+                ->data[$this->modelName][$options['input']];
+            $url = $this->controller->params['url'];
+
+            // Set list of choices.
+            $items = array();
+            $emptyValue = isset($options['empty']) ? $options['empty'] : false;
+
+            if (isset($options['title']) && !is_array($options['title'])) {
+                $title = $options['title'];
+            } else {
+                $title = __('Select an option..');
             }
 
-            if (!empty($options['data'])) {
+            if ($title) {
+                $items[''] = $title;
+            }
+
+            if (isset($options['items'])) {
+                $items = array_merge($items, (array)$options['items']);
+            }
+
+            if (isset($options['data'])) {
+                //TODO: optimize, do one request and clear table after (unique)
                 foreach ((array)$options['data'] as $field) {
-                    $items = array_merge($items, $this->controller
-                        ->{$this->modelName}->find(
+                    $items = array_merge(
+                        $items,
+                        $this->controller->{$this->modelName}->find(
                             'list',
                             array(
                                 'order' => $field . ' ASC',
@@ -105,96 +141,118 @@ class FiltersComponent extends Component {
                 }
             }
 
-            $this->controller->set($options['input'] . 's', $items);
-
             if (!$emptyValue) {
-                $items_tmp = array();
-
                 foreach ($items as $key => $item) {
-                    if (!empty($item)) {
-                        $items_tmp[$key] = $item;
+                    if (empty($item)) {
+                        unset($items[$key]);
                     }
                 }
-
-                $items = $items_tmp;
             }
 
-            $this->addStringConstraint(array(
-                'fields' => $options['fields'],
-                'input' => $options['input'],
-            ));
+            $this->controller->set($options['input'] . 's', $items);
+
+            // Set default value.
+            $strict = isset($options['strict']) ? $options['strict'] : true;
+            if (isset($options['default'])
+                && !isset($url[$options['input']])
+            ) {
+                if (!$strict) {
+                    foreach ((array)$options['default'] as $default) {
+                        $data[] = $default;
+                    }
+                } else {
+                    $default = (array)$options['default'];
+                    $data = array_shift($default);
+                }
+            }
+
+            // Filter results.
+            if (!empty($options['fields'])) {
+                $this->addStringConstraint(array(
+                    'fields' => $options['fields'],
+                    'input' => $options['input'],
+                    'strict' => $strict,
+                ));
+            }
         }
     }
 
+    //TODO: test
     public function addSliderConstraint($options) {
-        $order = isset($options['order']) ? $options['order'] : 'desc';
-        if (!empty($options['input'])
-            && !empty($options['options'])
-            && !empty($options['fields'])
-        ) {
+        if (isset($options['input']) && !is_array($options['input'])) {
+            $data =  &$this->controller->request
+                ->data[$this->modelName][$options['input']];
+            $url = $this->controller->params['url'];
+
+            $order = isset($options['order']) ? $options['order'] : 'desc';
+
+            // Set list of choices.
+            if (isset($options['items'])) {
+                if ($order == 'desc') {
+                    $values = array_reverse($options['items']);
+                } else {
+                    $values = $options['items'];
+                }
+
+                $this->controller->set(
+                    $options['input'] . 's',
+                    (array)$options['items']
+                );
+            } else {
+                $values = array();
+            }
+
+            // Set default value.
             if (isset($options['default'])
-                && empty($this->controller->params['url'][$options['input']])
+                && !isset($url[$options['input']])
             ) {
-                $this->controller->request
-                    ->data[$this->modelName][$options['input']]
-                    = $options['default'];
+                $data = $options['default'];
                 $selectedValue = $options['default'];
             } else {
-                $selectedValue = $this->controller
-                    ->params['url'][$options['input']];
+                $selectedValue = $url[$options['input']];
             }
 
+            // Filter results.
             $regex = array();
 
-            if ($order == 'desc') {
-                $values = array_reverse($options['options']);
-            } else {
-                $values = $options['options'];
-            }
-
             foreach (array_keys($values) as $value) {
-                array_push($regex, Sanitize::escape($value));
+                $regex[] = $value;
 
                 if($value == $selectedValue) {
                     break;
                 }
             }
 
-            $this->controller->set(
-                $options['input'] . 's',
-                $options['options']
-            );
-
             $this->addConstraint(
                 "%field REGEXP '^(%value)\$'",
                 $options['fields'],
-                implode('|', $regex)
+                implode($regex, '|')
             );
         }
     }
 
+    //TODO: test
     public function addDatesConstraint($options) {
+        $url = $this->controller->params['url'];
         $patternDate = '/^(?<day>0[1-9]|[1-2]\d|3[01])\/'
             . '(?<mon>0[1-9]|1[12])\/'
             . '(?<year>20\d{2})\s+'
             . '(?<hour>[01]\d|2[0-3]):(?<min>[0-5]\d):(?<sec>[0-5]\d)$/';
 
         if (!empty($options['fields'])) {
-            if (!empty($options['from'])
-                && !empty($this->controller->params['url'][$options['from']])
+            if (isset($options['from'])
+                && isset($url[$options['from']])
                 && preg_match(
                     $patternDate,
-                    $this->controller->params['url'][$options['from']],
+                    $url[$options['from']],
                     $date
                 )
             ) {
-                $template = "%field >= '%value'";
-
                 $this->addConstraint(
-                    $template,
+                    "%field >= '%value'",
                     $options['fields'], 
                     sprintf(
-                        "%d-%d-%d %d:%d:0",
+                        "%d-%d-%d %d:%d:%d",
                         $date['year'],
                         $date['mon'],
                         $date['day'],
@@ -205,21 +263,19 @@ class FiltersComponent extends Component {
                 );
             }
 
-            if (!empty($options['to'])
-                && !empty($this->controller->params['url'][$options['to']])
+            if (isset($options['to'])
+                && isset($url[$options['to']])
                 && preg_match(
                     $patternDate,
-                    $this->controller->params['url'][$options['to']],
+                    $url[$options['to']],
                     $date
                 )
             ) {
-                $template = "%field <= '%value'";
-
                 $this->addConstraint(
-                    $template,
+                    "%field <= '%value'",
                     $options['fields'], 
                     sprintf(
-                        "%d-%d-%d %d:%d:0",
+                        "%d-%d-%d %d:%d:%d",
                         $date['year'],
                         $date['mon'],
                         $date['day'],
@@ -233,49 +289,68 @@ class FiltersComponent extends Component {
     }
 
     public function addStringConstraint($options) {
-        if (!empty($options['fields'])
-            && !empty($options['input'])
-            && (
-                !empty($this->controller->params['url'][$options['input']])
-                || !empty($options['value']))
-        ) {
-            $template = "%field REGEXP '%value'";
+        if (isset($options['input']) && !is_array($options['input'])) {
+            $data = &$this->controller->request
+                ->data[$this->modelName][$options['input']];
+            $url = $this->controller->params['url'];
 
-            $this->addConstraint(
-                $template,
-                $options['fields'],
-                (empty($options['value']) ?
-                $this->controller->params['url'][$options['input']] :
-                $options['value'])
-            );
-        }
+            // Set ahead data.
+            if (isset($options['ahead'])) {
+                $aheadData = array();
 
-        if (!empty($options['ahead'])) {
-            $aheadData = array();
-
-            foreach ((array) $options['ahead'] as $field) {
-                $aheadData = array_merge($aheadData, $this->controller
-                    ->{$this->modelName}->find(
-                        'list',
-                        array(
-                            'fields' => $field,
-                            'group' => $field,
+                foreach ((array)$options['ahead'] as $field) {
+                    $aheadData = array_merge(
+                        $aheadData,
+                        $this->controller->{$this->modelName}->find(
+                            'list',
+                            array(
+                                'fields' => $field,
+                                'group' => $field,
+                                'limit' => 100
+                            )
                         )
-                    )
-                );
+                    );
+                }
+
+                $this->controller->set($options['input'] . 'Data', $aheadData);
             }
 
-            $this->controller->set($options['input'] . 'Data', $aheadData);
+            // Set default value.
+            if (isset($options['default'])
+                && !isset($url[$options['input']])
+            ) {
+                $data = $options['default'];
+            }
+
+            // Filter results.
+            if (!empty($options['fields'])) {
+                if (isset($options['value'])) {
+                    $value = $options['value'];
+                } else if (isset($data)) {
+                    $value = implode((array)$data, '|');
+                }
+
+                if (isset($value)) {
+                    if (isset($options['strict']) && $options['strict']) {
+                        $template = "%field REGEXP '^(%value)\$'";
+                    } else {
+                        $template = "%field REGEXP '%value'";
+                    }
+
+                    $this->addConstraint(
+                        $template,
+                        $options['fields'],
+                        $value
+                    );
+                }
+            }
         }
+
     }
 
     public function addGroupConstraint($groups = array()) {
         if (!empty($groups)) {
-            if (is_array($groups)) {
-                $this->group = array_merge($this->groups, $groups);
-            } else {
-                $this->groups[] = $groups;
-            }
+            $this->group = array_merge($this->groups, (array)$groups);
         }
     }
 
@@ -284,9 +359,7 @@ class FiltersComponent extends Component {
     }
 
     public function paginate($dataTitle = null) {
-        $dataTitle = is_null($dataTitle) ? strtolower($this->modelName).'s'
-            : $dataTitle;
-
+        // Add 'group by' conditions.
         if (isset($this->controller->paginate['group'])) {
             $this->groups = array_merge(
                 $this->controller->paginate['group'],
@@ -296,16 +369,22 @@ class FiltersComponent extends Component {
 
         $this->controller->paginate['group'] = $this->groups;
 
+        // Paginate whith filters conditions.
         $data = $this->controller->paginate(
             $this->modelName,
             $this->constraints
         );
+
+        // Set view data.
+        $dataTitle = is_null($dataTitle) ? strtolower($this->modelName).'s'
+            : $dataTitle;
 
         $this->controller->set(
             $dataTitle,
             $data
         );
 
+        // Set view sort icons.
         $this->controller->set(
             'sortIcons',
             array(

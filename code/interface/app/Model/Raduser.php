@@ -175,7 +175,7 @@ class Raduser extends AppModel {
     }
 
     public function notEmptyIfCiscoOrLoginpass($fields = array(), $was_cisco = null) {
-        $value = array_shift($field);
+        $value = array_shift($fields);
         if (isset($this->data[$this->name][$was_cisco])) {
             $was_cisco = $this->data[$this->name][$was_cisco];
         } else {

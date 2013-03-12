@@ -23,7 +23,7 @@ class LoglinesController extends AppController {
             'fields' => 'level', 
             'input' => 'level',
             'default' => 'info',
-            'options' => $this->Logline->levels,
+            'items' => $this->Logline->levels,
         ));
 
         $this->Filters->addDatesConstraint(array(
