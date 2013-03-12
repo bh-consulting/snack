@@ -129,7 +129,11 @@ $cakeDescription = __('SNACK');
     <hr/>
     <footer>
         <p>
-            <a href="http://bh-consulting.net">b.h. consulting 2013</a>
+	    <a href="http://bh-consulting.net"><?php echo $this->Html->image('BHConsulting.png', array('class' => 'logobh', 'alt' => 'B.H. Consulting')) ?></a>
+	    <p class="copyright">
+		<strong><?php echo __('Authors:') ?></strong> Nicolas BOUGET, <a href="http://julien.guepin.fr">Julien GUÉPIN</a>, Marc PINHÈDE, <a href="http://julien.vaubourg.com">Julien VAUBOURG</a>.<br />
+		<em>Copyright <a href="http://www.gnu.org/licenses/">GPL v3</a> &copy; 2013 <a href="http://bh-consulting.net">B.H. Consulting</a></em>
+	    </p>
             <!-- Flag sprites downloaded from http://flag-sprites.com/ (CC by-sa) -->
             <span class="flags">
                 <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-fr', 'alt' => __('French'))), array('controller' => 'app', 'action' => 'changeLang', 'fre'), array('escape' => false)); ?>

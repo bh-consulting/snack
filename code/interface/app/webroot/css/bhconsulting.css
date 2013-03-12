@@ -147,3 +147,12 @@ div.menutopphone {
 #bar {
     height: 6px;
 }
+
+.logobh {
+	float: left;
+	margin-right: 20px;
+}
+
+.copyright {
+	padding-top: 6px;
+}
