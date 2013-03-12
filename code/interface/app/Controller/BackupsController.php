@@ -5,11 +5,66 @@ class BackupsController extends AppController {
     public $paginate = array('limit' => 10, 'order' => array('id' => 'desc'));
     public $uses = array('Backup');
     public $components = array(
-	'Filters' => array('model' => 'Backup'),
+        'Filters',
         'Users' => array()
     );
 
     private $git = '~snack/backups.git/';
+
+    public function getRegexSynchronisation($args = array()) {
+        if (!empty($args['input']) && !empty($args['nas'])) {
+            $data = &$this->request->data['Backup'][$args['input']];
+            $regex = '(1 = 1';
+            $ids = array();
+            $flag = false;
+
+            foreach ((array)$data as $choice) {
+                switch ($choice) {
+                case 'changed':
+                    $ids = array_merge(
+                        $ids,
+                        (array)$this->getUnwrittenBackups($args['nas'])
+                    );
+                    $flag = true;
+                    break;
+                case 'notchanged':
+                    $ids = array_merge(
+                        $ids,
+                        (array)$this->getUnwrittenBackups($args['nas'], true)
+                    );
+                    $flag = true;
+                    break;
+                }
+            }
+
+            if (!empty($ids)) {
+                $regex .= ' AND id IN ('
+                    . implode($ids, ',')
+                    . '))';
+            } else if ($flag) {
+                $regex = '(1=0)'; 
+            } else {
+                $regex .= ')';
+            }
+
+            if (!empty($regex) && $regex != '(1 = 1)') {
+                return $regex;
+            }
+        }
+    }
+
+    public function getUnwrittenBackups($nas, $inverse = false) {
+        $backups = $this->BackupsChanges
+            ->backupsUnwrittenInThisNAS($nas, $inverse);
+
+		$backupIds = array();
+
+		foreach($backups as $backup) {
+		    $backupIds[] = $backup['Backup']['id'];
+        }
+
+        return $backupIds;
+    }
 
     public function index($id = null) {
 		$this->loadModel('Nas');
@@ -20,13 +75,13 @@ class BackupsController extends AppController {
 		$this->set('nasShortname', $nas['Nas']['shortname']);
 
 		$this->Filters->addDatesConstraint(array(
-		    'column' => 'datetime', 
+		    'field' => 'datetime', 
 		    'from' => 'datefrom',
 		    'to' => 'dateto',
 		));
 
 		$this->Filters->addStringConstraint(array(
-		    'fields' => 'author', 
+		    'fields' => 'users', 
 		    'input' => 'author', 
 		));
 
@@ -34,7 +89,41 @@ class BackupsController extends AppController {
 		    'fields' => 'nas', 
 		    'input' => 'nas', 
 		    'value'  => $nas['Nas']['nasname'],
+            'strict' => true,
 		));
+
+        $this->Filters->addSelectConstraint(array(
+            'fields' => array('action'),
+            'items' => array(
+                'login' => __('Log in'),
+                'logoff' => __('Log off'),
+                'wrmem' => __('Saved'),
+                'restore' => __('Restored'),
+                'boot' => __('Boot'),
+            ),
+            'input' => 'action',
+            'title' => false,
+        ));
+
+        $this->Filters->addComplexConstraint(array(
+            'select' => array(
+                'items' => array(
+                    'notchanged' => '<i class="icon-ok-sign icon-green"></i> '
+                    . __('Synchronized'),
+                    'changed' => ' <i class="icon-exclamation-sign icon-red"></i> '
+                    . __('Not synchronized'),
+                ),
+                'input' => 'writemem',
+                'title' => false,
+            ),
+            'callback' => array(
+                'getRegexSynchronisation',
+                array(
+                    'input' => 'writemem',
+                    'nas' => $nas,
+                ),
+            )
+        ));
 
 		$this->Filters->addGroupConstraint('commit');
 
@@ -49,13 +138,7 @@ class BackupsController extends AppController {
 
 		$this->set('users', $users);
 
-		$notWrittenBackups = $this->BackupsChanges->backupsUnwrittenInThisNAS($nas);
-		$notWrittenIds = array();
-
-		foreach($notWrittenBackups AS $backup)
-		    $notWrittenIds[] = $backup['Backup']['id'];
-
-		$this->set('unwrittenids', $notWrittenIds);
+		$this->set('unwrittenids', $this->getUnwrittenBackups($nas));
     }
 
     private function gitDiffNas($nas, $a, $b = null) {

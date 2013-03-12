@@ -37,14 +37,17 @@ class NasController extends AppController {
             $data = &$this->request->data['Nas'][$args['input']];
             $regex = '(1 = 1';
             $ids = array();
+            $flag = false;
 
             foreach ((array)$data as $choice) {
                 switch ($choice) {
                 case 'changed':
                     $ids = array_merge($ids, (array)$this->getUnwrittenNas());
+                    $flag = true;
                     break;
                 case 'notchanged':
                     $ids = array_merge($ids, (array)$this->getUnwrittenNas(true));
+                    $flag = true;
                     break;
                 }
             }
@@ -52,10 +55,12 @@ class NasController extends AppController {
             if (!empty($ids)) {
                 $regex .= ' AND id IN ('
                     . implode($ids, ',')
-                    . ')';
+                    . '))';
+            } else if ($flag) {
+                $regex = '(1=0)'; 
+            } else {
+                $regex .= ')';
             }
-
-            $regex .= ")";
 
             if (!empty($regex) && $regex != '(1 = 1)') {
                 return $regex;

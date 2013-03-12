@@ -9,63 +9,64 @@ class BackupsChangesComponent extends Component {
     }
 
     public function areThereChangesUnwrittenInThisNAS($nas) {
-	$backup = new Backup();
+        $backup = new Backup();
 
-	$lastWrmem = $backup->find('first', array(
-	    'conditions' => array(
-		'nas'    => $nas['Nas']['nasname'],
-		'action' => 'wrmem'
-	    ),
-	    'fields'     => array('id'),
-	    'order'      => array('id DESC'),
-	    'limit'      => 1
-	));
+        $lastWrmem = $backup->find('first', array(
+            'conditions' => array(
+                'nas'    => $nas['Nas']['nasname'],
+                'action' => 'wrmem'
+            ),
+            'fields'     => array('id'),
+            'order'      => array('id DESC'),
+            'limit'      => 1
+        ));
 
-	$unwrittenCount = $backup->find('count', array(
-	    'conditions' => array(
-		'nas'    => $nas['Nas']['nasname'],
-		'id >'   => !empty($lastWrmem['Backup']) ? $lastWrmem['Backup']['id'] : 0
-	    ),
-	    'fields'     => array('id')
-	));
+        $unwrittenCount = $backup->find('count', array(
+            'conditions' => array(
+                'nas'    => $nas['Nas']['nasname'],
+                'id >'   => !empty($lastWrmem['Backup']) ? $lastWrmem['Backup']['id'] : 0
+            ),
+            'fields'     => array('id')
+        ));
 
-	return $unwrittenCount > 0;
+        return $unwrittenCount > 0;
     }
 
-    public function backupsUnwrittenInThisNAS($nas) {
-	$backup = new Backup();
+    public function backupsUnwrittenInThisNAS($nas, $inverse = false) {
+        $backup = new Backup();
 
-	$lastWrmem = $backup->find('first', array(
-	    'conditions' => array(
-		'nas'    => $nas['Nas']['nasname'],
-		'action' => 'wrmem'
-	    ),
-	    'fields'     => array('id'),
-	    'order'      => array('id DESC'),
-	    'limit'      => 1
-	));
+        $lastWrmem = $backup->find('first', array(
+            'conditions' => array(
+                'nas'    => $nas['Nas']['nasname'],
+                'action' => 'wrmem'
+            ),
+            'fields'     => array('id'),
+            'order'      => array('id DESC'),
+            'limit'      => 1
+        ));
 
-	$unwrittenBackups = $backup->find('all', array(
-	    'conditions' => array(
-		'nas'    => $nas['Nas']['nasname'],
-		'id >'   => !empty($lastWrmem['Backup']) ? $lastWrmem['Backup']['id'] : 0
-	    ),
-	    'fields'     => array('id')
-	));
+        $condition = ($inverse) ? 'id <' : 'id >';
+        $unwrittenBackups = $backup->find('all', array(
+            'conditions' => array(
+                'nas'    => $nas['Nas']['nasname'],
+                $condition   => !empty($lastWrmem['Backup']) ? $lastWrmem['Backup']['id'] : 0
+            ),
+            'fields'     => array('id')
+        ));
 
-	return $unwrittenBackups;
+        return $unwrittenBackups;
     }
 
     public function areThereChangesUnwritten() {
-	$nas = new Nas();
-	$allnas = $nas->find('all');
+        $nas = new Nas();
+        $allnas = $nas->find('all');
 
-	foreach($allnas AS $nas) {
-	    if($this->areThereChangesUnwrittenInThisNAS($nas))
-		return true;
-	}
+        foreach($allnas AS $nas) {
+            if($this->areThereChangesUnwrittenInThisNAS($nas))
+                return true;
+        }
 
-	return false;
+        return false;
     }
 }
 

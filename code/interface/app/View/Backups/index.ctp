@@ -15,27 +15,40 @@ $columns = array(
 
 <?php
 echo $this->element('filters_panel', array(
-    'controller' => 'backups/index',
+    'controller' => 'backups/index/' . $nasID,
     'inputs' => array(
-	array(
-	    'name' => 'datefrom',
-	    'label' => __('From'),
-	    'type' => 'datetimepicker',
-	    'options' => array('id' => 'datefrom')
-	),
-	array(
-	    'name' => 'dateto',
-	    'label' => __('To'),
-	    'type' => 'datetimepicker',
-	    'options' => array('id' => 'dateto')
-	),
-	array(
-	    'name' => 'users',
-	    'label' => __('User(s) contains (accept regex)'),
-	    'options' => array('id' => 'users')
-	))
+        array(
+            'name' => 'datefrom',
+            'label' => __('From'),
+            'type' => 'datetimepicker',
+            'options' => array('id' => 'datefrom')
+        ),
+        array(
+            'name' => 'dateto',
+            'label' => __('To'),
+            'type' => 'datetimepicker',
+            'options' => array('id' => 'dateto')
+        ),
+        array(
+            'name' => 'author',
+            'label' => __('Author contains (accept regex)'),
+            'options' => array('id' => 'author')
+        ),
+        array(
+            'name' => 'action',
+            'label' => __('Action'),
+            'multiple' => 'checkbox',
+            'type' => 'checkgroup check-horizontal',
+        ),
+        array(
+            'name' => 'writemem',
+            'label' => __('Synchronization'),
+            'multiple' => 'checkbox',
+            'type' => 'checkgroup check-horizontal',
+            'escape' => false,
+        ),
     )
-);
+));
 
 echo $this->Form->create('SelectDiff', array(
 	'url' => array(

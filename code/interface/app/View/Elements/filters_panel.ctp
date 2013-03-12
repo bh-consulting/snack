@@ -2,11 +2,25 @@
 	echo '<div class="toggleBlock" onclick="toggleBlock(this)">';
 	echo $this->Html->link(__('Filters'), '#');
 
+    $url = array();
+	$params = explode('/', $controller);
+
+    if (isset($params[0])) {
+        $url['controller'] = $params[0];
+    }
+    if (isset($params[1])) {
+        $url['action'] = $params[1];
+    }
+    if (isset($params[2])) {
+        $url[] = $params[2];
+    }
+
+
 	if (count($this->params['url']) > 0) {
 		echo ' - ';
         echo $this->Html->link(
             __('No filters'),
-            '.',
+            $url,
             array('id' => 'nofilters')
         );
 	}
@@ -14,12 +28,8 @@
 	echo '<i class="icon-chevron-down"></i>';
 	echo '</div>';
 
-	$controller = explode('/', $controller);
 	echo $this->Form->create(null, array(
-		'url' => array(
-			'controller' => $controller[0],
-			'action' => $controller[1]
-		),
+		'url' => $url,
 		'type' => isset($method) ? $method : 'get',
 		'id' => 'filtersForm',
 		'class' => 'well',
