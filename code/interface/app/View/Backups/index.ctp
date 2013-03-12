@@ -117,11 +117,11 @@ for($i = 0; $i < count($backups); $i++) {
 
 	if ($field == 'id') {
 	    if(in_array($backup['Backup']['id'], $unwrittenids)) {
-		echo '<td class="smallCol fit" title="' . __('Configuration NOT loaded if the device restart.') .'">';
-		echo '<i class="icon-exclamation-sign icon-red"></i>';
+		echo '<td class="smallCol fit">';
+		echo '<i class="icon-exclamation-sign icon-red" title="' . __('Configuration NOT loaded if the device restart.') .'"></i>';
 	    } else {
-		echo '<td class="smallCol fit" title="' . __('Seems saved as starting configuration.') .'">';
-		echo '<i class="icon-ok-sign icon-green"></i>';
+		echo '<td class="smallCol fit">';
+		echo '<i class="icon-ok-sign icon-green" title="' . __('Seems saved as starting configuration.') .'"></i>';
 	    }
 
 	    echo '</td>';

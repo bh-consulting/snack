@@ -102,13 +102,13 @@ var Boostrapify = {
 		// DATETIMEPICKER
 		$('.datetimepicker').wrap('<div class="input-append date ' +
 			'datetimepickerwrap" />');
-		$('.datetimepicker').attr('data-format', 'dd/MM/yyyy hh:mm:ss');
+		$('.datetimepicker').attr('data-format', 'yyyy-MM-dd hh:mm:ss');
 		$('<span class="add-on datetimepickeradd" />')
 		.insertAfter('.datetimepicker');
 		$('.datetimepickeradd').append('<i data-time-icon="icon-time" ' +
 			'data-date-icon="icon-calendar" />');
 		$('.datetimepickerwrap').datetimepicker({
-			language: 'fr'
+			language: 'en'
 		});
 
 		// SLIDER
@@ -154,19 +154,22 @@ var Boostrapify = {
 			});
 		}
 
-		// slider max
+		// SLIDER MAX
 		$('<div class="slider"><div></div><span></span></div>')
 		.insertAfter('.slidermax');
 		$('.slidermax + div :first-child').each(function(index, elt){
 			applySlider(index, elt, 'max');
 		});
 
-		// slider min
+		// SLIDER MIN
 		$('<div class="slider"><div></div><span></span></div>')
 		.insertAfter('.slidermin');
 		$('.slidermin + div :first-child').each(function(index, elt){
 			applySlider(index, elt, 'min');
 		});
+
+		// TOOLTIPS
+		$('*[title]').tooltip();
 	}
 };
 

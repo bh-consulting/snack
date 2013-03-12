@@ -66,6 +66,21 @@ class RadgroupsController extends AppController {
                         'conditions' => array('groupname' => $group['Radgroup']['groupname']),
                     )
                 );
+                $radgc = new Radgroupcheck();
+		$groupcheck = $radgc->find(
+		    'first',
+		    array(
+			'fields' => 'value',
+			'conditions' => array(
+			    'groupname' => $group['Radgroup']['groupname'],
+			    'attribute' => 'Expiration'
+			)
+		    )
+		);
+		if(!empty($groupcheck))
+		    $group['Radgroup']['expiration'] = $groupcheck['Radgroupcheck']['value'];
+		else
+		    $group['Radgroup']['expiration'] = -1;
             }
         }
 

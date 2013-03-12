@@ -175,6 +175,22 @@ if (!empty($radgroups)) {
                     )
                 );
                 break;
+            case 'groupname':
+		if($group['Radgroup']['expiration'] != -1) {
+		    $expiration = new DateTime($group['Radgroup']['expiration']);
+		    $now = new DateTime();
+		    $interval = $now->diff($expiration);
+
+		    if($interval->format('%R') == '-')
+			echo '<i class="icon-warning-sign icon-red" title="';
+			echo __('Group expired since the %s', $this->element('formatDates', array('date' => $group['Radgroup']['expiration'])));
+			echo '"></i> ';
+		}
+
+                echo h($group['Radgroup'][$field]);
+
+                break;
+
             case 'id':
             case 'membercount':
                 echo '<strong>' . h($group['Radgroup'][$field]) . '</strong>';

@@ -157,3 +157,7 @@ div.menutopphone {
 .copyright {
 	padding-top: 6px;
 }
+
+.tooltip {
+    white-space: normal;
+}
