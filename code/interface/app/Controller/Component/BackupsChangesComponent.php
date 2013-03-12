@@ -24,7 +24,7 @@ class BackupsChangesComponent extends Component {
 	$unwrittenCount = $backup->find('count', array(
 	    'conditions' => array(
 		'nas'    => $nas['Nas']['nasname'],
-		'id >'   => isset($lastWrmem['Backup']) ? $lastWrmem['Backup']['id'] : 0
+		'id >'   => !empty($lastWrmem['Backup']) ? $lastWrmem['Backup']['id'] : 0
 	    ),
 	    'fields'     => array('id')
 	));
@@ -48,7 +48,7 @@ class BackupsChangesComponent extends Component {
 	$unwrittenBackups = $backup->find('all', array(
 	    'conditions' => array(
 		'nas'    => $nas['Nas']['nasname'],
-		'id >'   => $lastWrmem['Backup']['id']
+		'id >'   => !empty($lastWrmem['Backup']) ? $lastWrmem['Backup']['id'] : 0
 	    ),
 	    'fields'     => array('id')
 	));
