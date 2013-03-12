@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-03-11 21:46+0000\n"
+"POT-Creation-Date: 2013-03-12 16:54+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -18,11 +18,11 @@ msgstr ""
 msgid "CakePHP: the rapid development php framework"
 msgstr ""
 
-#: View/Pages/home.ctp:26
+#: View/Pages/home.ctp:24
 msgid "Release Notes for CakePHP %s."
 msgstr ""
 
-#: View/Pages/home.ctp:27
+#: View/Pages/home.ctp:26
 msgid "Read the changelog"
 msgstr ""
 
@@ -66,131 +66,155 @@ msgstr ""
 msgid "Rename APP/Config/database.php.default to APP/Config/database.php"
 msgstr ""
 
-#: View/Pages/home.ctp:108
+#: View/Pages/home.ctp:115
 msgid "Cake is able to connect to the database."
 msgstr ""
 
-#: View/Pages/home.ctp:112
+#: View/Pages/home.ctp:119
 msgid "Cake is NOT able to connect to the database."
 msgstr ""
 
-#: View/Pages/home.ctp:124
+#: View/Pages/home.ctp:131
 msgid "PCRE has not been compiled with Unicode support."
 msgstr ""
 
-#: View/Pages/home.ctp:126
+#: View/Pages/home.ctp:133
 msgid "Recompile PCRE with Unicode support by adding <code>--enable-unicode-properties</code> when configuring"
 msgstr ""
 
-#: View/Pages/home.ctp:130
+#: View/Pages/home.ctp:142
+msgid "DebugKit plugin is present"
+msgstr ""
+
+#: View/Pages/home.ctp:146
+msgid "DebugKit is not installed. It will help you inspect and debug different aspects of your application."
+msgstr ""
+
+#: View/Pages/home.ctp:148
+msgid "You can install it from %s"
+msgstr ""
+
+#: View/Pages/home.ctp:154
 msgid "Editing this Page"
 msgstr ""
 
-#: View/Pages/home.ctp:133
+#: View/Pages/home.ctp:157
 msgid "To change the content of this page, edit: APP/View/Pages/home.ctp.<br />\nTo change its layout, edit: APP/View/Layouts/default.ctp.<br />\nYou can also add some CSS styles for your pages at: APP/webroot/css."
 msgstr ""
 
-#: View/Pages/home.ctp:139
+#: View/Pages/home.ctp:163
 msgid "Getting Started"
 msgstr ""
 
-#: View/Pages/home.ctp:143
+#: View/Pages/home.ctp:167
 msgid "New"
 msgstr ""
 
-#: View/Pages/home.ctp:143
+#: View/Pages/home.ctp:167
 msgid "CakePHP 2.0 Docs"
 msgstr ""
 
-#: View/Pages/home.ctp:152
+#: View/Pages/home.ctp:176
 msgid "The 15 min Blog Tutorial"
 msgstr ""
 
-#: View/Pages/home.ctp:159
+#: View/Pages/home.ctp:183
+msgid "Official Plugins"
+msgstr ""
+
+#: View/Pages/home.ctp:188
+msgid "provides a debugging toolbar and enhanced debugging tools for CakePHP applications."
+msgstr ""
+
+#: View/Pages/home.ctp:192
+msgid "contains various localized validation classes and translations for specific countries"
+msgstr ""
+
+#: View/Pages/home.ctp:197
 msgid "More about Cake"
 msgstr ""
 
-#: View/Pages/home.ctp:161
+#: View/Pages/home.ctp:199
 msgid "CakePHP is a rapid development framework for PHP which uses commonly known design patterns like Active Record, Association Data Mapping, Front Controller and MVC."
 msgstr ""
 
-#: View/Pages/home.ctp:164
+#: View/Pages/home.ctp:202
 msgid "Our primary goal is to provide a structured framework that enables PHP users at all levels to rapidly develop robust web applications, without any loss to flexibility."
 msgstr ""
 
-#: View/Pages/home.ctp:168
+#: View/Pages/home.ctp:206
 msgid "Cake Software Foundation"
 msgstr ""
 
-#: View/Pages/home.ctp:169
+#: View/Pages/home.ctp:207
 msgid "Promoting development related to CakePHP"
 msgstr ""
 
-#: View/Pages/home.ctp:170
+#: View/Pages/home.ctp:208
 msgid "CakePHP"
 msgstr ""
 
-#: View/Pages/home.ctp:171
+#: View/Pages/home.ctp:209
 msgid "The Rapid Development Framework"
 msgstr ""
 
-#: View/Pages/home.ctp:172
+#: View/Pages/home.ctp:210
 msgid "CakePHP Documentation"
 msgstr ""
 
-#: View/Pages/home.ctp:173
+#: View/Pages/home.ctp:211
 msgid "Your Rapid Development Cookbook"
 msgstr ""
 
-#: View/Pages/home.ctp:174
+#: View/Pages/home.ctp:212
 msgid "CakePHP API"
 msgstr ""
 
-#: View/Pages/home.ctp:175
+#: View/Pages/home.ctp:213
 msgid "Quick Reference"
 msgstr ""
 
-#: View/Pages/home.ctp:176
+#: View/Pages/home.ctp:214
 msgid "The Bakery"
 msgstr ""
 
-#: View/Pages/home.ctp:177
+#: View/Pages/home.ctp:215
 msgid "Everything CakePHP"
 msgstr ""
 
-#: View/Pages/home.ctp:178
-msgid "The Show"
+#: View/Pages/home.ctp:216
+msgid "CakePHP plugins repo"
 msgstr ""
 
-#: View/Pages/home.ctp:179
-msgid "The Show is a live and archived internet radio broadcast CakePHP-related topics and answer questions live via IRC, Skype, and telephone."
+#: View/Pages/home.ctp:217
+msgid "A comprehensive list of all CakePHP plugins created by the community"
 msgstr ""
 
-#: View/Pages/home.ctp:180
+#: View/Pages/home.ctp:218
 msgid "CakePHP Google Group"
 msgstr ""
 
-#: View/Pages/home.ctp:181
+#: View/Pages/home.ctp:219
 msgid "Community mailing list"
 msgstr ""
 
-#: View/Pages/home.ctp:183
+#: View/Pages/home.ctp:221
 msgid "Live chat about CakePHP"
 msgstr ""
 
-#: View/Pages/home.ctp:184
+#: View/Pages/home.ctp:222
 msgid "CakePHP Code"
 msgstr ""
 
-#: View/Pages/home.ctp:185
+#: View/Pages/home.ctp:223
 msgid "For the Development of CakePHP Git repository, Downloads"
 msgstr ""
 
-#: View/Pages/home.ctp:186
+#: View/Pages/home.ctp:224
 msgid "CakePHP Lighthouse"
 msgstr ""
 
-#: View/Pages/home.ctp:187
+#: View/Pages/home.ctp:225
 msgid "CakePHP Tickets, Wiki pages, Roadmap"
 msgstr ""
 
