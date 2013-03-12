@@ -154,7 +154,7 @@ class RadusersController extends AppController {
         $this->Filters->addSelectConstraint(array(
             'fields' => array('role'),
             'items' => array(
-                'user' => $this->Raduser->roles['user'].'plop',
+                'user' => $this->Raduser->roles['user'],
                 'tech' => $this->Raduser->roles['tech'],
                 'admin' => $this->Raduser->roles['admin'],
                 'superadmin' => $this->Raduser->roles['superadmin'],

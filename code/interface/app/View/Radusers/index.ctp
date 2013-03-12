@@ -143,13 +143,13 @@ echo $this->element('filters_panel', array(
             'name' => 'authtype',
             'label' => __('Authentication type'),
             'multiple' => 'checkbox',
-            'type' => 'checkgroup check-horizontal',
+            'type' => 'checkgroup',
         ),
         array(
             'name' => 'rolefilter',
             'label' => __('Role'),
             'multiple' => 'checkbox',
-            'type' => 'checkgroup check-horizontal',
+            'type' => 'checkgroup',
         ),
         array(
             'name' => 'text',

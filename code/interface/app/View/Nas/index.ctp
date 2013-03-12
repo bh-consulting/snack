@@ -70,7 +70,7 @@ echo $this->element('filters_panel', array(
             'name' => 'writemem',
             'label' => __('Synchronization'),
             'multiple' => 'checkbox',
-            'type' => 'checkgroup check-horizontal',
+            'type' => 'checkgroup',
             'escape' => false,
         ),
         array(

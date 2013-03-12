@@ -63,13 +63,13 @@ echo $this->element('filters_panel', array(
             'name' => 'action',
             'label' => __('Action'),
             'multiple' => 'checkbox',
-            'type' => 'checkgroup check-horizontal',
+            'type' => 'checkgroup',
         ),
         array(
             'name' => 'writemem',
             'label' => __('Synchronization'),
             'multiple' => 'checkbox',
-            'type' => 'checkgroup check-horizontal',
+            'type' => 'checkgroup',
             'escape' => false,
         ),
     )
