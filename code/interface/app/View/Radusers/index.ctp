@@ -292,6 +292,22 @@ if (!empty($radusers)) {
                     . $roles[$user['Raduser'][$field]]
                     . '</span>';
                 break;
+	    case 'username':
+		if($user['Raduser']['expiration'] != -1) {
+		    $expiration = new DateTime($user['Raduser']['expiration']);
+		    $now = new DateTime();
+		    $interval = $now->diff($expiration);
+
+		    if($interval->format('%R') == '-') {
+			echo '<i class="icon-warning-sign icon-red" title="';
+			echo __('User expired since the %s.', $this->element('formatDates', array('date' => $user['Raduser']['expiration'])));
+			echo '"></i> ';
+		    }
+		}
+
+		echo h($user['Raduser'][$field]);
+
+		break;
             default:
                 echo h($user['Raduser'][$field]);
                 break;

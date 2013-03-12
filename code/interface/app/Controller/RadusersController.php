@@ -181,6 +181,24 @@ class RadusersController extends AppController {
                         $user['Raduser']['username']
                     );
                 }
+
+                $radc = new Radcheck();
+
+		$radcheck = $radc->find(
+		    'first',
+		    array(
+			'fields' => 'value',
+			'conditions' => array(
+			    'username' => str_replace(':', '', $user['Raduser']['username']),
+			    'attribute' => 'Expiration'
+			)
+		    )
+		);
+
+		if(!empty($radcheck))
+		    $user['Raduser']['expiration'] = $radcheck['Radcheck']['value'];
+		else
+		    $user['Raduser']['expiration'] = -1;
             }
         }
 
