@@ -160,6 +160,9 @@ div.menutopphone {
 
 .tooltip {
     white-space: normal;
+    font-weight: normal;
+    font-style: normal;
+    text-shadow: 0px 0px 0px;
 }
 
 .bhbody {
