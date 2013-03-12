@@ -11,7 +11,7 @@ class NasController extends AppController {
     public $components = array(
         'Filters' => array('model' => 'Nas'),
         'Session',
-	'BackupsChanges',
+    	'BackupsChanges',
         'MultipleAction' => array('model' => 'Nas', 'name' => 'nas'),
     );
 
@@ -56,14 +56,14 @@ class NasController extends AppController {
 
         $allnas = $this->Filters->paginate('nas');
 
-	$unwrittenIds = array();
+    	$unwrittenIds = array();
 
-	foreach($allnas AS $nas) {
-	    if($this->BackupsChanges->areThereChangesUnwrittenInThisNAS($nas))
-		$unwrittenIds[] = $nas['Nas']['id'];
-	}
+    	foreach($allnas AS $nas) {
+    	    if($this->BackupsChanges->areThereChangesUnwrittenInThisNAS($nas))
+        		$unwrittenIds[] = $nas['Nas']['id'];
+    	}
 
-	$this->set('unwrittenids', $unwrittenIds);
+    	$this->set('unwrittenids', $unwrittenIds);
     }
 
     public function view($id = null) {
@@ -95,14 +95,17 @@ class NasController extends AppController {
             )
         );
 	
-	$this->set('isunwritten', $this->BackupsChanges->areThereChangesUnwrittenInThisNAS($nas));
+    	$this->set('isunwritten', $this->BackupsChanges->areThereChangesUnwrittenInThisNAS($nas));
     }
 
     // method to display a warning field to restart the server after Nas changes
     public function alert_restart_server(){
-        // TODO: add a link to the restart button in the message
         $this->Session->setFlash(
-            __('You HAVE to restart the Radius server to apply NAS changes!'),
+            __('You HAVE to restart the Radius server to apply NAS changes!') .
+                '<a href="http://localhost/interface/systemDetails/restart/freeradius" 
+                    class="btn btn-danger btn-mini" style="margin-left:10px;">  
+                    <i class="icon-refresh icon-white"></i> ' . __('Restart Freeradius') .
+                '</a>',
             'flash_error'
         );
     }
@@ -126,6 +129,8 @@ class NasController extends AppController {
                 );
                 Utils::userlog(__('error while adding NAS'), 'error');
             }
+        } else {
+            echo 'lol';
         }
     }
 
