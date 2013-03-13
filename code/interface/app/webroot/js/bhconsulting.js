@@ -4,6 +4,13 @@ function toggleBlock(button) {
 	$(button).find('i').toggleClass('icon-chevron-down');
 }
 
+function countItems() {
+    var n = $('input:checked[type=checkbox][id^=MultiSelection][value!=all]').length;
+    var button = $('#modaldel .btn-danger');
+
+    button.text(button.text().replace(/[0-9]+/, n));
+}
+
 $(window).resize(function() {
     if($(window).width() > 979) {
 	if($('.mainmenu').hasClass('menuphone'))

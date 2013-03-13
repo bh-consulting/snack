@@ -8,8 +8,8 @@ class UserGroupException extends CakeException {
 class DeleteException extends UserGroupException {
     public function __construct($className, $id, $name) {
         parent::__construct(
-            __('Unable to delete %s %s (#%d).'),
-                array(substr($className, 3), $name, $id)
+            __('Unable to delete %s %s.'),
+                array(substr($className, 3), $name)
             ); 
     }
 }
@@ -17,8 +17,8 @@ class DeleteException extends UserGroupException {
 class ExportException extends UserGroupException {
     public function __construct($className, $id, $name) {
         parent::__construct(
-            __('Unable to export %s %s (#%d).'),
-                array(substr($className,3), $name, $id)
+            __('Unable to export %s %s.'),
+                array(substr($className,3), $name)
             ); 
     }
 }
@@ -35,8 +35,8 @@ class AddException extends UserGroupException {
 class EditException extends UserGroupException {
     public function __construct($className, $id, $name) {
         parent::__construct(
-            __('Unable to edit %s %s (#%d).'),
-                array(substr($className,3), $name, $id)
+            __('Unable to edit %s %s.'),
+                array(substr($className,3), $name)
             ); 
     }
 }
@@ -44,8 +44,8 @@ class EditException extends UserGroupException {
 class RSAKeyException extends UserGroupException {
     public function __construct($id, $name) {
         parent::__construct(
-            __('User %s (#%d) : RSA key generation failed.'),
-                array($name, $id)
+            __('User %s: RSA key generation failed.'),
+                array($name)
             ); 
     }
 }
@@ -53,8 +53,8 @@ class RSAKeyException extends UserGroupException {
 class CertificateException extends UserGroupException {
     public function __construct($id, $name) {
         parent::__construct(
-            __('User %s (#%d) : Certificate generation failed.'),
-                array($name, $id)
+            __('User %s: certificate generation failed.'),
+                array($name)
             ); 
     }
 }
@@ -62,8 +62,8 @@ class CertificateException extends UserGroupException {
 class CertificateSignException extends UserGroupException {
     public function __construct($id, $name) {
         parent::__construct(
-            __('User %s (#%d) : Certificate authentification failed.'),
-                array($name, $id)
+            __('User %s: certificate authentification failed.'),
+                array($name)
             ); 
     }
 }
@@ -71,8 +71,8 @@ class CertificateSignException extends UserGroupException {
 class CRLException extends UserGroupException {
     public function __construct($id, $name) {
         parent::__construct(
-            __('User %s (#%d) : Revocation list update failed.'),
-                array($name, $id)
+            __('User %s: revocation list update failed.'),
+                array($name)
             ); 
     }
 }
@@ -80,8 +80,8 @@ class CRLException extends UserGroupException {
 class RevokeException extends UserGroupException {
     public function __construct($id, $name) {
         parent::__construct(
-            __('User %s (#%d) : Certificate revocation failed.'),
-                array($name, $id)
+            __('User %s: certificate revocation failed.'),
+                array($name)
             ); 
     }
 }
@@ -91,8 +91,8 @@ class CertificateRemoveException extends UserGroupException {
         $certs = Utils::getUserCertsPath($name);
 
         parent::__construct(
-            __("User %s (#%d) : Cannot remove %s or %s."),
-                array($name, $id, $certs['public'], $certs['key'])
+            __("User %s: cannot remove %s or %s."),
+                array($name, $certs['public'], $certs['key'])
             ); 
     }
 }
@@ -102,8 +102,8 @@ class CertificateNotFoundException extends UserGroupException {
         $certs = Utils::getUserCertsPath($name);
 
         parent::__construct(
-            __("User %s (#%d) : Cannot find %s or %s."),
-                array($name, $id, $certs['public'], $certs['key'])
+            __("User %s: cannot find %s or %s."),
+                array($name, $certs['public'], $certs['key'])
             ); 
     }
 }
@@ -147,8 +147,8 @@ class UserGroupAddException extends UserGroupException {
 class CheckAddException extends UserGroupException {
     public function __construct($className, $id, $name, $check) {
         parent::__construct(
-            _('%s %s (#%d) : Unable to add check "%s".'),
-            array(ucfirst(substr($className,3)), $name, $id, $check)
+            _('%s %s: unable to add check "%s".'),
+            array(ucfirst(substr($className,3)), $name, $check)
         ); 
     }
 }
@@ -156,8 +156,8 @@ class CheckAddException extends UserGroupException {
 class CheckRemoveException extends UserGroupException {
     public function __construct($className, $id, $name, $checkID) {
         parent::__construct(
-            _('%s %s (#%d) : Unable to delete check #%s.'),
-            array(ucfirst(substr($className,3)), $name, $id, $checkID)
+            _('%s %s: unable to delete check.'),
+            array(ucfirst(substr($className,3)), $name)
         ); 
     }
 }
@@ -165,8 +165,8 @@ class CheckRemoveException extends UserGroupException {
 class ReplyAddException extends UserGroupException {
     public function __construct($className, $id, $name, $reply) {
         parent::__construct(
-            _('%s %s (#%d) : Unable to add reply "%s".'),
-            array(ucfirst(substr($className,3)), $name, $id, $reply)
+            _('%s %s: unable to add reply "%s".'),
+            array(ucfirst(substr($className,3)), $name, $reply)
         ); 
     }
 }
@@ -174,8 +174,8 @@ class ReplyAddException extends UserGroupException {
 class ReplyRemoveException extends UserGroupException {
     public function __construct($className, $id, $name, $replyID) {
         parent::__construct(
-            _('%s %s (#%d) : Unable to delete reply #%s.'),
-            array(ucfirst(substr($className,3)), $name, $id, $replyID)
+            _('%s %s: unable to delete reply.'),
+            array(ucfirst(substr($className,3)), $name)
         ); 
     }
 }

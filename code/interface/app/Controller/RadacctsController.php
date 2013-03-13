@@ -129,12 +129,13 @@ class RadacctsController extends AppController {
         $this->set('radacct', $this->Radacct->read());
     }
 
-    public function delete() {
+    public function delete($id = null) {
         if ($this->request->is('get')) {
             throw new MethodNotAllowedException();
         }
 
-        $id = $this->request->data['Radacct']['id'];
+        $id = is_null($id) ? $this->request->data['Radacct']['id'] : $id;
+
         $uniqueId = $this->Radacct->field(
             'acctuniqueid',
             array('radacctid' => $id)
@@ -149,7 +150,7 @@ class RadacctsController extends AppController {
             $this->redirect(array('action' => 'index'));
 		} else {
 		    $this->Session->setFlash(
-				__('Unable to delete session #%s', $uniqueId),
+				__('Unable to delete session.'),
 				'flash_error'
 			);
             Utils::userlog(

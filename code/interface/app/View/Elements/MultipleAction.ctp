@@ -33,15 +33,31 @@ case 'end':
             switch ($option) {
             case 'delete':
                 $items[] = $this->Html->link(
-                    '<i class="icon-remove"></i> ' . __('Delete selected'),
-                    '#',
-                    array(
-                        'onClick' => "$('#selectionAction').attr('value', 'delete');"
-                        . "if (confirm('" . __('Are you sure?') . "')) {"
-                        . "$('#MultiSelectionIndexForm').submit();}",
-                        'escape' => false,
-                    )
-                );
+			'<i class="icon-remove"></i> ' . __('Delete selected'),
+			"#confirmmultiple",
+			array(
+			    'escape' => false,
+			    'data-toggle' => 'modal',
+			    'onclick' => 'countItems()'
+			)
+		    );
+
+		echo '<div id="modaldel">';
+		echo $this->element('modalDelete', array(
+		    'id'   => 'multiple',
+		    'link' => $this->Html->link(
+			    '<i class="icon-remove icon-white"></i> ' . __('Delete 0 items'),
+			    '#',
+			    array(
+				'onclick' => "$('#selectionAction').attr('value', 'delete');"
+				. "$('#MultiSelectionIndexForm').submit()",
+				'escape' => false,
+				'class'  => 'btn btn-primary btn-danger'
+			    )
+			)
+		));
+		echo '</div>';
+
                 break;
             case 'export':
                 $items[] = $this->Html->link(

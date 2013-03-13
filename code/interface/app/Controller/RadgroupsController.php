@@ -37,7 +37,8 @@ class RadgroupsController extends AppController {
             switch ($this->request->data['action']) {
             case "delete":
                 $this->multipleDelete(
-                    $this->request->data['MultiSelection']['groups']
+                    isset($this->request->data['MultiSelection']) ?
+			$this->request->data['MultiSelection']['groups'] : 0
                 );
                 break;
             }
@@ -223,25 +224,34 @@ class RadgroupsController extends AppController {
         $this->Checks->restoreCommonReplyFields($id, $this->request);
     }
 
-	public function delete ($id = null) {
-        try {
-            $this->Checks->delete($this->request, $id);
+    public function delete ($id = null) {
+	try {
+	    if($this->request->is('get')){
+		throw new MethodNotAllowedException();
+	    }
 
-			$this->Session->setFlash(
-				__('The group with id #') . $id . __(' has been deleted.'),
-				'flash_success'
-			);
-            Utils::userlog(__('deleted group %s', $id));
-		} catch (UserGroupException $uge) {
-			$this->Session->setFlash(
-				$uge->getMessage(),
-				'flash_error'
-			);
-            Utils::userlog(__('error while deleting group %s', $this->Radgroup->id), 'error');
-		}
-		
-		$this->redirect(array('action' => 'index'));
+	    $id = is_null($id) ? $this->request->data['Radgroup']['id'] : $id;
+
+	    $this->Checks->delete($this->request, $id);
+
+	    $this->Session->setFlash(
+		    __('The group has been deleted.'),
+		    'flash_success'
+		    );
+
+	    Utils::userlog(__('deleted group %s', $id));
+
+	} catch (UserGroupException $uge) {
+	    $this->Session->setFlash(
+		    $uge->getMessage(),
+		    'flash_error'
+		    );
+
+	    Utils::userlog(__('error while deleting group %s', $this->Radgroup->id), 'error');
 	}
+
+	$this->redirect(array('action' => 'index'));
+    }
 
     public function restoreUsers($id) {
     	$usersRecords = $this->Checks->getUserGroups($id);

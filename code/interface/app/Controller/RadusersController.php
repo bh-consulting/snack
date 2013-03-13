@@ -117,7 +117,8 @@ class RadusersController extends AppController {
                 switch ($this->request->data['action']) {
                     case "delete":
                         $this->multipleDelete(
-                            $this->request->data['MultiSelection']['users']
+			    isset($this->request->data['MultiSelection']) ?
+				$this->request->data['MultiSelection']['users'] : 0
                         );
                         break;
                     case "export":
@@ -1007,6 +1008,11 @@ class RadusersController extends AppController {
 
     public function delete ($id = null) {
         try {
+	    if($this->request->is('get')){
+		throw new MethodNotAllowedException();
+	    }
+
+	    $id = is_null($id) ? $this->request->data['Raduser']['id'] : $id;
             $this->Raduser->id = $id;
 
             // Revoke and remove certificate for user
@@ -1022,7 +1028,7 @@ class RadusersController extends AppController {
             Utils::userlog(__('deleted user %s', $id));
 
             $this->Session->setFlash(
-                __('The user with id #%d has been deleted.', $id),
+                __('The user has been deleted.'),
                 'flash_success'
             );
         } catch(UserGroupException $e) {

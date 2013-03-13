@@ -95,7 +95,7 @@ class NasController extends AppController {
                 'failed' => array(
                     'delete' => __('Unable to delete NAS.')
                 ),
-                'warning' => __('Please, select at least one NAS !'),
+                'warning' => __('Please, select at least one NAS!'),
             )
         );
 
@@ -214,7 +214,7 @@ class NasController extends AppController {
                 $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(
-                    __('Unable to update NAS'),
+                    __('Unable to update NAS.'),
                     'flash_error'
                 );
                 Utils::userlog(__('error while editing NAS %s', $id), 'error');
@@ -222,24 +222,24 @@ class NasController extends AppController {
         }
     }
 
-    public function delete()
+    public function delete($id = null)
     {
         if($this->request->is('get')){
             throw new MethodNotAllowedException();
         }
 
-        $id = $this->request->data['Nas']['id'];
+        $id = is_null($id) ? $this->request->data['Nas']['id'] : $id;
 
         if($this->Nas->delete($id)){
             $this->Session->setFlash(
-                __('The NAS #%s has been deleted.', $id),
+                __('The NAS has been deleted.'),
                 'flash_success'
             );
             Utils::userlog(__('deleted NAS %s', $id));
             $this->redirect(array('action' => 'index'));
         } else {
             $this->Session->setFlash(
-                __('Unable to delete NAS #%s.', $id));
+                __('Unable to delete NAS.'));
             Utils::userlog(__('error while deleting NAS %s', $id), 'error');
         }
     }
