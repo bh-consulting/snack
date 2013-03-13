@@ -332,7 +332,7 @@ class RadusersController extends AppController {
             $attributes['Username'] = $username;
         }
         $attributes['Comment'] = $views['base']['Raduser']['comment'];
-        $attributes['Role'] = $views['base']['Raduser']['role'];
+        $attributes['Role'] = $this->Raduser->roles[$views['base']['Raduser']['role']];
         $certsPath = Utils::getUserCertsPath($username);
         $attributes['Certificate path'] = $certsPath['public'];
         $attributes['Key path'] = $certsPath['key'];
