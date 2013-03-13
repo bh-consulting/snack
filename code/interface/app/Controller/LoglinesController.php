@@ -19,6 +19,24 @@ class LoglinesController extends AppController {
     }
 
     public function index() {
+        $this->Filters->addStringConstraint(array(
+            'fields' => 'facility',
+            'input' => 'facility',
+            'default' => 'local2'
+        ));
+        $this->defaultValues();
+    }
+
+    public function snack_logs() {
+        $this->Filters->addStringConstraint(array(
+            'fields' => 'facility',
+            'input' => 'facility',
+            'default' => 'local4',
+        ));
+        $this->defaultValues();
+    }
+
+    private function defaultValues(){
         $this->Filters->addSliderConstraint(array(
             'fields' => 'level', 
             'input' => 'level',
@@ -45,7 +63,7 @@ class LoglinesController extends AppController {
             throw new MethodNotAllowedException();
         }
 
-        if (in_array($program, array('freeradius', 'interface'))) {
+        if (in_array($program, array('freeradius', 'snack'))) {
             if ($this->Logline->deleteAll(array('program' => $program))) {
                 $this->Session->setFlash(
                     __('All logs for %s have been deleted.', $program),

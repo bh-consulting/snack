@@ -33,7 +33,7 @@
 		'type' => isset($method) ? $method : 'get',
 		'id' => 'filtersForm',
 		'class' => 'well',
-		'style' => $filtersPanOpen ? 'display: block' : null
+		'style' => (isset($filtersPanOpen) && $filtersPanOpen) ? 'display: block' : null
 	));
 
 	foreach ($inputs as $input) {

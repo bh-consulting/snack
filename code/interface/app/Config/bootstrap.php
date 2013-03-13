@@ -182,7 +182,7 @@ CakeLog::config('debug', array(
 
 CakeLog::config('syslog', array(
     'engine' => 'SysLog',
-    'ident' => 'Snack',
+    'ident' => 'snack',
     'facility' => LOG_LOCAL4,
 ));
 
