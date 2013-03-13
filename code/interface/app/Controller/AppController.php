@@ -23,6 +23,14 @@
 App::uses('Controller', 'Controller');
 App::uses('Utils', 'Lib');
 App::import('Model', 'Nas');
+
+/**
+ * Load administration parameters like :
+ * - Certificates options
+ * - Pagination configuration
+ * - Contact emails
+ * - Server IP
+ */
 Configure::load('parameters');
 
 /**
@@ -62,35 +70,57 @@ class AppController extends Controller {
             ),
             'authorize' => array('Controller'),
         ),
-	'BackupsChanges'
+        'BackupsChanges'
     );
 
+    public $disableBackupsCheck = array(
+        'Radusers' => 'login',
+    );
+
+    /**
+     * Executed before every action.
+     */
     public function beforeFilter() {
+        // Initialize the default langage if not set,
+        // regarding the browser langage.
         if (!$this->Session->check('Config.language')) {
             $lang = Utils::getISOCode($_SERVER['HTTP_ACCEPT_LANGUAGE']);
             $this->Session->write('Config.language', $lang);
         }
 
+        // Set views langage.
         Configure::write(
             'Config.language',
             $this->Session->read('Config.language')
         );
 
-        // set the pagination count from the parameters file
+        // Set pagination count configuration from parameters file.
         if (isset($this->paginate) && isset($this->paginate['limit'])) {
-            $this->paginate['limit'] = Configure::read('Parameters.paginationCount');
+            $this->paginate['limit'] = Configure::read(
+                'Parameters.paginationCount'
+            );
         }
 
-        // set class for sort icons, used in all indexes to display
-        // sorted tables of elements
+        // Set common class for sort icons, used in all indexes to display
+        // sorted tables of elements.
         $this->set('sortIcons', array(
             'asc' => 'icon-chevron-down',
             'desc' => 'icon-chevron-up',
         ));
 
-    	$this->set('nasunwritten', $this->BackupsChanges->areThereChangesUnwritten());
+        if (!isset($this->disableBackupsCheck[$this->name])
+            || $this->disableBackupsCheck[$this->name] != $this->action
+        ) {
+            $this->set(
+                'nasunwritten',
+                $this->BackupsChanges->areThereChangesUnwritten()
+            );
+        }
     }
 
+    /**
+     * Change the current display langage.
+     */
     public function changeLang($lang) {
         $this->autoRender = false;
         $this->Session->write('Config.language', $lang);
@@ -98,18 +128,20 @@ class AppController extends Controller {
         $this->redirect($this->referer());
     }
 
+    /**
+     * Authorize all actions for super admin and stop other users.
+     */
     public function isAuthorized($user) {
-        // Super admin can access everything
+        // Super admin can access everything.
         if (isset($user['role']) && $user['role'] === 'superadmin') {
             return true;
         }
 
-        // default deny
+        // Default deny
         $this->Session->setFlash(
             __('You are not authorized to access this page!'),
             'flash_error'
         );
         return false;
     }
-
 }

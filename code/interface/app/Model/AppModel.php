@@ -21,6 +21,7 @@
  */
 
 App::uses('Model', 'Model');
+App::uses('Lib', 'Validation');
 
 /**
  * Application model for Cake.
