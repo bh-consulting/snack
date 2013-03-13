@@ -10,24 +10,28 @@ class FiltersComponent extends Component {
         $this->controller = $collection->getController();
         $this->modelName = isset($params['model'])
             ? $params['model'] : substr($this->controller->name, 0, -1);
+        $this->actions = isset($params['actions'])
+            ? (array)$params['actions'] : array('index');
 
-        if (!isset($this->controller->request->data[$this->modelName])) {
-            $this->controller->request->data[$this->modelName] = array();
-        }
+        if (in_array($this->controller->request->action, $this->actions)) {
+            if (!isset($this->controller->request->data[$this->modelName])) {
+                $this->controller->request->data[$this->modelName] = array();
+            }
 
-        $this->controller->request->data[$this->modelName] = array_merge(
-            $this->controller->request->data[$this->modelName],
-            $this->controller->params['url']
-        );
+            $this->controller->request->data[$this->modelName] = array_merge(
+                $this->controller->request->data[$this->modelName],
+                $this->controller->params['url']
+            );
 
-        if (in_array('beforeValidateForFilters', $this->controller->methods)) {
-            $this->controller->beforeValidateForFilters();
-        }
+            if (in_array('beforeValidateForFilters', $this->controller->methods)) {
+                $this->controller->beforeValidateForFilters();
+            }
 
-        if ($this->controller->{$this->modelName}->validates()) {
-            $this->controller->set('filtersPanOpen', false);
-        } else {
-            $this->controller->set('filtersPanOpen', true);
+            if ($this->controller->{$this->modelName}->validates()) {
+                $this->controller->set('filtersPanOpen', false);
+            } else {
+                $this->controller->set('filtersPanOpen', true);
+            }
         }
     }
 
@@ -155,17 +159,19 @@ class FiltersComponent extends Component {
             if (isset($options['data'])) {
                 //TODO: optimize, do one request and clear table after (unique)
                 foreach ((array)$options['data'] as $field) {
-                    $items = array_merge(
-                        $items,
-                        $this->controller->{$this->modelName}->find(
-                            'list',
-                            array(
-                                'order' => $field . ' ASC',
-                                'fields' => array($field, $field),
-                                'group' => $field
-                            )
+                    $itemsData = $this->controller->{$this->modelName}->find(
+                        'list',
+                        array(
+                            'order' => $field . ' ASC',
+                            'fields' => array($field, $field),
+                            'group' => $field
                         )
                     );
+
+                    //TODO: translate items
+                    //foreach ($itemsData as &$item) {
+                    //    if (
+                    $items = array_merge($items, $itemsData);
                 }
             }
 
@@ -205,7 +211,6 @@ class FiltersComponent extends Component {
         }
     }
 
-    //TODO: test
     public function addSliderConstraint($options) {
         if (isset($options['input']) && !is_array($options['input'])) {
             $data =  &$this->controller->request
@@ -259,12 +264,11 @@ class FiltersComponent extends Component {
         }
     }
 
-    //TODO: test
     public function addDatesConstraint($options) {
         $url = $this->controller->params['url'];
-        $patternDate = '/^(?<day>0[1-9]|[1-2]\d|3[01])\/'
-            . '(?<mon>0[1-9]|1[12])\/'
-            . '(?<year>20\d{2})\s+'
+        $patternDate = '/^(?<year>20\d{2})-'
+            . '(?<mon>0[1-9]|1[12])-'
+            . '(?<day>0[1-9]|[1-2]\d|3[01])\s+'
             . '(?<hour>[01]\d|2[0-3]):(?<min>[0-5]\d):(?<sec>[0-5]\d)$/';
 
         if (!empty($options['fields'])) {
@@ -410,15 +414,6 @@ class FiltersComponent extends Component {
         $this->controller->set(
             $dataTitle,
             $data
-        );
-
-        // Set view sort icons.
-        $this->controller->set(
-            'sortIcons',
-            array(
-                'asc' => 'icon-chevron-down',
-                'desc' => 'icon-chevron-up'
-            )
         );
 
         return $data;

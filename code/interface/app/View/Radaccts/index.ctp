@@ -53,25 +53,25 @@ if(AuthComponent::user('role') != 'superadmin'){
 echo $this->element('filters_panel', array(
     'controller' => 'radaccts/index',
     'inputs' => array(
-	array(
-	    'name' => 'datefrom',
-	    'label' => __('From'),
-	    'type' => 'datetimepicker',
-	),
-	array(
-	    'name' => 'dateto',
-	    'label' => __('To'),
-	    'type' => 'datetimepicker',
-	),
-	array(
-	    'name' => 'porttype',
-	    'label' => __('Port type'),
-	),
-	array(
-	    'name' => 'text',
-	    'label' => __('Contains (accept regex)'),
-	    'autoComplete' => true,
-	))
+        array(
+            'name' => 'datefrom',
+            'label' => __('From'),
+            'type' => 'datetimepicker',
+        ),
+        array(
+            'name' => 'dateto',
+            'label' => __('To'),
+            'type' => 'datetimepicker',
+        ),
+        array(
+            'name' => 'porttype',
+            'label' => __('Port type'),
+        ),
+        array(
+            'name' => 'text',
+            'label' => __('Contains (accept regex)'),
+            'autoComplete' => true,
+        ))
     )
 );
 
@@ -110,7 +110,7 @@ foreach ($columns as $field => $info) {
         if (preg_match("#$field$#", $this->Paginator->sortKey())) {
             $sort = '<i class="'
                 .  $sortIcons[$this->Paginator->sortDir()]
-               . '"></i>';
+                . '"></i>';
         }
 
         echo $this->Paginator->sort(
@@ -152,7 +152,7 @@ if (!empty($radaccts)) {
                 );
                 break;
             case 'view':
-		        echo '<i class="icon-eye-open"></i> ';
+                echo '<i class="icon-eye-open"></i> ';
                 echo $this->Html->link(
                     __('View'),
                     array(
@@ -174,72 +174,61 @@ if (!empty($radaccts)) {
                 );
                 break;
             case 'nasipaddress':
-		echo $this->element('formatNasLink', array(
-		    'nas' => $devices[$acct['Radacct']['radacctid']]
-		));
+                echo $this->element('formatNasLink', array(
+                    'nas' => $devices[$acct['Radacct']['radacctid']]
+                ));
 
                 if (!empty($acct['Radacct'][$info['port']])) {
-		    echo ':' . (strpos($acct['Radacct'][$info['port']], '500') !== false ?
-			$acct['Radacct'][$info['port']] - 50000 :
-			h($acct['Radacct'][$info['port']]));
+                    echo ':' . (strpos($acct['Radacct'][$info['port']], '500') !== false ?
+                        $acct['Radacct'][$info['port']] - 50000 :
+                        h($acct['Radacct'][$info['port']]));
                 }
                 break;
-	    case 'username':
-		echo $this->element('formatUsersList', array(
-		    'users' => $users[$acct['Radacct']['radacctid']]
-		));
+            case 'username':
+                echo $this->element('formatUsersList', array(
+                    'users' => $users[$acct['Radacct']['radacctid']]
+                ));
 
-		break;
-	    case 'callingstationid':
-                echo str_replace('-', ':', h($acct['Radacct'][$field]));
-		break;
-	    case 'nasporttype':
-
-		switch($acct['Radacct'][$field]) {
-		    case 'Virtual':
-			echo 'Telnet/SSH';
-			break;
-
-		    case 'Ethernet':
-			echo '802.1x';
-			break;
-
-		    case 'Async':
-			echo 'Console';
-			break;
-		}
-		break;
-	    case 'acctstarttime':
-		echo $this->element('formatDates', array('date' => $acct['Radacct'][$field]));
-		break;
-	    case 'acctstoptime':
-		if(empty($acct['Radacct'][$field]))
-		    echo '<em>'.__('still connected').'</em>';
-		echo $this->element('formatDates', array('date' => $acct['Radacct'][$field]));
-		break;
-	    case 'duration':
-		$datetime1 = new DateTime($acct['Radacct']['acctstarttime']);
-		$datetime2 = new DateTime($acct['Radacct']['acctstoptime']);
-		$interval = $datetime1->diff($datetime2);
-
-		$years = $interval->format('%y');
-		$months = $interval->format('%m');
-		$days = $interval->format('%d');
-		$hours = $interval->format('%h');
-		$minutes = $interval->format('%m');
-		$seconds = $interval->format('%s');
-		
-		echo $years ? __('%dy', $years).'&nbsp;' : '';
-		echo $months ? __('%dm', $months).'&nbsp;' : '';
-		echo $days ? __('%dd', $days).'&nbsp;' : '';
-		echo $hours ? __('%dh', $hours).'&nbsp;' : '';
-		echo $minutes ? __('%dm', $minutes).'&nbsp;' : '';
-		echo $seconds ? __('%ds', $seconds) : '';
-
-		break;
-            default:
-                echo h($acct['Radacct'][$field]);
                 break;
+            case 'callingstationid':
+                echo str_replace('-', ':', h($acct['Radacct'][$field]));
+                break;
+            case 'nasporttype':
+                $value = $acct['Radacct'][$field];
+                echo isset($types[$value])
+                    ? $types[$value] : $value;
+                break;
+            case 'acctstarttime':
+                    echo $this->element('formatDates', array('date' => $acct['Radacct'][$field]));
+                    break;
+                case 'acctstoptime':
+                    if(empty($acct['Radacct'][$field]))
+                        echo '<em>'.__('still connected').'</em>';
+                    echo $this->element('formatDates', array('date' => $acct['Radacct'][$field]));
+                    break;
+                case 'duration':
+                    $datetime1 = new DateTime($acct['Radacct']['acctstarttime']);
+                    $datetime2 = new DateTime($acct['Radacct']['acctstoptime']);
+                    $interval = $datetime1->diff($datetime2);
+
+                    $years = $interval->format('%y');
+                    $months = $interval->format('%m');
+                    $days = $interval->format('%d');
+                    $hours = $interval->format('%h');
+                    $minutes = $interval->format('%m');
+                    $seconds = $interval->format('%s');
+
+                    echo $years ? __('%dy', $years).'&nbsp;' : '';
+                    echo $months ? __('%dm', $months).'&nbsp;' : '';
+                    echo $days ? __('%dd', $days).'&nbsp;' : '';
+                    echo $hours ? __('%dh', $hours).'&nbsp;' : '';
+                    echo $minutes ? __('%dm', $minutes).'&nbsp;' : '';
+                    echo $seconds ? __('%ds', $seconds) : '';
+
+                    break;
+                default:
+                    echo h($acct['Radacct'][$field]);
+                    break;
             }
 
             echo '</td>';

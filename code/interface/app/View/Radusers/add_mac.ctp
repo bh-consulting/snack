@@ -5,7 +5,7 @@ $this->assign('users_active', 'active');
 ?>
 <h1> <? echo __('Add a passive user with MAC address'); ?></h1>
 <?php
-echo $this->Form->create('Raduser');
+echo $this->Form->create('Raduser', array('novalidate' => true));
 
 $checks = '<fieldset>';
 $checks .='<legend>' . __('Checks') . '</legend>';

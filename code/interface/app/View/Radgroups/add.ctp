@@ -6,7 +6,7 @@ $this->assign('groups_active', 'active');
 
 echo '<h1>' . __('Add a group') . '</h1>';
 
-echo $this->Form->create('Radgroup');
+echo $this->Form->create('Radgroup', array('novalidate' => true));
 
 $info = '<fieldset>';
 $info .= '<legend>' . __('Checks') . '</legend>';

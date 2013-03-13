@@ -7,16 +7,15 @@ class RadacctsController extends AppController {
         'order' => array('acctstarttime' => 'desc')
     );
     public $components = array(
-        'Filters' => array('model' => 'Radacct'),
-        'Users' => array(),
-        'Nas' => array(),
+        'Filters',
+        'Users',
+        'Nas',
     );
 
     public function isAuthorized($user) {
-        
-        if($user['role'] === 'admin' && in_array($this->action, array(
-            'index', 'view'
-        ))){
+        if ($user['role'] === 'admin'
+            && in_array($this->action, array('index', 'view'))
+        ){
             return true;
         }
 
@@ -31,26 +30,26 @@ class RadacctsController extends AppController {
                 $success = true;
                 foreach( $this->request->data['MultiSelection']['sessions']
                     as $sessionId ) {
-                    switch( $this->request->data['action'] ) {
-                    case "delete":
-                        $success = $success 
-                            && $this->Radacct->delete($sessionId);
-                        if ($success) {
-                            Utils::userlog(
-                                __('deleted session %s',
-                                $sessionId));
-                        } else {
-                            Utils::userlog(
-                                __(
-                                    'error while deleting session %s',
-                                    $sessionId
-                                ),
-                                'error'
-                            );
+                        switch( $this->request->data['action'] ) {
+                        case "delete":
+                            $success = $success 
+                                && $this->Radacct->delete($sessionId);
+                            if ($success) {
+                                Utils::userlog(
+                                    __('deleted session %s',
+                                    $sessionId));
+                            } else {
+                                Utils::userlog(
+                                    __(
+                                        'error while deleting session %s',
+                                        $sessionId
+                                    ),
+                                    'error'
+                                );
+                            }
+                            break;
                         }
-                        break;
                     }
-                }
 
                 if ($success) {
                     switch( $this->request->data['action'] ) {
@@ -108,20 +107,20 @@ class RadacctsController extends AppController {
 
         $sessions = $this->Filters->paginate();
 
-	$users = array();
-	$devices = array();
+        $users = array();
+        $devices = array();
 
-	foreach($sessions AS $session) {
-	    $users[$session['Radacct']['radacctid']] =
-		$this->Users->extendUsers($session['Radacct']['username']);
+        foreach($sessions AS $session) {
+            $users[$session['Radacct']['radacctid']] =
+                $this->Users->extendUsers($session['Radacct']['username']);
 
-	    $devices[$session['Radacct']['radacctid']] =
-		$this->Nas->extendNasByIP($session['Radacct']['nasipaddress']);
-	}
+            $devices[$session['Radacct']['radacctid']] =
+                $this->Nas->extendNasByIP($session['Radacct']['nasipaddress']);
+        }
 
-	$this->set('users', $users);
-	$this->set('devices', $devices);
-
+        $this->set('users', $users);
+        $this->set('devices', $devices);
+        $this->set('types', $this->Radacct->types);
     }
 
     public function view($id = null) {
@@ -145,19 +144,19 @@ class RadacctsController extends AppController {
             $this->Session->setFlash(
                 __('The Session with id #%s has beed deleted', $uniqueId),
                 'flash_success'
-                );
-		    Utils::userlog(__('deleted session %s', $uniqueId));
+            );
+            Utils::userlog(__('deleted session %s', $uniqueId));
             $this->redirect(array('action' => 'index'));
-		} else {
-		    $this->Session->setFlash(
-				__('Unable to delete session.'),
-				'flash_error'
-			);
+        } else {
+            $this->Session->setFlash(
+                __('Unable to delete session.'),
+                'flash_error'
+            );
             Utils::userlog(
                 __('error while deleting session %s', $uniqueId),
                 'error'
             );
-		}
+        }
     }
 }
 
