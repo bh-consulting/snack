@@ -11,35 +11,41 @@ $checks = '<fieldset>';
 $checks .= '<legend>' . __('Checks') . '</legend>';
 
 $checks .= $this->Form->input('username');
-$checks .= $this->Form->input('passwd', array('type' => 'password', 'label' => __('Password')));
+$checks .= $this->Form->input(
+    'passwd',
+    array('type' => 'password', 'label' => __('Password'))
+);
 $checks .= $this->Form->input('confirm_password', array('type' => 'password'));
 $checks.= $this->Form->input(
     'ttls',
     array(
-	'type' => 'checkbox',
-	'label' => __('Check server certificate')
+        'type' => 'checkbox',
+        'label' => __('Check server certificate')
     )
 );
-$checks .= $this->Form->input('calling-station-id', array('label' => __('MAC address')));
+$checks .= $this->Form->input(
+    'calling-station-id',
+    array('label' => __('MAC address'))
+);
 $checks .= $this->element('check_common_fields');
 
 $checks .= $this->element(
     'doubleListsSelector',
     array(
-	'leftTitle' => __('Groups'),
-	'rightTitle' => __('Selected groups'),
-	'contents' => $groups,
-	'selectedContents' => array()
+        'leftTitle' => __('Groups'),
+        'rightTitle' => __('Selected groups'),
+        'contents' => $groups,
+        'selectedContents' => array()
     )
 );
 $checks .= $this->Form->input(
     'groups',
     array(
-	'type' => 'select',
-	'id' => 'select-right',
-	'label' => '',
-	'class' => 'hidden',
-	'multiple' => 'multiple'
+        'type' => 'select',
+        'id' => 'select-right',
+        'label' => '',
+        'class' => 'hidden',
+        'multiple' => 'multiple'
     )
 );
 $checks .= '</fieldset>';
@@ -69,4 +75,17 @@ echo $this->element('wizard', array(
     'finishButton' => $finish,
 ));
 
+$this->start('script');
+?>
+<script>
+$(document).ready(function(){
+    $('input.form-error').first().each(function(){
+        var pos = $(this).parents('div.tab-pane').attr('id');
+        $('#rootwizard').bootstrapWizard('show', pos.substr(-1));
+        $(this).focus();
+    });
+});
+</script>
+<?php
+$this->end();
 ?>

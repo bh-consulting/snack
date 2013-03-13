@@ -32,7 +32,6 @@ echo $this->Form->input(
 
 <?php $this->start('script'); ?>
 <script type="text/javascript">
-//$('#username_field').focus();
 $(document).ready(function(){
     $('#username_field').focus();
 });

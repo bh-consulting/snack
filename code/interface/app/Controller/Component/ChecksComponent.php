@@ -204,6 +204,13 @@ class ChecksComponent extends Component {
 
             $this->baseClass->create();
             if (!$this->baseClass->save($request->data)) {
+                if (isset($request->data[$this->baseClassName]['is_mac'])
+                    && isset($request->data[$this->baseClassName]['mac'])
+                    && $request->data[$this->baseClassName]['is_mac']
+                ) {
+                    $name = $request->data[$this->baseClassName]['mac'];
+                }
+
                 throw new AddException($this->baseClassName, $name);
             }
 

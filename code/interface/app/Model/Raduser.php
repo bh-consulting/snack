@@ -10,13 +10,14 @@ class Raduser extends AppModel {
     public $actsAs = array('Validation');
 
     public $roles = array();
+    public $virtualFields = array('mac' => 'username');
 
     public $validationDomain = 'validation';
     
     public $validate = array(
         'username' => array(
             'isUnique' => array(
-                'rule' => array('isUnique', 'username'),
+                'rule' => array('isUniqueValue', 'username', 'user'),
                 'message' => 'Username already used'
             ),
             'notEmpty' => array(
@@ -46,7 +47,7 @@ class Raduser extends AppModel {
                 'allowEmpty' => false,
             ),
             'isUnique' => array(
-                'rule' => array('isUnique', 'username', 'mac'),
+                'rule' => array('isUniqueValue', 'username', 'mac'),
                 'message' => 'MAC already used',
             ),
         ),

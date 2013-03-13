@@ -9,7 +9,6 @@ Configure::load('parameters');
 <?php
 echo $this->Form->create('Raduser', array('novalidate' => true));
 
-
 $certificate = '<fieldset>';
 $certificate .= '<legend>' . __('Certificate') . '</legend>';
 
@@ -36,10 +35,30 @@ $certificate .= '</fieldset>';
 $checks = '<fieldset>';
 $checks .= '<legend>' . __('Checks') . '</legend>';
 
-$checks .= $this->Form->input('calling-station-id', array('label' => __('MAC address')));
+$checks .= $this->Form->input(
+    'calling-station-id',
+    array('label' => __('MAC address'))
+);
 $checks .= $this->element('check_common_fields');
-$checks .= $this->element('doubleListsSelector', array('leftTitle' => __('Groups'), 'rightTitle' => __('Selected groups'), 'contents' => $groups, 'selectedContents' => array()));
-$checks .= $this->Form->input('groups', array('type' => 'select', 'id' => 'select-right', 'label' => '', 'class' => 'hidden', 'multiple' => 'multiple'));
+$checks .= $this->element(
+    'doubleListsSelector',
+    array(
+        'leftTitle' => __('Groups'),
+        'rightTitle' => __('Selected groups'),
+        'contents' => $groups,
+        'selectedContents' => array(),
+    )
+);
+$checks .= $this->Form->input(
+    'groups',
+    array(
+        'type' => 'select',
+        'id' => 'select-right',
+        'label' => '',
+        'class' => 'hidden',
+        'multiple' => 'multiple',
+    )
+);
 
 $checks .= '</fieldset>';
 
@@ -69,4 +88,17 @@ echo $this->element('wizard', array(
     'finishButton' => $finish,
 ));
 
+$this->start('script');
+?>
+<script>
+$(document).ready(function(){
+    $('input.form-error').first().each(function(){
+        var pos = $(this).parents('div.tab-pane').attr('id');
+        $('#rootwizard').bootstrapWizard('show', pos.substr(-1));
+        $(this).focus();
+    });
+});
+</script>
+<?php
+$this->end();
 ?>

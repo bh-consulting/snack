@@ -668,13 +668,12 @@ class RadusersController extends AppController {
 
         if ($this->request->is('post')) {
             try {
-                $this->request->data['Raduser']['mac'] =
+                $username =
                     Utils::cleanMAC($this->request->data['Raduser']['mac']);
 
-                $username = $this->request->data['Raduser']['mac'];
+                $this->request->data['Raduser']['username'] = $username;
+
                 $this->request->data['Raduser']['is_mac'] = 1;
-                $this->request->data['Raduser']['username'] =
-                    $this->request->data['Raduser']['mac'];
                 $rads = array(
                     array(
                         $username,
@@ -686,7 +685,7 @@ class RadusersController extends AppController {
                         $username,
                         'Cleartext-Password',
                         ':=',
-                        $this->request->data['Raduser']['mac'],
+                        $username,
                     ),
                     array(
                         $username,

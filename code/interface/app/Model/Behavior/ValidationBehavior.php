@@ -42,13 +42,12 @@ class ValidationBehavior extends ModelBehavior {
     /**
      * Check if value is unique in the specified column.
      */
-    public static function isUnique($model, $field = array(),
+    public static function isUniqueValue($model, $field = array(),
         $column = null, $type = 'text') {
 
         if (is_null($column) || is_array($column) || is_array($type)) {
             return false;
         }
-
         switch ($type) {
         case 'mac':
             $value = preg_replace('#:|-#', '', array_shift($field));

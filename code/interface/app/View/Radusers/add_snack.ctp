@@ -24,8 +24,14 @@ $userInfo .= $this->element('tab_panes', array(
     ),
 ));
 
-$userInfo .= $this->Form->input('passwd', array('type' => 'password', 'label' => __('Password')));
-$userInfo .= $this->Form->input('confirm_password', array('type' => 'password', 'label' => __('Confirm password')));
+$userInfo .= $this->Form->input(
+    'passwd',
+    array('type' => 'password', 'label' => __('Password'))
+);
+$userInfo .= $this->Form->input(
+    'confirm_password',
+    array('type' => 'password', 'label' => __('Confirm password'))
+);
 $userInfo .= '</fieldset>';
 
 $role = $this->element('snack_role_input');
@@ -44,4 +50,17 @@ echo $this->element('wizard', array(
     'finishButton' => $finish,
 ));
 
+$this->start('script');
+?>
+<script>
+$(document).ready(function(){
+    $('input.form-error').first().each(function(){
+        var pos = $(this).parents('div.tab-pane').attr('id');
+        $('#rootwizard').bootstrapWizard('show', pos.substr(-1));
+        $(this).focus();
+    });
+});
+</script>
+<?php
+$this->end();
 ?>
