@@ -11,8 +11,6 @@
 #                                   Mike Machado <mike@innercite.com>     #
 ###########################################################################
 
-CREATE user 'radius'@'localhost' identified by 'radiusroxx';
-
 GRANT ALL ON radius.* to 'radius'@'localhost';
 
 #

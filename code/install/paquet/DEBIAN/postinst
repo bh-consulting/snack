@@ -138,6 +138,7 @@ do
 done
 
 MYSQL_RES=$(echo "	CREATE DATABASE ${DATABASE} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;\
+			GRANT ALL ON ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
 			flush privileges;\
 " | mysql -uroot -p${PASSWORD_DB_ROOT} 2>&1 >>$OUT)
 
@@ -174,6 +175,7 @@ do
 	fi
 
 	MYSQL_RES=$(echo "	CREATE DATABASE ${DATABASE} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;\
+				GRANT ALL ON ${DATABASE}.* to radius@localhost identified by '${PASSWORD_RADIUS}';\
 				flush privileges;\
 	" | mysql -uroot -p${PASSWORD_DB_ROOT} 2>&1 >>$OUT)
 done
