@@ -32,13 +32,16 @@ echo $this->element('dropdownButton', array(
 	<p><?php echo __('Are you sure?') ?></p>
     </div>
     <div class="modal-footer">
-	<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><?php echo __('Cancel') ?></a>
+	<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">
+	    <i class="icon-chevron-up"></i>
+	    <?php echo __('Cancel') ?>
+	</a>
 	<?php echo $this->Form->postLink(
-			__('Delete'),
+			'<i class="icon-remove icon-white"></i>' . __('Delete'),
 			array('action' => 'delete', $id),
 			array(
 			    'escape' => false,
-			    'class' => 'btn btn-primary'
+			    'class' => 'btn btn-primary btn-danger'
 			)
 		) ?>
     </div>

@@ -19,9 +19,11 @@ case 'link':
 	<p><?php echo __('Are you sure?') ?></p>
     </div>
     <div class="modal-footer">
-	<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><?php echo __('Cancel') ?></a>
-	<a href="#" class="btn btn-primary" onclick="$('#<?php echo $model ?>DeleteForm input').val('<?php echo $id ?>'); $('#<?php echo $model ?>DeleteForm').submit()">
-	    <?php echo __('Delete') ?>
+	<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">
+	    <i class="icon-chevron-up"></i> <?php echo __('Cancel') ?>
+	</a>
+	<a href="#" class="btn btn-primary btn-danger" onclick="$('#<?php echo $model ?>DeleteForm input').val('<?php echo $id ?>'); $('#<?php echo $model ?>DeleteForm').submit()">
+	    <i class="icon-remove icon-white"></i> <?php echo __('Delete') ?>
 	</a>
     </div>
 </div>
