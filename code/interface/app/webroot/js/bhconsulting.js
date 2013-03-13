@@ -48,4 +48,7 @@ $(document).ready(function() {
             $('#rootwizard').find('.pager .finish').hide();
         }
     }});
+
+    document.onkeydown = Tastendruck;
 });
+

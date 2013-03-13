@@ -125,6 +125,10 @@ div.menutopphone {
     background-image: url("../img/glyphicons-halflings-green.png");
 }
 
+.icon-orange {
+    background-image: url("../img/glyphicons-halflings-orange.png");
+}
+
 .form-signin {
     max-width: 500px;
     margin: 0 auto 0;
@@ -176,4 +180,50 @@ div.menutopphone {
 
 .modal-body {
     text-align: center;
+}
+
+#snakefade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 1999;
+}
+
+#snakewrap {
+    top: 50%;
+    left: 50%;
+    width: 450px;
+    height: 250px;
+    margin-left: -225px;
+    margin-top: -250px;
+    z-index: 2000;
+    position: absolute;
+    border: 10px solid #0088cc;
+    background-color: #fff;
+}
+
+#snake {
+    width: 100%;
+    height: 100%; 
+}
+
+#snakescore, #snakelevel {
+    top: 10px;
+    left: 10px;
+    font-weight: bold;
+    font-size: 30px;
+    border: 10px solid #0c5a0c;
+    background-color: #fff;
+    z-index: 2001;
+    position: absolute;
+    text-align: center;
+    padding: 15px;
+}
+
+#snakelevel {
+    left: 110px;
+    border-color: #aa0000;
 }

@@ -44,6 +44,8 @@ $cakeDescription = __('SNACK');
     echo $this->Html->css('jquery.terminal.css');
     echo $this->Html->css('bootstrap-toggle-buttons.css');
     echo $this->fetch('css');
+
+    echo $this->Html->script('snake');
 ?>
     <style>
         body {
