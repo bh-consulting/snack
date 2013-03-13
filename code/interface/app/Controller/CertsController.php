@@ -20,7 +20,7 @@ class CertsController extends AppController {
      * @param  string $user user
      * @return response file to download
      */
-    public function get_cert($user, $file_type) {
+    private function get_cert($user, $file_type) {
         $userCert = Utils::getUserCertsPath($user);
         $file = $userCert[$file_type];
         try {

@@ -467,7 +467,7 @@ class RadusersController extends AppController {
 
                     $this->Session->setFlash(__(
                         'New user added. His certificates are %s and %s.',
-                        '<a href="certs/get_cert/' . $username  . '">' . $certs['public'] . '</a>',
+                        '<a href="certs/get_public/' . $username  . '">' . $certs['public'] . '</a>',
                         '<a href="certs/get_key/' . $username . '">' . $certs['key'] . '</a>',
                         'flash_success'
                     ));
@@ -1105,16 +1105,16 @@ class RadusersController extends AppController {
         $result = Utils::shell($command);
         Utils::userlog(__('created certificate for user %s', $userID));
 
-        switch ($result['code']) {
-        case 1:
-            throw new RSAKeyException($userID, $username);
-        case 2:
-            throw new CertificateException($userID, $username);
-        case 3:
-            throw new CertificateSignException($userID, $username);
-        case 4:
-            throw new CRLException($userID, $username);
-        }
+        // switch ($result['code']) {
+        // case 1:
+        //     throw new RSAKeyException($userID, $username);
+        // case 2:
+        //     throw new CertificateException($userID, $username);
+        // case 3:
+        //     throw new CertificateSignException($userID, $username);
+        // case 4:
+        //     throw new CRLException($userID, $username);
+        // }
     }
 
     /*

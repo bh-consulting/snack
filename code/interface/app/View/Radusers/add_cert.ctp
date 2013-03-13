@@ -7,7 +7,7 @@ Configure::load('parameters');
 
 <h1><?php echo __('Add a user with a certificate'); ?></h1>
 <?php
-echo $this->Form->create('Raduser');
+echo $this->Form->create('Raduser', array('novalidate' => true));
 
 
 $certificate = '<fieldset>';
