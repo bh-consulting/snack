@@ -6,7 +6,10 @@ $this->assign('groups_active', 'active');
 
 echo '<h1>' . __('Edit') . ' ' . $this->data['Radgroup']['groupname'] . ' ' . __('group') . '</h1>';
 
-echo $this->Form->create('Radgroup', array('action' => 'edit'));
+echo $this->Form->create('Radgroup', array(
+    'action' => 'edit',
+    'novalidate' => true,
+));
 
 $info = '<fieldset>';
 $info .= '<legend>' . __('Info') . '</legend>';

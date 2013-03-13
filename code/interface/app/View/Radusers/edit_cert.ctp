@@ -10,7 +10,10 @@ echo '<h1>'
     . ' (' . __('certificate user') . ')'
     . '</h1>';
 
-echo $this->Form->create('Raduser', array('action' => 'edit_cert'));
+echo $this->Form->create('Raduser', array(
+    'action' => 'edit_cert',
+    'novalidate' => true,
+));
 
 $certs = '<fieldset>';
 $certs .= '<legend>' . __('Certificate') . '</legend>';

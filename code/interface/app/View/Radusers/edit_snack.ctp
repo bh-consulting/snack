@@ -5,7 +5,10 @@ $this->assign('users_active', 'active');
 
 echo '<h1>' . __('Edit') . ' ' . $this->data['Raduser']['username'] . '</h1>';
 
-echo $this->Form->create('Raduser', array('action' => 'edit_snack'));
+echo $this->Form->create('Raduser', array(
+    'action' => 'edit_snack',
+    'novalidate' => true,
+));
 
 $userInfo = '<fieldset>';
 $userInfo .= '<legend>' . __('User info') . '</legend>';

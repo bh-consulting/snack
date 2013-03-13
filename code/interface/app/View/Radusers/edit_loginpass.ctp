@@ -6,7 +6,10 @@ $this->assign('users_active', 'active');
 echo '<h1>' . __('Edit') . ' ' . $this->data['Raduser']['username']
     . ' ' . __('(login / password user)') . '</h1>';
 
-echo $this->Form->create('Raduser', array('action' => 'edit_loginpass',));
+echo $this->Form->create('Raduser', array(
+    'action' => 'edit_loginpass',
+    'novalidate' => true,
+));
 
 $checks = '<fieldset>';
 $checks .= '<legend>' . __('Checks') . '</legend>';

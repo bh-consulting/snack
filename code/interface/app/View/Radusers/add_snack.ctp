@@ -5,7 +5,7 @@ $this->assign('users_active', 'active');
 
 echo '<h1>' . __('Add an admin user') . '</h1>';
 
-echo $this->Form->create('Raduser');
+echo $this->Form->create('Raduser', array('novalidate' => true));
 
 $userInfo = '<fieldset>';
 $userInfo .= '<legend>' . __('User info') . '</legend>';
