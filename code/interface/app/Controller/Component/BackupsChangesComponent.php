@@ -27,6 +27,8 @@ class BackupsChangesComponent extends Component {
 		),
 	   ));
 
+	    if($backupsCount == 0)
+		$areThereUnwritten = 1;
 	}
 
         return $areThereUnwritten != 0;
