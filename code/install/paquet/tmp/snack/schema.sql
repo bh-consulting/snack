@@ -11,7 +11,6 @@
 #                                   Mike Machado <mike@innercite.com>     #
 ###########################################################################
 
-CREATE DATABASE radius DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE user 'radius'@'localhost' identified by 'radiusroxx';
 
 GRANT ALL ON radius.* to 'radius'@'localhost';
