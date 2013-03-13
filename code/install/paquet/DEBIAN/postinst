@@ -588,7 +588,7 @@ STEP=4
 
 echo 0 | whiptail \
 	--title "SNACK ${VERSION}" \
-	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nCreate directories"
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nCreate directories" \
 	10 70 0
 {
 mkdir -p $TFTP_FOLDER
@@ -598,7 +598,7 @@ chmod 0770 $TFTP_FOLDER
 
 echo 30 | whiptail \
 	--title "SNACK ${VERSION}" \
-	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nSet scripts permissions"
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nSet scripts permissions" \
 	10 70 0
 {
 chmod +x $DEST_ROOT_PATH/scripts
@@ -611,7 +611,7 @@ chmod 0550 $BACKUP_TRAPS_SCRIPT
 
 echo 60 | whiptail \
 	--title "SNACK ${VERSION}" \
-	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nAdapting services configurations"
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nAdapting services configurations" \
 	10 70 0
 {
 cat >> /etc/snmp/snmptrapd.conf <<TRAPCONF
@@ -649,7 +649,7 @@ sed\
 
 echo 90 | whiptail \
 	--title "SNACK ${VERSION}" \
-	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nIntiate git"
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nIntiate git" \
 	10 70 0
 {(cd $TFTP_FOLDER && git init)} >> $OUT 2 >> $LOG
 
