@@ -643,7 +643,7 @@ sed\
 	-i /etc/default/snmpd
 
 sed\
-	-e "s/\(TFTP_DIRECTORY=\"\)\/var\/lib\/tftpboot/\1$TFTP_FOLDER/"\
+	-e "s|\(TFTP_DIRECTORY=\"\)/var/lib/tftpboot|\1$TFTP_FOLDER|" \
 	-i /etc/default/tftpd-hpa
 } >> $OUT 2>>$LOG
 
