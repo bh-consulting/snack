@@ -5,6 +5,29 @@ Configure::load('parameters');
 class Utils {
 
     /**
+     * Generate a sql query with cakephp tools.
+     * !!!WARNING!!! Experimental
+     */
+    public static function generateQuery($model, $queryData) {
+        $db = $model->getDataSource();
+        $params = array_merge(
+            array(
+                'fields'     => array(),
+                'table'      => $db->fullTableName($model),
+                'alias'      => ucfirst($model->table),
+                'limit'      => null,
+                'offset'     => null,
+                'joins'      => array(),
+                'conditions' => array(),
+                'order'      => null,
+                'group'      => null
+            ),
+            $queryData
+        );
+        return trim($db->buildStatement($params, $model));
+    }
+
+    /**
      * Tell if the given string is a MAC address
      * @param  string $string string to check
      * @return boolean         string is a MAC

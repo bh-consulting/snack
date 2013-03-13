@@ -59,34 +59,26 @@ class RadgroupsController extends AppController {
 
         if ($radgroups != null) {
             foreach ($radgroups as &$group) {
-                $radug = new Radusergroup();
-                $group['Radgroup']['membercount'] = $radug->find(
-                    'count',
+                $radgc = new Radgroupcheck();
+                $groupcheck = $radgc->find(
+                    'first',
                     array(
-                        'fields' => 'username',
-                        'conditions' => array('groupname' => $group['Radgroup']['groupname']),
+                        'fields' => 'value',
+                        'conditions' => array(
+                            'groupname' => $group['Radgroup']['groupname'],
+                            'attribute' => 'Expiration'
+                        )
                     )
                 );
-                $radgc = new Radgroupcheck();
-		$groupcheck = $radgc->find(
-		    'first',
-		    array(
-			'fields' => 'value',
-			'conditions' => array(
-			    'groupname' => $group['Radgroup']['groupname'],
-			    'attribute' => 'Expiration'
-			)
-		    )
-		);
-		if(!empty($groupcheck))
-		    $group['Radgroup']['expiration'] = $groupcheck['Radgroupcheck']['value'];
-		else
-		    $group['Radgroup']['expiration'] = -1;
+                if(!empty($groupcheck))
+                    $group['Radgroup']['expiration'] = $groupcheck['Radgroupcheck']['value'];
+                else
+                    $group['Radgroup']['expiration'] = -1;
             }
         }
 
         $this->set('radgroups', $radgroups);
-	}
+    }
 
     /**
      * Delete severals groups.

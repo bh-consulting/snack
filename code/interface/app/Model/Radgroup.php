@@ -1,19 +1,20 @@
 <?
-
 App::uses('Utils', 'Lib');
+App::import('Model', 'Radusergroup');
 
-class Radgroup extends AppModel
-{
+class Radgroup extends AppModel {
+
     public $useTable = 'radgroup';
     public $primaryKey = 'id';
     public $displayField = 'groupname';
     public $name = 'Radgroup';
+    public $actsAs = array('Validation');
 
     public $validationDomain = 'validation';
     public $validate = array(
         'groupname' => array(
             'isUnique' => array(
-                'rule' => 'isUnique',
+                'rule' => array('isUnique', 'groupname'),
                 'message' => 'Groupname already used'
             ),
             'notEmpty' => array(
@@ -39,6 +40,17 @@ class Radgroup extends AppModel
             'allowEmpty' => true,
         ),
     );
-}
 
+    public function __construct($id = false, $table = null, $ds = null) {
+        $this->virtualFields['membercount'] = Utils::generateQuery(
+            new Radusergroup(),
+            array(
+                'fields' => array('COUNT(*)'),
+                'conditions' => array('Radusergroup.groupname = Radgroup.groupname'),
+            )
+        );
+
+        parent::__construct($id, $table, $ds);
+    }
+}
 ?>
