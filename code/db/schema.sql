@@ -181,3 +181,37 @@ CREATE TABLE radius.radgroup (
     PRIMARY KEY (id),
     KEY groupname (groupname(32))
 );
+
+#
+# 'backup_freeradius.sql'
+#
+CREATE USER 'logsfreeradius'@'localhost' IDENTIFIED BY 'logsfreeradius';
+
+CREATE TABLE radius.logs (
+	id bigint unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	host varchar(128) default NULL,
+	facility varchar(10) default NULL,
+	priority varchar(10) default NULL,
+	level varchar(10) default NULL,
+	tag varchar(10) default NULL,
+	datetime datetime default NULL,
+	program varchar(15) default NULL,
+	msg text
+);
+
+GRANT ALL ON radius.logs TO 'logsfreeradius'@'localhost';
+
+
+#
+# 'gitCommit.sql' 
+#
+CREATE TABLE radius.backups (
+  id int(11) unsigned NOT NULL auto_increment,
+  commit varchar(64) DEFAULT NULL,
+  datetime DATETIME NOT NULL,
+  nas varchar(100)  NOT NULL,
+  action varchar(50) NOT NULL ,
+  users varchar(256) NOT NULL ,
+  restore varchar(64) DEFAULT NULL,
+  PRIMARY KEY  (id)
+) ;

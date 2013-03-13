@@ -15,6 +15,10 @@ oid_ccmHistoryEventCommandSource=iso.3.6.1.4.1.9.9.43.1.1.6.1.3
 oid_ccmHistoryEventConfigSource=iso.3.6.1.4.1.9.9.43.1.1.6.1.4
 oid_ccmHistoryEventConfigDestination=iso.3.6.1.4.1.9.9.43.1.1.6.1.5
 
+oid_sysUpTime=iso.3.6.1.2.1.1.3.0
+oid_whyReload=iso.3.6.1.4.1.9.2.1.2.0
+
+
 db_login=$(extract_db login)
 db_password=$(extract_db password)
 db_name=$(extract_db database)
@@ -94,6 +98,13 @@ elif [[\
     
     cd ~snack/backups.git/
     rm $NAS_IP_ADDRESS.pid
+
+#elif [[\
+#    "$ccmHistoryEventCommandSource" =~ $oid_sysUpTime\ [0-9]+ \
+#    && "$ccmHistoryEventConfigSource" =~ $oid_whyReload\ 706f7765722d6f6e \
+#]]; then
+#	echo "got a reboot" >> /tmp/switch
+
 fi
 
 exit 0

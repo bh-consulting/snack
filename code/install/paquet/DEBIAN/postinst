@@ -46,8 +46,14 @@ RADIUSD_CONF=${RADIUS_PATH}/radiusd.conf
 APACHE_PORTS_CONF=${APACHE_PATH}/ports.conf
 APACHE_SNACK=${APACHE_PATH}/sites-available/snack
 
+
+BACKUP_CONFIG_SCRIPT=$USER_HOME/scripts/backupConfig.sh
+BACKUP_CREATE_SCRIPT=$USER_HOME/scripts/backup_create.sh
+BACKUP_TRAPS_SCRIPT=$USER_HOME/scripts/backup_traps.sh
+TFTP_FOLDER=$USER_HOME/backups.git
+
 STEP=1
-LAST_STEP=5
+LAST_STEP=6
 DISPLAY_SLEEP=0.5
 
 whiptail \
@@ -180,8 +186,6 @@ echo 20 | whiptail \
 	--title "SNACK ${VERSION}" \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring Mysql for Radius...\nCreate tables." 10 70 0
 
-mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /etc/freeradius/sql/mysql/schema.sql >> $OUT 2>>$LOG
-mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < /etc/freeradius/sql/mysql/nas.sql >> $OUT 2>>$LOG
 mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < ${TMP}/schema.sql >> $OUT 2>>$LOG
 
 echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cleartext-Password', ':=', '${PASSWORD_RADIUS}');" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} >> $OUT 2>>$LOG
@@ -457,12 +461,6 @@ echo 80 | whiptail \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring certificates for Radius...\nImport scripts for the web interface." \
 	10 70 0
 
-# Copy scripts version
-# Copie des scripts
-
-{
-mv ${TMP}/scripts $USER_HOME
-} >> $OUT 2>>$LOG
 
 # Setting approriates permissions
 # Affecter les permissions
@@ -515,7 +513,7 @@ sed \
 rm -f ${APACHE_PATH}/sites-enabled/000-default
 } >> $OUT 2>>$LOG
 
-echo 33 | whiptail \
+echo 30 | whiptail \
 	--title "SNACK ${VERSION}" \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring apache for Radius...\nEnable ssl and rewrite modules." \
 	10 70 0
@@ -525,7 +523,7 @@ a2enmod ssl
 a2enmod rewrite
 } >> $OUT 2>>$LOG
 
-echo 66 | whiptail \
+echo 60 | whiptail \
 	--title "SNACK ${VERSION}" \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring apache for Radius...\nMysql access for radius." \
 	10 70 0
@@ -535,6 +533,22 @@ sed \
 	-i ${USER_HOME}/interface/app/Config/database.php \
 
 >> $OUT 2>>$LOG
+
+echo 90 | whiptail \
+	--title "SNACK ${VERSION}" \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring apache for Radius...\nAutomaticaly Setting IP" \
+	10 70 0
+{
+IP=`ip a | grep eth | head -1 | grep '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*' | cut -d ' ' -f6 | cut -d '/' -f1`
+if [ ! $IP = '' ]
+then
+sed\
+	-e "s/\('ipAddress' => '\)[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/\1$IP/g"\
+	-i $DEST_ROOT_PATH/interface/app/Config/parameters.php
+fi
+} >> $OUT 2>>$LOG
+
+
 
 echo 100 | whiptail \
 	--title "SNACK ${VERSION}" \
@@ -568,6 +582,80 @@ sleep $DISPLAY_SLEEP
 
 STEP=4
 
+#####################################################
+#Configuration backups/Sauvegarde des configurations#
+#####################################################
+
+echo 0 | whiptail \
+	--title "SNACK ${VERSION}" \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nCreate directories"
+	10 70 0
+{
+mkdir -p $TFTP_FOLDER
+chown snack:snack $TFTP_FOLDER
+chmod 0770 $TFTP_FOLDER
+} >> $OUT 2>>$LOG
+
+echo 30 | whiptail \
+	--title "SNACK ${VERSION}" \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nSet scripts permissions"
+	10 70 0
+{
+chmod +x $DEST_ROOT_PATH/scripts
+chown snmp:snack $BACKUP_CREATE_SCRIPT
+chmod 0550 $BACKUP_CREATE_SCRIPT
+chown snmp:snack $BACKUP_TRAPS_SCRIPT
+chmod 0550 $BACKUP_TRAPS_SCRIPT
+} >> $OUT 2>>$LOG
+
+
+echo 60 | whiptail \
+	--title "SNACK ${VERSION}" \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nAdapting services configurations"
+	10 70 0
+{
+cat >> /etc/snmp/snmptrapd.conf <<TRAPCONF
+	donotlogtraps false
+        logOption f /var/log/snmptraps.log
+        authCommunity log,execute,net private
+        traphandle 1.3.6.1.4.1.9.9.43.* $BACKUP_TRAPS_SCRIPT
+TRAPCONF
+
+cat > /etc/freeradius/modules/snack-backups <<MODULES
+exec snack-backups {
+            program = "$BACKUP_CREATE_SCRIPT"
+            wait = no
+            input_pairs = request
+            shell_escape = yes
+            output = none
+}
+MODULES
+sed\
+	-e "/exec/c \\\texec /usr/sbin/in.tftpd --listen --user snack --address 0.0.0.0:69 --secure $TFTP_FOLDER -c"\
+	-i /etc/init/tftpd-hpa.conf
+
+sed\
+	-e "/TRAPDRUN=no/c TRAPDRUN=yes"\
+	-i /etc/init.d/snmpd
+
+[ -r /etc/default/snmpd ] && sed\
+	-e "/TRAPDRUN=no/c TRAPDRUN=yes"\
+	-i /etc/default/snmpd
+
+sed\
+	-e"s/\(TFTP_DIRECTORY=\"\)\/var\/lib\/tftpboot/\1$TFTP_FOLDER/"\
+	-i /etc/default/tftpd-hpa
+} >> $OUT 2 >> $LOG
+
+echo 90 | whiptail \
+	--title "SNACK ${VERSION}" \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nIntiate git"
+	10 70 0
+{(cd $TFTP_FOLDER && git init)} >> $OUT 2 >> $LOG
+
+
+STEP=5
+
 echo 0 | whiptail \
 	--title "SNACK ${VERSION}" \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Restarting services...\nSyslog-ng" \
@@ -575,19 +663,38 @@ echo 0 | whiptail \
 
 service syslog-ng restart >> $OUT 2>>$LOG
 
-echo 33 | whiptail \
+echo 20 | whiptail \
 	--title "SNACK ${VERSION}" \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Restarting services...\nFreeradius" \
 	10 70 0
 
 service freeradius restart >> $OUT 2>>$LOG
 
-echo 66 | whiptail \
+echo 40 | whiptail \
 	--title "SNACK ${VERSION}" \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Restarting services...\nApache2" \
 	10 70 0
 
 service apache2 restart >> $OUT 2>>$LOG
+
+echo 60 | whiptail \
+	--title "SNACK ${VERSION}" \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Restarting services...\nTftp" \
+	10 70 0
+
+{
+/usr/sbin/in.tftpd --listen --user snack --address 0.0.0.0:69 --secure $TFTP_FOLDER -c
+sudo service tftpd-hpa stop
+} >> $OUT 2>>$LOG
+
+echo 80 | whiptail \
+	--title "SNACK ${VERSION}" \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Restarting services...\nSnmptrapd" \
+	10 70 0
+
+{
+snmptrapd 
+} >> $OUT 2>>$LOG
 
 echo 100 | whiptail \
 	--title "SNACK ${VERSION}" \
@@ -595,7 +702,7 @@ echo 100 | whiptail \
 	10 70 0
 sleep $DISPLAY_SLEEP
 
-STEP=5
+STEP=6
 
 # Delete temporary directory
 # Suppression du dossier temporaire

@@ -33,6 +33,9 @@ server snack {
 	}
 
 	accounting {
+		if(((NAS-Port-Type == Async)||(NAS-Port-Type == Virtual))&&((Acct-Status-Type == Start)||(Acct-Status-Type == Stop))) {
+			snack-backups
+		}
 		detail
 		radutmp
 		sql
