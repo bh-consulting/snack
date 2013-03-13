@@ -250,7 +250,13 @@ if (!empty($nas)) {
 </table>
 <?php
 if(AuthComponent::user('role') == 'superadmin'){
-    echo $this->element('MultipleAction', array('action' => 'end'));
+    echo $this->element(
+        'MultipleAction',
+        array(
+            'options' => array('delete'),
+            'action' => 'end',
+        )
+    );
 }
 echo $this->element('paginator_footer');
 unset($n);
