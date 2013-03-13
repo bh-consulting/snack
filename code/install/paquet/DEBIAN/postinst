@@ -543,7 +543,7 @@ IP=`ip a | grep eth | head -1 | grep '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*' | cut -d '
 if [ ! $IP = '' ]
 then
 sed\
-	-e "s/\('ipAddress' => '\)[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/\1$IP/g"\
+	-e "s/\('ipAddress' => '\)[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/\1$IP/" \
 	-i $USER_HOME/interface/app/Config/parameters.php
 fi
 } >> $OUT 2>>$LOG
@@ -668,7 +668,10 @@ echo 20 | whiptail \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Restarting services...\nFreeradius" \
 	10 70 0
 
-service freeradius restart >> $OUT 2>>$LOG
+{
+service freeradius restart 
+echo "service freeradius restart" >> /etc/rc.local
+}>> $OUT 2>>$LOG
 
 echo 40 | whiptail \
 	--title "SNACK ${VERSION}" \
