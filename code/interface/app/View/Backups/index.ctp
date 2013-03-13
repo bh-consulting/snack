@@ -246,7 +246,7 @@ if (!empty($backups)) {
     <tr>
         <td colspan="<?php echo count($columns); ?>" style="text-align: center">
 <?php
-    echo __('No backup found.');
+    echo __('No backup found (');
 
     if (count($this->params['url']) > 0) {
         echo $this->Html->link(__('retry with no filters'), '.');
