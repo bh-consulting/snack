@@ -645,13 +645,13 @@ sed\
 sed\
 	-e"s/\(TFTP_DIRECTORY=\"\)\/var\/lib\/tftpboot/\1$TFTP_FOLDER/"\
 	-i /etc/default/tftpd-hpa
-} >> $OUT 2 >> $LOG
+} >> $OUT 2>>$LOG
 
 echo 90 | whiptail \
 	--title "SNACK ${VERSION}" \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring backups system...\nIntiate git" \
 	10 70 0
-{(cd $TFTP_FOLDER && git init)} >> $OUT 2 >> $LOG
+{(cd $TFTP_FOLDER && git init)} >> $OUT 2>>$LOG
 
 
 STEP=5
