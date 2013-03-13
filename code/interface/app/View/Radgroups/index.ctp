@@ -60,6 +60,13 @@ echo $this->element('filters_panel', array(
     'controller' => 'radgroups/index',
     'inputs' => array(
         array(
+            'name' => 'expired',
+            'label' => __('Expiration'),
+            'multiple' => 'checkbox',
+            'type' => 'checkgroup',
+            'escape' => false,
+        ),
+        array(
             'name' => 'text',
             'label' => __('Contains (accept regex)'),
             'autoComplete' => true,

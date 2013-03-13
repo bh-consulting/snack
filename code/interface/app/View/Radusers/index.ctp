@@ -152,6 +152,13 @@ echo $this->element('filters_panel', array(
             'type' => 'checkgroup',
         ),
         array(
+            'name' => 'expired',
+            'label' => __('Expiration'),
+            'multiple' => 'checkbox',
+            'type' => 'checkgroup',
+            'escape' => false,
+        ),
+        array(
             'name' => 'text',
             'label' => __('Contains (accept regex)'),
             'autoComplete' => true,
@@ -296,14 +303,14 @@ if (!empty($radusers)) {
 		if($user['Raduser']['expiration'] != -1) {
 		    $expiration = new DateTime($user['Raduser']['expiration']);
 		    $now = new DateTime();
-		    $interval = $now->diff($expiration);
+            $interval = $now->diff($expiration);
 
-		    if($interval->format('%R') == '-') {
-			echo '<i class="icon-warning-sign icon-red" title="';
-			echo __('User expired since the %s.', $this->element('formatDates', array('date' => $user['Raduser']['expiration'])));
-			echo '"></i> ';
-		    }
-		}
+            if($interval->format('%R') == '-') {
+                echo '<i class="icon-warning-sign icon-red" title="';
+                echo __('User expired since the %s.', $this->element('formatDates', array('date' => $user['Raduser']['expiration'])));
+                echo '"></i> ';
+            }
+        }
 
 		echo h($user['Raduser'][$field]);
 

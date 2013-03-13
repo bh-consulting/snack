@@ -168,9 +168,14 @@ class FiltersComponent extends Component {
                         )
                     );
 
-                    //TODO: translate items
-                    //foreach ($itemsData as &$item) {
-                    //    if (
+                    if (isset($options['translate'])) {
+                        foreach ($itemsData as $text=>&$value) {
+                            if (isset($options['translate'][$text])) {
+                                $value = $options['translate'][$text];
+                            }
+                        }
+                    }
+
                     $items = array_merge($items, $itemsData);
                 }
             }
@@ -328,21 +333,14 @@ class FiltersComponent extends Component {
 
             // Set ahead data.
             if (isset($options['ahead'])) {
-                $aheadData = array();
 
-                foreach ((array)$options['ahead'] as $field) {
-                    $aheadData = array_merge(
-                        $aheadData,
-                        $this->controller->{$this->modelName}->find(
-                            'list',
-                            array(
-                                'fields' => $field,
-                                'group' => $field,
-                                'limit' => 100
-                            )
-                        )
-                    );
-                }
+                $aheadData = $this->controller->{$this->modelName}->find(
+                    'customList',
+                    array(
+                        'fields' => $options['ahead'],
+                        'limit' => 100
+                    )
+                );
 
                 $this->controller->set($options['input'] . 'Data', $aheadData);
             }

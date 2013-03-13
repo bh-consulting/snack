@@ -31,6 +31,18 @@ class RadgroupsController extends AppController {
         unset($this->Radgroup->validate['groupname']['notEmpty']['required']);
     }
     
+    public function getRegexExpiration($args = array()) {
+        if (!empty($args['input'])) {
+            $data = &$this->request->data['Radgroup'][$args['input']];
+
+            if (isset($data[0]) && $data[0] == 'expired') {
+                return "(groupname IN (SELECT groupname from radgroupcheck where attribute='Expiration' and value < now()))";
+            } else {
+                return '(1=1)';
+            }
+        }
+    }
+
 	public function index(){
         // Multiple delete/export
         if ($this->request->is('post')) {
@@ -55,6 +67,24 @@ class RadgroupsController extends AppController {
             'ahead' => array('groupname'),
         ));
 
+        $this->Filters->addComplexConstraint(array(
+            'select' => array(
+                'items' => array(
+                    'expired' => '<i class="icon-warning-sign icon-red"></i> '
+                    . __('Expired'),
+                ),
+                'input' => 'expired',
+                'title' => false,
+            ),
+            'callback' => array(
+                'getRegexExpiration',
+                array(
+                    'input' => 'expired',
+                ),
+            )
+        ));
+
+        $radusers = $this->Filters->paginate();
         $radgroups = $this->Filters->paginate();
 
         if ($radgroups != null) {

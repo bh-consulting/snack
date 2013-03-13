@@ -111,7 +111,7 @@ class NasController extends AppController {
                 'description',
             ),
             'input' => 'text',
-            'ahead' => array('nasname','shortname'),
+            'ahead' => array('nasname','shortname', 'type', 'ports', 'server'),
         ));
 
         $this->Filters->addComplexConstraint(array(

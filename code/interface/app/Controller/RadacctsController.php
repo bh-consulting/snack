@@ -101,6 +101,7 @@ class RadacctsController extends AppController {
         $this->Filters->addSelectConstraint(array(
             'fields' => array('nasporttype'),
             'data' => array('nasporttype'),
+            'translate' => $this->Radacct->types,
             'input' => 'porttype',
             'title' => __('Select a port type...'),
         ));

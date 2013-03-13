@@ -32,4 +32,26 @@ App::uses('Lib', 'Validation');
  * @package       app.Model
  */
 class AppModel extends Model {
+    public $findMethods = array('customList' =>  true);
+
+    public function _findCustomList($state, $query, $results = array()) {
+        if ($state == 'before') {
+            return $query;
+        } else {
+            $newResults = array();
+
+            foreach ($results as $result) {
+                $records = array_shift($result);
+                foreach ($records as $key=>$value) {
+                    if ($value != null && $value != '' && $value != false) {
+                        $newResults[] = $value;
+                    }
+                }
+            }
+
+            $newResults = array_unique($newResults);
+
+            return $newResults;
+        }
+    }
 }

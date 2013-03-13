@@ -106,6 +106,18 @@ class RadusersController extends AppController {
         unset($this->Raduser->validate['username']['notEmpty']['required']);
     }
     
+    public function getRegexExpiration($args = array()) {
+        if (!empty($args['input'])) {
+            $data = &$this->request->data['Raduser'][$args['input']];
+
+            if (isset($data[0]) && $data[0] == 'expired') {
+                return "(username IN (SELECT username from radcheck where attribute='Expiration' and value < now()))";
+            } else {
+                return '(1=1)';
+            }
+        }
+    }
+
     /**
      * Display users list.
      * Manage multiple delete/export actions.
@@ -162,6 +174,23 @@ class RadusersController extends AppController {
             ),
             'input' => 'rolefilter',
             'title' => false,
+        ));
+
+        $this->Filters->addComplexConstraint(array(
+            'select' => array(
+                'items' => array(
+                    'expired' => '<i class="icon-warning-sign icon-red"></i> '
+                    . __('Expired'),
+                ),
+                'input' => 'expired',
+                'title' => false,
+            ),
+            'callback' => array(
+                'getRegexExpiration',
+                array(
+                    'input' => 'expired',
+                ),
+            )
         ));
 
         $radusers = $this->Filters->paginate();
