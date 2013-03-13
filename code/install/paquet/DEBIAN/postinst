@@ -686,8 +686,8 @@ echo 60 | whiptail \
 	10 70 0
 
 {
-/usr/sbin/in.tftpd --listen --user snack --address 0.0.0.0:69 --secure $TFTP_FOLDER -c
 sudo service tftpd-hpa stop
+/usr/sbin/in.tftpd --listen --user snack --address 0.0.0.0:69 --secure $TFTP_FOLDER -c
 } >> $OUT 2>>$LOG
 
 echo 80 | whiptail \
