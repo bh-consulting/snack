@@ -11,7 +11,7 @@ class BackupsChangesComponent extends Component {
     public function areThereChangesUnwrittenInThisNAS($nas) {
         $backup = new Backup();
 
-        $writtenCount = $backup->find('count', array(
+        $areThereUnwritten = $backup->find('count', array(
             'conditions' => array(
                 "id = (SELECT MAX(id) FROM backups GROUP BY nas HAVING nas='"
 		    . Sanitize::escape($nas['Nas']['nasname'])
@@ -20,7 +20,16 @@ class BackupsChangesComponent extends Component {
             ),
         ));
 
-        return $writtenCount != 0;
+	if($areThereUnwritten == 0) {
+	   $backupsCount = $backup->find('count', array(
+		'conditions' => array(
+		    'nas' => $nas['Nas']['nasname']
+		),
+	   ));
+
+	}
+
+        return $areThereUnwritten != 0;
     }
 
     public function backupsUnwrittenInThisNAS($nas, $inverse = false) {

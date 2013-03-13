@@ -108,7 +108,8 @@ var Boostrapify = {
 		$('.datetimepickeradd').append('<i data-time-icon="icon-time" ' +
 			'data-date-icon="icon-calendar" />');
 		$('.datetimepickerwrap').datetimepicker({
-			language: 'en'
+			language: 'fr',
+			weekStart: 1
 		});
 
 		// SLIDER
@@ -172,7 +173,7 @@ var Boostrapify = {
 		$('*[title]').tooltip();
 
 		// SWITCHS
-		$('.switch').each(function() {
+		$('.switchbtn').each(function() {
 		    $(this).parent().css('padding-left', '0');
 		    $(this).wrap('<div class="switchwrap">');
 		    $(this).parent().toggleButtons({
