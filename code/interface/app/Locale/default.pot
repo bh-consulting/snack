@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-03-14 16:42+0000\n"
+"POT-Creation-Date: 2013-03-14 18:31+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -232,6 +232,7 @@ msgid "MAC"
 msgstr ""
 
 #: Controller/RadusersController.php:164
+#: View/Radusers/index.ctp:38
 msgid "Login/Pwd"
 msgstr ""
 
@@ -356,7 +357,7 @@ msgid "Server %s cannot be restarted."
 msgstr ""
 
 #: Controller/Component/ChecksComponent.php:64
-#: View/Radusers/index.ctp:38;85
+#: View/Radusers/index.ctp:85
 msgid "Login / Password"
 msgstr ""
 
@@ -514,18 +515,15 @@ msgid "bytes"
 msgstr ""
 
 #: Model/Backup.php:13
-#: View/Backups/view.ctp:38
 msgid "Log in"
 msgstr ""
 
 #: Model/Backup.php:14
-#: View/Backups/view.ctp:35
 msgid "Log off"
 msgstr ""
 
 #: Model/Backup.php:15
 #: View/Backups/index.ctp:14
-#: View/Backups/view.ctp:41
 msgid "Write memory"
 msgstr ""
 
@@ -548,6 +546,8 @@ msgstr ""
 
 #: Model/Raduser.php:106
 #: View/Elements/snack_role_input.ctp:11
+#: View/Radaccts/index.ctp:24
+#: View/Radaccts/view.ctp:18
 msgid "User"
 msgstr ""
 
@@ -600,12 +600,12 @@ msgid "Differences"
 msgstr ""
 
 #: View/Backups/diff.ctp:66
-#: View/Backups/view.ctp:187
+#: View/Backups/view.ctp:175
 msgid "Go back to backups"
 msgstr ""
 
 #: View/Backups/index.ctp:8
-#: View/Backups/view.ctp:109
+#: View/Backups/view.ctp:93
 #: View/Nas/index.ctp:15
 #: View/Radgroups/index.ctp:12
 #: View/Radusers/index.ctp:18
@@ -618,7 +618,7 @@ msgid "When"
 msgstr ""
 
 #: View/Backups/index.ctp:26
-#: View/Backups/view.ctp:49
+#: View/Backups/view.ctp:33
 msgid "Why"
 msgstr ""
 
@@ -644,7 +644,7 @@ msgid "Author contains (accept regex)"
 msgstr ""
 
 #: View/Backups/index.ctp:66
-#: View/Backups/view.ctp:111
+#: View/Backups/view.ctp:95
 #: View/Elements/MultipleAction.ctp:79
 msgid "Action"
 msgstr ""
@@ -667,12 +667,12 @@ msgid "No backup found ("
 msgstr ""
 
 #: View/Backups/index.ctp:243
-#: View/Elements/logs_element.ctp:138
+#: View/Elements/logs_element.ctp:137
 msgid "retry with no filters"
 msgstr ""
 
 #: View/Backups/index.ctp:245
-#: View/Elements/logs_element.ctp:140
+#: View/Elements/logs_element.ctp:139
 msgid "no filters"
 msgstr ""
 
@@ -680,47 +680,47 @@ msgstr ""
 msgid "View and restore"
 msgstr ""
 
-#: View/Backups/view.ctp:48
+#: View/Backups/view.ctp:32
 msgid "<strong>%s:</strong> <em>%s</em>"
 msgstr ""
 
-#: View/Backups/view.ctp:53
+#: View/Backups/view.ctp:37
 msgid "This is the current configuration."
 msgstr ""
 
-#: View/Backups/view.ctp:59
+#: View/Backups/view.ctp:43
 msgid "Comparison with the current configuration"
 msgstr ""
 
-#: View/Backups/view.ctp:62;75
+#: View/Backups/view.ctp:46;59
 msgid "Show"
 msgstr ""
 
-#: View/Backups/view.ctp:72
+#: View/Backups/view.ctp:56
 msgid "Contents"
 msgstr ""
 
-#: View/Backups/view.ctp:87
+#: View/Backups/view.ctp:71
 msgid "Restore"
 msgstr ""
 
-#: View/Backups/view.ctp:95
-#: View/Elements/logs_element.ctp:158
+#: View/Backups/view.ctp:79
+#: View/Elements/logs_element.ctp:157
 #: View/Elements/modalDelete.ctp:7
 msgid "Are you sure?"
 msgstr ""
 
-#: View/Backups/view.ctp:104
+#: View/Backups/view.ctp:88
 msgid "Newer similar backups"
 msgstr ""
 
-#: View/Backups/view.ctp:110
+#: View/Backups/view.ctp:94
 #: View/Elements/logs_element.ctp:9
 #: View/SystemDetails/index.ctp:21
 msgid "Date"
 msgstr ""
 
-#: View/Backups/view.ctp:112
+#: View/Backups/view.ctp:96
 #: View/Common/radius_sidebar.ctp:8
 #: View/Radgroups/add.ctp:14
 #: View/Radgroups/edit.ctp:16
@@ -728,7 +728,7 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: View/Backups/view.ctp:168
+#: View/Backups/view.ctp:156
 msgid "No similar backups found"
 msgstr ""
 
@@ -888,15 +888,15 @@ msgstr ""
 msgid "Search from this date"
 msgstr ""
 
-#: View/Elements/logs_element.ctp:116
+#: View/Elements/logs_element.ctp:115
 msgid "Search from this severity"
 msgstr ""
 
-#: View/Elements/logs_element.ctp:135
+#: View/Elements/logs_element.ctp:134
 msgid "No logs found"
 msgstr ""
 
-#: View/Elements/logs_element.ctp:155
+#: View/Elements/logs_element.ctp:154
 msgid "Delete all"
 msgstr ""
 
@@ -1181,11 +1181,6 @@ msgstr ""
 #: View/Radusers/index.ctp:23
 #: View/Radusers/login.ctp:15
 msgid "Username"
-msgstr ""
-
-#: View/Radaccts/index.ctp:24
-#: View/Radaccts/view.ctp:18
-msgid "User station"
 msgstr ""
 
 #: View/Radaccts/index.ctp:32;68
