@@ -1,3 +1,5 @@
+// MODIFIE DEPUIS : http://www.freejavascriptgames.info/games/snake.html
+
 var i;
 Richtung = '+1';
 var block = 0;
