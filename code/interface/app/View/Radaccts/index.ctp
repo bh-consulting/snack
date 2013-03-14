@@ -192,7 +192,10 @@ if (!empty($radaccts)) {
 
                 break;
             case 'callingstationid':
-                echo str_replace('-', ':', h($acct['Radacct'][$field]));
+		if(empty($acct['Radacct'][$field]))
+		    echo '<i class="icon-resize-small" title="' . __('Directly connected') . '"></i>';
+		else
+		    echo str_replace('-', ':', h($acct['Radacct'][$field]));
                 break;
             case 'nasporttype':
                 $value = $acct['Radacct'][$field];
@@ -203,13 +206,18 @@ if (!empty($radaccts)) {
 		break;
             case 'duration':
 		if ($acct['Radacct']['durationsec'] != -1) {
+		    echo '<span title="' . __('User still connected') . '">';
 		    echo '<i class="icon-time"></i> ';
-		    echo "<span -data-duration='{$acct['Radacct']['durationsec']}'";
+		    echo "<span ";
+		    echo " -data-duration='{$acct['Radacct']['durationsec']}'";
 		    echo " -data-duration-format='" . __('y,m,d,h,min,s') . "'>";
 		    echo $acct['Radacct'][$field];
-		    echo '</span>';
-		} else 
+		    echo '</span></span>';
+		} else {
+		    echo '<span title="' . __('Session ended the %s.', $acct['Radacct']['acctstoptime']) . '">';
 		    echo $acct['Radacct'][$field];
+		    echo '</span>';
+		}
                 break;
             default:
                 echo h($acct['Radacct'][$field]);

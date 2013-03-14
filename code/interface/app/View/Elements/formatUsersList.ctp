@@ -16,7 +16,7 @@ foreach($users AS $user) {
 	    )
         );
     } else {
-	$usersList[] = "<span class='unknown'><i class='icon-user icon-red'></i>&nbsp;{$user['username']}</span>";
+	$usersList[] = "<span class='unknown' title='" . __('User unknown') . "'><i class='icon-user icon-red'></i>&nbsp;{$user['username']}</span>";
     }
 }
 

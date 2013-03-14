@@ -13,7 +13,7 @@ if($nas['id'] != -1) {
 	)
     );
 } else {
-    $nas = "<span class='unknown'><i class='icon-hdd icon-red'></i>&nbsp;{$nas['ip']}</span>";
+    $nas = "<span class='unknown' title='" . __('NAS unknown') . "'><i class='icon-hdd icon-red'></i>&nbsp;{$nas['ip']}</span>";
 }
 
 echo $nas;

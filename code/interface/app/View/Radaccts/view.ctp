@@ -20,18 +20,40 @@ echo $this->element('block-dl', array(
     ),
 ));
 
-echo $this->element('block-dl', array(
-    'title' => __('Statistics:'),
-    'fields' => array(
+$fields = array();
+
+if ($radacct['Radacct']['durationsec'] != -1) {
+    $duration = '<span title="' . __('User still connected') . '">'
+	. '<i class="icon-time"></i> '
+	. '<span'
+	. " -data-duration='{$radacct['Radacct']['durationsec']}'"
+	. " -data-duration-format='" . __('y,m,d,h,min,s') . "'>"
+	. $radacct['Radacct']['duration']
+	. '</span></span>';
+} else {
+    $duration = $radacct['Radacct']['duration'];
+
+    $fields = array(
+        __('Session stop') => $radacct['Radacct']['acctstoptime'],
+    );
+}
+
+$fields = array_merge(
+    array(
         __('Session start') => $radacct['Radacct']['acctstarttime'],
-        __('Session stop') => (empty($radacct['Radacct']['acctstoptime']) ?
-	    '<em>'.__('still connected').'</em>' :
-	    $radacct['Radacct']['acctstoptime']),
-        __('Duration') => $radacct['Radacct']['duration'],
+    ),
+    $fields,
+    array(
+        __('Duration') => $duration,
         __('Terminate cause') => $radacct['Radacct']['acctterminatecause'],
         __('Input data') => Utils::octets($radacct['Radacct']['acctinputoctets']),
         __('Output data') => Utils::octets($radacct['Radacct']['acctoutputoctets']),
-    ),
+    )
+);
+
+echo $this->element('block-dl', array(
+    'title' => __('Statistics:'),
+    'fields' => $fields,
 ));
 
 if (!empty($radacct['Radacct']['nasportid'])) {
@@ -48,5 +70,7 @@ echo $this->element('block-dl', array(
     ),
 ));
 
+$this->start('script');
 echo $this->Html->script('radaccts');
+$this->end();
 ?>
