@@ -14,10 +14,13 @@ function backup() {
 		-e "$(printf "$sqline_restore" $1 ${USER_NAME//\"} $RESTORE_VALUE)"
     elif [ $1 = reload ]
     then
+	echo "in good case " >> /tmp/switch
     	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
 		-e "$(printf "$sqline" $1 ${USER_NAME//\"})"
     	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
 		-e "$(printf "$sqlcloses_sessions")"
+	/usr/bin/radzap -N $NAS_IP_ADDRESS 127.0.0.1 $secret
+		
 
     else
     	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
@@ -42,6 +45,8 @@ db_name=$(extract_db database)
 db_host=$(extract_db host)
 db_prefix=$(extract_db prefix)
 
+secret=secretloop
+
 read sqline <<SQL
     INSERT INTO\\
     ${db_prefix}backups(datetime, nas, action, users)\\
@@ -55,14 +60,15 @@ read sqline_restore <<SQL
 SQL
 
 read sqlcloses_sessions <<SQL
-    UPDATE radacct
-    SET ACCTSTOPTIME=(
-	SELECT datetime FROM backups
-	WHERE action='reload'
-	ORDER BY datetime DESC
-	LIMIT 1)
-    WHERE acctstoptime IS NULL;
+    UPDATE radacct\\
+    SET ACCTSTOPTIME=(\\
+	SELECT datetime FROM backups\\
+	WHERE action='reload'\\
+	ORDER BY datetime DESC\\
+	LIMIT 1)\\
+    WHERE acctstoptime IS NULL\\
 SQL
+
 
 ## PROGRAM
 

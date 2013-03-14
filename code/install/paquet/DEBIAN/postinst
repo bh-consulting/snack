@@ -53,7 +53,7 @@ BACKUP_TRAPS_SCRIPT=$USER_HOME/scripts/backup_traps.sh
 TFTP_FOLDER=$USER_HOME/backups.git
 
 STEP=1
-LAST_STEP=6
+LAST_STEP=7
 DISPLAY_SLEEP=0.5
 
 whiptail \
@@ -70,6 +70,32 @@ if [ $? != 0 ]; then
 		10 70
 	exit 1
 fi
+
+
+
+echo 0 | whiptail \
+	--title "SNACK ${VERSION}" \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring Radius...\nCorrecting accounting." \
+	10 70 0
+sed\
+	-e "s/\(\s*key\s*=\s*\".*\)\"/\1, Class\"/"\
+	-i $RADIUS_PATH/modules/acct_unique
+
+cat >> $RADIUS_PATH/modules/acct_unique <<MODULE_ACCT_UNIQUE
+acct_unique acct_class_unique {
+        key = "User-Name, Tmp-String-0, NAS-IP-Address, Client-IP-Address, NAS-Port"
+}
+MODULE_ACCT_UNIQUE
+
+
+echo 50 | whiptail \
+	--title "SNACK ${VERSION}" \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring Radius...\nCorrecting accounting." \
+	10 70 0
+sed\
+	-e "/exit/i service freeradius restart" \
+	-i /etc/rc.local
+
 	
 ##############################################################
 # Radius-Mysql configuration / Configuration de Radius-Mysql #
@@ -77,7 +103,7 @@ fi
 
 echo 0 | whiptail \
 	--title "SNACK ${VERSION}" \
-	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring Mysql for Radius...Create database." \
+	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring Mysql for Radius...\nCreate database." \
 	10 70 0
 sleep $DISPLAY_SLEEP
 
@@ -222,7 +248,7 @@ echo 100 | whiptail \
 	10 70 0
 sleep $DISPLAY_SLEEP
 
-STEP=2
+STEP=$(($STEP+1))
 
 ##############################
 # Certificates / Certificats #
@@ -488,7 +514,7 @@ echo 100 | whiptail \
 	10 70 0
 sleep $DISPLAY_SLEEP
 
-STEP=3
+STEP=$(($STEP+1))
 
 ##########
 # Apache #
@@ -578,7 +604,7 @@ echo 100 | whiptail \
 	10 70 0
 sleep $DISPLAY_SLEEP
 
-STEP=4
+STEP=$(($STEP+1))
 
 #####################################################
 #Configuration backups/Sauvegarde des configurations#
@@ -616,7 +642,7 @@ cat >> /etc/snmp/snmptrapd.conf <<TRAPCONF
 	donotlogtraps false
         logOption f /var/log/snmptraps.log
         authCommunity log,execute,net private
-        traphandle 1.3.6.1.4.1.9.9.43.* $BACKUP_TRAPS_SCRIPT
+        traphandle default $BACKUP_TRAPS_SCRIPT
 TRAPCONF
 
 cat > /etc/freeradius/modules/snack-backups <<MODULES
@@ -652,7 +678,7 @@ echo 90 | whiptail \
 {(cd $TFTP_FOLDER && git init)} >> $OUT 2>>$LOG
 
 
-STEP=5
+STEP=$(($STEP+1))
 
 echo 0 | whiptail \
 	--title "SNACK ${VERSION}" \
@@ -666,12 +692,7 @@ echo 20 | whiptail \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Restarting services...\nFreeradius" \
 	10 70 0
 
-{
-service freeradius restart 
-sed\
-	-e "/exit/i service freeradius restart" \
-	-i /etc/rc.local
-}>> $OUT 2>>$LOG
+service freeradius restart >> $OUT 2>>$LOG
 
 echo 40 | whiptail \
 	--title "SNACK ${VERSION}" \
@@ -705,7 +726,7 @@ echo 100 | whiptail \
 	10 70 0
 sleep $DISPLAY_SLEEP
 
-STEP=6
+STEP=$(($STEP+1))
 
 # Delete temporary directory
 # Suppression du dossier temporaire
