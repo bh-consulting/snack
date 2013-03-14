@@ -45,7 +45,7 @@ db_name=$(extract_db database)
 db_host=$(extract_db host)
 db_prefix=$(extract_db prefix)
 
-secret=secretloop
+secret=loopsecret
 
 read sqline <<SQL
     INSERT INTO\\
