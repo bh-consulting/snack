@@ -111,7 +111,9 @@ class RadusersController extends AppController {
             $data = &$this->request->data['Raduser'][$args['input']];
 
             if (isset($data[0]) && $data[0] == 'expired') {
-                return "(username IN (SELECT username from radcheck where attribute='Expiration' and value < now()))";
+                return "(username IN (SELECT username from radcheck "
+                    . "where attribute='Expiration' "
+                    . "and STR_TO_DATE(value, '%d %b %Y %T') < NOW()))";
             } else {
                 return '(1=1)';
             }
@@ -214,21 +216,34 @@ class RadusersController extends AppController {
 
                 $radc = new Radcheck();
 
-		$radcheck = $radc->find(
-		    'first',
-		    array(
-			'fields' => 'value',
-			'conditions' => array(
-			    'username' => str_replace(':', '', $user['Raduser']['username']),
-			    'attribute' => 'Expiration'
-			)
-		    )
-		);
+                $radcheck = $radc->find(
+                    'first',
+                    array(
+                        'fields' => 'value',
+                        'conditions' => array(
+                            'username' => str_replace(
+                                ':',
+                                '',
+                                $user['Raduser']['username']
+                            ),
+                            'attribute' => 'Expiration'
+                        )
+                    )
+                );
 
-		if(!empty($radcheck))
-		    $user['Raduser']['expiration'] = $radcheck['Radcheck']['value'];
-		else
-		    $user['Raduser']['expiration'] = -1;
+                if (!empty($radcheck)
+                    && Utils::formatDate(
+                        array($radcheck['Radcheck']['value'], date('d M Y H:i:s')),
+                        'dursign'
+                    ) >= 0 
+                ) {
+                    $user['Raduser']['expiration'] = Utils::formatDate(
+                        $radcheck['Radcheck']['value'],
+                        'display'
+                    );
+                } else {
+                    $user['Raduser']['expiration'] = -1;
+                }
             }
         }
 
@@ -606,10 +621,10 @@ class RadusersController extends AppController {
 
                 if (isset($this->request->data['Raduser']['ttls'])
                     && $this->request->data['Raduser']['ttls'] == 1) {
-                    $eapType = 'EAP-TTLS';
-                } else {
-                    $eapType = 'MD5-CHALLENGE';
-                }
+                        $eapType = 'EAP-TTLS';
+                    } else {
+                        $eapType = 'MD5-CHALLENGE';
+                    }
 
                 $rads = array(
                     array(
@@ -771,7 +786,7 @@ class RadusersController extends AppController {
 
                 $success = $this->Raduser->save($user);
 
-            // create a new user (only admin)
+                // create a new user (only admin)
             } else {
                 $this->Raduser->create();
                 $success = $this->Raduser->save($this->request->data);
@@ -791,8 +806,8 @@ class RadusersController extends AppController {
             if($success){
                 $this->Session->setFlash(__(
                     'The admin user %s was added', $this->request->data['Raduser']['username']),
-                    'flash_success'
-                );
+                'flash_success'
+            );
                 Utils::userlog(__('added admin user %s', $this->request->data['Raduser']['username']), 'error');
                 $this->redirect(array('action' => 'index'));
 
@@ -841,6 +856,13 @@ class RadusersController extends AppController {
             $this->Raduser->is_cisco
         );
 
+        if (isset($this->request->data['Raduser']['expiration_date'])) {
+            $this->request->data['Raduser']['expiration_date'] = Utils::formatDate(
+                $this->request->data['Raduser']['expiration_date'],
+                'syst'
+            );
+        }
+
         // Radreply
         $this->Checks->restoreCommonReplyFields(
             $this->Raduser->id,
@@ -856,7 +878,7 @@ class RadusersController extends AppController {
                 $this->request
             );
         }
-        
+
         $this->set('roles', $this->Raduser->roles);
     }
 
@@ -873,7 +895,11 @@ class RadusersController extends AppController {
                 $checksCiscoMac = $this->setCommonCiscoMacFields();
 
                 if(!$this->Raduser->save($this->request->data)){
-                    throw new EditException('Raduser', $id, $this->request->data['Raduser']['username']);
+                    throw new EditException(
+                        'Raduser',
+                        $id,
+                        $this->request->data['Raduser']['username']
+                    );
                 }
 
                 // update radchecks fields
@@ -881,9 +907,11 @@ class RadusersController extends AppController {
                     'Cleartext-Password' =>
                     $this->request->data['Raduser']['passwd'],
                 );
+
                 foreach ($checksCiscoMac as $c) {
                     $checkClassFields[$c[1]] = $c[3];
                 }
+
                 $this->Checks->updateRadcheckFields(
                     $id,
                     $this->request,
@@ -1036,11 +1064,11 @@ class RadusersController extends AppController {
 
     public function delete ($id = null) {
         try {
-	    if($this->request->is('get')){
-		throw new MethodNotAllowedException();
-	    }
+            if($this->request->is('get')){
+                throw new MethodNotAllowedException();
+            }
 
-	    $id = is_null($id) ? $this->request->data['Raduser']['id'] : $id;
+            $id = is_null($id) ? $this->request->data['Raduser']['id'] : $id;
             $this->Raduser->id = $id;
 
             // Revoke and remove certificate for user
@@ -1104,7 +1132,7 @@ class RadusersController extends AppController {
             $id,
             $request->data['Raduser']['groups']
         );
-        
+
         if (!is_null($result)) {
             throw new UserGroupAddException(
                 $request->data['Raduser']['username'],

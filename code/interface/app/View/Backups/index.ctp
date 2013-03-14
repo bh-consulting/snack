@@ -7,6 +7,7 @@ $columns = array(
     'id' => array(
         'text' => __('ID'),
         'fit' => true,
+        'bold' => true,
     ),
     'sync' => array(
         'text' => '<i class="icon-ok-circle" title="'
@@ -23,6 +24,7 @@ $columns = array(
     ),
     'action' => array(
         'text' => __('Why'),
+        'bold' => true,
     ),
     'users' => array(
         'text' => __('Who'),
@@ -139,10 +141,14 @@ if (!empty($backups)) {
 
         foreach ($columns as $field=>$info) {
             if (isset($info['fit']) && $info['fit']) {
-                echo '<td class="fit">';
+                echo '<td class="fit"';
             } else {
-                echo '<td>';
+                echo '<td';
             }
+            if (isset($info['bold']) && $info['bold']) {
+                echo ' style="font-weight:bold;"';
+            }
+            echo '>';
 
             switch ($field) {
             case 'view':
@@ -157,13 +163,8 @@ if (!empty($backups)) {
                     )
                 );
                 break;
-            case 'id':
-                echo '<strong>' . h($backup['Backup'][$field]) . '</strong>';
-                break;
             case 'datetime':
-                echo $this->element('formatDates', array(
-                    'date' => $backup['Backup'][$field]
-                ));
+                echo $backup['Backup'][$field];
                 break;
             case 'users':
                 echo $this->element('formatUsersList', array(
@@ -215,7 +216,6 @@ if (!empty($backups)) {
                 }
                 break;
             case 'action':
-                echo '<strong>';
                 switch ($backup['Backup'][$field]) {
                 case 'logoff':
                     echo __('Log off');
@@ -229,7 +229,6 @@ if (!empty($backups)) {
                 default:
                     echo $backup['Backup'][$field];
                 }
-                echo '</strong>';
                 break;
             default:
                 echo h($backup['Backup'][$field]);

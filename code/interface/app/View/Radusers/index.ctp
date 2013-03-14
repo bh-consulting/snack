@@ -17,6 +17,7 @@ $columns = array(
         'id' => 'id',
         'text' => __('ID'),
         'fit' => true,
+        'bold' => true,
     ),
     'username' => array(
         'text' => __('Username'),
@@ -24,6 +25,7 @@ $columns = array(
     'role' => array(
         'text' => __('Role'),
         'fit' => true,
+        'bold' => true,
     ),
     'comment' => array(
         'text' => __('Comment'),
@@ -229,10 +231,14 @@ if (!empty($radusers)) {
 
         foreach ($columns as $field=>$info) {
             if (isset($info['fit']) && $info['fit']) {
-                echo '<td class="fit">';
+                echo '<td class="fit"';
             } else {
-                echo '<td>';
+                echo '<td';
             }
+            if (isset($info['bold']) && $info['bold']) {
+                echo ' style="font-weight:bold;"';
+            }
+            echo '>';
 
             switch ($field) {
             case 'checkbox':
@@ -287,34 +293,27 @@ if (!empty($radusers)) {
                     )
                 );
                 break;
-            case 'id':
-                echo '<strong>' . h($user['Raduser'][$field]) . '</strong>';
-                break;
             case (preg_match("#is_(cert|loginpass|mac|cisco)#i", $field)
                 ? $field : !$field):
                 echo $user['Raduser'][$field] ? '<i class="icon-ok"></i>' : '';
                 break;
             case 'role':
-                echo '<strong>'
-                    . $roles[$user['Raduser'][$field]]
-                    . '</span>';
+                echo $roles[$user['Raduser'][$field]];
                 break;
-	    case 'username':
-		if($user['Raduser']['expiration'] != -1) {
-		    $expiration = new DateTime($user['Raduser']['expiration']);
-		    $now = new DateTime();
-            $interval = $now->diff($expiration);
-
-            if($interval->format('%R') == '-') {
-                echo '<i class="icon-warning-sign icon-red" title="';
-                echo __('User expired since the %s.', $this->element('formatDates', array('date' => $user['Raduser']['expiration'])));
-                echo '"></i> ';
-            }
-        }
-
-		echo h($user['Raduser'][$field]);
-
-		break;
+            case 'username':
+                if($user['Raduser']['expiration'] != -1) {
+                    echo '<span title="'
+                        . __(
+                            'User expired since the %s.',
+                            $user['Raduser']['expiration']
+                        )
+                        . '"><i class="icon-warning-sign icon-red"></i> '
+                        . h($user['Raduser'][$field])
+                        . '</span>';
+                } else {
+                    echo h($user['Raduser'][$field]);
+                }
+                break;
             default:
                 echo h($user['Raduser'][$field]);
                 break;

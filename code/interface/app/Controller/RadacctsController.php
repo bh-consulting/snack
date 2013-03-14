@@ -111,17 +111,40 @@ class RadacctsController extends AppController {
         $users = array();
         $devices = array();
 
-        foreach($sessions AS $session) {
+        foreach ($sessions as &$session) {
             $users[$session['Radacct']['radacctid']] =
                 $this->Users->extendUsers($session['Radacct']['username']);
 
             $devices[$session['Radacct']['radacctid']] =
                 $this->Nas->extendNasByIP($session['Radacct']['nasipaddress']);
+
+            $session['Radacct']['duration'] = Utils::formatDate(
+                array(
+                    $session['Radacct']['acctstarttime'],
+                    $session['Radacct']['acctstoptime'],
+                ),
+                'durdisplay'
+            ); 
+
+            if (isset($session['Radacct']['acctstarttime'])) {
+                $session['Radacct']['acctstarttime'] = Utils::formatDate(
+                    $session['Radacct']['acctstarttime'],
+                    'display'
+                );
+            }
+
+            if (isset($session['Radacct']['acctstoptime'])) {
+                $session['Radacct']['acctstoptime'] = Utils::formatDate(
+                    $session['Radacct']['acctstoptime'],
+                    'display'
+                );
+            }
         }
 
         $this->set('users', $users);
         $this->set('devices', $devices);
         $this->set('types', $this->Radacct->types);
+        $this->set('radaccts', $sessions);
     }
 
     public function view($id = null) {

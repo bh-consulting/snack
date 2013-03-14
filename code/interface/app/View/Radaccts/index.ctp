@@ -135,10 +135,14 @@ if (!empty($radaccts)) {
 
         foreach ($columns as $field=>$info) {
             if (isset($info['fit']) && $info['fit']) {
-                echo '<td class="fit">';
+                echo '<td class="fit"';
             } else {
-                echo '<td>';
+                echo '<td';
             }
+            if (isset($info['bold']) && $info['bold']) {
+                echo ' style="font-weight:bold;"';
+            }
+            echo '>';
 
             switch ($field) {
             case 'checkbox':
@@ -195,40 +199,22 @@ if (!empty($radaccts)) {
                 break;
             case 'nasporttype':
                 $value = $acct['Radacct'][$field];
-                echo isset($types[$value])
-                    ? $types[$value] : $value;
+                echo isset($types[$value]) ? $types[$value] : $value;
                 break;
             case 'acctstarttime':
-                    echo $this->element('formatDates', array('date' => $acct['Radacct'][$field]));
-                    break;
-                case 'acctstoptime':
-                    if(empty($acct['Radacct'][$field]))
-                        echo '<em>'.__('still connected').'</em>';
-                    echo $this->element('formatDates', array('date' => $acct['Radacct'][$field]));
-                    break;
-                case 'duration':
-                    $datetime1 = new DateTime($acct['Radacct']['acctstarttime']);
-                    $datetime2 = new DateTime($acct['Radacct']['acctstoptime']);
-                    $interval = $datetime1->diff($datetime2);
-
-                    $years = $interval->format('%y');
-                    $months = $interval->format('%m');
-                    $days = $interval->format('%d');
-                    $hours = $interval->format('%h');
-                    $minutes = $interval->format('%m');
-                    $seconds = $interval->format('%s');
-
-                    echo $years ? __('%dy', $years).'&nbsp;' : '';
-                    echo $months ? __('%dm', $months).'&nbsp;' : '';
-                    echo $days ? __('%dd', $days).'&nbsp;' : '';
-                    echo $hours ? __('%dh', $hours).'&nbsp;' : '';
-                    echo $minutes ? __('%dm', $minutes).'&nbsp;' : '';
-                    echo $seconds ? __('%ds', $seconds) : '';
-
-                    break;
-                default:
-                    echo h($acct['Radacct'][$field]);
-                    break;
+            case 'duration':
+                echo $acct['Radacct'][$field];
+                break;
+            case 'acctstoptime':
+                if (empty($acct['Radacct'][$field])) {
+                    echo '<em>'.__('still connected').'</em>';
+                } else {
+                    echo $acct['Radacct'][$field];
+                }
+                break;
+            default:
+                echo h($acct['Radacct'][$field]);
+                break;
             }
 
             echo '</td>';

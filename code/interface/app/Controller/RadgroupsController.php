@@ -6,7 +6,7 @@ App::import('Model', 'Raduser');
 class RadgroupsController extends AppController {
 
     public $helpers = array('Html', 'Form', 'JqueryEngine');
-    public $paginate = array('limit' => 10, 'order' => array('Radgroup.id' => 'asc'));
+    public $paginate = array('limit' => 10, 'order' => array('id' => 'asc'));
     public $components = array(
         'Filters',
         'Checks' => array(
@@ -36,7 +36,9 @@ class RadgroupsController extends AppController {
             $data = &$this->request->data['Radgroup'][$args['input']];
 
             if (isset($data[0]) && $data[0] == 'expired') {
-                return "(groupname IN (SELECT groupname from radgroupcheck where attribute='Expiration' and value < now()))";
+                return "(groupname IN (SELECT groupname from radgroupcheck "
+                    . "where attribute='Expiration' "
+                    . "and STR_TO_DATE(value, '%d %b %Y %T') < NOW()))";
             } else {
                 return '(1=1)';
             }
@@ -100,10 +102,20 @@ class RadgroupsController extends AppController {
                         )
                     )
                 );
-                if(!empty($groupcheck))
-                    $group['Radgroup']['expiration'] = $groupcheck['Radgroupcheck']['value'];
-                else
+
+                if (!empty($groupcheck)
+                    && Utils::formatDate(
+                        array($groupcheck['Radgroupcheck']['value'], date('d M Y H:i:s')),
+                        'dursign'
+                    ) >= 0 
+                ) {
+                    $group['Radgroup']['expiration'] = Utils::formatDate(
+                        $groupcheck['Radgroupcheck']['value'],
+                        'display'
+                    );
+                } else {
                     $group['Radgroup']['expiration'] = -1;
+                }
             }
         }
 
@@ -212,7 +224,6 @@ class RadgroupsController extends AppController {
         if ($this->request->is('get')) {
             $this->Radgroup->id = $id;
             $this->request->data = $this->Radgroup->read();
-
         } else {
             try {
                 $this->Radgroup->save($this->request->data);
@@ -243,6 +254,14 @@ class RadgroupsController extends AppController {
         );
         $this->restoreUsers($this->Radgroup->id);
         $this->Checks->restoreCommonCheckFields($id, $this->request);
+
+        if (isset($this->request->data['Radgroup']['expiration_date'])) {
+            $this->request->data['Radgroup']['expiration_date'] = Utils::formatDate(
+                $this->request->data['Radgroup']['expiration_date'],
+                'syst'
+            );
+        }
+
         $this->Checks->restoreCommonReplyFields($id, $this->request);
     }
 

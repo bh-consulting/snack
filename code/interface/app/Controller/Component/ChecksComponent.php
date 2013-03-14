@@ -186,8 +186,11 @@ class ChecksComponent extends Component {
                     array(
                         $name,
                         'Expiration',
-                        ':=',
-                        $request->data[$this->baseClassName]['expiration_date']
+                        '==',
+                        Utils::formatDate(
+                            $request->data[$this->baseClassName]['expiration_date'],
+                            'expiration'
+                        )
                     ),
                 ));
             }
@@ -196,7 +199,7 @@ class ChecksComponent extends Component {
                     array(
                         $name,
                         'Simultaneous-Use',
-                        ':=',
+                        '==',
                         $request->data[$this->baseClassName]['simultaneous_use']
                     )
                 ));
@@ -460,7 +463,10 @@ class ChecksComponent extends Component {
     public function updateRadcheckFields($id, $request, $additionalFields = array()){
         // common fields
         $fields = array(
-            'Expiration' => $request->data[$this->baseClassName]['expiration_date'],
+            'Expiration' => Utils::formatDate(
+                $request->data[$this->baseClassName]['expiration_date'],
+                'expiration'
+            ),
             'Simultaneous-Use' => $request->data[$this->baseClassName]['simultaneous_use']
         );
         $fields = array_merge($fields, $additionalFields);

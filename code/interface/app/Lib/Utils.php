@@ -5,6 +5,67 @@ Configure::load('parameters');
 class Utils {
 
     /**
+     * Manipulate date to output the correct format
+     * regarding the context where it's used.
+     */
+    public static function formatDate($date, $context) {
+        try {
+            switch ($context) {
+            case 'expiration':
+                $date = new DateTime($date);
+                return $date->format('d M Y H:i:s');
+            case 'display':
+                $date = new DateTime($date);
+                return $date->format('d/m/Y') . '&nbsp;'
+                    . __('at') . '&nbsp;' . $date->format('H:i:s');
+            case 'durdisplay':
+                if (count($date) == 2) {
+                    $start = new Datetime($date[0]);
+                    $stop = new Datetime($date[1]);
+                    $interval = $start->diff($stop);
+
+                    $years = $interval->format('%y');
+                    $months = $interval->format('%m');
+                    $days = $interval->format('%d');
+                    $hours = $interval->format('%h');
+                    $minutes = $interval->format('%m');
+                    $seconds = $interval->format('%s');
+
+                    $duration = $years ? __('%dy', $years).'&nbsp;' : '';
+                    $duration .= $months ? __('%dm', $months).'&nbsp;' : '';
+                    $duration .= $days ? __('%dd', $days).'&nbsp;' : '';
+                    $duration .= $hours ? __('%dh', $hours).'&nbsp;' : '';
+                    $duration .= $minutes ? __('%dm', $minutes).'&nbsp;' : '';
+                    $duration .= $seconds ? __('%ds', $seconds) : '';
+
+                    return $interval->format('%r') . '&nbsp;' . $duration; 
+                }
+            case 'dursign':
+                if (count($date) == 2) {
+                    $start = new Datetime($date[0]);
+                    $stop = new Datetime($date[1]);
+                    $interval = $stop->getTimestamp() - $start->getTimestamp();
+
+                    if ($interval > 0) {
+                        return 1;
+                    } else if ($interval < 0) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    return false;
+                }
+            case 'syst':
+                $date = new DateTime($date);
+                return $date->format('Y-m-d H:i:s');
+            }
+        } catch (Exception $ex){}
+
+        return $date;
+    }
+
+    /**
      * Generate a sql query with cakephp tools.
      * !!!WARNING!!! Experimental
      */

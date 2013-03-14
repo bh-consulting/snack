@@ -96,7 +96,7 @@ if (!empty($loglines)) {
             switch ($field) {
             case 'datetime':
                 echo $this->Html->link(
-                    $this->element('formatDates', array('date' => $logline['Logline'][$field])),
+                    $logline['Logline'][$field],
                     '#',
                     array(
                         'onclick' => 'logsSearchFromDate($(this))',

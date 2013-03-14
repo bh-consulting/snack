@@ -55,7 +55,18 @@ class LoglinesController extends AppController {
             'input' => 'text',
         ));
 
-        $this->Filters->paginate();
+        $logs = $this->Filters->paginate();
+
+        foreach ($logs as &$log) {
+            if (isset($log['Logline']['datetime'])) {
+                $log['Logline']['datetime'] = Utils::formatDate(
+                    $log['Logline']['datetime'],
+                    'display'
+                );
+            }
+        }
+
+        $this->set('loglines', $logs);
     }
 
     public function deleteAll($program) {

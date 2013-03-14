@@ -132,14 +132,21 @@ class BackupsController extends AppController {
 
 		$users = array();
 
-		foreach($backups AS $backup) {
+		foreach($backups as &$backup) {
 		    $users[$backup['Backup']['id']] =
 			$this->Users->extendUsers($backup['Backup']['users']);
+
+            if (isset($backup['Backup']['datetime'])) {
+                $backup['Backup']['datetime'] = Utils::formatDate(
+                    $backup['Backup']['datetime'],
+                    'display'
+                );
+            }
 		}
 
 		$this->set('users', $users);
-
 		$this->set('unwrittenids', $this->getUnwrittenBackups($nas));
+		$this->set('backups', $backups);
     }
 
     private function gitDiffNas($nas, $a, $b = null) {

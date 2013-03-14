@@ -11,6 +11,7 @@ $columns = array(
     'id' => array(
         'text' => __('ID'),
         'fit' => true,
+        'bold' => true,
     ),
     'groupname' => array(
         'text' => __('Name'),
@@ -19,6 +20,7 @@ $columns = array(
         'id' => 'id',
         'text' => __('Members'),
         'fit' => true,
+        'bold' => true,
     ),
     'comment' => array(
         'text' => __('Comment'),
@@ -134,10 +136,14 @@ if (!empty($radgroups)) {
 
         foreach ($columns as $field=>$info) {
             if (isset($info['fit']) && $info['fit']) {
-                echo '<td class="fit">';
+                echo '<td class="fit"';
             } else {
-                echo '<td>';
+                echo '<td';
             }
+            if (isset($info['bold']) && $info['bold']) {
+                echo ' style="font-weight:bold;"';
+            }
+            echo '>';
 
             switch ($field) {
             case 'checkbox':
@@ -183,25 +189,18 @@ if (!empty($radgroups)) {
                 );
                 break;
             case 'groupname':
-		if($group['Radgroup']['expiration'] != -1) {
-		    $expiration = new DateTime($group['Radgroup']['expiration']);
-		    $now = new DateTime();
-		    $interval = $now->diff($expiration);
-
-		    if($interval->format('%R') == '-') {
-			echo '<i class="icon-warning-sign icon-red" title="';
-			echo __('Group expired since the %s.', $this->element('formatDates', array('date' => $group['Radgroup']['expiration'])));
-			echo '"></i> ';
-		    }
-		}
-
-                echo h($group['Radgroup'][$field]);
-
-                break;
-
-            case 'id':
-            case 'membercount':
-                echo '<strong>' . h($group['Radgroup'][$field]) . '</strong>';
+                if($group['Radgroup']['expiration'] != -1) {
+                    echo '<span title="'
+                        . __(
+                            'Group expired since the %s.',
+                            $group['Radgroup']['expiration']
+                        )
+                        . '"><i class="icon-warning-sign icon-red"></i> '
+                        . h($group['Radgroup'][$field])
+                        . '</span>';
+                } else {
+                    echo h($group['Radgroup'][$field]);
+                }
                 break;
             default:
                 echo h($group['Radgroup'][$field]);
