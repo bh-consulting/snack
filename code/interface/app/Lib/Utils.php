@@ -34,7 +34,7 @@ class Utils {
                     $months = $interval->format('%m');
                     $days = $interval->format('%d');
                     $hours = $interval->format('%h');
-                    $minutes = $interval->format('%m');
+                    $minutes = $interval->format('%i');
                     $seconds = $interval->format('%s');
 
                     $duration = $years ? __('%dy', $years).'&nbsp;' : '';
