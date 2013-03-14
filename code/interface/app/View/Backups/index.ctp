@@ -216,17 +216,9 @@ if (!empty($backups)) {
                 }
                 break;
             case 'action':
-                switch ($backup['Backup'][$field]) {
-                case 'logoff':
-                    echo __('Log off');
-                    break;
-                case 'login':
-                    echo __('Log in');
-                    break;
-                case 'wrmem':
-                    echo __('Write memory');
-                    break;
-                default:
+                if (isset($actions[$backup['Backup'][$field]])) {
+                    echo $actions[$backup['Backup'][$field]];
+                } else {
                     echo $backup['Backup'][$field];
                 }
                 break;

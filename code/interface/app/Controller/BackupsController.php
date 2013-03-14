@@ -95,13 +95,7 @@ class BackupsController extends AppController {
 
         $this->Filters->addSelectConstraint(array(
             'fields' => array('action'),
-            'items' => array(
-                'login' => __('Log in'),
-                'logoff' => __('Log off'),
-                'wrmem' => __('Saved'),
-                'restore' => __('Restored'),
-                'boot' => __('Boot'),
-            ),
+            'items' => $this->Backup->actions,
             'input' => 'action',
             'title' => false,
         ));
