@@ -212,7 +212,7 @@ div.menutopphone {
 
 #snakescore, #snakelevel {
     top: 10px;
-    left: 10px;
+    left: 90px;
     font-weight: bold;
     font-size: 30px;
     border: 10px solid #0c5a0c;
@@ -224,6 +224,6 @@ div.menutopphone {
 }
 
 #snakelevel {
-    left: 110px;
+    left: 10px;
     border-color: #aa0000;
 }

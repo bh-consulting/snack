@@ -294,6 +294,7 @@ function snake() {
 
    $(document).on('scroll', function() {
        $(document).scrollTop(0);
+       $(document).scrollLeft(0);
    });
 
    $('#snakefade').fadeTo(700, 0.9, function() {
