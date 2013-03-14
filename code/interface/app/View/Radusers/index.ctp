@@ -35,7 +35,7 @@ $columns = array(
         'fit' => true,
     ),
     'is_loginpass' => array(
-        'text' => __('Login / Password'),
+        'text' => __('Login/Pwd'),
         'fit' => true,
     ),
     'is_mac' => array(

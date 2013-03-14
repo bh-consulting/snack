@@ -228,25 +228,6 @@ class Utils {
         );
     }
 
-    public function getType($id, $nice = false) {
-        $types = array(
-            array('cisco', 'Cisco'),
-            array('loginpass', 'Login / Password'),
-            array('mac', 'MAC'),
-            array('cert', 'Certificate')
-        );
-
-        if($this->isCisco($id))
-            return $types[0][$nice];
-        if($this->isLoginPass($id))
-            return $types[1][$nice];
-        if($this->isMAC($id))
-            return $types[2][$nice];
-        if($this->isCert($id))
-            return $types[3][$nice];
-        return "";
-    }
-
     public static function getISOCode($httpAcceptLanguage) {
         $langs = array(
             'fr-FR' => 'fra',
