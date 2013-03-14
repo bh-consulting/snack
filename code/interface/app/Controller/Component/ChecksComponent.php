@@ -469,6 +469,7 @@ class ChecksComponent extends Component {
             ),
             'Simultaneous-Use' => $request->data[$this->baseClassName]['simultaneous_use']
         );
+
         $fields = array_merge($fields, $additionalFields);
         $rads = $this->getChecks($id);
 
@@ -619,7 +620,9 @@ class ChecksComponent extends Component {
      * @param  [type] $request request where to values
      */
     public function restoreCommonCiscoMacFields($id, &$request) {
-        if($request->data[$this->baseClassName]['is_cisco']){
+        if(isset($request->data[$this->baseClassName]['is_cisco'])
+            && $request->data[$this->baseClassName]['is_cisco']
+        ){
             $request->data[$this->baseClassName]['cisco'] = 1;
             $request->data[$this->baseClassName]['was_cisco'] = 1;
         }

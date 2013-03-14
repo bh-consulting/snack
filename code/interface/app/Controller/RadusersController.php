@@ -541,7 +541,8 @@ class RadusersController extends AppController {
      * @param $checks - array of radchecks lines
      */
     private function setCommonCiscoMacFields(&$checks=array()) {
-        $username = $this->request->data['Raduser']['username'];
+        $this->Raduser->id = $this->request->data['Raduser']['id'];
+        $username = $this->Raduser->field('username');
 
         // retrieve nas-port-type check
         $nasPortTypeIndex = -1;
@@ -841,6 +842,15 @@ class RadusersController extends AppController {
             }
         }
 
+        if ($this->Raduser->field('is_mac')) {
+            $this->set(
+                'username',
+                Utils::formatMAC($this->Raduser->field('username'))
+            );
+        } else {
+            $this->set('username', $this->Raduser->field('username'));
+        }
+
         // Radgroup
         $groups = new Radgroup();
         $this->set(
@@ -870,9 +880,11 @@ class RadusersController extends AppController {
         );
 
         // MAC or Cisco properties for active users
-        if($this->request->data['Raduser']['is_cisco']
-            || $this->request->data['Raduser']['is_mac'])
-        {
+        if((isset($this->request->data['Raduser']['is_cisco'])
+            && $this->request->data['Raduser']['is_cisco'])
+            || (isset($this->request->data['Raduser']['is_mac'])
+            && $this->request->data['Raduser']['is_mac'])
+        ) {
             $this->Checks->restoreCommonCiscoMacFields(
                 $this->Raduser->id,
                 $this->request
@@ -894,11 +906,11 @@ class RadusersController extends AppController {
 
                 $checksCiscoMac = $this->setCommonCiscoMacFields();
 
-                if(!$this->Raduser->save($this->request->data)){
+                if (!$this->Raduser->save($this->request->data)){
                     throw new EditException(
                         'Raduser',
                         $id,
-                        $this->request->data['Raduser']['username']
+                        $this->Raduser->field('username')
                     );
                 }
 
@@ -951,10 +963,13 @@ class RadusersController extends AppController {
         } else {
             try {
                 $this->request->data['Raduser']['is_mac'] = 1;
-                $this->request->data['Raduser']['username'] =
-                    Utils::cleanMAC($this->request->data['Raduser']['username']);
+
                 if(!$this->Raduser->save($this->request->data)){
-                    throw new EditException('Raduser', $id, $this->request->data['Raduser']['username']);
+                    throw new EditException(
+                        'Raduser',
+                        $id,
+                        $this->Raduser->field('username')
+                    );
                 }
 
                 $this->updateGroups($this->Raduser->id, $this->request);
@@ -984,9 +999,15 @@ class RadusersController extends AppController {
         } else {
             try {
                 $this->request->data['Raduser']['is_cert'] = 1;
+
                 $checksCiscoMac = $this->setCommonCiscoMacFields();
+
                 if(!$this->Raduser->save($this->request->data)){
-                    throw new EditException('Raduser', $id, $this->request->data['Raduser']['username']);
+                    throw new EditException(
+                        'Raduser',
+                        $id,
+                        $this->Raduser->field('username')
+                    );
                 }
 
                 // update radchecks fields
@@ -1034,7 +1055,11 @@ class RadusersController extends AppController {
         } else {
             try {
                 if(!$this->Raduser->save($this->request->data)){
-                    throw new EditException('Raduser', $id, $this->request->data['Raduser']['username']);
+                    throw new EditException(
+                        'Raduser',
+                        $id,
+                        $this->Raduser->field('username')
+                    );
                 }
 
                 // TODO: update password
@@ -1059,6 +1084,7 @@ class RadusersController extends AppController {
             $this->redirect(array('action' => 'index'));
         }
         $this->request->data = $this->Raduser->read();
+        $this->set('username', $this->Raduser->field('username'));
         $this->set('roles', $this->Raduser->roles);
     }
 

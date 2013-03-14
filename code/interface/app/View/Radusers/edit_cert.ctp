@@ -6,7 +6,7 @@ Configure::load('parameters');
 
 echo '<h1>'
     . __('Edit') . ' '
-    . $this->data['Raduser']['username']
+    . $username
     . ' (' . __('certificate user') . ')'
     . '</h1>';
 
@@ -74,7 +74,6 @@ $replies .= '</fieldset>';
 $role = $this->element('snack_role_input');
 
 $finish = $this->Form->input('id', array('type' => 'hidden'));
-$finish .= $this->Form->input('username', array('type' => 'hidden'));
 $finish .= $this->Form->input('was_cisco', array('type' => 'hidden'));
 
 $finish .= $this->Form->end(array(

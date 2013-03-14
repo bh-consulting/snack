@@ -3,7 +3,7 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
 
-echo '<h1>' . __('Edit') . ' ' . $this->data['Raduser']['username'] . ' ' . __('(MAC user)') . '</h1>';
+echo '<h1>' . __('Edit') . ' ' . $username . ' ' . __('(MAC user)') . '</h1>';
 
 echo $this->Form->create('Raduser', array(
     'action' => 'edit_mac',
@@ -25,7 +25,6 @@ $replies .= '</fieldset>';
 $role = $this->element('snack_role_input');
 
 $finish = $this->Form->input('id', array('type' => 'hidden'));
-$finish .= $this->Form->input('username', array('type' => 'hidden'));
 $finish .= $this->Form->end(array(
     'label' => __('Update'),
     'class' => 'next finish',

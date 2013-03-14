@@ -18,13 +18,14 @@ class Raduser extends AppModel {
         'username' => array(
             'isUnique' => array(
                 'rule' => array('isUniqueValue', 'username', 'user'),
-                'message' => 'Username already used'
+                'message' => 'Username already used',
             ),
             'notEmpty' => array(
                 'rule' => 'notEmpty',
                 'message' => 'Username cannot be empty',
                 'allowEmpty' => false,
                 'required' => true,
+                'on' => 'create',
             ),
         ),
         'passwd' => array(
@@ -39,7 +40,7 @@ class Raduser extends AppModel {
         'mac' => array(
             'macFormat' => array(
                 'rule' => 'isMACFormat',
-                'message' => 'This is not a MAC address format.'
+                'message' => 'This is not a MAC address format.',
             ),
             'notEmpty' => array(
                 'rule' => 'notEmpty',

@@ -12,12 +12,18 @@ class Utils {
         try {
             switch ($context) {
             case 'expiration':
-                $date = new DateTime($date);
-                return $date->format('d M Y H:i:s');
+                if (!empty($date)) {
+                    $date = new DateTime($date);
+                    return $date->format('d M Y H:i:s');
+                }
+                break;
             case 'display':
-                $date = new DateTime($date);
-                return $date->format('d/m/Y') . '&nbsp;'
-                    . __('at') . '&nbsp;' . $date->format('H:i:s');
+                if (!empty($date)) {
+                    $date = new DateTime($date);
+                    return $date->format('d/m/Y') . '&nbsp;'
+                        . __('at') . '&nbsp;' . $date->format('H:i:s');
+                }
+                break;
             case 'durdisplay':
                 if (count($date) == 2) {
                     $start = new Datetime($date[0]);
@@ -57,8 +63,11 @@ class Utils {
                     return false;
                 }
             case 'syst':
-                $date = new DateTime($date);
-                return $date->format('Y-m-d H:i:s');
+                if (!empty($date)) {
+                    $date = new DateTime($date);
+                    return $date->format('Y-m-d H:i:s');
+                }
+                break;
             }
         } catch (Exception $ex){}
 
