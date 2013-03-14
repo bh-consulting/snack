@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-03-14 18:34+0000\n"
+"POT-Creation-Date: 2013-03-14 22:59+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -117,11 +117,11 @@ msgstr ""
 msgid "Unable to update parameters."
 msgstr ""
 
-#: Controller/RadacctsController.php:39;62;172
+#: Controller/RadacctsController.php:39;62;204
 msgid "deleted session %s"
 msgstr ""
 
-#: Controller/RadacctsController.php:43;180
+#: Controller/RadacctsController.php:43;212
 msgid "error while deleting session %s"
 msgstr ""
 
@@ -141,11 +141,11 @@ msgstr ""
 msgid "Select a port type..."
 msgstr ""
 
-#: Controller/RadacctsController.php:169
+#: Controller/RadacctsController.php:201
 msgid "The session has been deleted"
 msgstr ""
 
-#: Controller/RadacctsController.php:176
+#: Controller/RadacctsController.php:208
 msgid "Unable to delete session."
 msgstr ""
 
@@ -473,43 +473,43 @@ msgstr ""
 msgid "%ds"
 msgstr ""
 
-#: Lib/Utils.php:144
+#: Lib/Utils.php:156
 msgid "day"
 msgstr ""
 
-#: Lib/Utils.php:144
+#: Lib/Utils.php:156
 msgid "days"
 msgstr ""
 
-#: Lib/Utils.php:147
+#: Lib/Utils.php:159
 msgid "hour"
 msgstr ""
 
-#: Lib/Utils.php:147
+#: Lib/Utils.php:159
 msgid "hours"
 msgstr ""
 
-#: Lib/Utils.php:150
+#: Lib/Utils.php:162
 msgid "minute"
 msgstr ""
 
-#: Lib/Utils.php:150
+#: Lib/Utils.php:162
 msgid "minutes"
 msgstr ""
 
-#: Lib/Utils.php:153
+#: Lib/Utils.php:165
 msgid "second"
 msgstr ""
 
-#: Lib/Utils.php:153
+#: Lib/Utils.php:165
 msgid "seconds"
 msgstr ""
 
-#: Lib/Utils.php:178
+#: Lib/Utils.php:190
 msgid "byte"
 msgstr ""
 
-#: Lib/Utils.php:178
+#: Lib/Utils.php:190
 #: View/SystemDetails/index.ctp:171;223
 msgid "bytes"
 msgstr ""
@@ -582,14 +582,14 @@ msgstr ""
 #: View/Backups/diff.ctp:25
 #: View/Backups/index.ctp:48
 #: View/Elements/logs_element.ctp:34
-#: View/Radaccts/index.ctp:58
+#: View/Radaccts/index.ctp:55
 msgid "From"
 msgstr ""
 
 #: View/Backups/diff.ctp:40
 #: View/Backups/index.ctp:54
 #: View/Elements/logs_element.ctp:40
-#: View/Radaccts/index.ctp:63
+#: View/Radaccts/index.ctp:60
 msgid "To"
 msgstr ""
 
@@ -627,7 +627,7 @@ msgstr ""
 
 #: View/Backups/index.ctp:33;157
 #: View/Nas/index.ctp:28;178
-#: View/Radaccts/index.ctp:36;161
+#: View/Radaccts/index.ctp:33;158
 #: View/Radgroups/index.ctp:30;162
 #: View/Radusers/index.ctp:51;257
 msgid "View"
@@ -736,7 +736,7 @@ msgid "Logs"
 msgstr ""
 
 #: View/Common/logs_tabs.ctp:14
-#: View/Layouts/default.ctp:78
+#: View/Layouts/default.ctp:77
 msgid "Radius"
 msgstr ""
 
@@ -767,12 +767,12 @@ msgstr ""
 
 #: View/Common/radius_sidebar.ctp:40
 #: View/Nas/index.ctp:52
-#: View/Radaccts/index.ctp:28
+#: View/Radaccts/index.ctp:25
 msgid "NAS"
 msgstr ""
 
 #: View/Common/radius_sidebar.ctp:53
-#: View/Radaccts/index.ctp:50
+#: View/Radaccts/index.ctp:47
 msgid "Sessions"
 msgstr ""
 
@@ -844,7 +844,7 @@ msgstr ""
 #: View/Elements/modalDelete.ctp:4
 #: View/Elements/viewInfo.ctp:15;28
 #: View/Nas/index.ctp:36
-#: View/Radaccts/index.ctp:40
+#: View/Radaccts/index.ctp:37
 #: View/Radgroups/index.ctp:40
 #: View/Radusers/index.ctp:61
 msgid "Delete"
@@ -860,6 +860,14 @@ msgstr ""
 
 #: View/Elements/filters_panel.ctp:66
 msgid "Search"
+msgstr ""
+
+#: View/Elements/formatNasLink.ctp:16
+msgid "NAS unknown"
+msgstr ""
+
+#: View/Elements/formatUsersList.ctp:19
+msgid "User unknown"
 msgstr ""
 
 #: View/Elements/logs_element.ctp:5
@@ -975,24 +983,24 @@ msgstr ""
 msgid "SNACK"
 msgstr ""
 
-#: View/Layouts/default.ctp:89
+#: View/Layouts/default.ctp:88
 #: View/Terminal/index.ctp:4
 msgid "Terminal"
 msgstr ""
 
-#: View/Layouts/default.ctp:107
+#: View/Layouts/default.ctp:106
 msgid "Logout from %s"
 msgstr ""
 
-#: View/Layouts/default.ctp:137
+#: View/Layouts/default.ctp:136
 msgid "Authors:"
 msgstr ""
 
-#: View/Layouts/default.ctp:142
+#: View/Layouts/default.ctp:141
 msgid "French"
 msgstr ""
 
-#: View/Layouts/default.ctp:143
+#: View/Layouts/default.ctp:142
 msgid "English"
 msgstr ""
 
@@ -1004,7 +1012,7 @@ msgstr ""
 #: View/Nas/add.ctp:12
 #: View/Nas/edit.ctp:9
 #: View/Nas/index.ctp:22
-#: View/Radaccts/view.ctp:44
+#: View/Radaccts/view.ctp:68
 msgid "IP address"
 msgstr ""
 
@@ -1053,7 +1061,7 @@ msgid "Backups"
 msgstr ""
 
 #: View/Nas/index.ctp:78
-#: View/Radaccts/index.ctp:72
+#: View/Radaccts/index.ctp:69
 #: View/Radgroups/index.ctp:73
 #: View/Radusers/index.ctp:165
 msgid "Contains (accept regex)"
@@ -1167,34 +1175,45 @@ msgid "Start"
 msgstr ""
 
 #: View/Radaccts/index.ctp:15
-msgid "Stop"
-msgstr ""
-
-#: View/Radaccts/index.ctp:18
+#: View/Radaccts/view.ctp:47
 msgid "Duration"
 msgstr ""
 
-#: View/Radaccts/index.ctp:21
+#: View/Radaccts/index.ctp:18
 #: View/Radaccts/view.ctp:16
 #: View/Radusers/index.ctp:23
 #: View/Radusers/login.ctp:15
 msgid "Username"
 msgstr ""
 
-#: View/Radaccts/index.ctp:24
+#: View/Radaccts/index.ctp:21
 #: View/Radaccts/view.ctp:18
 msgid "Station"
 msgstr ""
 
-#: View/Radaccts/index.ctp:32;68
+#: View/Radaccts/index.ctp:29;65
 msgid "Port type"
 msgstr ""
 
-#: View/Radaccts/index.ctp:210
-msgid "still connected"
+#: View/Radaccts/index.ctp:196
+msgid "Directly connected"
 msgstr ""
 
-#: View/Radaccts/index.ctp:229
+#: View/Radaccts/index.ctp:209
+#: View/Radaccts/view.ctp:26
+msgid "User still connected"
+msgstr ""
+
+#: View/Radaccts/index.ctp:213
+#: View/Radaccts/view.ctp:30
+msgid "y,m,d,h,min,s"
+msgstr ""
+
+#: View/Radaccts/index.ctp:217
+msgid "Session ended the %s."
+msgstr ""
+
+#: View/Radaccts/index.ctp:236
 msgid "No session found."
 msgstr ""
 
@@ -1214,40 +1233,36 @@ msgstr ""
 msgid "Session id"
 msgstr ""
 
-#: View/Radaccts/view.ctp:24
+#: View/Radaccts/view.ctp:37
+msgid "Session stop"
+msgstr ""
+
+#: View/Radaccts/view.ctp:43
+msgid "Session start"
+msgstr ""
+
+#: View/Radaccts/view.ctp:48
+msgid "Terminate cause"
+msgstr ""
+
+#: View/Radaccts/view.ctp:49
+msgid "Input data"
+msgstr ""
+
+#: View/Radaccts/view.ctp:50
+msgid "Output data"
+msgstr ""
+
+#: View/Radaccts/view.ctp:55
 #: View/SystemDetails/index.ctp:71
 msgid "Statistics:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:26
-msgid "Session start"
-msgstr ""
-
-#: View/Radaccts/view.ctp:27
-msgid "Session stop"
-msgstr ""
-
-#: View/Radaccts/view.ctp:28
-msgid "Session time"
-msgstr ""
-
-#: View/Radaccts/view.ctp:29
-msgid "Terminate cause"
-msgstr ""
-
-#: View/Radaccts/view.ctp:30
-msgid "Input data"
-msgstr ""
-
-#: View/Radaccts/view.ctp:31
-msgid "Output data"
-msgstr ""
-
-#: View/Radaccts/view.ctp:42
+#: View/Radaccts/view.ctp:66
 msgid "Network Access Server:"
 msgstr ""
 
-#: View/Radaccts/view.ctp:45
+#: View/Radaccts/view.ctp:69
 msgid "Port"
 msgstr ""
 
