@@ -10,12 +10,12 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="744.09448819"
-   height="1052.3622047"
+   width="410.73764"
+   height="247.0798"
    id="svg14300"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="New document 42">
+   sodipodi:docname="wrmem.svg">
   <defs
      id="defs14302">
     <marker
@@ -382,16 +382,20 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="504.71052"
-     inkscape:cy="729.55852"
+     inkscape:cx="219.16766"
+     inkscape:cy="123.09842"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1280"
-     inkscape:window-height="1007"
+     inkscape:window-width="1024"
+     inkscape:window-height="751"
      inkscape:window-x="0"
      inkscape:window-y="17"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <metadata
      id="metadata14305">
     <rdf:RDF>
@@ -400,14 +404,15 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-285.54286,-113.108)">
     <g
        id="g13121"
        transform="matrix(0.86134208,0,0,0.79986158,-31.121221,-76.463224)">
