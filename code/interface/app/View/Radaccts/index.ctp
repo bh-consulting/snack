@@ -15,7 +15,7 @@ $columns = array(
         'text' => __('Stop'),
     ),
     'duration' => array(
-        'text' => __('Durée'),
+        'text' => __('Duration'),
     ),
     'username' => array(
         'text' => __('Username'),
