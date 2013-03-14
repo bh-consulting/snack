@@ -11,9 +11,6 @@ $columns = array(
     'acctstarttime' => array(
         'text' => __('Start'),
     ),
-    'acctstoptime' => array(
-        'text' => __('Stop'),
-    ),
     'duration' => array(
         'text' => __('Duration'),
     ),
@@ -202,15 +199,17 @@ if (!empty($radaccts)) {
                 echo isset($types[$value]) ? $types[$value] : $value;
                 break;
             case 'acctstarttime':
+		echo $acct['Radacct'][$field];
+		break;
             case 'duration':
-                echo $acct['Radacct'][$field];
-                break;
-            case 'acctstoptime':
-                if (empty($acct['Radacct'][$field])) {
-                    echo '<em>'.__('still connected').'</em>';
-                } else {
-                    echo $acct['Radacct'][$field];
-                }
+		if ($acct['Radacct']['durationsec'] != -1) {
+		    echo '<i class="icon-time"></i> ';
+		    echo "<span -data-duration='{$acct['Radacct']['durationsec']}'";
+		    echo " -data-duration-format='" . __('y,m,d,h,min,s') . "'>";
+		    echo $acct['Radacct'][$field];
+		    echo '</span>';
+		} else 
+		    echo $acct['Radacct'][$field];
                 break;
             default:
                 echo h($acct['Radacct'][$field]);
@@ -248,5 +247,9 @@ if(AuthComponent::user('role') == 'root'){
 }
 echo $this->element('paginator_footer');
 unset($acct);
-?>
 
+$this->start('script');
+echo $this->Html->script('radaccts');
+$this->end();
+
+?>

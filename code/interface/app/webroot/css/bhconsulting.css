@@ -227,3 +227,60 @@ div.menutopphone {
     left: 10px;
     border-color: #aa0000;
 }
+
+#logmessage { margin-top: 12px }
+
+.loglinks td {
+	text-align: center;
+}
+
+.loglinks td.logcellmsg {
+	text-align: left;
+	font-style: italic;
+}
+
+.loglinks td.logcellid {
+	font-weight: bold;
+}
+
+.loglinks td.logcelldatetime {
+	width: 140px;
+}
+
+.loglinks td a {
+	color: #000;
+}
+
+tr.loglevelemerg, tr.loglevelalert, tr.loglevelcrit, tr.loglevelerr {
+	background-color: #cc0000;
+	color: #fff;
+}
+
+.loglinks tr.loglevelemerg:hover td, .loglinks tr.loglevelalert:hover td, .loglinks tr.loglevelcrit:hover td, .loglinks tr.loglevelerr:hover td {
+	background-color: #a90000;
+}
+
+tr.logleveldebug {
+	background-color: #95c2cf;
+}
+
+.loglinks tr.logleveldebug:hover td {
+	background-color: #84acb8;
+}
+
+tr.loglevelemerg a, tr.loglevelalert a, tr.loglevelcrit a, tr.loglevelerr a {
+	color: #fff;
+}
+
+tr.loglevelwarn {
+	background-color: #cc4500;
+	color: #fff;
+}
+
+.loglinks tr.loglevelwarn:hover td {
+	background-color: #ba4b12;
+}
+
+tr.loglevelwarn a {
+	color: #fff;
+}

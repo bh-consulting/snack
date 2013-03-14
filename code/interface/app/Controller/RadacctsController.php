@@ -126,6 +126,17 @@ class RadacctsController extends AppController {
                 'durdisplay'
             ); 
 
+	    if(is_null($session['Radacct']['acctstoptime'])) {
+		$session['Radacct']['durationsec'] = Utils::formatDate(
+		    array(
+			$session['Radacct']['acctstarttime'],
+			$session['Radacct']['acctstoptime'],
+		    ),
+		    'durdisplaysec'
+		); 
+	    } else
+		$session['Radacct']['durationsec'] = -1;
+
             if (isset($session['Radacct']['acctstarttime'])) {
                 $session['Radacct']['acctstarttime'] = Utils::formatDate(
                     $session['Radacct']['acctstarttime'],
@@ -149,7 +160,28 @@ class RadacctsController extends AppController {
 
     public function view($id = null) {
         $this->Radacct->id = $id;
-        $this->set('radacct', $this->Radacct->read());
+	$session = $this->Radacct->read();
+
+        $session['Radacct']['duration'] = Utils::formatDate(
+            array(
+                $session['Radacct']['acctstarttime'],
+                $session['Radacct']['acctstoptime'],
+            ),
+            'durdisplay'
+        );
+
+	if(is_null($session['Radacct']['acctstoptime'])) {
+	    $session['Radacct']['durationsec'] = Utils::formatDate(
+		array(
+		    $session['Radacct']['acctstarttime'],
+		    $session['Radacct']['acctstoptime'],
+		),
+		'durdisplaysec'
+	    ); 
+	} else
+	    $session['Radacct']['durationsec'] = -1;
+
+        $this->set('radacct', $session);
     }
 
     public function delete($id = null) {

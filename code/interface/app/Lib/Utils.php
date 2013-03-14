@@ -37,15 +37,27 @@ class Utils {
                     $minutes = $interval->format('%i');
                     $seconds = $interval->format('%s');
 
-                    $duration = $years ? __('%dy', $years).'&nbsp;' : '';
-                    $duration .= $months ? __('%dm', $months).'&nbsp;' : '';
-                    $duration .= $days ? __('%dd', $days).'&nbsp;' : '';
-                    $duration .= $hours ? __('%dh', $hours).'&nbsp;' : '';
-                    $duration .= $minutes ? __('%dmin', $minutes).'&nbsp;' : '';
+                    $duration = $years ? __('%dy', $years).' ' : '';
+                    $duration .= $months ? __('%dm', $months).' ' : '';
+                    $duration .= $days ? __('%dd', $days).' ' : '';
+                    $duration .= $hours ? __('%dh', $hours).' ' : '';
+                    $duration .= $minutes ? __('%dmin', $minutes).' ' : '';
                     $duration .= $seconds ? __('%ds', $seconds) : '';
 
-                    return $interval->format('%r') . '&nbsp;' . $duration; 
+                    return trim($duration);
                 }
+
+		return -1;
+            case 'durdisplaysec':
+                if (count($date) == 2) {
+                    $start = new Datetime($date[0]);
+                    $stop = new Datetime($date[1]);
+                    $interval = $stop->getTimestamp() - $start->getTimestamp();
+
+                    return $interval;
+                }
+
+		return -1;
             case 'dursign':
                 if (count($date) == 2) {
                     $start = new Datetime($date[0]);

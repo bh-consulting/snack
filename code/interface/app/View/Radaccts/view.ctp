@@ -24,8 +24,10 @@ echo $this->element('block-dl', array(
     'title' => __('Statistics:'),
     'fields' => array(
         __('Session start') => $radacct['Radacct']['acctstarttime'],
-        __('Session stop') => $radacct['Radacct']['acctstoptime'],
-        __('Session time') => Utils::secondToTime($radacct['Radacct']['acctsessiontime']),
+        __('Session stop') => (empty($radacct['Radacct']['acctstoptime']) ?
+	    '<em>'.__('still connected').'</em>' :
+	    $radacct['Radacct']['acctstoptime']),
+        __('Duration') => $radacct['Radacct']['duration'],
         __('Terminate cause') => $radacct['Radacct']['acctterminatecause'],
         __('Input data') => Utils::octets($radacct['Radacct']['acctinputoctets']),
         __('Output data') => Utils::octets($radacct['Radacct']['acctoutputoctets']),
@@ -45,4 +47,6 @@ echo $this->element('block-dl', array(
         __('Port') => $radacct['Radacct']['nasporttype'] . $portid
     ),
 ));
+
+echo $this->Html->script('radaccts');
 ?>
