@@ -6,9 +6,9 @@ function logsSearchFromSeverity(link) {
 }
 
 function logsSearchFromDate(link) {
-        var from_datetime = link.attr('datetime').split(' ');
+        var from_datetime = link.text().split(/\s+.*\s+/);
 
-        var from_date = from_datetime[0].split('-');
+        var from_date = from_datetime[0].split('/');
         var from_time = from_datetime[1].split(':');
         var to_datetime = $('#dateto').attr('value').split(' ');
 
@@ -22,7 +22,7 @@ function logsSearchFromDate(link) {
                         $('#dateto').attr('value', '');
         }
 
-        $('#datefrom').val(link.attr('datetime'));
+        $('#datefrom').val(from_date[2] + '-' + from_date[1] + '-' + from_date[0] + ' ' + from_datetime[1]);
         $('#filtersForm').submit();
 }
 

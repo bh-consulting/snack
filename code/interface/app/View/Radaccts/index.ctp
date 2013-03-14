@@ -21,7 +21,7 @@ $columns = array(
         'text' => __('Username'),
     ),
     'callingstationid' => array(
-        'text' => __('User station'),
+        'text' => __('User'),
         'fit' => true,
     ),
     'nasipaddress' => array(

@@ -154,7 +154,10 @@ class BackupsController extends AppController {
 
 		$commitA = $backupA['Backup']['commit'];
 
-		$this->set('dateA', $backupA['Backup']['datetime']);
+		$this->set('dateA', Utils::formatDate(
+		    $backupA['Backup']['datetime'],
+		    'display'
+		));
 		$this->set('idA', $backupA['Backup']['id']);
 		$this->set('actionA', $backupA['Backup']['action']);
 		$this->set('usersA', $this->Users->extendUsers($backupA['Backup']['users']));
@@ -270,12 +273,20 @@ class BackupsController extends AppController {
 				$backups = $this->Filters->paginate();
 				$users = array();
 
-				foreach($backups AS $backup) {
+				foreach($backups AS &$backup) {
 				    $users[$backup['Backup']['id']] =
 					$this->Users->extendUsers($backup['Backup']['users']);
-				}
 
+				    if (isset($backup['Backup']['datetime'])) {
+					$backup['Backup']['datetime'] = Utils::formatDate(
+					    $backup['Backup']['datetime'],
+					    'display'
+					);
+				    }
+				}
 				$this->set('users', $users);
+				$this->set('actions', $this->Backup->actions);
+				$this->set('backups', $backups);
 		    } else {
 				throw new BadBackupOrNasID(
 				    'Please select a NAS and a configuration version.'

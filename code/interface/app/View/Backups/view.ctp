@@ -29,25 +29,9 @@ if(isset($diff) && isset($config)):
 			$this->element('formatUsersList', array(
 			    'users' => $usersA
 			))) ?></li>
-<?php
-    switch ($actionA) {
-    case 'logoff':
-        $actionA = __('Log off');
-        break;
-    case 'login':
-        $actionA = __('Log in');
-        break;
-    case 'wrmem':
-        $actionA = __('Write memory');
-        break;
-    default:
-        echo $actionA;
-    }
-?>
-
     <li><?php echo __('<strong>%s:</strong> <em>%s</em>',
 			__('Why'),
-			$actionA) ?></li>
+			$actions[$actionA]) ?></li>
 
     <?php if(empty($diff)): ?>
     <li><strong><?php echo __('This is the current configuration.') ?></strong></li>
@@ -153,7 +137,11 @@ for($i = 0; $i < count($backups); $i++) {
 	    echo $this->element('formatUsersList', array(
 		'users' => $users[$backup['Backup']['id']]
 	    ));
-	} else 
+
+	} else if($field == 'action') {
+	    echo $actions[$backup['Backup'][$field]];
+
+	} else
 	    echo $backup['Backup'][$field];
 
 	echo '</td>';

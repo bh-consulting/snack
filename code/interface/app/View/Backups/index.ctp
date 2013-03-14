@@ -217,7 +217,7 @@ if (!empty($backups)) {
                 break;
             case 'action':
                 if (isset($actions[$backup['Backup'][$field]])) {
-                    echo $actions[$backup['Backup'][$field]];
+                    echo __($actions[$backup['Backup'][$field]]);
                 } else {
                     echo $backup['Backup'][$field];
                 }
