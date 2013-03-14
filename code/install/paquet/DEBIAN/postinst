@@ -187,7 +187,7 @@ echo 20 | whiptail \
 mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < ${TMP}/schema.sql >> $OUT 2>>$LOG
 
 echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cleartext-Password', ':=', '${PASSWORD_RADIUS}');" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} >> $OUT 2>>$LOG
-echo "INSERT INTO raduser(UserName, Admin) VALUES ('admin', true);" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} >> $OUT 2>>$LOG
+echo "INSERT INTO raduser(UserName, Role) VALUES ('admin', 'superadmin');" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} >> $OUT 2>>$LOG
 
 echo 50 | whiptail \
 	--title "SNACK ${VERSION}" \
@@ -537,10 +537,10 @@ echo 90 | whiptail \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring apache for Radius...\nAutomaticaly Setting IP" \
 	10 70 0
 {
-IP=`ip a | grep eth | head -1 | grep '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*' | cut -d ' ' -f6 | cut -d '/' -f1`
-if [ ! $IP = '' ]
+IP=`ip a | grep eth. | grep '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*' | head -1 | cut -d ' ' -f6 | cut -d '/' -f1`
+if [[ -z "$IP" ]]
 then
-sed\
+sed \
 	-e "s/\('ipAddress' => '\)[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/\1$IP/" \
 	-i $USER_HOME/interface/app/Config/parameters.php
 fi
