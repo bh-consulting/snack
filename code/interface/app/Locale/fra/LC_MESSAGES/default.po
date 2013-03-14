@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SNACK\n"
 "POT-Creation-Date: 2013-03-14 18:34+0000\n"
-"PO-Revision-Date: 2013-03-14 19:37+0100\n"
+"PO-Revision-Date: 2013-03-14 20:20+0100\n"
 "Last-Translator: Julien VAUBOURG <julien@vaubourg.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -459,7 +459,7 @@ msgstr "à"
 
 #: Lib/Utils.php:40
 msgid "%dy"
-msgstr "%d ans"
+msgstr "%da"
 
 #: Lib/Utils.php:41
 msgid "%dm"
@@ -475,11 +475,11 @@ msgstr "%dh"
 
 #: Lib/Utils.php:44
 msgid "%dmin"
-msgstr "Admin"
+msgstr "%dmin"
 
 #: Lib/Utils.php:45
 msgid "%ds"
-msgstr "%dm"
+msgstr "%ds"
 
 #: Lib/Utils.php:144
 msgid "day"
