@@ -538,7 +538,7 @@ echo 90 | whiptail \
 	10 70 0
 {
 IP=`ip a | grep eth. | grep '[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*' | head -1 | cut -d ' ' -f6 | cut -d '/' -f1`
-if [[ -z "$IP" ]]
+if [[ ! -z "$IP" ]]
 then
 sed \
 	-e "s/\('ipAddress' => '\)[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/\1$IP/" \
