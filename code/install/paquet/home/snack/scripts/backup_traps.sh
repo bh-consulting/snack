@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo laaa > /tmp/mardi
 
 ## FUNCTIONS
 
@@ -37,7 +36,7 @@ read sql_tftpdone <<SQL
     SET commit='%s'\\
     WHERE commit IS NULL\\
     AND nas='$NAS_IP_ADDRESS'\\
-    ORDER BY id\\
+    ORDER BY datetime DESC\\
     LIMIT 1\\
 SQL
 
@@ -99,11 +98,25 @@ elif [[\
     cd ~snack/backups.git/
     rm $NAS_IP_ADDRESS.pid
 
-#elif [[\
-#    "$ccmHistoryEventCommandSource" =~ $oid_sysUpTime\ [0-9]+ \
-#    && "$ccmHistoryEventConfigSource" =~ $oid_whyReload\ 706f7765722d6f6e \
-#]]; then
-#	echo "got a reboot" >> /tmp/switch
+
+
+# Trap reveived if the switch reloads.
+elif [[\
+    "$ccmHistoryEventCommandSource" =~ $oid_sysUpTime\ [0-9]*:[0-9]*:[0-9]*:[0-9]*.[0-9]* \
+    && "$ccmHistoryEventConfigSource" =~ $oid_whyReload\ \"power-on\" \
+]]; then
+
+    users=$(/usr/bin/mysql -B -h $db_host -u $db_login -p$db_password $db_name\
+	-e "$sql_sessionusers" | tail -n+2  | paste -sd ,)
+
+    export NAS_IP_ADDRESS
+    export USER_NAME=$users
+    export ACCT_STATUS_TYPE=Reload
+
+    ~snack/scripts/backup_create.sh
+
+
+
 
 fi
 

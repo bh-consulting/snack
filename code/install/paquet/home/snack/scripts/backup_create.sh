@@ -12,6 +12,12 @@ function backup() {
     then
     	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
 		-e "$(printf "$sqline_restore" $1 ${USER_NAME//\"} $RESTORE_VALUE)"
+    elif [ $1 = reload ]
+    then
+    	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
+		-e "$(printf "$sqline" $1 ${USER_NAME//\"})"
+    	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
+		-e "$(printf "$sqlcloses_sessions")"
 
     else
     	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
@@ -48,6 +54,16 @@ read sqline_restore <<SQL
     VALUES(NOW(), '$NAS_IP_ADDRESS', '%s', '%s', '%s')\\
 SQL
 
+read sqlcloses_sessions <<SQL
+    UPDATE radacct
+    SET ACCTSTOPTIME=(
+	SELECT datetime FROM backups
+	WHERE action='reload'
+	ORDER BY datetime DESC
+	LIMIT 1)
+    WHERE acctstoptime IS NULL;
+SQL
+
 ## PROGRAM
 
 case "$ACCT_STATUS_TYPE" in
@@ -65,6 +81,9 @@ case "$ACCT_STATUS_TYPE" in
 
     Restore)
 	backup restore
+    ;;
+    Reload)
+	backup reload
     ;;
 esac
 
