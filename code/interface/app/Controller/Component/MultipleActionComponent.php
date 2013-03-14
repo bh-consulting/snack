@@ -25,14 +25,12 @@ class MultipleActionComponent extends Component {
                             && $this->controller->{$this->modelName}->delete($id);
                         if ($success) {
                             Utils::userlog(
-                                __('deleted %s #%s', $this->itemName, $id)
+                                __('deleted %s', $this->itemName)
                             );
                         } else {
                             Utils::userlog(
-                                __(
-                                    'error while deleting %s #%s',
-                                    $this->itemName,
-                                    $id
+                                __('error while deleting %s',
+                                    $this->itemName
                                 ),
                                 'error'
                             );
@@ -82,7 +80,7 @@ class MultipleActionComponent extends Component {
                     );
                 } else {
                     $this->controller->Session->setFlash(
-                        __('Please, select at least one %s !', $this->itemName),
+                        __('Please, select at least one %s!', $this->itemName),
                         'flash_warning'
                     );
                 }

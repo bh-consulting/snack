@@ -42,7 +42,7 @@ $columns = array(
     ),
 );
 
-if(AuthComponent::user('role') != 'superadmin'){
+if(AuthComponent::user('role') != 'root'){
     unset($columns['edit']);
     unset($columns['delete']);
     unset($columns['backups']);
@@ -52,7 +52,7 @@ if(AuthComponent::user('role') != 'superadmin'){
 <h1><?php echo __('NAS'); ?></h1>
 
 <?php
-if(AuthComponent::user('role') == 'superadmin'){
+if(AuthComponent::user('role') == 'root'){
     echo $this->Html->link(
         '<i class="icon-hdd icon-white"></i> ' . __('Add a NAS'),
         array('controller' => 'nas', 'action' => 'add'),
@@ -184,7 +184,7 @@ if (!empty($nas)) {
                 );
                 break;
             case 'edit':
-                if(AuthComponent::user('role') == 'superadmin'){
+                if(AuthComponent::user('role') == 'root'){
                     echo '<i class="icon-edit"></i> ';
                     echo $this->Html->link(
                         __('Edit'),
@@ -193,7 +193,7 @@ if (!empty($nas)) {
                 }
                 break;
             case 'backups':
-                if(AuthComponent::user('role') == 'superadmin'){
+                if(AuthComponent::user('role') == 'root'){
                     echo '<i class="icon-camera icon-' . (
 			    in_array($n['Nas']['id'], $unwrittenids) ?
 				'red" title="' . __('Running configuration NOT synchronized with the starting one.') :
@@ -210,7 +210,7 @@ if (!empty($nas)) {
                 }
                 break;
             case 'delete':
-                if(AuthComponent::user('role') == 'superadmin'){
+                if(AuthComponent::user('role') == 'root'){
                     echo '<i class="icon-remove"></i> ';
                     echo $this->element(
                         'delete_links',
@@ -249,7 +249,7 @@ if (!empty($nas)) {
     </tbody>
 </table>
 <?php
-if(AuthComponent::user('role') == 'superadmin'){
+if(AuthComponent::user('role') == 'root'){
     echo $this->element(
         'MultipleAction',
         array(

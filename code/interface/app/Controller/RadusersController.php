@@ -161,7 +161,7 @@ class RadusersController extends AppController {
             'items' => array(
                 'is_cisco' => __('Cisco'),
                 'is_mac' => __('MAC'),
-                'is_loginpass' => __('Login/Password'),
+                'is_loginpass' => __('Login/Pwd'),
                 'is_cert' => __('Certificate'),
             ),
         ));
@@ -172,7 +172,7 @@ class RadusersController extends AppController {
                 'user' => $this->Raduser->roles['user'],
                 'tech' => $this->Raduser->roles['tech'],
                 'admin' => $this->Raduser->roles['admin'],
-                'superadmin' => $this->Raduser->roles['superadmin'],
+                'root' => $this->Raduser->roles['root'],
             ),
             'input' => 'rolefilter',
             'title' => false,
@@ -277,7 +277,7 @@ class RadusersController extends AppController {
             }
         } else {
             $this->Session->setFlash(
-                __('Please, select at least one user !'),
+                __('Please, select at least one user!'),
                 'flash_warning'
             );
         }
@@ -339,7 +339,7 @@ class RadusersController extends AppController {
             }
         } else {
             $this->Session->setFlash(
-                __('Please, select at least one user !'),
+                __('Please, select at least one user!'),
                 'flash_warning'
             );
         }
@@ -454,7 +454,7 @@ class RadusersController extends AppController {
         }
 
         $this->set('showedAttr', $showedAttr);
-        $this->view($id, array( 'Authentication type' => 'Login / Password' ));
+        $this->view($id, array( 'Authentication type' => 'Login/Pwd' ));
     }
 
     /**
@@ -821,7 +821,7 @@ class RadusersController extends AppController {
             }
         }
 
-        $users = $this->Raduser->find('all', array('conditions' => array('Raduser.role !=' => 'superadmin')));
+        $users = $this->Raduser->find('all', array('conditions' => array('Raduser.role !=' => 'root')));
         $values = array();
         foreach ($users as $u) {
             $values[$u['Raduser']['id']]= $u['Raduser']['username'];

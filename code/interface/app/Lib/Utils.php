@@ -41,7 +41,7 @@ class Utils {
                     $duration .= $months ? __('%dm', $months).'&nbsp;' : '';
                     $duration .= $days ? __('%dd', $days).'&nbsp;' : '';
                     $duration .= $hours ? __('%dh', $hours).'&nbsp;' : '';
-                    $duration .= $minutes ? __('%dm', $minutes).'&nbsp;' : '';
+                    $duration .= $minutes ? __('%dmin', $minutes).'&nbsp;' : '';
                     $duration .= $seconds ? __('%ds', $seconds) : '';
 
                     return $interval->format('%r') . '&nbsp;' . $duration; 

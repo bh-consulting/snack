@@ -34,7 +34,7 @@ echo $this->Html->link(
 if($nasunwritten)
     $iconnas = '<i class="icon-hdd icon-red" title="' . __('There is at least one NAS not synchronized with the starting configuration.') . '"></i>';
 else
-    $iconnas = '<i class="icon-hdd icon-green" title="' . __('All NAS seems synchronized with the starting configuration.') . '"></i>';
+    $iconnas = '<i class="icon-hdd icon-green" title="' . __('All NAS seem synchronized with the starting configuration.') . '"></i>';
 
 echo $this->Html->link(
     $iconnas . ' ' . __('NAS')
@@ -86,7 +86,7 @@ echo $this->Html->link(
 );
 ?>
 	</li>
-<?php if(AuthComponent::user('role') == 'superadmin'){ ?>
+<?php if(AuthComponent::user('role') == 'root'){ ?>
 	<li class="<?php echo $this->fetch('param_active'); ?>">
 <?php
 echo $this->Html->link(

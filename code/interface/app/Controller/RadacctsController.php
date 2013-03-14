@@ -75,7 +75,7 @@ class RadacctsController extends AppController {
                 }
             } else {
                 $this->Session->setFlash(
-                    __('Please, select at least one session !'),
+                    __('Please, select at least one session!'),
                     'flash_warning'
                 );
             }
@@ -166,7 +166,7 @@ class RadacctsController extends AppController {
 
         if ($this->Radacct->delete($id)) {
             $this->Session->setFlash(
-                __('The Session with id #%s has beed deleted', $uniqueId),
+                __('The session has been deleted'),
                 'flash_success'
             );
             Utils::userlog(__('deleted session %s', $uniqueId));

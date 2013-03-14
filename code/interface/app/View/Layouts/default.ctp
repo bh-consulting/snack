@@ -83,7 +83,7 @@ $cakeDescription = __('SNACK');
                             array()
                         ) . '</li>';
 
-                    if(AuthComponent::user('role') == 'superadmin'){
+                    if(AuthComponent::user('role') == 'root'){
                         echo '<li class="' . $this->fetch('term_active') . '">' .
                             $this->Html->link(
                                 __('Terminal'),

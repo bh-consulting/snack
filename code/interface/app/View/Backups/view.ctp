@@ -29,7 +29,23 @@ if(isset($diff) && isset($config)):
 			$this->element('formatUsersList', array(
 			    'users' => $usersA
 			))) ?></li>
-    <li><?php echo __('<strong>%s:</strong> %s',
+<?php
+    switch ($actionA) {
+    case 'logoff':
+        $actionA = __('Log off');
+        break;
+    case 'login':
+        $actionA = __('Log in');
+        break;
+    case 'wrmem':
+        $actionA = __('Write memory');
+        break;
+    default:
+        echo $actionA;
+    }
+?>
+
+    <li><?php echo __('<strong>%s:</strong> <em>%s</em>',
 			__('Why'),
 			$actionA) ?></li>
 

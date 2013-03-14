@@ -104,9 +104,9 @@ class Raduser extends AppModel {
     public function __construct($id = false, $table = null, $ds = null) {
         $this->roles = array(
             'user' => __('User'),
-            'tech' => __('Technician'),
-            'admin' => __('Manager'),
-            'superadmin' => __('Administrator'),
+            'tech' => __('Tech'),
+            'admin' => __('Admin'),
+            'root' => __('Root'),
         );
 
         parent::__construct($id, $table, $ds);
@@ -118,43 +118,43 @@ class Raduser extends AppModel {
 
     /*
      * Check if user has 'user rights'.
-     * Every user, tech, admin and superadmin have these rights.
+     * Every user, tech, admin and root have these rights.
      */
     public function isUser($id){
         $role = $this->getRole($id);
         return $role == 'user'
             || $role == 'tech'
             || $role == 'admin'
-            || $role == 'superadmin';
+            || $role == 'root';
     }
 
     /*
      * Check if user has 'tech rights'.
-     * Every tech, admin and superadmin have these rights.
+     * Every tech, admin and root have these rights.
      */
     public function isTech($id){
         $role = $this->getRole($id);
         return $role == 'tech'
             || $role == 'admin'
-            || $role == 'superadmin';
+            || $role == 'root';
     }
 
     /*
      * Check if user has 'admin rights'.
-     * Only admin and superadmin have these rights.
+     * Only admin and root have these rights.
      */
     public function isAdmin($id){
         $role = $this->getRole($id);
         return $role == 'admin'
-            || $role == 'superadmin';
+            || $role == 'root';
     }
 
     /*
-     * Check if user has 'superadmin rights'.
-     * Only superadmin have these rights.
+     * Check if user has 'root rights'.
+     * Only root have these rights.
      */
     public function isSuperAdmin($id){
-        return $this->getRole($id) == 'superadmin';
+        return $this->getRole($id) == 'root';
     }
 
     /*

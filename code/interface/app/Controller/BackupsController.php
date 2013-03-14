@@ -192,7 +192,20 @@ class BackupsController extends AppController {
 		$this->set('nasIP', $nas['Nas']['nasname']);
 		$this->set('nasShortname', $nas['Nas']['shortname']);
 
-		exec("cd $this->git; git diff $commitB $commitA", $output);
+		if(is_null($commitB)) {
+		    exec("cd $this->git; git diff "
+			. "$commitA:{$backupA['Backup']['nas']}"
+			. " :{$backupA['Backup']['nas']}",
+			$output);
+
+		} else {
+
+		    exec("cd $this->git; git diff "
+			. "$commitB:{$backupB['Backup']['nas']}"
+			. " $commitA:{$backupA['Backup']['nas']}",
+			$output);
+		}
+
 		$this->set('diff', implode("\n", $output));
 
 		return $backupA;

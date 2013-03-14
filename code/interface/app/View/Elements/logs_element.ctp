@@ -150,7 +150,7 @@ if (!empty($loglines)) {
 </table>
 <div>
 <?php
-if(AuthComponent::user('role') == 'superadmin'){
+if(AuthComponent::user('role') == 'root'){
     echo $this->Form->postLink(
         __('Delete all'),
         array('action' => 'deleteAll', $program),

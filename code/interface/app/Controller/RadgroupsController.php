@@ -148,7 +148,7 @@ class RadgroupsController extends AppController {
             }
         } else {
             $this->Session->setFlash(
-                __('Please, select at least one group !'),
+                __('Please, select at least one group!'),
                 'flash_warning'
             );
         }

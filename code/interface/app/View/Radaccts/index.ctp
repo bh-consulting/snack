@@ -42,7 +42,7 @@ $columns = array(
     ),
 );
 
-if(AuthComponent::user('role') != 'superadmin'){
+if(AuthComponent::user('role') != 'root'){
     unset($columns['delete']);
 }
 ?>
@@ -75,7 +75,7 @@ echo $this->element('filters_panel', array(
     )
 );
 
-if(AuthComponent::user('role') == 'superadmin'){
+if(AuthComponent::user('role') == 'root'){
     echo $this->element(
         'delete_links',
         array('action' => 'form', 'model' => 'Radacct')
@@ -237,7 +237,7 @@ if (!empty($radaccts)) {
 </table>
 
 <?php
-if(AuthComponent::user('role') == 'superadmin'){
+if(AuthComponent::user('role') == 'root'){
     echo $this->element(
         'MultipleAction',
         array(
