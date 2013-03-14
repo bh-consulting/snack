@@ -452,10 +452,10 @@ that use the API provided by core.
 		},
 		
 		keys: {
-			// enter, space, page down, right arrow, down arrow,
-			next: [13, 32, 34, 39, 40],
-			// backspace, page up, left arrow, up arrow
-			previous: [8, 33, 37, 38]
+			// enter, space, page down, right arrow, down arrow, j
+			next: [13, 32, 34, 39, 40, 74],
+			// backspace, page up, left arrow, up arrow, k
+			previous: [8, 33, 37, 38, 75]
 		},
 		
 		touch: {

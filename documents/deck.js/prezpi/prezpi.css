@@ -11,3 +11,11 @@
 .deck-container li, .deck-container p{
     font-size: 1.3em;
 }
+
+.deck-container h1 {
+    font-size: 3.2em;
+}
+
+.text-center {
+    text-align: center;
+}
