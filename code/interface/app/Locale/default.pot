@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2013-03-14 18:31+0000\n"
+"POT-Creation-Date: 2013-03-14 18:34+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -546,8 +546,6 @@ msgstr ""
 
 #: Model/Raduser.php:106
 #: View/Elements/snack_role_input.ctp:11
-#: View/Radaccts/index.ctp:24
-#: View/Radaccts/view.ctp:18
 msgid "User"
 msgstr ""
 
@@ -1181,6 +1179,11 @@ msgstr ""
 #: View/Radusers/index.ctp:23
 #: View/Radusers/login.ctp:15
 msgid "Username"
+msgstr ""
+
+#: View/Radaccts/index.ctp:24
+#: View/Radaccts/view.ctp:18
+msgid "Station"
 msgstr ""
 
 #: View/Radaccts/index.ctp:32;68

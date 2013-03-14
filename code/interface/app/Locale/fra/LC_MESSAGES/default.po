@@ -4,8 +4,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SNACK\n"
-"POT-Creation-Date: 2013-03-14 18:31+0000\n"
-"PO-Revision-Date: 2013-03-14 19:32+0100\n"
+"POT-Creation-Date: 2013-03-14 18:34+0000\n"
+"PO-Revision-Date: 2013-03-14 19:37+0100\n"
 "Last-Translator: Julien VAUBOURG <julien@vaubourg.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -554,8 +554,6 @@ msgstr "802.1X"
 
 #: Model/Raduser.php:106
 #: View/Elements/snack_role_input.ctp:11
-#: View/Radaccts/index.ctp:24
-#: View/Radaccts/view.ctp:18
 msgid "User"
 msgstr "Utilisateur"
 
@@ -1190,6 +1188,11 @@ msgstr "Durée"
 #: View/Radusers/login.ctp:15
 msgid "Username"
 msgstr "Utilisateur"
+
+#: View/Radaccts/index.ctp:24
+#: View/Radaccts/view.ctp:18
+msgid "Station"
+msgstr "Station"
 
 #: View/Radaccts/index.ctp:32;68
 msgid "Port type"
