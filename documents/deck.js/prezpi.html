@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=1024, user-scalable=no">
 
-	<title>Projet industriel b.h. consulting authentification</title>
+	<title>Projet industriel b.h. consulting SNACK</title>
 	
 	<!-- Required stylesheet -->
 	<link rel="stylesheet" href="core/deck.core.css">
@@ -40,16 +40,19 @@
 <!-- Begin slides. Just make elements with a class of slide. -->
 
 <section class="slide" id="start">
-	<h1>b.h. consulting authentification</h1>
-	<div style="text-align: center;">
+	<h1>Projet industriel</h1>
+	<h1>b.h. consulting SNACK</h1>
+	<div style="text-align: center; padding-top: 50px;">
 		<p>21 mars 2013</p>
 		<p><em>N. BOUGET, J. GUÉPIN, M. PINHÈDE, J. VAUBOURG</em></p>
 	</div>
-	<img src="prezpi/img/telecom-nancy.jpg" style="float:left; width: 20%;" />
-	<img src="prezpi/img/ul.png" style="float:right; width: 20%;" />
-	<span style="margin-left: auto; margin-right: auto;">
-		<img src="prezpi/img/BHConsulting.jpg" style="width: 20%;" />
-	</span>
+	<div style="padding-top: 120px;">
+		<img src="prezpi/img/telecom-nancy.jpg" style="float:left; width: 20%;" />
+		<img src="prezpi/img/ul.png" style="float:right; width: 20%;" />
+		<span style="margin-left: auto; margin-right: auto;">
+			<img src="prezpi/img/BHConsulting.jpg" style="width: 20%;" />
+		</span>
+	</div>
 </section>
 
 <section class="slide" id="plan">
@@ -57,8 +60,9 @@
 	<ol class="plan">
 		<li>Contexte</li>
 		<li>Gestion du projet</li>
-		<li>Authentification 802.1x</li>
+		<li>Authentification sur le réseau</li>
 		<li>Sauvegarde de configurations</li>
+		<li>Interface utilisateur Snack</li>
 	</ol>
 </section>
 
@@ -77,7 +81,7 @@
 	<img src="prezpi/img/reseaubh.gif" />
 </section>
 
-<section class="slide" id="ctx_bh2">
+<section class="slide" id="organigramme">
 	<h2>Contexte : le client, b.h. consulting</h2>
 	<p>4 employés :</p>
 	<img src="prezpi/img/organigramme.svg" style="width: 80%;" />
@@ -97,8 +101,9 @@
 	<h2>Contexte : objectifs du projet</h2>
 	<p>Sécurite des réseaux d'entreprise</p>
 	<p>Contrôle des accès au réseau</p>
-	<p>Gestion des configurations</p>
+	<p>Gestion des configurations des équipements</p>
 	<p><strong>Solution simple à installer et à utiliser</strong></p>
+	<p><strong>Notre solution : </strong> SNACK (Secure Network Access Control K???)</p>
 </section>
 
 
@@ -140,20 +145,30 @@
 	<img src="prezpi/img/redmine_logo.png" />
 </section>
 
-<section class="slide" id="dot1x">
-	<h2>Authentification 802.1x</h2>
-	<p>Authentification des clients sur le réseau</p>
+<section class="slide" id="radius">
+	<h2>Authentification sur le réseau</h2>
+	<p>Authentification des utilisateurs du réseau de l'entreprise</p>
+	<p>Utilisation du protocole <strong>802.1x</strong></p>
 	<p>Plusieurs méthodes d'authentification :</p>
-	<img src="prezpi/img/freeradius.png" style="float: right;" />
 	<ul>
 		<li>Certificat</li>
 		<li>Identifiant et mot de passe</li>
 		<li>Adresse MAC</li>
 	</ul>
-	<p>Implémentation avec le serveur libre FreeRadius
-	</p>
 </section>
 
+<section class="slide" id="radius_impl">
+	<h2>Authentification : implémentation</h2>
+	<img src="prezpi/img/freeradius.png" style="float: right; width: 20%;" />
+	<p>Implémentation avec le serveur libre <strong>FreeRadius</strong></p>
+	<img src="prezpi/img/mysql.png" style="float: right; width: 20%;" />
+	<p>Stockage des données dans <strong>MySQL</strong></p>
+</section>
+
+<section class="slide" id="radius_fonctionnement">
+	<h3>Fonctionnement de 802.1x</h3>
+	<p>Schema trop cool a mettre ici</p>
+</section>
 
 <section class="slide" id="confs">
 	<h2>Gestion des configurations</h2>
@@ -161,6 +176,40 @@
 	<p><strong>Versionnage et comparaison</strong> des configurations</p>
 	<p><strong>Restauration</strong> d'une ancienne configuration</p>
 </section>
+
+<section class="slide" id="confs_impl">
+	<h2>Gestion des configurations : implémentation</h2>
+    <p>Trappes SNMP toussa...</p>
+</section>
+
+<section class="slide" id="confs_fonctionnement_auth">
+    <h3>Fonctionnement de la sauvegarde : authentification</h3>
+    <img src="prezpi/img/auth.svg" style="width:80%;" />
+</section>
+
+<section class="slide" id="confs_fonctionnement_wrmem">
+    <h3>Fonctionnement de la sauvegarde : écriture mémoire</h3>
+    <img src="prezpi/img/wrmem.svg" style="width:80%;" />
+</section>
+
+
+<section class="slide" id="snack">
+	<h2>Interface utilisateur Snack</h2>
+	<p>Application web <strong>simple</strong>, ergonomique et securisee</p>
+	<p>Configuration du serveur Radius</p>
+	<p>Gestion des configurations</p>
+</section>
+
+<section class="slide" id="snack_impl">
+    <h2>Interface utilisateur Snack : implementation</h2>
+    <img src="prezpi/img/php_logo.png" style="float:right; width: 15%;" />
+    <p>Serveur <strong>LAMP</strong></p>
+    <p><strong>CakePHP</strong> pour les traitements</p>
+    <img src="prezpi/img/cake_logo.png" style="float:right; width: 15%;" />
+    <p><strong>Bootstrap</strong> pour l'affichage</p>
+    <p><strong>jQuery</strong> pour simplifier le traitement cote client</p>
+</section>
+
 <!-- <section class="slide">
 	<h2>Gestion des utilisateurs</h2>
 	<iframe class="snack_frame" src="http://localhost/interface/radusers/"></iframe>
