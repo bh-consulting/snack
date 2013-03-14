@@ -150,12 +150,29 @@ if (!empty($loglines)) {
 <div>
 <?php
 if(AuthComponent::user('role') == 'root'){
-    echo $this->Form->postLink(
-        __('Delete all'),
-        array('action' => 'deleteAll', $program),
-        array('class' => 'btn btn-primary'),
-        __('Are you sure?')
+
+    echo $this->Html->link(
+	'<i class="icon-remove"></i> ' . __('Delete all'),
+	"#confirmdelall",
+	array(
+	    'escape' => false,
+	    'data-toggle' => 'modal',
+	    'class' => 'btn btn-primary'
+	)
     );
+
+    echo $this->element('modalDelete', array(
+	'id'   => 'delall',
+	'link' => $this->Form->postLink(
+		'<i class="icon-remove icon-white"></i> ' . __('Delete all'),
+		array('action' => 'deleteAll', $program),
+		array(
+		    'escape' => false,
+		    'class' => 'btn btn-primary btn-danger'
+		)
+	    )
+    ));
+
 }
 ?>
 </div>
