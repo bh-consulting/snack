@@ -1,0 +1,13 @@
+.snack_frame {
+    width: 90%;
+    height: 650px;
+}
+
+.plan li{
+    font-size: 2.5em;
+    margin-left: 50px;
+}
+
+.deck-container li, .deck-container p{
+    font-size: 1.3em;
+}

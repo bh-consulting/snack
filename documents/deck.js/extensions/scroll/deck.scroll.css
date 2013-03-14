@@ -1,0 +1,28 @@
+.csstransforms .slide h1, .csstransforms .slide .vcenter {
+  padding: inherit;
+  position: inherit;
+  left: inherit;
+  right: inherit;
+  top: inherit;
+  -webkit-transform: inherit;
+  -moz-transform: inherit;
+  -ms-transform: inherit;
+  -o-transform: inherit;
+  transform: inherit;
+}
+
+.deck-before, .deck-previous, .deck-next, .deck-after {
+  position: inherit;
+  left: inherit;
+  top: inherit;
+}
+
+.slide .slide {
+  visibility: inherit;
+  position: inherit;
+  min-height: inherit;
+}
+
+.deck-child-current .slide {
+  visibility: inherit;
+}

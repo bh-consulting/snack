@@ -17,10 +17,13 @@
 	<link rel="stylesheet" href="extensions/status/deck.status.css">
 	<link rel="stylesheet" href="extensions/hash/deck.hash.css">
 	<link rel="stylesheet" href="extensions/scale/deck.scale.css">
+	<link rel="stylesheet" href="extensions/scroll/deck.scroll.css">
 
 	<!-- Style theme. More available in /themes/style/ or create your own. -->
-	<link rel="stylesheet" href="themes/style/launchpad.css">
-	<link rel="stylesheet" href="themes/style/prezpi.css">
+	<link rel="stylesheet" href="themes/style/swiss.css">
+	<link rel="stylesheet" href="prezpi/prezpi.css">
+	<link href="prezpi/img/favicon.ico" type="image/x-icon" rel="icon" />
+	<link href="prezpi/img/favicon.ico" type="image/x-icon" rel="shortcut icon" />
 	
 	<!-- Transition theme. More available in /themes/transition/ or create your own. -->
 	<link rel="stylesheet" href="themes/transition/horizontal-slide.css">
@@ -30,15 +33,24 @@
 </head>
 <body class="deck-container">
 
+
+
+
+
 <!-- Begin slides. Just make elements with a class of slide. -->
 
-<section class="slide">
+<section class="slide" id="start">
 	<h1>b.h. consulting authentification</h1>
-<!-- 	<p><em>N. BOUGET, J. GUÉPIN, M. PINHÈDE, J. VAUBOURG</em></p>
+	<img src="prezpi/img/telecom-nancy.jpg" style="float:left; width: 20%;" />
+	<img src="prezpi/img/ul.png" style="float:right; width: 20%;" />
+	<span style="margin-left: auto; margin-right: auto;">
+		<img src="prezpi/img/BHConsulting.jpg" style="width: 20%;" />
+	</span>
 	<p>21 mars 2013</p>
- --></section>
+	<footer><em>N. BOUGET, J. GUÉPIN, M. PINHÈDE, J. VAUBOURG</em></footer>
+</section>
 
-<section class="slide">
+<section class="slide" id="plan">
 	<h2>Plan</h2>
 	<ol class="plan">
 		<li>Contexte</li>
@@ -48,7 +60,92 @@
 	</ol>
 </section>
 
-<section class="slide">
+<section class="slide" id="ctx_pi">
+	<h2>Contexte : le projet industriel</h2>
+	<p>Projet en 3<sup>ème</sup> année de TELECOM Nancy dans un contexte industriel</p>
+	<p>Gestion du cycle complet du projet</p>
+	<p><strong>250 heures</strong> par étudiant (12 heures par semaine)</p>
+	<p>Suivi par un encadrant industriel (<strong>Guillaume ROCHE</strong>) et un encadrant universitaire (<strong>Jean-François SCHEID</strong>)</p>
+</section>
+
+<section class="slide" id="ctx_bh">
+	<h2>Contexte : le client, b.h. consulting</h2>
+	<p>Entreprise spécialisée dans l'<strong>implantation de réseaux d'entreprise</strong></p>
+	<p>Fondée par Bertrand PÉTAT en 2000</p>
+	<img src="prezpi/img/reseaubh.gif" />
+</section>
+
+<section class="slide" id="ctx_bh2">
+	<h2>Contexte : le client, b.h. consulting</h2>
+	<p>4 employés :</p>
+	<img src="prezpi/img/organigramme.svg" style="width: 80%;" />
+</section>
+
+<section class="slide" id="ctx_team">
+	<h2>Contexte : notre équipe</h2>
+	<ul>
+		<li>Nicolas BOUGET, chef de projet (TRS)</li>
+		<li>Julien GUÉPIN (IL)</li>
+		<li>Marc PINHÈDE (LE)</li>
+		<li>Julien VAUBOURG (TRS)</li>
+	</ul>
+	<p>La team qui bouge !</p>
+</section>
+
+<section class="slide" id="ctx_goals">
+	<h2>Contexte : objectifs du projet</h2>
+	<p>Sécurite des réseaux d'entreprise</p>
+	<p>Contrôle des accès au réseau</p>
+	<p>Gestion des configurations</p>
+	<p class="highlight">Solution simple à installer et à utiliser</p>
+</section>
+
+
+<section class="slide" id="gestion">
+	<h2>Gestion du projet</h2>
+
+	<p>Réunions :
+		<ul>
+			<li>hebdomadaires avec Guillaume ROCHE</li>
+			<li>toutes les 3 semaines avec Jean-François SCHEID</li>
+		</ul>
+	</p>
+	<p>Outils utilisés :
+		<ul>
+			<li>VM project</li>
+			<li>Redmine</li>
+		</ul>
+	</p>
+</section>
+
+<section class="slide" id="vmproject">
+	<h2>Gestion du projet : VM project</h2>
+	<p>Application proposée par l'école pour la gestion des projets industriels</p>
+	<p>Définition d'un diagramme Gantt en début de projet</p>
+	<p>Définition et affectation des tâches</p>
+	<p>Feuilles de temps</p>
+	<img src="prezpi/img/vmproject_logo.png" />
+</section>
+
+<section class="slide" id="redmine">
+	<h2>Gestion du projet : Redmine</h2>
+	<p>Dépôt de sources Subversion hébergé par l'école</p>
+	<p>Tickets : gestion des bugs et demandes de fonctionnalités</p>
+	<p>Conventions de codage sur le wiki</p>
+	<img src="prezpi/img/redmine_logo.png" />
+</section>
+
+<section class="slide" id="dot1x">
+	<h2>Authentification 802.1x</h2>
+	<p></p>
+</section>
+
+
+<section class="slide" id="confs">
+	<h2>Gestion des configurations</h2>
+	<p></p>
+</section>
+<!-- <section class="slide">
 	<h2>Gestion des utilisateurs</h2>
 	<iframe class="snack_frame" src="http://localhost/interface/radusers/"></iframe>
 </section>
@@ -57,8 +154,12 @@
 	<h2>Gestion des groupes</h2>
 	<iframe class="snack_frame" src="http://localhost/interface/radgroups/"></iframe>
 </section>
-
+ -->
 <!-- End slides. -->
+
+
+
+
 
 
 <!-- Begin extension snippets. Add or remove as needed. -->
@@ -100,6 +201,8 @@
 <script src="extensions/status/deck.status.js"></script>
 <script src="extensions/navigation/deck.navigation.js"></script>
 <script src="extensions/scale/deck.scale.js"></script>
+<script src="extensions/scroll/deck.scroll.js"></script>
+<script src="extensions/zoom/deck.zoom.js"></script>
 
 <!-- Initialize the deck. You can put this in an external file if desired. -->
 <script>
