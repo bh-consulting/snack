@@ -15,7 +15,7 @@ echo $this->element('block-dl', array(
     'fields' => array(
         __('Username') => $radacct['Radacct']['username'],
         __('Groupname') => $radacct['Radacct']['groupname'],
-        __('User') => $radacct['Radacct']['callingstationid'],
+        __('Station') => $radacct['Radacct']['callingstationid'],
         __('Session id') => $radacct['Radacct']['acctuniqueid'],
     ),
 ));
