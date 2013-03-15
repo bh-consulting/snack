@@ -1,5 +1,41 @@
+@font-face {
+    font-family: Biolinum;
+    src: url('font/LinBiolinum_R.ttf');
+}
+
+.deck-container {
+    font-family: "Helvetica Neue", sans-serif;
+}
+
+.deck-container .slide h1, .deck-container .slide h2 {
+    font-family: Biolinum, sans-serif;
+}
+
+.deck-container .slide h1 {
+    color: #72336b;
+}
+.deck-container .slide h2 {
+    color: #006cb7;
+}
+
+.deck-container .slide ::-moz-selection {
+    background: #006cb7;
+}
+.deck-container .slide ::selection {
+    background: #006cb7;
+}
+
+.deck-container .slide a, .deck-container .slide a:hover, .deck-container .slide a:focus, .deck-container .slide a:active, .deck-container .slide a:visited {
+    color: #006cb7;
+}
+
+.deck-container .deck-prev-link:hover, .deck-container .deck-prev-link:focus, .deck-container .deck-next-link:hover, .deck-container .deck-next-link:focus {
+  background: #006cb7;
+}
+
+
 .snack_frame {
-    width: 90%;
+    width: 100%;
     height: 650px;
 }
 
@@ -13,9 +49,24 @@
 }
 
 .deck-container h1 {
-    font-size: 3.2em;
+    font-size: 3em;
 }
 
 .text-center {
     text-align: center;
+}
+
+.deck-status .deck-status-current {
+    color: #000;
+    font-style: bold;
+}
+
+.deck-container .deck-prev-link, .deck-container .deck-next-link {
+    opacity:0.4;
+    filter:alpha(opacity=40);
+}
+
+.deck-container .deck-prev-link:hover, .deck-container .deck-next-link:hover {
+    opacity:1;
+    filter:alpha(opacity=100);
 }

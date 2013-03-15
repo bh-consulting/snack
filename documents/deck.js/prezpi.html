@@ -4,6 +4,8 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="viewport" content="width=1024, user-scalable=no">
+	<link href="prezpi/img/favicon.ico" type="image/x-icon" rel="icon" />
+	<link href="prezpi/img/favicon.ico" type="image/x-icon" rel="shortcut icon" />
 
 	<title>Projet industriel b.h. consulting SNACK</title>
 	
@@ -17,13 +19,10 @@
 	<link rel="stylesheet" href="extensions/status/deck.status.css">
 	<link rel="stylesheet" href="extensions/hash/deck.hash.css">
 	<link rel="stylesheet" href="extensions/scale/deck.scale.css">
-	<link rel="stylesheet" href="extensions/scroll/deck.scroll.css">
 
 	<!-- Style theme. More available in /themes/style/ or create your own. -->
 	<link rel="stylesheet" href="themes/style/swiss.css">
 	<link rel="stylesheet" href="prezpi/prezpi.css">
-	<link href="prezpi/img/favicon.ico" type="image/x-icon" rel="icon" />
-	<link href="prezpi/img/favicon.ico" type="image/x-icon" rel="shortcut icon" />
 	
 	<!-- Transition theme. More available in /themes/transition/ or create your own. -->
 	<link rel="stylesheet" href="themes/transition/horizontal-slide.css">
@@ -40,11 +39,11 @@
 <!-- Begin slides. Just make elements with a class of slide. -->
 
 <section class="slide" id="start">
-	<h1>Projet industriel</h1>
-	<h1>b.h. consulting SNACK</h1>
+	<h1>Projet industriel SNACK</h1>
 	<div style="text-align: center; padding-top: 50px;">
-		<p>21 mars 2013</p>
-		<p><em>N. BOUGET, J. GUÉPIN, M. PINHÈDE, J. VAUBOURG</em></p>
+		<p><em>Nicolas BOUGET, Julien GUÉPIN, Marc PINHÈDE, Julien VAUBOURG</em></p>
+		<p>Encadré par Guillaume ROCHE et Jean-François SCHEID</p>
+		<p><strong>21 mars 2013</strong></p>
 	</div>
 	<div style="padding-top: 120px;">
 		<img src="prezpi/img/telecom-nancy.jpg" style="float:left; width: 20%;" />
@@ -62,14 +61,14 @@
 		<li>Gestion du projet</li>
 		<li>Authentification sur le réseau</li>
 		<li>Sauvegarde de configurations</li>
-		<li>Interface utilisateur Snack</li>
+		<li>Interface utilisateur SNACK</li>
 	</ol>
 </section>
 
 <section class="slide" id="ctx_pi">
 	<h2>Contexte : le projet industriel</h2>
-	<p>Projet en 3<sup>ème</sup> année de TELECOM Nancy dans un contexte industriel</p>
-	<p>Gestion du cycle complet du projet</p>
+	<p>Projet dans un contexte industriel en 3<sup>ème</sup> année de TELECOM Nancy</p>
+	<p>Découverte de la gestion du cycle complet d'un projet</p>
 	<p><strong>250 heures</strong> par étudiant (12 heures par semaine)</p>
 	<p>Suivi par un encadrant industriel (<strong>Guillaume ROCHE</strong>) et un encadrant universitaire (<strong>Jean-François SCHEID</strong>)</p>
 </section>
@@ -77,6 +76,7 @@
 <section class="slide" id="ctx_bh">
 	<h2>Contexte : le client, b.h. consulting</h2>
 	<p>Entreprise spécialisée dans l'<strong>implantation de réseaux d'entreprise</strong></p>
+	<p>Petite entreprise à taille humaine</p>
 	<p>Fondée par Bertrand PÉTAT en 2000</p>
 	<img src="prezpi/img/reseaubh.gif" />
 </section>
@@ -102,8 +102,8 @@
 	<p>Sécurite des réseaux d'entreprise</p>
 	<p>Contrôle des accès au réseau</p>
 	<p>Gestion des configurations des équipements</p>
-	<p><strong>Solution simple à installer et à utiliser</strong></p>
-	<p><strong>Notre solution : </strong> SNACK (Secure Network Access Control K???)</p>
+	<p><strong>Application simple à installer et à utiliser</strong></p>
+	<p>Notre solution : <strong>SNACK</strong> (<strong>S</strong>ecure <strong>N</strong>etwork <strong>A</strong>ccess <strong>C</strong>ontrol <em>for <strong>K</strong>ids</em>)</p>
 </section>
 
 
@@ -117,38 +117,44 @@
 		</ul>
 	<p><strong>Outils utilisés :</strong></p>
 		<ul>
-			<li>VM project</li>
+			<li>VMproject</li>
 			<li>Redmine</li>
 		</ul>
 </section>
 
 <section class="slide" id="vmproject">
-	<h2>Gestion du projet : VM project</h2>
+	<h2>Gestion du projet : VMproject</h2>
 	<p>Application proposée par l'école pour aider la gestion des projets industriels</p>
-	<p>Définition d'un diagramme Gantt en début de projet</p>
 	<p>Définition et affectation des tâches, suivi de progression</p>
+	<p>Génération d'un diagramme Gantt</p>
+	<img src="prezpi/img/vmproject_logo.png" style="float: right;" />
 	<p>Feuilles de temps</p>
 	<p>Rapports de réunions</p>
-	<img src="prezpi/img/vmproject_logo.png" />
 </section>
 
 <section class="slide" id="planning">
-	<h2>Gestion du projet : planning prévisionnel</h2>
+	<h3>Gestion du projet : planning prévisionnel</h3>
 	<img src="prezpi/img/gantt.png" />
 </section>
 
 <section class="slide" id="redmine">
 	<h2>Gestion du projet : Redmine</h2>
-	<p>Dépôt de sources Subversion hébergé par l'école</p>
-	<p>Tickets : gestion des bugs et demandes de fonctionnalités</p>
+	<p>Dépôt de sources <strong>Subversion</strong> hébergé par l'école</p>
+	<p>Tickets : gestion des <strong>bugs et demandes</strong> de fonctionnalités</p>
 	<p>Conventions de codage sur le wiki</p>
 	<img src="prezpi/img/redmine_logo.png" />
 </section>
 
+<section class="slide" id="redmine_screenshot">
+    <h3>Demande de fonctionnalité : afficher les logs de l'interface</h3>
+    <img src="prezpi/img/screenshot_ticket.png" />
+</section>
+
+
 <section class="slide" id="radius">
-	<h2>Authentification sur le réseau</h2>
+	<h2>Contrôle d'accès au réseau</h2>
 	<p>Authentification des utilisateurs du réseau de l'entreprise</p>
-	<p>Utilisation du protocole <strong>802.1x</strong></p>
+	<p>Journalisation des accès</p>
 	<p>Plusieurs méthodes d'authentification :</p>
 	<ul>
 		<li>Certificat</li>
@@ -158,9 +164,11 @@
 </section>
 
 <section class="slide" id="radius_impl">
-	<h2>Authentification : implémentation</h2>
+	<h2>Contrôle d'accès : implémentation</h2>
 	<img src="prezpi/img/freeradius.png" style="float: right; width: 20%;" />
+	<p>Utilisation du protocole <strong>802.1x</strong></p>
 	<p>Implémentation avec le serveur libre <strong>FreeRadius</strong></p>
+	<p>Installation sur un serveur GNU/Linux <strong>Ubuntu Server</strong></p>
 	<img src="prezpi/img/mysql.png" style="float: right; width: 20%;" />
 	<p>Stockage des données dans <strong>MySQL</strong></p>
 </section>
@@ -179,7 +187,10 @@
 
 <section class="slide" id="confs_impl">
 	<h2>Gestion des configurations : implémentation</h2>
-    <p>Trappes SNMP toussa...</p>
+	<p>Sauvegarde manuelle et à chaque connexion à l'équipement</p>
+	<p>Transmission de la configuration par TFTP</p>
+	<p>Détection de fin de connexion grâce à un trap SNMP</p>
+	<p>Versionnage des configurations dans un dépôt Git</p>
 </section>
 
 <section class="slide" id="confs_fonctionnement_auth">
@@ -194,34 +205,77 @@
 
 
 <section class="slide" id="snack">
-	<h2>Interface utilisateur Snack</h2>
-	<p>Application web <strong>simple</strong>, ergonomique et securisee</p>
+	<h2>Interface utilisateur SNACK</h2>
+	<p>Application web <strong>simple</strong>, ergonomique et sécurisée</p>
+	<p>Gestion des utilisateurs du réseau</p>
 	<p>Configuration du serveur Radius</p>
+	<p>Supervision des accès réseau</p>
 	<p>Gestion des configurations</p>
 </section>
 
 <section class="slide" id="snack_impl">
-    <h2>Interface utilisateur Snack : implementation</h2>
+    <h2>Interface utilisateur SNACK : implémentation</h2>
     <img src="prezpi/img/php_logo.png" style="float:right; width: 15%;" />
     <p>Serveur <strong>LAMP</strong></p>
     <p><strong>CakePHP</strong> pour les traitements</p>
     <img src="prezpi/img/cake_logo.png" style="float:right; width: 15%;" />
     <p><strong>Bootstrap</strong> pour l'affichage</p>
-    <p><strong>jQuery</strong> pour simplifier le traitement cote client</p>
+    <p><strong>jQuery</strong> pour simplifier le traitement côté client</p>
 </section>
 
-<!-- <section class="slide">
-	<h2>Gestion des utilisateurs</h2>
-	<iframe class="snack_frame" src="http://localhost/interface/radusers/"></iframe>
+<section class="slide" id="demo_users">
+	<h3>Démo : gestion des utilisateurs</h3>
+	<iframe class="snack_frame" src="http://localhost/interface/radusers"></iframe>
 </section>
 
-<section class="slide">
-	<h2>Gestion des groupes</h2>
-	<iframe class="snack_frame" src="http://localhost/interface/radgroups/"></iframe>
+<section class="slide" id="demo_groups">
+	<h3>Démo : gestion des groupes</h3>
+	<iframe class="snack_frame" src="http://localhost/interface/radgroups"></iframe>
 </section>
- -->
+
+<section class="slide" id="demo_nas">
+	<h3>Démo : gestion des NAS et des configurations</h3>
+	<iframe class="snack_frame" src="http://localhost/interface/nas"></iframe>
+</section>
+
+<section class="slide" id="demo_sessions">
+	<h3>Démo : affichage des sessions</h3>
+	<iframe class="snack_frame" src="http://localhost/interface/radaccts"></iframe>
+</section>
+
+<section class="slide" id="demo_logs">
+	<h3>Démo : affichage des logs</h3>
+	<iframe class="snack_frame" src="http://localhost/interface/loglines"></iframe>
+</section>
+
+<section class="slide" id="demo_dashboard">
+	<h3>Démo : tableau de bord du système</h3>
+	<iframe class="snack_frame" src="http://localhost/interface/systemDetails"></iframe>
+</section>
+
+<section class="slide" id="demo_parameters">
+	<h3>Démo : paramétrage du serveur</h3>
+	<iframe class="snack_frame" src="http://localhost/interface/parameters"></iframe>
+</section>
 
 
+<section class="slide" id="future">
+    <h2>Améliorations possibles</h2>
+    <p><strong>Terminal</strong> virtuel</p>
+    <p>Gestion de plus d'équipements :</p>
+    <ul>
+    	<li>Versions d'IOS</li>
+    	<li>Firewall Astaro</li>
+    </ul>
+    <p>Utilisation de <strong>LDAP</strong> au lieu de MySQL</p>
+</section>
+
+<section class="slide" id="ccl">
+	<h2>Conclusion</h2>
+	<p><strong>Solution complète, simple et fonctionnelle</strong></p>
+	<p>Utilisation en production rapidement par b.h. consulting</p>
+	<p>Projet enrichissant et utile</p>
+</section>
 
 <section class="slide" id="end">
 	<h1>Vacances !</h1>
@@ -256,8 +310,8 @@
 </form>
 
 <!-- deck.hash snippet -->
-<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
-
+<!-- <a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+ -->
 <!-- End extension snippets. -->
 
 
@@ -273,9 +327,10 @@
 <script src="extensions/status/deck.status.js"></script>
 <script src="extensions/navigation/deck.navigation.js"></script>
 <script src="extensions/scale/deck.scale.js"></script>
-<script src="extensions/scroll/deck.scroll.js"></script>
 <script src="extensions/zoom/deck.zoom.js"></script>
-
+<!-- <script src="http://localhost:8989/socket.io/socket.io.js"></script>
+<script src="http://localhost:8989/remote.js"></script>
+ -->
 <!-- Initialize the deck. You can put this in an external file if desired. -->
 <script>
 	$(function() {
