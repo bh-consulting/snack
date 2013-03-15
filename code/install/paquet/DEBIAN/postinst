@@ -84,6 +84,7 @@ sed\
 sed\
 	-e "s/acctsessionid\s*=\s*'%{Acct-Session-Id}'/acctuniqueid\t= '%{Acct-Unique-Session-ID}'/" \
 	-i $RADIUS_PATH/sql/mysql/dialup.conf
+} >> $OUT 2>>$LOG
 
 echo 50 | whiptail \
 	--title "SNACK ${VERSION}" \
