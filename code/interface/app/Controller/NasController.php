@@ -133,6 +133,7 @@ class NasController extends AppController {
 
         $this->Filters->paginate('nas');
 
+        //TODO: optimiser les requêtes
     	$this->set('unwrittenids', $this->getUnwrittenNas());
     }
 

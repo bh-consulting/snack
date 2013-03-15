@@ -198,11 +198,17 @@ class RadusersController extends AppController {
         $radusers = $this->Filters->paginate();
 
         if ($radusers != null) {
+            $userList = array();
             foreach ($radusers as &$user) {
+                if (!empty($user['Raduser']['username'])) {
+                    $userList[] = $user['Raduser']['username'];
+                }
+
                 $user['Raduser']['ntype'] = $this->Checks->getType(
                     $user['Raduser'],
                     true
                 );
+
                 $user['Raduser']['type'] = $this->Checks->getType(
                     $user['Raduser'],
                     false
@@ -213,36 +219,38 @@ class RadusersController extends AppController {
                         $user['Raduser']['username']
                     );
                 }
+            }
 
-                $radc = new Radcheck();
+            if (!empty($userList)) {
+                $radcheck = new Radcheck();
 
-                $radcheck = $radc->find(
-                    'first',
+                $expirations = $radcheck->find(
+                    'list',
                     array(
-                        'fields' => 'value',
+                        'fields' => array('username', 'value'),
                         'conditions' => array(
-                            'username' => str_replace(
-                                ':',
-                                '',
-                                $user['Raduser']['username']
-                            ),
-                            'attribute' => 'Expiration'
+                            'username REGEXP' => '^(' . implode($userList, '|') . ')$',
+                            'attribute' => 'Expiration',
                         )
                     )
                 );
 
-                if (!empty($radcheck)
-                    && Utils::formatDate(
-                        array($radcheck['Radcheck']['value'], date('d M Y H:i:s')),
-                        'dursign'
-                    ) >= 0 
-                ) {
-                    $user['Raduser']['expiration'] = Utils::formatDate(
-                        $radcheck['Radcheck']['value'],
-                        'display'
-                    );
-                } else {
-                    $user['Raduser']['expiration'] = -1;
+                foreach ($radusers as &$user) {
+                    if (isset($expirations[$user['Raduser']['username']])
+                        && Utils::formatDate(
+                            array(
+                                $expirations[$user['Raduser']['username']],
+                                date('d M Y H:i:s')
+                            ),
+                            'dursign') >= 0
+                    ) {
+                        $user['Raduser']['expiration'] = Utils::formatDate(
+                            $expirations[$user['Raduser']['username']],
+                            'display'
+                        );
+                    } else {
+                        $user['Raduser']['expiration'] = -1;
+                    }
                 }
             }
         }

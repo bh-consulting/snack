@@ -57,41 +57,41 @@ class BackupsController extends AppController {
         $backups = $this->BackupsChanges
             ->backupsUnwrittenInThisNAS($nas, $inverse);
 
-		$backupIds = array();
+        $backupIds = array();
 
-		foreach($backups as $backup) {
-		    $backupIds[] = $backup['Backup']['id'];
+        foreach($backups as $backup) {
+            $backupIds[] = $backup['Backup']['id'];
         }
 
         return $backupIds;
     }
 
     public function index($id = null) {
-		$this->loadModel('Nas');
-		$nas = $this->Nas->findById($id);
+        $this->loadModel('Nas');
+        $nas = $this->Nas->findById($id);
 
-		$this->set('nasID', $nas['Nas']['id']);
-		$this->set('nasIP', $nas['Nas']['nasname']);
-		$this->set('nasShortname', $nas['Nas']['shortname']);
+        $this->set('nasID', $nas['Nas']['id']);
+        $this->set('nasIP', $nas['Nas']['nasname']);
+        $this->set('nasShortname', $nas['Nas']['shortname']);
 
-		$this->Filters->addDatesConstraint(array(
-		    'field' => 'datetime', 
-		    'from' => 'datefrom',
-		    'to' => 'dateto',
-		));
+        $this->Filters->addDatesConstraint(array(
+            'field' => 'datetime', 
+            'from' => 'datefrom',
+            'to' => 'dateto',
+        ));
 
-		$this->Filters->addStringConstraint(array(
-		    'fields' => 'users', 
-		    'input' => 'author', 
+        $this->Filters->addStringConstraint(array(
+            'fields' => 'users', 
+            'input' => 'author', 
             'ahead' => array('users'),
-		));
+        ));
 
-		$this->Filters->addStringConstraint(array(
-		    'fields' => 'nas', 
-		    'input' => 'nas', 
-		    'value'  => $nas['Nas']['nasname'],
+        $this->Filters->addStringConstraint(array(
+            'fields' => 'nas', 
+            'input' => 'nas', 
+            'value'  => $nas['Nas']['nasname'],
             'strict' => true,
-		));
+        ));
 
         $this->Filters->addSelectConstraint(array(
             'fields' => array('action'),
@@ -105,30 +105,30 @@ class BackupsController extends AppController {
                 'items' => array(
                     'notchanged' => '<i class="icon-ok-sign icon-green"></i> '
                     . __('Synchronized'),
-                    'changed' => ' <i class="icon-exclamation-sign icon-red"></i> '
-                    . __('Not synchronized'),
-                ),
-                'input' => 'writemem',
-                'title' => false,
-            ),
-            'callback' => array(
-                'getRegexSynchronisation',
-                array(
-                    'input' => 'writemem',
-                    'nas' => $nas,
-                ),
-            )
-        ));
+                        'changed' => ' <i class="icon-exclamation-sign icon-red"></i> '
+                        . __('Not synchronized'),
+                        ),
+                        'input' => 'writemem',
+                        'title' => false,
+                    ),
+                    'callback' => array(
+                        'getRegexSynchronisation',
+                        array(
+                            'input' => 'writemem',
+                            'nas' => $nas,
+                        ),
+                    )
+                ));
 
-		$this->Filters->addGroupConstraint('commit');
+        $this->Filters->addGroupConstraint('commit');
 
-		$backups = $this->Filters->paginate();
+        $backups = $this->Filters->paginate();
 
-		$users = array();
+        $users = array();
 
-		foreach($backups as &$backup) {
-		    $users[$backup['Backup']['id']] =
-			$this->Users->extendUsers($backup['Backup']['users']);
+        foreach($backups as &$backup) {
+            $users[$backup['Backup']['id']] =
+                $this->Users->extendUsers($backup['Backup']['users']);
 
             if (isset($backup['Backup']['datetime'])) {
                 $backup['Backup']['datetime'] = Utils::formatDate(
@@ -136,64 +136,61 @@ class BackupsController extends AppController {
                     'display'
                 );
             }
-		}
+        }
 
-		$this->set('users', $users);
-		$this->set('unwrittenids', $this->getUnwrittenBackups($nas));
-		$this->set('backups', $backups);
+        $this->set('users', $users);
+        $this->set('unwrittenids', $this->getUnwrittenBackups($nas));
+        $this->set('backups', $backups);
     }
 
-    private function gitDiffNas($nas, $a, $b = null) {
-		$backupA = $this->Backup->findById($a);
+    /**
+     * Return differences between two nas backups.
+     * If the second id is not specified,
+     * differences are compute with the last commit.
+     */
+    private function gitDiffNas($nasId, $firstId, $secondId = null) {
+        $first = $this->Backup->findById($firstId);
 
-		if(!$backupA) {
-		    throw new BadBackupOrNasID(
-			'Please select an existant version A for this NAS.'
-		    );
-		}
+        if (!$first) {
+            throw new BadBackupOrNasID(
+                'Please select an existant version A for this NAS.'
+            );
+        }
 
-		$commitA = $backupA['Backup']['commit'];
+        $first['Backup']['users'] = $this->Users->extendUsers($first['Backup']['users']);
 
-		$this->set('dateA', Utils::formatDate(
-		    $backupA['Backup']['datetime'],
-		    'display'
-		));
-		$this->set('idA', $backupA['Backup']['id']);
-		$this->set('actionA', $backupA['Backup']['action']);
-		$this->set('usersA', $this->Users->extendUsers($backupA['Backup']['users']));
+        $this->set('first', $first);
 
-		if ($b != null) {
-		    $b = $this->params['url']['b'];
-		    $backupB = $this->Backup->findById($b);
+        if ($secondId != null) {
+            $second = $this->Backup->findById($secondId);
 
-		    if(!$backupB) {
-			throw new BadBackupOrNasID(
-			    'Please select an existant version B for this NAS.'
-			);
-		    }
+            if (!$second) {
+                throw new BadBackupOrNasID(
+                    'Please select an existant version B for this NAS.'
+                );
+            }
 
-		    $commitB = $backupB['Backup']['commit'];
+            $second['Backup']['users'] = $this->Users->extendUsers($second['Backup']['users']);
 
-		    $this->set('dateB', $backupB['Backup']['datetime']);
-		    $this->set('idB', $backupB['Backup']['id']);
-		    $this->set('actionB', $backupB['Backup']['action']);
-		    $this->set('usersB', $backupB['Backup']['users']);
+            $this->set('second', $second);
+        }
 
-		} else
-		    $commitB = null; // last
+        exec("cd $this->git; git diff $commitB $commitA", $output);
+        $this->set('diff', implode("\n", $output));
 
-		$this->loadModel('Nas');
-		$nas = $this->Nas->findById($nas);
+        return $backupA;
+    }
 
-		if(!$nas) {
-		    throw new BadBackupOrNasID(
-			'Please select an existant NAS.'
-		    );
-		}
+    public function diff() {
+        try {
+            if(!isset($this->params['url']['nas'])
+                || !isset($this->params['url']['a'])
+                || !isset($this->params['url']['b'])) {
 
-		$this->set('nasID', $nas['Nas']['id']);
-		$this->set('nasIP', $nas['Nas']['nasname']);
-		$this->set('nasShortname', $nas['Nas']['shortname']);
+                    throw new BadBackupOrNasID(
+                        'Please select specific versions for a specific NAS.'
+                    );
+                }
 
 		if(is_null($commitB)) {
 		    exec("cd $this->git; git diff "
@@ -211,98 +208,296 @@ class BackupsController extends AppController {
 
 		$this->set('diff', implode("\n", $output));
 
-		return $backupA;
+        } catch(BadBackupOrNasID $e) {
+            $this->Session->setFlash(
+                $e->getMessage(),
+                'flash_error'
+            );
+        }
     }
 
-    public function diff() {
-		try {
-		    if(!isset($this->params['url']['nas'])
-			|| !isset($this->params['url']['a'])
-			|| !isset($this->params['url']['b'])) {
+    public function renderDiff($left, $right, $diff) {
+        if (is_array($left) && is_array($right) && is_array($diff)) {
+            $begin = false;
+            $action = false;
+            $currentL = $currentR = 0;
+            $offsetR = $offsetL = 0;
+            foreach ($diff as $line) {
+                switch (substr($line,0,1)) {
+                case '@':
+                    $begin = true;
+                    $action = false;
 
-				throw new BadBackupOrNasID(
-				    'Please select specific versions for a specific NAS.'
-				);
-		    }
+                    if (preg_match('#@\s-(?<lineS>[0-9]+)\s\+(?<lineD>[0-9]+)\s@#', $line, $info)) {
+                        $currentL = intval($info['lineS']);
+                        $currentR = intval($info['lineD']);
+                        $action = 'update';
+                    } else if (preg_match('#@\s-(?<lineS>[0-9]+)(,[0-9]+)?\s\+(?<lineD>[0-9]+,0)\s@#', $line, $info)) {
+                        $currentL = intval($info['lineS']);
+                        $currentR = intval($info['lineD']);
+                        $action = 'delete';
+                    } else if (preg_match('#@\s-(?<lineS>[0-9]+,0)\s\+(?<lineD>[0-9]+)(,[0-9]+)?\s@#', $line, $info)) {
+                        $currentL = intval($info['lineS']);
+                        $currentR = intval($info['lineD']);
+                        $action = 'add';
+                    } else if (preg_match('#-(?<lineS>[0-9]+)(,(?<lenS>[0-9]+))?\s\+(?<lineD>[0-9]+)(,(?<lenD>[0-9]+))?#', $line, $info)) {
+                        $currentL = intval($info['lineS']);
+                        $currentR = intval($info['lineD']);
 
-		    $this->gitDiffNas(
-				$this->params['url']['nas'],
-				$this->params['url']['a'],
-				$this->params['url']['b']
-		    );
+                        if (isset($info['lenS'])
+                            && isset($info['lenD'])
+                            && $info['lenS'] == $info['lenD']
+                        ) {
+                            $action = 'update';
+                        } else {
+                            $action = 'mix';
+                        }
+                    } else {
+                        $begin = false;
+                    }
+                    break;
+                case '-':
+                    if ($begin && $action) {
+                        $line = substr($line, 1);
 
-		} catch(BadBackupOrNasID $e) {
-		    $this->Session->setFlash(
-				$e->getMessage(),
-				'flash_error'
-		    );
-		}
+                        // Update left
+                        switch ($action) {
+                        case 'update':
+                            $left[$currentL + $offsetL - 1] = array('UP' => $line);
+                            break;
+                        case 'delete':
+                        case 'mix':
+                            $left[$currentL + $offsetL - 1] = array('DEL' => $line);
+                            break;
+                        }
+                        ++$currentL;
+
+                        // Update right
+                        switch ($action) {
+                        case 'delete':
+                            $right = array_merge(
+                                array_slice($right, 0, $currentR + $offsetR),
+                                array(array('DEL' => '')),
+                                array_slice($right, $currentR + $offsetR)
+                            );
+                            ++$offsetR;
+                            break;
+                        case 'mix':
+                            $right = array_merge(
+                                array_slice($right, 0, $currentR + $offsetR - 1),
+                                array(array('DEL' => '')),
+                                array_slice($right, $currentR + $offsetR - 1)
+                            );
+                            ++$offsetR;
+                            break;
+                        }
+                    }
+                    break;
+                case '+':
+                    if ($begin) {
+                        $line = substr($line, 1);
+
+                        // Update right
+                        switch ($action) {
+                        case 'update':
+                            $right[$currentR + $offsetR - 1] = array(
+                                'UP' => $line);
+                            break;
+                        case 'add':
+                        case 'mix':
+                            $right[$currentR + $offsetR - 1] = array('ADD' => $line);
+                            break;
+                        }
+                        ++$currentR;
+
+                        // Update left
+                        switch ($action) {
+                        case 'add':
+                            $left = array_merge(
+                                array_slice($left, 0, $currentL + $offsetL),
+                                array(array('ADD' => '')),
+                                array_slice($left, $currentL + $offsetL)
+                            );
+                            ++$offsetL;
+                            break;
+                        case 'mix':
+                            $left = array_merge(
+                                array_slice($left, 0, $currentL + $offsetL - 1),
+                                array(array('ADD' => '')),
+                                array_slice($left, $currentL + $offsetL - 1)
+                            );
+                            ++$offsetL;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        } else {
+            $left = array($left);
+            $right = array($right);
+        }
+
+        return array('left' => $left, 'right' => $right);
     }
 
-    public function view($id = null, $nas = null) {
-		try {
-		    if($id != null && $nas != null) {
-				$this->loadModel('Nas');
-				$nas = $this->Nas->findById($nas);
+    /**
+     * Show details about a backup:
+     * - Information like nas, when, who, why
+     * - Current configuration differences
+     * - File content
+     * - Other backups which look like
+     */
+    public function view($backupId = null, $nasId = null) {
+        try {
+            if($backupId != null && $nasId != null) {
+                // Nas informations.
+                $nas = new Nas($nasId);
+                $nas = $nas->read();
 
-				if(!$nas) {
-				    throw new BadBackupOrNasID(
-					'Please select an existant NAS.'
-				    );
-				}
+                if (!$nas) {
+                    throw new BadBackupOrNasID(
+                        __('Please select an existant NAS.')
+                    );
+                }
 
-				$backup = $this->gitDiffNas($nas['Nas']['id'], $id);
-				$commit = $backup['Backup']['commit'];
+                $this->set('nas', $nas);
 
-				exec("cd $this->git; git show $commit:{$nas['Nas']['nasname']}", $output);
-				$this->set('config', implode("\n", $output));
-				$this->set('backupID', $id);
+                // Backup information.
+                $backup = $this->Backup->read(null, $backupId);
 
-				$this->Filters->addStringConstraint(array(
-				    'fields' => 'commit', 
-				    'input' => 'commit', 
-				    'value'  => $commit,
-				));
+                if (!$backup) {
+                    throw new BadBackupOrNasID(
+                        __('Please select an existant backup.')
+                    );
+                }
 
-				$this->Filters->addStringConstraint(array(
-				    'fields' => 'nas', 
-				    'input' => 'nas', 
-				    'value'  => $nas['Nas']['nasname'],
-				));
+                $backup['Backup']['users'] = 
+                    $this->Users->extendUsers($backup['Backup']['users']);
+                $backup['Backup']['datetime'] = Utils::formatDate(
+                    $backup['Backup']['datetime'],
+                    'display'
+                );
+                if (isset($this->Backup->actions[$backup['Backup']['action']])) {
+                    $backup['Backup']['action'] = 
+                        $this->Backup->actions[$backup['Backup']['action']];
+                }
 
-				$backups = $this->Filters->paginate();
-				$users = array();
+                $this->set('current', $backup);
 
-				foreach($backups AS &$backup) {
-				    $users[$backup['Backup']['id']] =
-					$this->Users->extendUsers($backup['Backup']['users']);
+                // Current configuration differences + Backup information.
+                $diff = Utils::shell(
+                    "cd $this->git; git diff -U0 {$backup['Backup']['commit']}"
+                );
 
-				    if (isset($backup['Backup']['datetime'])) {
-					$backup['Backup']['datetime'] = Utils::formatDate(
-					    $backup['Backup']['datetime'],
-					    'display'
-					);
-				    }
-				}
-				$this->set('users', $users);
-				$this->set('actions', $this->Backup->actions);
-				$this->set('backups', $backups);
-		    } else {
-				throw new BadBackupOrNasID(
-				    'Please select a NAS and a configuration version.'
-				);
-		    }
+                if ($diff['code']) {
+                    $diff = __(
+                        'Error while compare backup %s with last backup.',
+                        "{$backup['Backup']['commit']}"
+                    );
+                } else {
+                    $diff = $diff['msg'];
+                }
 
-		} catch(BadBackupOrNasID $e) {
-		    $this->Session->setFlash(
-				$e->getMessage(),
-				'flash_error'
-		    );
-		}
+                $this->set('diff', implode("\n", (array)$diff));
+
+                // Backup content.
+                $content = Utils::shell(
+                    "cd $this->git; "
+                    . "git show {$backup['Backup']['commit']}:{$nas['Nas']['nasname']}"
+                );
+
+                if ($content['code']) {
+                    $content = __(
+                        'Error while retrieving file content: %s.',
+                        "{$backup['Backup']['commit']}:{$nas['Nas']['nasname']}"
+                    );
+                } else {
+                    $content = $content['msg'];
+                }
+
+                $this->set('content', implode("\n", (array)$content));
+
+                // Graphical differences
+                $last = $this->Backup->find(
+                    'first',
+                    array(
+                        'fields' => 'commit',
+                        'conditions' => array('nas' => $nas['Nas']['nasname']),
+                        'order' => 'datetime DESC',
+                    )
+                );
+
+                $lastContent = Utils::shell(
+                    "cd $this->git; "
+                    . "git show {$last['Backup']['commit']}:{$nas['Nas']['nasname']}"
+                );
+
+                if ($lastContent['code']) {
+                    $lastContent = __(
+                        'Error while retrieving file content: %s.',
+                        "{$last['Backup']['commit']}:{$nas['Nas']['nasname']}"
+                    );
+                } else {
+                    $lastContent = $lastContent['msg'];
+                }
+
+                $diffExtend = $this->renderDiff($content, $lastContent, $diff);
+
+                $this->set('diffExtend', $diffExtend);
+
+                // Similar backups.
+                // Users information.
+                
+                $this->Filters->addStringConstraint(array(
+                    'fields' => 'commit', 
+                    'input' => 'commit', 
+                    'value'  => $backup['Backup']['commit'],
+                    'strict'  => true,
+                ));
+
+                $this->Filters->addStringConstraint(array(
+                    'fields' => 'nas', 
+                    'input' => 'nas', 
+                    'value'  => $nas['Nas']['nasname'],
+                    'strict'  => true,
+                ));
+
+                $similar = $this->Filters->paginate('similar');
+
+                $users = array();
+
+                foreach($similar as &$backup) {
+                    $users[$backup['Backup']['id']] =
+                        $this->Users->extendUsers($backup['Backup']['users']);
+                    $backup['Backup']['datetime'] = Utils::formatDate(
+                        $backup['Backup']['datetime'],
+                        'display'
+                    );
+                    if (isset($this->Backup->actions[$backup['Backup']['action']])) {
+                        $backup['Backup']['action'] = 
+                            $this->Backup->actions[$backup['Backup']['action']];
+                    }
+                }
+
+                $this->set('users', $users);
+                $this->set('similar', $similar);
+            } else {
+                throw new BadBackupOrNasID(
+                    'Please select a NAS and a configuration version.'
+                );
+            }
+
+        } catch(BadBackupOrNasID $e) {
+            $this->Session->setFlash(
+                $e->getMessage(),
+                'flash_error'
+            );
+        }
     }
 
     public function restore($id, $nas) {
-	
+
     }
 }
 

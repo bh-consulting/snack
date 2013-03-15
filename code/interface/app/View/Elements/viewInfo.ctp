@@ -57,5 +57,4 @@ echo $this->element('modalDelete', array(
 		}
 	}
 	?>
-	</dd>
 </dl>

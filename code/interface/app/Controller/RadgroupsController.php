@@ -86,35 +86,46 @@ class RadgroupsController extends AppController {
             )
         ));
 
-        $radusers = $this->Filters->paginate();
         $radgroups = $this->Filters->paginate();
 
         if ($radgroups != null) {
+            $groupList = array();
             foreach ($radgroups as &$group) {
-                $radgc = new Radgroupcheck();
-                $groupcheck = $radgc->find(
-                    'first',
+                if (!empty($group['Radgroup']['groupname'])) {
+                    $groupList[] = $group['Radgroup']['groupname'];
+                }
+            }
+
+            if (!empty($groupList)) {
+                $radgroupcheck = new Radgroupcheck();
+
+                $expirations = $radgroupcheck->find(
+                    'list',
                     array(
-                        'fields' => 'value',
+                        'fields' => array('groupname', 'value'),
                         'conditions' => array(
-                            'groupname' => $group['Radgroup']['groupname'],
-                            'attribute' => 'Expiration'
+                            'groupname REGEXP' => '^(' . implode($groupList, '|') . ')$',
+                            'attribute' => 'Expiration',
                         )
                     )
                 );
 
-                if (!empty($groupcheck)
-                    && Utils::formatDate(
-                        array($groupcheck['Radgroupcheck']['value'], date('d M Y H:i:s')),
-                        'dursign'
-                    ) >= 0 
-                ) {
-                    $group['Radgroup']['expiration'] = Utils::formatDate(
-                        $groupcheck['Radgroupcheck']['value'],
-                        'display'
-                    );
-                } else {
-                    $group['Radgroup']['expiration'] = -1;
+                foreach ($radgroups as &$group) {
+                    if (isset($expirations[$group['Radgroup']['groupname']])
+                        && Utils::formatDate(
+                            array(
+                                $expirations[$group['Radgroup']['groupname']],
+                                date('d M Y H:i:s')
+                            ),
+                            'dursign') >= 0
+                    ) {
+                        $group['Radgroup']['expiration'] = Utils::formatDate(
+                            $expirations[$group['Radgroup']['groupname']],
+                            'display'
+                        );
+                    } else {
+                        $group['Radgroup']['expiration'] = -1;
+                    }
                 }
             }
         }

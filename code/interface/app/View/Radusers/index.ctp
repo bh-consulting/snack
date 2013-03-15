@@ -298,7 +298,11 @@ if (!empty($radusers)) {
                 echo $user['Raduser'][$field] ? '<i class="icon-ok"></i>' : '';
                 break;
             case 'role':
-                echo $roles[$user['Raduser'][$field]];
+                if (isset($roles[$user['Raduser'][$field]])) {
+                    echo $roles[$user['Raduser'][$field]];
+                } else {
+                    echo $user['Raduser'][$field];
+                }
                 break;
             case 'username':
                 if($user['Raduser']['expiration'] != -1) {

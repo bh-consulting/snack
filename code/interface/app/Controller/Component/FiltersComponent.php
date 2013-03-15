@@ -380,7 +380,7 @@ class FiltersComponent extends Component {
 
     public function addGroupConstraint($groups = array()) {
         if (!empty($groups)) {
-            $this->group = array_merge($this->groups, (array)$groups);
+            $this->groups = array_merge($this->groups, (array)$groups);
         }
     }
 

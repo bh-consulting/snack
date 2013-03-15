@@ -226,6 +226,58 @@ div.menutopphone {
     border-color: #aa0000;
 }
 
+.diff-table tr {
+    color: #999;
+    text-shadow: 0 1px 0 #eee;
+    font-size: 13px;
+    line-height: 20px;
+}
+
+.diff-table th {
+    text-align: center;
+    font-size: 14px;
+    color: #0088CC;
+    border-bottom: 1px solid #ddd;
+}
+
+.diff-table td {
+    color: #555;
+    width: 49%;
+    border-bottom: 0;
+    border-top: 0;
+    padding: 2px;
+}
+
+.diff-table tbody tr:hover > td {
+    background: #D9EDF7;
+}
+
+.diff-table td.diff-number {
+    font-weight: bold;
+    width: 2%;
+    border-top: 1px solid #ddd;
+}
+
+.diff-table tr:nth-child(2) td.diff-number {
+    border-top: 0;
+}
+
+.add {
+    background: #c1e2b3;
+}
+
+.del {
+    background: #ffbbbb;
+}
+
+.up {
+    background: #f7ecb5;
+}
+
+.blank {
+    background: #ddd;
+}
+
 #logmessage { margin-top: 12px }
 
 .loglinks td {
