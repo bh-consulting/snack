@@ -12,9 +12,8 @@ function backup() {
     then
     	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
 		-e "$(printf "$sqline_restore" $1 ${USER_NAME//\"} $RESTORE_VALUE)"
-    elif [ $1 = reload ]
+    elif [ $1 = boot ]
     then
-	echo "in good case " >> /tmp/switch
     	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
 		-e "$(printf "$sqline" $1 ${USER_NAME//\"})"
     	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
@@ -89,7 +88,7 @@ case "$ACCT_STATUS_TYPE" in
 	backup restore
     ;;
     Reload)
-	backup reload
+	backup boot
     ;;
 esac
 

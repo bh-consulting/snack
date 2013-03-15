@@ -78,15 +78,8 @@ echo 0 | whiptail \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring Radius...\nCorrecting accounting." \
 	10 70 0
 sed\
-	-e "s/\(\s*key\s*=\s*\".*\)\"/\1, Class\"/"\
+	-e "s/\(\s*key\s*=\s*\".*\)\"/\1, Tmp-String-0\"/"\
 	-i $RADIUS_PATH/modules/acct_unique
-
-cat >> $RADIUS_PATH/modules/acct_unique <<MODULE_ACCT_UNIQUE
-acct_unique acct_class_unique {
-        key = "User-Name, Tmp-String-0, NAS-IP-Address, Client-IP-Address, NAS-Port"
-}
-MODULE_ACCT_UNIQUE
-
 
 echo 50 | whiptail \
 	--title "SNACK ${VERSION}" \

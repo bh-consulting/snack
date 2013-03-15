@@ -27,6 +27,9 @@ server snack {
 	}
 
 	preacct {
+		update request {
+			Tmp-String-0 := "%{sql:SELECT datetime FROM backups WHERE nas='%{NAS-IP-Address}' AND action='boot' ORDER BY datetime DESC LIMIT 1}"
+		}
 		preprocess
 		acct_unique
 		suffix
