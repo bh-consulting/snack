@@ -1,0 +1,182 @@
+\section{Sauvegarde des configurations}
+\subsection{Serveur}
+
+Installer les paquets suivants en super-utilisateur~:
+
+\begin{lstlisting}
+$ sudo apt-get install snmp snmpd git tftpd-hpa
+\end{lstlisting}
+
+Puis, configurer les paquets de la façon suivante~:
+
+\subsubsection{radius}
+
+/etc/freeradius/sites-enabled/snack~:
+\begin{lstlisting}
+    accounting{
+	if(((NAS-Port-Type == Async)||(NAS-Port-Type == Virtual))&&((Acct-Status-Type == Start)||(Acct-Status-Type == Stop))) {
+	    snack-backups
+	}
+	detail
+	...
+\end{lstlisting}
+
+et creer snack-backups~:
+/etc/freeradius/modules/snack-backups~:
+\begin{lstlisting}
+exec snack-backups {
+            program = "/home/snack/scripts/backup_create.sh"
+            wait = no
+            input_pairs = request
+            shell_escape = yes
+            output = none
+}
+\end{lstlisting}
+
+
+\subsubsection{snmptrapd}
+
+/etc/snmp/snmptrapd.conf~:
+\begin{lstlisting}
+	donotlogtraps false
+	logOption f /var/log/snmptraps.log
+	authCommunity log,execute,net private
+	traphandle default /home/snack/scripts/backup_traps.sh
+\end{lstlisting}
+
+/etc/init.d/snmpd ET /etc/default/snmpd~:
+
+\begin{lstlisting}
+    TRAPDRUN=yes
+\end{lstlisting}
+
+Puis redémarrer le service~:
+
+\begin{lstlisting}
+$ sudo killall snmaptrapd
+$ sudo snmptrapd 
+\end{lstlisting}
+
+\subsubsection{tftp}
+
+Créer un dossier réservé aux sauvegardes de configurations.
+
+\begin{lstlisting}
+    mkdir /home/snack/backups.git
+\end{lstlisting}
+
+/etc/init/tftpd-hpa.conf~:
+
+\begin{lstlisting}
+exec /usr/sbin/in.tftpd --listen --user snack --address 0.0.0.0:69 --secure /home/snack/backups.git -c"\
+\end{lstlisting}
+
+/etc/default/tftpd-hpa~:
+\begin{lstlisting}
+TFTP_DIRECTORY="/home/snack/backups.git"
+\end{lstlisting}
+
+Puis redémarrer le service~:
+\begin{lstlisting}
+sudo service tftpd-hpa stop
+
+/usr/sbin/in.tftpd --listen --user snack --address 0.0.0.0:69 --secure $TFTP_FOLDER -c
+\end{lstlisting}
+
+\subsubsection{git}
+
+Initialiser le dépôt git~:
+
+\begin{lstlisting}
+~ $ cd /home/snack/backups.git
+backups.git $ git init
+Initialized empty Git repository in /home/snack/backups.git/.git/
+\end{lstlisting}
+
+
+\subsubsection{Interface}
+
+Les script de mise à jours utilisent l'adresse IP du radius. Celle ci peut être réglée via l'interface ou directement en modifiant /home/snack/interface/app/Config/parameters.php:
+\begin{lstlisting}
+    'ipAddress' => '192.168.1.10'
+\end{lstlisting}
+
+
+\subsection{Commutateur}
+
+En mode de configuration du terminal, activer l'envoi des trappes SNMP sur le commutateur cisco~:
+
+\begin{lstlisting}
+Switch(config)# snmp-server community private rw
+Switch(config)# snmp-server host $RADIUS_IP version 2c private
+Switch(config)# snmp-server enable traps config
+Switch(config)# snmp-server enable traps snmp coldstart
+\end{lstlisting}
+
+
+\subsection{Correction de l'accounting}
+
+Nos observation nous on permis de découvrir que les sessions d'accounting sont écrasée par radius lors d'un 'reload' du commutateur. Ceci est du au fait que les session accounting sont identifiées par un id supposé unique envoyé par le commutateur. Cependant, celui-ci re-utilise les même id une fois re-démarré.\\
+
+Si la sauvegarde des sessions est appliquée, et en particulier le redémarrage des équipement actif monitoré, ce comportement peut être corrigé coté radius.\\
+Modifier le fichier /etc/freeradius/modules/acct\_unique~:
+\begin{lstlisting}
+acct_unique {
+        key = "User-Name, Acct-Session-Id, NAS-IP-Address, Client-IP-Address, NAS-Port, Tmp-String-0"
+	}
+\end{lstlisting}
+
+puis le fichier /etc/freeradius/sites-enabled/snack~:
+\begin{lstlisting}
+preacct {
+	update request {
+		Tmp-String-0 := "%{sql:SELECT datetime FROM backups WHERE nas='%{NAS-IP-Address}' AND action='boot' ORDER BY datetime DESC LIMIT 1}"
+	}
+	preprocess
+	...
+\end{lstlisting}
+
+enfin, le fichier /etc/freeradius/sql/mysql/dialup.conf~:
+\begin{lstlisting}
+...
+	accounting_update_query = " \
+	UPDATE ${acct_table1} \
+	SET \
+	    framedipaddress = '%{Framed-IP-Address}', \
+	    acctsessiontime     = '%{Acct-Session-Time}', \
+	    acctinputoctets     = '%{%{Acct-Input-Gigawords}:-0}'  << 32 | \
+				  '%{%{Acct-Input-Octets}:-0}', \
+	    acctoutputoctets    = '%{%{Acct-Output-Gigawords}:-0}' << 32 | \
+				  '%{%{Acct-Output-Octets}:-0}' \
+	WHERE acctuniqueid  = '%{Acct-Unique-Session-ID}' \
+	AND username        = '%{SQL-User-Name}' \
+	AND nasipaddress    = '%{NAS-IP-Address}'"
+...
+	accounting_start_query_alt  = " \
+	UPDATE ${acct_table1} SET \
+	    acctstarttime     = '%S', \
+	    acctstartdelay    = '%{%{Acct-Delay-Time}:-0}', \
+	    connectinfo_start = '%{Connect-Info}' \
+	WHERE acctuniqueid    = '%{Acct-Unique-Session-ID}' \
+	AND username         = '%{SQL-User-Name}' \
+	AND nasipaddress     = '%{NAS-IP-Address}'"
+...
+	accounting_stop_query = " \
+	UPDATE ${acct_table2} SET \
+	    acctstoptime       = '%S', \
+	    acctsessiontime    = '%{Acct-Session-Time}', \
+	    acctinputoctets    = '%{%{Acct-Input-Gigawords}:-0}' << 32 | \
+				 '%{%{Acct-Input-Octets}:-0}', \
+	    acctoutputoctets   = '%{%{Acct-Output-Gigawords}:-0}' << 32 | \
+				 '%{%{Acct-Output-Octets}:-0}', \
+	    acctterminatecause = '%{Acct-Terminate-Cause}', \
+	    acctstopdelay      = '%{%{Acct-Delay-Time}:-0}', \
+	    connectinfo_stop   = '%{Connect-Info}' \
+	WHERE acctuniqueid    = '%{Acct-Unique-Session-ID}' \
+	AND username          = '%{SQL-User-Name}' \
+	AND nasipaddress      = '%{NAS-IP-Address}'"
+...
+\end{lstlisting}
+
+
+
