@@ -205,9 +205,9 @@ div.menutopphone {
     background-color: #fff;
 }
 
-#snake {
-    width: 100%;
-    height: 100%; 
+#snake td {
+	width: 22px;
+	height: 22px;
 }
 
 #snakescore, #snakelevel {

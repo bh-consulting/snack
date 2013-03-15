@@ -15,6 +15,8 @@ var Kopf;
 var code = 0;
 var Game = false;
 
+var fruchts = [ 'icon-glass', 'icon-music', 'icon-search', 'icon-envelope', 'icon-heart', 'icon-star', 'icon-star-empty', 'icon-user', 'icon-film', 'icon-th-large', 'icon-th', 'icon-th-list', 'icon-remove', 'icon-zoom-in', 'icon-zoom-out', 'icon-off', 'icon-signal', 'icon-cog', 'icon-trash', 'icon-home', 'icon-file', 'icon-time', 'icon-road', 'icon-download-alt', 'icon-download', 'icon-upload', 'icon-inbox', 'icon-play-circle', 'icon-repeat', 'icon-refresh', 'icon-list-alt', 'icon-lock', 'icon-flag', 'icon-headphones', 'icon-volume-off', 'icon-volume-down', 'icon-volume-up', 'icon-qrcode', 'icon-barcode', 'icon-tag', 'icon-tags', 'icon-book', 'icon-bookmark', 'icon-print', 'icon-camera', 'icon-font', 'icon-bold', 'icon-text-height', 'icon-text-width', 'icon-align-left', 'icon-align-center', 'icon-align-right', 'icon-align-justify', 'icon-list', 'icon-indent-left', 'icon-indent-right', 'icon-facetime-video', 'icon-picture', 'icon-pencil', 'icon-map-marker', 'icon-adjust', 'icon-tint', 'icon-edit', 'icon-share', 'icon-check', 'icon-move', 'icon-step-backward', 'icon-fast-backward', 'icon-backward', 'icon-play', 'icon-pause', 'icon-stop', 'icon-forward', 'icon-fast-forward', 'icon-step-forward', 'icon-eject', 'icon-plus-sign', 'icon-remove-sign', 'icon-ok-sign', 'icon-question-sign', 'icon-info-sign', 'icon-screenshot', 'icon-remove-circle', 'icon-ok-circle', 'icon-ban-circle', 'icon-share-alt', 'icon-plus', 'icon-minus', 'icon-asterisk', 'icon-exclamation-sign', 'icon-gift', 'icon-leaf', 'icon-fire', 'icon-eye-open', 'icon-eye-close', 'icon-warning-sign', 'icon-plane', 'icon-calendar', 'icon-random', 'icon-comment', 'icon-magnet', 'icon-chevron-up', 'icon-chevron-down', 'icon-retweet', 'icon-shopping-cart', 'icon-folder-close', 'icon-folder-open', 'icon-hdd', 'icon-bullhorn', 'icon-bell', 'icon-certificate', 'icon-thumbs-up', 'icon-thumbs-down', 'icon-hand-right', 'icon-hand-left', 'icon-hand-up', 'icon-hand-down', 'icon-circle-arrow-right', 'icon-circle-arrow-left', 'icon-circle-arrow-up', 'icon-circle-arrow-down', 'icon-globe', 'icon-wrench', 'icon-tasks', 'icon-filter', 'icon-briefcase', 'icon-fullscreen' ];
+
 function Tastendruck(Druck)
 {
 	if (document.all) k = window.event.keyCode; else k = Druck.which;
@@ -102,6 +104,7 @@ function Start()
 		{
 			Zelle = 'Zelle' + eval('C' + Countdown)[i];
 			document.getElementById(Zelle).style.backgroundColor = 'black';
+			$('#' + Zelle + ' i:first-child').remove();
 		}
 		Countdown--;
 		setTimeout("Start()", 1000);
@@ -140,16 +143,18 @@ function Pause()
 function Happen()
 {
 	Leckerli = Math.floor((Math.random() * 1000) % 220);
-	for (i = 0; i < Snake.length; i++) if (Leckerli == Snake[i]) Happen();
-	for (i = 0; i < eval('Wall' + Level).length; i++) if (Leckerli == eval('Wall' + Level)[i]) Happen();
-	for (i = 0; i < eval('noFruit' + Level).length; i++) if (Leckerli == eval('noFruit' + Level)[i]) Happen();
-	document.getElementById('Zelle' + Leckerli).style.backgroundColor = '#0c5a0c';
+	for (i = 0; i < Snake.length; i++) if (Leckerli == Snake[i]) { Happen(); return };
+	for (i = 0; i < eval('Wall' + Level).length; i++) if (Leckerli == eval('Wall' + Level)[i]) { Happen(); return; }
+	for (i = 0; i < eval('noFruit' + Level).length; i++) if (Leckerli == eval('noFruit' + Level)[i]) { Happen(); return; }
+	$('#Zelle' + Leckerli).append('<i class="' + snakeFrucht() + ' icon-green"></i>');
 }
 
 function Hindernisse()
 {
-	for (i = 0; i < eval('Wall' + Level).length; i++)
+	for (i = 0; i < eval('Wall' + Level).length; i++) {
 		document.getElementById('Zelle' + eval('Wall' + Level)[i]).style.backgroundColor = '#444444';
+		$('#Zelle' + eval('Wall' + Level)[i] + ' i:first-child').remove();
+	}
 }
 
 function Verlauf()
@@ -210,12 +215,14 @@ function Jubel(x)
 	{
 			Zelle = 'Zelle' + Jubel1[i];
 			document.getElementById(Zelle).style.backgroundColor = 'black';
+			$('#' + Zelle + ' i:first-child').remove();
 		}
 	} else {
 		for (i = 0; i < Jubel2.length; i++)
 		{
 			Zelle = 'Zelle' + Jubel2[i];
 			document.getElementById(Zelle).style.backgroundColor = 'black';
+			$('#' + Zelle + ' i:first-child').remove();
 		}
 	}
 	x++;
@@ -231,6 +238,7 @@ function Smiley_malen()
 	{
 		Zelle = 'Zelle' + Smiley[i];
 		document.getElementById(Zelle).style.backgroundColor = '#0c5a0c';
+		$('#' + Zelle + ' i:first-child').remove();
 	}
 	zuEnde = 0;
 }
@@ -243,6 +251,7 @@ function Frowny_malen()
 	{
 		Zelle = 'Zelle' + Frowny[i];
 		document.getElementById(Zelle).style.backgroundColor = '#aa0000';
+		$('#' + Zelle + ' i:first-child').remove();
 	}
 
 	setTimeout("snakeEnd()", 700);
@@ -252,10 +261,12 @@ function Schlange_malen()
 {
 	Zelle = 'Zelle' + Snake[0];
 	document.getElementById(Zelle).style.backgroundColor = '#f5f5f5';
+	$('#' + Zelle + ' i:first-child').remove();
 	for (i = 1; i < Snake.length; i++)
 	{
 		Zelle = 'Zelle' + Snake[i];
 		document.getElementById(Zelle).style.backgroundColor = 'black';
+		$('#' + Zelle + ' i:first-child').remove();
 	}
 }
 
@@ -265,7 +276,13 @@ function reset()
 	{
 		Zelle = 'Zelle' + i;
 		document.getElementById(Zelle).style.backgroundColor = '#f5f5f5';
+		$('#' + Zelle + ' i:first-child').remove();
 	}
+}
+
+function snakeFrucht() {
+	frucht = Math.floor((Math.random() * 1000) % fruchts.length);
+	return fruchts[frucht];
 }
 
 function snake() {
