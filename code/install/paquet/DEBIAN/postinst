@@ -77,9 +77,13 @@ echo 0 | whiptail \
 	--title "SNACK ${VERSION}" \
 	--gauge "\n\nStep #${STEP}/${LAST_STEP}: Configuring Radius...\nCorrecting accounting." \
 	10 70 0
+{
 sed\
 	-e "s/\(\s*key\s*=\s*\".*\)\"/\1, Tmp-String-0\"/"\
-	-i $RADIUS_PATH/modules/acct_unique
+	-i $RADIUS_PATH/modules/acct_unique 
+sed\
+	-e "s/acctsessionid\s*=\s*'%{Acct-Session-Id}'/acctuniqueid\t= '%{Acct-Unique-Session-ID}'/" \
+	-i $RADIUS_PATH/sql/mysql/dialup.conf
 
 echo 50 | whiptail \
 	--title "SNACK ${VERSION}" \
@@ -87,7 +91,7 @@ echo 50 | whiptail \
 	10 70 0
 sed\
 	-e "/exit/i service freeradius restart" \
-	-i /etc/rc.local
+	-i /etc/rc.local >> $OUT 2>>$LOG
 
 	
 ##############################################################
