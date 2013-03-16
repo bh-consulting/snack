@@ -447,9 +447,293 @@ Une grosse partie de notre travail a donc consistée à dissimuler les mécanism
 
 \subsection{Vue générale}
 
+L'accueil sur l'interface se fait avec une invitation à s'identifier (figure~\ref{login} page~\pageref{login}). Il faut être un utilisateur SNACK enregistré pour pouvoir y accéder, complétement ou partiellement. La création d'un utilisateur ayant tous les droits dessus est demandée lors de l'installation du paquet.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/login.png}
+	\end{center}
+	\caption{Identification sur l'interface.}
+	\label{login}
+\end{figure}
+
+La première page qui s'affiche correspond à celle des utilisateurs. Comme on peut le voir sur la figure~\ref{general} page~\pageref{general}, l'interface a été conçue en quatre zones~:
+
+\begin{enumerate}
+\item Le menu horizontal du haut, qui permet de revenir à l'accueil, de changer l'interface de mode, ou bien de déconnecter l'utilisateur. Puisque l'interface utilise un \emph{responsive design}, ces actions sont regroupées dans une menu déroulant si l'affichage est trop petit (avec un périphérique mobile, par exemple).
+\item Le menu latéral gauche, qui propose toutes les grandes sections de l'interface, sur lesquelles nous allons revenir plus longuement par la suite.
+\item La zone principale qui contient le contenu de la page, selon la section sélectionnée dans le menu de gauche.
+\item Le pied de page, qui contient principalement deux boutons à droite, permettant de changer instantanément la langue de toute l'interface. Si l'utilisateur visite l'interface avec un navigateur anglais, l'interface est par défaut en anglais.
+\end{enumerate}
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/general.png}
+	\end{center}
+	\caption{Vue générale de l'interface.}
+	\label{general}
+\end{figure}
+
+Comme pour toutes les pages qui suivront, nous retrouvons plusieurs éléments~:
+
+\begin{itemize}
+\item La possibilité de faire une recherche dans le tableau, en filtrant très finement les lignes à afficher, grâce au panneau déroulé qui est présenté en figure~\ref{filters} page~\pageref{filters}.
+\item Un tableau récapitulatif, pour lequel chaque colonne peut être triée dans un sens comme dans l'autre.
+\item La possibilité d'effectuer des actions de masse, en cochant directement les lignes. Cette sélection peut être encore plus rapidement contrôlée en utilisant la touche majuscule du clavier, qui permet d'aller d'une ligne A à une ligne B en cochant toutes les lignes qui sont entre les deux. Un exemple avec l'action \og~Supprimer~\fg (sélectionnable dans le menu du bas) est donné en figure~\ref{massdel} page~\pageref{massdel}.
+\item Une pagination, pour un meilleur confort visuel (le nombre d'éléments par page pouvant être réglé dans les options de l'interface).
+\end{itemize}
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/filters.png}
+	\end{center}
+	\caption{Panneau de recherche.}
+	\label{filters}
+\end{figure}
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/massdel.png}
+	\end{center}
+	\caption{Suppression multiple.}
+	\label{massdel}
+\end{figure}
+
+Les prochaines sections détaillent les possibilités offertes par l'interface, en suivant l'ordre des choix du menu latéral.
+
+\subsection{Gestion des utilisateurs}
+
+La page affichée dans la figure~\ref{general} page~\pageref{general} correspond à la section du menu \og~Utilisateurs~\fg.
+
+Le tableau au centre présente tous les utilisateurs créés depuis la mise en route de l'interface, avec leurs caractères les plus pertinents. Plus d'informations par utilisateur peuvent être affichées, en visualisant leur page personnelle.
+
+Le menu principal (figure~\ref{menuusers} page~\pageref{menuusers}) de la page \og~Ajouter un utilisateur~\fg{} propose trois types d'utilisateur~:
+
+\begin{enumerate}
+\item \textbf{Actif~:} Un utilisateur actif est un utilisateur qui s'authentifie sur le réseau de façon pro-active, avec un logiciel d'authentification (éventuellement intégré dans le système d'exploitation). C'est le cas de toutes les machines qui sont suffisamment puissantes et qui peuvent être contrôlées dans un humain. L'authentification peut se faire par certificat (authentification forte) ou par identifiant et mot de passe (authentification plus faible).
+\item \textbf{Passif (MAC)~:} Contrairement à l'utilisateur actif, le passif n'a pas conscience de s'authentifier sur le réseau. C'est donc la seule information qu'il transmet qui est utilisée pour le reconnaître, son adresse MAC. Cette authentification est très faible (il est facile d'usurper une adresse de ce type), mais il correspond parfaitement à des équipements comme les imprimantes qui ne savent pas s'authentifier de façon pro-active. Ce genre d'équipement a aussi l'avantage de n'avoir en général accès qu'à un réseau virtuel très limité (ce qui est configurable via SNACK).
+\item \textbf{Snack~:} Ce dernier type d'utilisateur correspond à un utilisateur qui a le droit d'accéder à l'interface de SNACK. Nous verrons qu'il peut évidemment être recoupé avec d'autres fonctions, pour être polyvalent.
+\end{enumerate}
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/menuusers.png}
+	\end{center}
+	\caption{Menu d'ajout d'utilisateur.}
+	\label{menuusers}
+\end{figure}
 
 
+L'ajout d'un utilisateur qui s'authentifie avec un identifiant et un mot de passe donne lieu à différentes options~:
 
+\begin{itemize}
+\item Outre le couple utilisateur/mot de passe qui est demandé, l'interface demande si cet utilisateur devra obligatoirement vérifier le certificat serveur pour s'authentifier. Elle demande également une adresse MAC facultative, pour permettre une double-authentification de l'utilisateur. Une date d'expiration peut aussi être positionnée, dans le cas d'un stagiaire, par exemple (résultat dans le tableau, sur la figure~\ref{usersexp} page~\pageref{usersexp}).
+\item Un utilisateur peut appartenir à un ou plusieurs groupes, sélectionnables par glissé-déposé.
+\item Comme l'illustre la figure~\ref{userscisco} page~\pageref{userscisco}, un utilisateur du réseau peut aussi être un utilisateur qui s'authentifie sur les équipements Cisco. Ainsi, l'interface propose d'activer cette possibilité pour cet utilisateur, en proposant de contrainte le mode de connexion (Telnet/SSH, Console ou les deux).
+\item Un numéro de réseau virtuel peut être automatiquement répondu lorsque cet utilisateur se connecte. Ainsi, il sera automatiquement contraint à des accès spécifiques.
+\item Et enfin son rôle, parmis ceux détaillés ci-dessous.
+\end{itemize}
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/userscisco.png}
+	\end{center}
+	\caption{Configuration Cisco pour un nouvel utilisateur.}
+	\label{userscisco}
+\end{figure}
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/usersexp.png}
+	\end{center}
+	\caption{Utilisateur expiré.}
+	\label{usersexp}
+\end{figure}
+
+Comme l'illustre la figure~\ref{snackrole} page~\pageref{snackrole}, un utilisateur peut être choisis parmis plusieurs rôles, associés à des droits différents sur l'interface~:
+
+\begin{description}
+\item[Utilisateur~:] Accès au réseau, pas à l'interface.
+\item[Tech~:] Voir les utilisateurs, télécharger les certificats.
+\item[Admin~:] Voir, créer, mettre à jour les utilisateurs.
+\item[Root~:] Voir, créer, mettre à jour, supprimer tous les objets.
+\end{description}
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/snackrole.png}
+	\end{center}
+	\caption{Sélection du rôle de l'utilisateur dans l'interface SNACK.}
+	\label{snackrole}
+\end{figure}
+
+Les différentes copies d'écran de cette section ont permises de mettre en avant l'organisation en étapes avec une barre de progression qu'on retrouve dans toutes les pages de formulaire, pour une meilleure expérience utilisateur.
+
+Un second menu est proposé pour les utilisateurs~: il permet d'importer ou d'exporter des utilisateurs en utilisant un fichier CSV. Cette fonctionnalité permet d'ajouter des utilisateurs en grand nombre, ou d'exporter la base de données.
+
+\subsection{Gestion des groupes}
+
+Une autre façon d'automatiser les droits sur le réseau pour un utilisateur est de lui affecter un groupe (figure~\ref{groupes} page~\pageref{groupes}). Ce groupe aura des droits similaires à ceux proposés pour les utilisateurs, et ils ne s'appliqueront que s'ils n'ont pas été positionnés par l'utilisateur. Cette fonctionnalité permet de créer des utilisateurs de façon efficace, en se contentant de les attribuer à des groupes qui ont été configurés au préalable. Un utilisateur peut être affecté à plusieurs groupes.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/groupes.png}
+	\end{center}
+	\caption{Gestion des groupes.}
+	\label{groupes}
+\end{figure}
+
+Un groupe peut également avoir une date d'expiration. La figure~\ref{groupesedit} page~\pageref{groupesedit} illustre l'édition d'un groupe, qui permet entre autres de définir les utilisateurs qui sont dedans via des glissés-déposés.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/groupesedit.png}
+	\end{center}
+	\caption{Édition d'un groupe.}
+	\label{groupesedit}
+\end{figure}
+
+\subsection{Gestion des NAS}
+
+Comme on peut l'apercevoir dans la figure~\ref{nas} page~\pageref{nas}, un NAS n'est caractérisé que par quatre paramètres~:
+
+\begin{enumerate}
+\item Son nom.
+\item Son IP.
+\item Sa clé secrète.
+\item Une description.
+\end{enumerate}.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/nas.png}
+	\end{center}
+	\caption{Liste des NAS.}
+	\label{nas}
+\end{figure}
+
+La ligne en dessous du panneau des filtres indique qu'un des NAS a eu des changements dans sa mémoire, sans qu'ils ne soient synchronisés avec sa configuration de démarrage. Si ces changements ont bien été sauvegardés automatiquement dans l'interface, le NAS ne la chargera pas s'il redémarre. Il est donc important de préciser à l'utilisateur qu'il a fait un oubli de grande importance.
+
+Par ailleurs, l'icône de la section NAS change de couleur selon si tous les NAS sont synchronisés ou non (figure~\ref{menunas} page~\pageref{menunas}).
+
+La dernière colonne permet d'accéder à la liste des sauvegardes automatisées qui ont eu lieu. La section suivante en explicite le contenu.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/menunas.png}
+	\end{center}
+	\caption{L'icône est verte ou rouge selon si tous les NAS sont synchronisés ou non.}
+	\label{menunas}
+\end{figure}
+
+\subsection{Gestion des sauvegardes}
+
+Un exemple de liste des sauvegardes automatiques pour un NAS est donnée en figure~\ref{backups} page~\pageref{backups}.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/backups.png}
+	\end{center}
+	\caption{Liste des sauvegardes pour un NAS.}
+	\label{backups}
+\end{figure}
+
+Cette liste montre qu'il y a eu trois sauvegardes, avec des modifications de la configuration du NAS, entre chacune. On peut constater qu'il s'agit d'un cycle classique de connexion, écriture et déconnexion. Mais on constate grâce aux icônes de couleur, que Brigitte a fait des modifications dans la configuration depuis sa dernière écriture, et a quitté sans synchroniser. Elles sont donc sauvegardées sur le serveur, mais le NAS ne les prendre pas en compte en cas de redémarrage.
+
+Pour mieux comprendre les changements, l'interface permet de comparer chacune des versions, avec un affichage convivial visible dans la figure~\ref{backupsdiff} page~\pageref{backupsdiff}.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/backupsdiff.png}
+	\end{center}
+	\caption{Comparaison entre deux sauvegardes.}
+	\label{backupsdiff}
+\end{figure}
+
+Si on affiche une sauvegarde, comme l'illustre la figure~\ref{backupsview} page~\pageref{backupsview}, trouve trois parties principales~:
+
+\begin{enumerate}
+\item La comparaison avec la configuration currente sur le NAS, si la sauvegarde visualisée n'est pas la plus récente (acec un affichage coloré des différences).
+\item La vue \emph{in extenso} de la configuration, à cette version. Dérouler ce panneau permet en plus d'accéder à un bouton pour restaurer la configuration sur le NAS.
+\item Si d'autres sauvegardes automatiques ont eu lieu mais que la configuration n'a pas changée depuis la dernière sauvegarde, elles sont listées dans le tableau de la dernière partie.
+\end{enumerate}
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/backupsview.png}
+	\end{center}
+	\caption{Visualisation d'une sauvegarde.}
+	\label{backupsview}
+\end{figure}
+
+\subsection{Gestion des sessions}
+
+La figure~\ref{sessions} page~\pageref{sessions} présente une liste de sessions enregistrées.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/sessions.png}
+	\end{center}
+	\caption{Visualisation d'une sauvegarde.}
+	\label{sessions}
+\end{figure}
+
+Que ça soit des authentifications pour de l'administration sur un NAS, un utilisateur qui se connecte, ou un utilisateur qui se connecte en série au NAS, tout est enregistré. On peut apercevoir sur la copie d'écran que la troisième session affiche une petite horloge à côté de sa durée. Le temps de connexion est mis à jour en temps réel sur l'interface, pour signifier à l'administrateur que cette session n'est pas encore terminée. Puisque le type de port correspond à du 802.1X, on peut en conclure que René est actuellement connecté via le Switch2, et sur le  poste \texttt{00:21:70:d6:e7:c7} et depuis plus de trois jours.
+
+Les autres connexion de l'exemple se sont faîtes avec un lien série, directement sur le NAS. La vue d'une session donne beaucoup d'informations supplémentaires.
+
+\subsection{Gestion des journaux systèmes}
+
+La figure~\ref{logs} page~\pageref{logs} révèle la présence de deux onglets pour cette page. Le premier permet d'afficher tous les jounaux du Freeradius, tandis que la seconde permet d'afficher tous ceux de l'interface de SNACK.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/logs.png}
+	\end{center}
+	\caption{Affichage des journaux systèmes.}
+	\label{logs}
+\end{figure}
+
+Les lignes sont mises en valeur selon leur gravité, et un puissant outil de filtrage est proposé, via le panneau (comme pour toutes les autres pages) ou directement en cliquant sur les lignes.
+
+\subsection{Tableau de bord}
+
+Le tableau de bord (figure~\ref{dashboard} page~\pageref{dashboard}) est un outil de supervision simplifié du serveur SNACK.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/dashboard.png}
+	\end{center}
+	\caption{Tableau de bord.}
+	\label{dashboard}
+\end{figure}
+
+Il permet de visualiser~:
+
+\begin{itemize}
+\item Des informations générales sur la machine.
+\item L'état des deux services principaux que sont Freeradius et MySQL.
+\item Des statistiques diverses.
+\item L'état des différentes mémoires.
+\item L'état des différentes interfaces réseau.
+\item Des statistiques détaillées de l'émission et la réception de ces dernières.
+\end{itemize}
+
+Il s'agit d'un outil qui pourrait être complété par la suite, notamment en le couplant avec un vrai logiciel de supervision comme Nagios.
+
+\subsection{Paramètres du serveur}
+
+Cette dernière section permet de visualiser et positionner les différents paramètres propres à l'interface de SNACK.
+
+Comme le montre la figure~\ref{parametres} page~\pageref{parametres}, certains paramètres comme la configuration des certificats serviront de valeur par défaut lors de la création de ceux-ci.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/parametres.png}
+	\end{center}
+	\caption{Paramètres du serveur SNACK.}
+	\label{parametres}
+\end{figure}
 
 \section{Conclusion}
 
