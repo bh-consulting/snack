@@ -1,5 +1,5 @@
-\newcommand{\titreA}{Rapport de projet}
-\newcommand{\titreB}{Projet industriel}
+\newcommand{\titreA}{Secure Network Access Control for Kids}
+\newcommand{\titreB}{Rapport de projet industriel}
 \input{entetes.tex}
 
 \listoffigures
@@ -186,13 +186,28 @@ L'attribution des tâches aux membres du projet s'est faite sur la base du volon
 
 Une réunion de travail a été planifiée toutes les semaines, en présence de l'ensemble des membres de l'équipe et de l'intervenant industriel qui s'est montré disponible tout au long du projet. Une réunion mensuelle a eu lieu avec l'encadrant universitaire, lui permettant d'obtenir une interactivité régulière, complémentaire avec les rapports des réunions de travail reçus toutes les semaines.
 
-\subsubsection{Documentation technique}
+\subsection{Documentation technique}
 
 À mi-parcours du projet, l'entreprise nous a signifié que l'un de ses clients souhaitait utiliser notre travail en avant-première. L'interface n'était pas encore finie, et le paquet d'installation non-plus. Mais le client souhaitait une documentation technique, pour installer lui-même notre solution, en suivant nos recommandations.
 
 Nous avons donc passé un temps non-négligeable à documenter toute la procédure d'installation manuelle de SNACK. Cette documentation est visible en annexe~\ref{doc-install} page~\pageref{doc-install}. Le client en question a salué la clareté de notre document.
 
 \section{Choix effectués}
+\subsection{Nom du projet}
+
+Le nom du projet a été choisi par les étudiants. Il s'agit de \og~SNACK~\fg{} pour \og~\emph{Secure Network Access Control for Kids}~\fg.
+
+Ce nom a été retenu pour ces quatre qualités~:
+
+\begin{enumerate}
+\item La signification de l'acronyme cadre parfaitement le but du projet, en évoquant le contrôle des accès du réseau.
+\item Le \emph{for Kids} insiste sur l'objectif du projet, à savoir de proposer une solution clé-en-main.
+\item L'acronyme fait référence à un autre mot anglais facile à retenir, ce qui est courant et apprécié dans les projets informatiques.
+\item En plus de \emph{NAC}, l'acronyme a l'avantage de contenir le suffixe \emph{ACK} qui, à lui tout seul, évoque le réseau (les acquittements de TCP).
+\end{enumerate}
+
+Ce nom a été validé par l'encadrant industriel.
+
 \subsection{Protocoles et implémentations}
 \subsubsection{Contrôle des accès réseaux}
 
@@ -838,13 +853,15 @@ Comme le montre la figure~\ref{parametres} page~\pageref{parametres}, certains p
 
 \section{Conclusion}
 
-migration bt et cake
+Que ça soit au niveau gestion de projet ou au niveau technique, ce projet industriel aura été l'occasion pour chacun des membres de l'équipe de découvrir de nombreux outils. La maîtrise de l'interaction entre les protocoles comme la programmation de l'interface ont permis de compléter généreusement la formation d'ingénieur des étudiants, et ont parfois permis de s'aventurer dans des domaines qui n'étaient pas attendus.
 
+Du côté de l'entreprise, le pari semble gagné comme le prouve l'interface finale qui rassemble l'ensemble des fonctionnalités attendues. Le terminal virtuel est une exception, mais son exclusion s'est faite avec l'accord de l'entreprise. Nous conseillons malgré tout à B.H. Consulting de continuer les tests avant de proposer notre solution en production, le temps de développement ayant empiété sur la période d'essai que nous aurions souhaités observer.
 
+B.H. Consulting est maintenant âpte à proposer à ses clients une solution complète, leur permettant de gérer les accès à leurs réseaux et à leurs commutateurs. Grâce à une interface conviviale, cette gestion peut se faire sans connaissances informatiques pointues, et uniquement en ouvrant un navigateur web (dès lors que les commutateurs sont correctement configurés, grâce à la la documentation mise à disposition). Le module de sauvegardes des données tranquilise à la fois les clients et B.H. Consulting, puisque qu'il est désormais possible d'avoir un suivi complet des modifications et de revenir en arrière facilement si nécessaire. Les outils comme la gestion des journaux systèmes, des sessions, la supervision et autres fonctionnalités viennent compléter avantageusement notre solution.
 
-Le matériel attribué au projet dans la salle des projets aura posé beaucoup de problèmes (matériel non-reconnu, disques durs corrompus, crashs inexpliqués, etc.), et aura déjà coûté beaucoup de temps aux membres de l'équipe. Quelques exigences supplémentaires arrivent parfois de la part de l'entreprise (comme la gestion d'utilisateurs d'un pare-feu), venant surcharger le cahier des charges. Nous essayons de faire avec ces contre-temps pour satisfaire l'ensemble des observateurs du projet.
+Grâce au paquet d'installation simplifié, un serveur SNACK peut être déployé rapidement et facilement. B.H. Consulting est ainsi capable de proposer des mécanismes complexes en un temps record chez ses clients.
 
-Le système de sauvegardes de la seconde partie impliquant plus de travail sur l'interface web, la première étape de janvier sera de former tous les membres de l'équipe qui n'ont pas encore travaillé dessus.
+La récente migration du projet en Bootstrap 2.3.1 et en CakePHP 2.3.1\footnote{Il n'y a aucun rapport entre les deux logiciels, c'est donc un hasard si c'est les numéros de leur dernière version sont identiques.} n'a posé aucune difficulté majeure, et prouve que l'interface est écrite proprement et pourra ainsi évoluer facilement dans le futur. Par ailleurs, de nombreuses fonctionnalités pourraient venir compléter notre projet, comme une auto-configuration des commutateurs.
 
 \newpage
 ~\vspace{5cm}
