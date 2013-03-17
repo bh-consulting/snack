@@ -36,9 +36,9 @@ Elle comprend cinq employés~:
 \begin{itemize}
 \item Bertrand PÉTAT (gérant)
 \item Christine MARCILLAT (secrétaire de direction)
-\item Guillaume ROCHE (ingénieur réseaux)
-\item Jérémy KRAEMER (ingénieur réseaux)
-\item Simon KOSMERL (ingénieur réseaux)
+\item Guillaume ROCHE (ingénieur réseau)
+\item Jérémy KRAEMER (ingénieur réseau)
+\item Simon KOSMERL (ingénieur réseau)
 \end{itemize}
 
 L'organigramme est disponible en figure~\ref{organigramme} page~\pageref{organigramme}.
@@ -150,6 +150,16 @@ L'outil de gestion permettant d'attribuer les tâches aux différents membres de
 
 Chaque réunion a donné lieu à un rapport, transmis à l'ensemble des membres de l'équipe ainsi qu'à l'intervenant industriel et l'encadrant universitaire.
 
+En interne, nous avons utilisé la puissance du gestionnaire de versions Subversion pour être capables de travailler tous ensemble, simultanément, sur les mêmes parties du projet. Pour tenir au courant les autres développeurs des problèmes rencontrés avec une fonctionnalité que nous n'avions pas implémenté, nous avons usé et abusé d'un gestionnaire de tickets (capture d'écran en figure~\ref{tickets} page~\pageref{tickets}).
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.9\textwidth]{img/tickets.png}
+	\end{center}
+	\caption{Gestionnaire de tickets.}
+	\label{tickets}
+\end{figure}
+
 \subsubsection{Planning}
 
 Un diagramme de Gantt des tâches prévues est disponible en annexe~\ref{gantt} page~\pageref{gantt}.
@@ -175,6 +185,12 @@ La liste des livrables proposée dans la note de cadrage (annexe~\ref{note-cadra
 L'attribution des tâches aux membres du projet s'est faite sur la base du volontariat. Le groupe étant cohérent et dynamique, aucune tâche n'a été affectée de force. Cette méthode a fonctionné correctement tout au long du projet, permettant à chacun d'avancer sans contrariétés.
 
 Une réunion de travail a été planifiée toutes les semaines, en présence de l'ensemble des membres de l'équipe et de l'intervenant industriel qui s'est montré disponible tout au long du projet. Une réunion mensuelle a eu lieu avec l'encadrant universitaire, lui permettant d'obtenir une interactivité régulière, complémentaire avec les rapports des réunions de travail reçus toutes les semaines.
+
+\subsubsection{Documentation technique}
+
+À mi-parcours du projet, l'entreprise nous a signifié que l'un de ses clients souhaitait utiliser notre travail en avant-première. L'interface n'était pas encore finie, et le paquet d'installation non-plus. Mais le client souhaitait une documentation technique, pour installer lui-même notre solution, en suivant nos recommandations.
+
+Nous avons donc passé un temps non-négligeable à documenter toute la procédure d'installation manuelle de SNACK. Cette documentation est visible en annexe~\ref{doc-install} page~\pageref{doc-install}. Le client en question a salué la clareté de notre document.
 
 \section{Choix effectués}
 \subsection{Protocoles et implémentations}
@@ -250,7 +266,7 @@ En accord avec l'intervenant industriel, nous sommes arrivés à la conclusion q
 \subsection{Interface web}
 \subsubsection{Langages et environnements de développement}
 
-Le langage PHP a été imposé pour la conception de l'interface web du projet. Le langage a l'avantage d'être suffisamement populaire chez les développeurs, pour assurer sa maintenabilité dans le futur. Il permet une approche de la conception propre et cohérente avec les techniques de développement actuelles, en offrant des performances acceptables y compris pour des serveurs de faible capacité.
+Le langage PHP a été imposé pour la conception de l'interface web du projet. Le langage a l'avantage d'être suffisamment populaire chez les développeurs, pour assurer sa maintenabilité dans le futur. Il permet une approche de la conception propre et cohérente avec les techniques de développement actuelles, en offrant des performances acceptables y compris pour des serveurs de faible capacité.
 
 Une contrainte sur l'environnement de développement est rapidement venue s'ajouter au langage imposé. Les développeurs de B.H. Consulting ont demandé que l'interface exploite les possibilités du \textit{framework} Bootstrap Twitter. Ce dernier est particulièrement populaire depuis sa récente création par l'entreprise du même nom. Il s'agit d'un composant logiciel pour la partie cliente de l'interface, qui propose une collection très complète de feuilles de style et de dispositions pour créer les vues, afin d'offrir une expérience utilisateur confortable. Une formation rapide de cet outil en interne a dû être effectuée par les membres de l'équipe qui ne l'avaient jamais utilisé auparavant.
 
@@ -284,6 +300,104 @@ PostgreSQL est beaucoup plus puissant que MySQL, mais il est aussi beaucoup plus
 
 Le choix de cette solution a été accueilli favorablement par l'intervenant industriel.
 
+\subsubsection{Journaux systèmes}
+
+Pour une meilleure traçabilité des actions des clients, l'interface web doit impérativement enregistrer les actions qu'elle effectue. Elle doit également être capable de présenter les journaux du Freeradius, de façon conviviale.
+
+Nous avons choisi d'utiliser le logiciel Syslog-ng couplé à une base de données MySQL pour la gestion de ces derniers. Ainsi, le Freeradius écrit directement, via Syslog-ng, dans la base de données que l'interface peut alors exploiter. Nous avons également conçu l'interface de telle sorte que toutes les traces que nous générons soient stockés dans cette même table avec un indicateur différent.
+
+Ainsi, la gestion des journaux systèmes des différents composants est homogène et se fait à l'aide d'un outil largement répandu, qui permettra de facilement ajouter des onglets pour afficher d'autres types de journaux.
+
+\subsubsection{Internationalisation}
+
+Pour permettre à notre travail d'être éventuellement réexploitable au delà des frontières franco-luxembourgeoises, l'interface a été écrite en anglais. Nous avons ensuite utilisé un outil nous permettant de traduire l'interface à la main en français. Ainsi, à n'importe quel instant, l'utilisateur a la possibilité de passer l'interface entièrement en anglais ou en français. L'intégration d'une nouvelle langue se fera très aisément, simplement en ajoutant les fichiers de langue correspondants.
+
+La langue par défaut dépendra de la localisation du visiteur, c'est à dire de la langue de son navigateur.
+
+\subsection{Sauvegarde des configurations}
+\label{chap-sauvegardes}
+\subsubsection{Rêve d'administrateur}
+
+Imaginez un monde où le risque zéro existe, où n'importe quel administrateur réseau peut se permettre de modifier la configuration de ses équipements sans se préoccuper de la sauvegarde de la configuration initiale. Un monde sans risque qui interdit aux débutants de faire l'erreur qui leur coûtera une longue soirée à retrouver les choix effectués avant qu'il ne se lance dans des changements hasardeux qu'il aura finalement abandonnés. En somme un monde où le prestataire du réseau est assuré qu'il n'aura jamais à refaire deux fois le même travail, par sa faute ou par la faute de son client. C'est le défi qui nous a été imposé par B.H. Consulting, qui trouve un intérêt particulièrement grand dans cette vision idéaliste.
+
+Le concept est simple~: chaque fois qu'un administrateur se connecte sur un équipement réseau, la configuration de ce dernier devra être sauvegardée sur un serveur centralisé. Elle le sera également lorsqu'il se déconnecte, et lorsqu'il enregistre ses modifications sur le disque de l'équipement. Ainsi, aucune modification ne pourra être oubliée, et l'historique est intégralement sauvegardé pour lui permettre de revenir en arrière aisément.
+
+Pour répondre à cette demande, notre équipe a dû redoubler de travail afin de trouver les solutions adéquates pour détecter l'un de ces trois événements, déclencheurs d'un rappatriement immédiat des configurations.
+
+\subsubsection{Sauvegarde de la configuration}
+
+Sur un équipement Cisco, la configuration qui est utilisée est stockée dans la \emph{running-configuration}, elle-même stockée dans la mémoire vive. Cette dernière étant réinitialisée à chaque redémarrage, une modification durable (\emph{write memory}) doit donner lieu à une synchronisation entre la \emph{running-configuration} et la \emph{startup-configuration}. Cette dernière sera chargée au démarrage pour devenir la \emph{running} actuelle. 
+
+La synchronisation entre la \emph{running-configuration} et la \emph{startup-configuration} sur le commutateur est une action à la discrétion de l'administrateur, totalement décorellée de l'\emph{accounting}. Pour lancer une sauvegarde automatique lors de cette action, il faut alors détecter un événement asynchrone et imprévisible.
+
+Nous donc avons dû recourir au protocole SNMP. Ce dernier est particulièrement utilisé dans la supervision des réseaux, et propose une interface de communication épurée et facile à prendre en main. Ses messages sont systématiquement de type \og~OID~: valeur~\fg, que ça soit pour une question ou une réponse. Puisque c'est un standard largement utilisé, tous les équipements Cisco implémentent des fonctionnalités l'exploitant. Ainsi, dès lors que le commutateur est correctement configuré, un événement SNMP est envoyé à chaque enregistrement de la configuration. Un serveur externe peut alors attraper ce message (on parle de \emph{trap} dans le vocabulaire SNMP), en déduit l'action effectuée en fonction de l'OID (l'identifiant unique d'une ressource particulière) et de sa valeur, et exécute le script correspondant.
+
+Le schéma~\ref{schema_wrmem} page~\pageref{schema_wrmem} illustre le mécanisme que nous avons mis en place pour exploiter cette possibilité. Un gestionnaire de versions est utilisé pour stocker les configurations de chacun des commutateurs, ce qui permet de les stocker de façon incrémentale, c'est à dire en stockant que les changements (\emph{commits}).
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.7\textwidth]{img/wrmem.pdf}
+	\end{center}
+	\caption{Interactions entre le commutateur et le serveur SNACK lors d'une synchronisation (\emph{Write memory}).}
+	\label{schema_wrmem}
+\end{figure}
+
+À noter que les matériels Cisco ne permettent de récupérer leur configuration qu'au travers du protocole TFTP. Celui-ci est une version simplifiée du protocole de transfert de fichiers FTP, non-sécurisée. Toutefois, les transferts devraient avoir lieu dans un réseau virtuel suffisamment restreint pour que ça ne puisse poser de problème.
+
+Un autre problème de taille de ce protocole imposé, est qu'il n'est pas orienté connexion. Ainsi, il est impossible de détecter la fin d'un transfert, pour l'ajouter ensuite dans le gestionnaire de versions. C'est pour cette raison que le schéma~\ref{schema_wrmem} page~\pageref{schema_wrmem} montre l'utilisation d'une nouvelle trap SNMP, que nous avons découverte, pour détecter la fin de l'opération.
+
+Les deux autres événements sont plus simples à détecter, grâce à l'\emph{accounting}.
+
+\subsubsection{Détection des connexions / déconnexions}
+
+Une partie de l'équipe ayant travaillé sur le module de gestion des sessions, une bonne partie du travail a déjà été effectuée pour comprendre les mécanismes d'\emph{accounting} de Freeradius. Cette fonctionnalité est utilisée en général pour identifier la longueur d'une session, dans le but de la facturer. Elle assure donc de correctement détecter son début et sa fin. Après différents tests, nous avons constaté que la fin de session intervenait quoiqu'il arrive, au pire grâce à un délai d'expiration. La seule exception étant une coupure électrique brutale du commutateur, pour laquelle nous avons mis en place un mécanisme de détection du démarrage permettant de fermer automatiquement toutes les sessions résiduelles restées ouvertes.
+
+Nous avons choisi de créer un module Freeradius, qui est appellé à chaque événement de l'\emph{accounting}. Une condition filtre directement ces événements pour éliminer tout ce qui relatif aux connexions 802.1x, en se contentant de repérer les connexions/déconnexions sur le commutateur, en Telnet, SSH comme en série.
+
+Le schéma~\ref{schema_auth} page~\pageref{schema_auth} illustre les interactions entre l'administrateur, le commutateur et le serveur SNACK lorsqu'une connexion Telnet, SSH ou série a lieu. Le processus est identique lorsqu'il se déconnecte.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=\textwidth]{img/auth.pdf}
+	\end{center}
+	\caption{Interactions entre les différents composants lors d'une connexion Telnet/SSH/série.}
+	\label{schema_auth}
+\end{figure}
+
+La principale différence avec le schéma précédent est que le processus de sauvegarde est déclenché automatiquement directement par l'utilisateur, directement depuis le serveur SNACK, plutôt qu'indirectement par le commutateur.
+
+\subsection{Installation automatisée}
+
+Pour que notre solution logicielle soit facilement et rapidement déployable sur de nombreux parcs informatiques, nous avons choisis de profiter de la puissance du gestionnaire de paquets du système cible. Ainsi, nous avons conçu un simple paquet Debian, qui s'occupe d'installer tous les fichiers et toutes les dépendances, pour une solution entièrement clé en main.
+
+Pour plus de confort, le paquet propose une interface d'installation conviviale, comme l'illustrent les copies d'écran en figure~\ref{install_start}, \ref{install_prompt} et \ref{install_progress} en pages~\pageref{install_start}, \pageref{install_prompt} et \pageref{install_progress}.
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/install_start.png}
+	\end{center}
+	\caption{Accueil de l'installation du paquet SNACK.}
+	\label{install_start}
+\end{figure}
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/install_prompt.png}
+	\end{center}
+	\caption{Exemple d'invite de saisie lors de l'installation du paquet SNACK.}
+	\label{install_prompt}
+\end{figure}
+
+\begin{figure}[!h]
+	\begin{center}
+	    \includegraphics[width=0.6\textwidth]{img/install_progress.png}
+	\end{center}
+	\caption{Barre de progression pour une meilleure expérience utilisateur.}
+	\label{install_progress}
+\end{figure}
+
+Une fois le paquet installé et les quelques questions répondues, le serveur est entièrement opérationnel et l'interface web immédiatement accessible (avec pour seul utilisateur, le super-utilisateur créé durant l'installation).
+
 \section{Implémentations et méthodologies}
 \subsection{Radius}
 
@@ -315,7 +429,7 @@ Le détail de cette tâche issu du diagramme de Gantt est donné en figure~\ref{
 	\label{gantt_sql}
 \end{figure}
 
-Après avoir dressé une liste des solutions Open Source les plus populaires, une recherche documentaire a été effecutée sur chacune, pour prendre en compte ses avantages et ses inconvénients. La compatibilité avec les trois principales implémentations Radius retenues a aussi été un critère de choix.
+Après avoir dressé une liste des solutions Open Source les plus populaires, une recherche documentaire a été effectuée sur chacune, pour prendre en compte ses avantages et ses inconvénients. La compatibilité avec les trois principales implémentations Radius retenues a aussi été un critère de choix.
 
 La solution retenue a été installée sur une machine de tests, au côté du Radius gagnant. Une dernière étape a consisté à réussir à lier les deux, pour que l'authentification Radius utilise la base de données SQL.
 
@@ -371,79 +485,58 @@ Un paquet Ubuntu a été réalisé au fur et à mesure de la réinstallation, po
 
 La réinstallation du système a posé plusieurs fois problème~: les machines mises à disposition ne sont pas parfaitement supportées par Ubuntu et Windows XP. Beaucoup de temps a été perdu pour résoudre les différents problèmes rencontrés.
 
-\section{Sauvegarde des configurations}
-\subsection{Rêve d'administrateur}
+\subsection{Radius par le web}
 
-Imaginez un monde où le risque zéro existe, où n'importe quel administrateur réseau peut se permettre de modifier la configuration de ses équipements sans se préoccuper de la sauvegarde de la configuration initiale. Un monde sans risque qui interdit aux débutants de faire l'erreur qui leur coûtera une longue soirée à retrouver les paramètres choisis avant qu'il ne se lance dans des changements hasardeux qu'il aura finalement abandonnés. En somme un monde où le prestataire du réseau est assuré qu'il n'aura jamais à refaire deux fois le même travail, par sa faute ou par la faute de son client. C'est le défi qui nous a été imposé par B.H. Consulting, qui trouve un intérêt particulièrement grand dans cette vision idéaliste.
-
-Le concept est simple~: chaque fois qu'un administrateur se connecte sur un équipement réseau, la configuration de ce dernier devra être sauvegardée sur un serveur centralisé. Elle le sera également lorsqu'il se déconnecte, et lorsqu'il enregistre ses modifications sur le disque de l'équipement. Ainsi, aucune modification ne pourra être oubliée, et l'historique est intégralement sauvegardé pour lui permettre de revenir en arrière aisément.
-
-Pour répondre à cette demande, notre équipe a dû redoubler de travail afin de trouver les solutions adéquates pour trouver les mécanismes qui lui assurent de détecter l'un de ces trois événements, pour faire rapatrier automatiquement la configuration.
-
-\subsection{Sauvegarde de la configuration}
-
-Sur un équipement Cisco, la configuration qui est utilisée est stockée dans la \emph{running-configuration}, elle-même stockée dans la mémoire vive. Cette dernière étant réinitialisée à chaque redémarrage, une modification durable doit donner lieu à une synchronisation entre la \emph{running-configuration} et la \emph{startup-configuration}. Cette dernière sera chargée au démarrage pour devenir la \emph{running} actuelle. 
-
-La synchronisation entre la \emph{running-configuration} et la \emph{startup-configuration} sur le commutateur est une action à la discrétion de l'administrateur, totalement décorellée de l'\emph{accounting}. Pour lancer une sauvegarde automatique lors de cette action, il faut alors détecter un événement asynchrone et imprévisible.
-
-Nous donc avons dû recourir au protocole SNMP. Ce dernier est particulièrement utilisé dans la supervision des réseaux, en proposant une interface de communication épurée et facile à prendre en main. Ses messages sont systématiquement de type \og~OID~: valeur~\fg, que ça soit pour une question ou une réponse. Puisque c'est un standard largement utilisé, tous les équipemetns Cisco implémentent des fonctionnalités l'exploitant. Ainsi, dès lors que le commutateur est correctement configuré, un événement SNMP est envoyé à chaque enregistrement de la configuration. Un serveur externe peut alors attraper ce message (on parle de \emph{trap} dans le vocabulaire SNMP), en déduit l'action effectuée en fonction de l'OID et de la valeur, et exécute le script correspondant.
-
-Le schéma~\ref{schema_wrmem} page~\pageref{schema_wrmem} illustre le mécanisme que nous avons mis en place pour exploiter cette possibilité. Un gestionnaire de versions est utilisé pour stocker les configurations de chacun des commutateurs, ce qui permet de les stocker de façon incrémentale, c'est à dire en stockant que les changements (\emph{commits}).
+Le projet arrivant à maturité pour ses fondements internes, l'accent a été mis sur la conception de l'interface web, permettant de contrôler ce qui a été réalisé d'une façon simple, ergonomique et conviviale. Cette tâche est racontée en figure~\ref{gantt_cake} page~\pageref{gantt_cake}.
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.7\textwidth]{img/wrmem.pdf}
+		\includegraphics[width=0.8\textwidth]{img/gantt_cake.png}
 	\end{center}
-	\caption{Interactions entre le commutateur et le serveur SNACK lors d'une synchronisation (\emph{Write memory}).}
-	\label{schema_wrmem}
+	\caption{Tâche \textit{Interface web}}
+	\label{gantt_cake}
 \end{figure}
 
-Les deux autres événements sont plus simples à détecter, grâce à l'\emph{accounting}.
+La première grosse partie a été de créer une interface pour le Freeradius. Il en existe beaucoup de disponibles, mais aucune n'est satisfaisante, ce qui a rendu le défi d'autant plus intéressant. Cette tâche a nécessité de comprendre parfaitement les mécanismes internes de ce que nous avions mis en place, pour l'ensemble des membres de l'équipe. C'est ainsi que sont nées la gestion des utilisateurs, des groupes, des commutateurs, des sessions et des journaux systèmes.
 
-\subsection{Détection des connexions / déconnexions}
+L'association de Bootstrap Twitter avec CakePHP n'a pas été simple, et nous a demandé beaucoup de travail d'intégration. Autant que faire ce peut, nous avons apprivoisé les \emph{Components}, \emph{Elements} et autres facilités de CakePHP pour créer des modules réexploitables partout dans l'interface.
 
-Une partie de l'équipe ayant travaillé sur le module de gestion des sessions, une bonne partie du travail a déjà été effectuée pour comprendre les mécanismes d'\emph{accounting} de Freeradius. Cette fonctionnalité est utilisée en général pour identifier la longueur d'une session, dans le but de la facturer. Elle assure donc de correctement détecter son début et sa fin. Après différents tests, nous avons constaté que la fin de session intervenait quoiqu'il arrive, au pire grâce à un délai d'expiration. La seule exception étant une coupure électrique brutale du commutateur, pour laquelle nous avons mis en place un mécanisme de détection du démarrage permettant de fermer automatiquement toutes les sessions résiduelles restées ouvertes.
+\subsection{Le module de sauvegardes}
 
-Nous avons choisi de créer un module Freeradius, qui est appellé à chaque événement de l'\emph{accounting}. Une condition filtre directement ces événements pour éliminer tout ce qui relatif aux connexions 802.1x, en se contentant de repérer les connexions/déconnexions sur le commutateur, en Telnet, SSH comme en série.
-
-Le schéma~\ref{schema_auth} page~\pageref{schema_auth} illustre les interactions entre l'administrateur, le commutateur et le serveur SNACK lorsqu'une connexion Telnet, SSH ou série a lieu. Le processus est identique lorsqu'il se déconnecte.
+Après un court passage par l'internationalisation (qui nous aura value ensuite plusieurs séances de traduction), la tâche visible en figure~\ref{gantt_sauvegardes} page~\pageref{gantt_sauvegardes} a annoncé le début d'une nouvelle étape~: le module de sauvegardes.
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=\textwidth]{img/auth.pdf}
+		\includegraphics[width=0.8\textwidth]{img/gantt_sauvegarde.png}
 	\end{center}
-	\caption{Interactions entre les différents composants lors d'une connexion Telnet/SSH/série.}
-	\label{schema_auth}
+	\caption{Tâche \textit{Sauvegardes}}
+	\label{gantt_sauvegardes}
 \end{figure}
 
-\section{Installation automatisée}
+Ce nouveau défi nous a value de revenir à la configuration de Radius, Cisco, et cie. Grâce à des astuces qui sont décrites dans la section~\ref{chap-sauvegardes} page~\pageref{chap-sauvegardes}, nous sommes parvenus à récupérer les sauvegardes au moments clés que l'entreprise souhaitait. Il a fallu ensuite revenir sur CakePHP, pour développer la partie de l'interface qui lui est dédiée. Ainsi, toutes les sauvegardes sont visibles en temps réel sur l'interface, et peuvent être comparées graphiquement.
 
-Pour que notre solution logicielle soit facilement et rapidement déployable sur de nombreux parcs informatiques, nous avons choisis de profiter de la puissance du gestionnaire de paquets du système cible. Ainsi, nous avons conçu un simple paquet Debian, qui s'occupe d'installer tous les fichiers et toutes les dépendances, pour une solution entièrement clé en main.
+Cette tâche a eu lieu en parallèle de l'intégration de l'interface dans le paquet, et de la correction de problèmes détectés dans la partie précédente.
 
-Pour plus de confort, le paquet propose une interface d'installation conviviale, comme l'illustrent les copies d'écran en figure~\ref{install_start} et \ref{install_prompt} pages~\pageref{install_start} et \pageref{install_prompt}.
+\subsection{La tâche qui n'aura pas lieu}
+
+Le projet initial était très ambitieux, tant bien que nous avons finalement décidés d'abandonner la tâche qui avait été jugée la moins urgente par l'entreprise. Ainsi, la création d'un terminal virtuel, destiné à pouvoir contrôler les commutateurs depuis l'interface web sans avoir à demander d'accès au client, en restera à une démonstration minimale qui n'a rien d'exploitable. La défunte tâche est présentée en figure~\ref{gantt_terminal} page~\pageref{gantt_terminal}.
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/install_start.png}
+		\includegraphics[width=0.5\textwidth]{img/gantt_terminal.png}
 	\end{center}
-	\caption{Accueil de l'installation du paquet SNACK.}
-	\label{install_start}
+	\caption{Tâche \textit{Terminal virtuel}}
+	\label{gantt_terminal}
 \end{figure}
 
-\begin{figure}[!h]
-	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/install_prompt.png}
-	\end{center}
-	\caption{Exemple d'invite de saisie lors de l'installation du paquet SNACK.}
-	\label{install_prompt}
-\end{figure}
+Le temps récupéré suite à cette décision nous a permis de poursuivre les tests des autres parties, et de peaufiner l'interface pour la rendre encore plus conviviale. Nous avons en outre estimé que la création complète propre et sérieuse d'un terminal virtuel aurait pu donner lieu à un projet à part entière.
 
 \section{L'interface web}
 \subsection{L'administration à la portée de tous}
 
-Les employés de B.H. Consulting en majorité de valeureux et talentueux administrateurs systèmes. La ligne de commandes est à leur portée, et les interfaces austères (et néammoins très efficaces) ne les rebutent pas. Mais ce qui est vrai en interne ne l'est pas forcément en externe. Ainsi, les clients qui sont les leurs n'ont pas systématiquement les compétences pour administrer leurs réseaux sans être guidés, et sans une nécessité certaine de mise en confiance par l'outil. Une interface graphique, colorée et assurément ergonomique est un luxe que B.H. Consulting souhaite leur apporter. L'outil le plus simple pour contacter une application étant le navigateur web, ce dernier nous a demandé de répondre à cette attente.
+Les employés de B.H. Consulting en majorité de valeureux et talentueux administrateurs systèmes. La ligne de commandes est à leur portée, et les interfaces austères (et néammoins très efficaces) ne les rebutent pas. Mais ce qui est vrai en interne ne l'est pas forcément en externe. Ainsi, les clients qui sont les leurs n'ont pas systématiquement les compétences pour administrer leurs réseaux sans être guidés, et sans une nécessité certaine de mise en confiance par l'outil. Une interface graphique, colorée et assurément ergonomique est un luxe que B.H. Consulting souhaite leur apporter. L'outil le plus simple pour contacter une application étant le navigateur web, c'est le choix que nous avons fait.
 
-Une grosse partie de notre travail a donc consistée à dissimuler les mécanismes complexes que nous avons mis en place, derrière un outil accessible. Puisque les outils mis en oeuvre ont déjà été présentés dans une autre section, celle-ci est dédié à la présentation de l'aboutissement de notre projet.
+Une grosse partie de notre travail a donc consistée à dissimuler les mécanismes complexes que nous avons mis en place, derrière un outil accessible. Puisque les outils mis en oeuvre ont déjà été présentés dans une autre section, celle-ci est dédié à la présentation de l'aboutissement de notre projet, et de ses choix ergonomiques. Puisque ce sera probablement la langue la plus exploitée, l'interface est présentée en français.
 
 \subsection{Vue générale}
 
@@ -451,7 +544,7 @@ L'accueil sur l'interface se fait avec une invitation à s'identifier (figure~\r
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/login.png}
+	    \includegraphics[width=0.9\textwidth]{img/login.png}
 	\end{center}
 	\caption{Identification sur l'interface.}
 	\label{login}
@@ -468,13 +561,13 @@ La première page qui s'affiche correspond à celle des utilisateurs. Comme on p
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/general.png}
+	    \includegraphics[width=0.9\textwidth]{img/general.png}
 	\end{center}
 	\caption{Vue générale de l'interface.}
 	\label{general}
 \end{figure}
 
-Comme pour toutes les pages qui suivront, nous retrouvons plusieurs éléments~:
+Comme \textbf{pour toutes les pages qui suivront}, nous retrouvons plusieurs éléments~:
 
 \begin{itemize}
 \item La possibilité de faire une recherche dans le tableau, en filtrant très finement les lignes à afficher, grâce au panneau déroulé qui est présenté en figure~\ref{filters} page~\pageref{filters}.
@@ -485,7 +578,7 @@ Comme pour toutes les pages qui suivront, nous retrouvons plusieurs éléments~:
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/filters.png}
+	    \includegraphics[width=0.9\textwidth]{img/logsfilters.png}
 	\end{center}
 	\caption{Panneau de recherche.}
 	\label{filters}
@@ -510,28 +603,53 @@ Le tableau au centre présente tous les utilisateurs créés depuis la mise en r
 Le menu principal (figure~\ref{menuusers} page~\pageref{menuusers}) de la page \og~Ajouter un utilisateur~\fg{} propose trois types d'utilisateur~:
 
 \begin{enumerate}
-\item \textbf{Actif~:} Un utilisateur actif est un utilisateur qui s'authentifie sur le réseau de façon pro-active, avec un logiciel d'authentification (éventuellement intégré dans le système d'exploitation). C'est le cas de toutes les machines qui sont suffisamment puissantes et qui peuvent être contrôlées dans un humain. L'authentification peut se faire par certificat (authentification forte) ou par identifiant et mot de passe (authentification plus faible).
+\item \textbf{Actif~:} Un utilisateur actif est un utilisateur qui s'authentifie sur le réseau de façon pro-active, avec un logiciel d'authentification (éventuellement intégré dans le système d'exploitation). C'est le cas de toutes les machines qui sont suffisamment puissantes et qui peuvent être contrôlées par un humain. L'authentification peut se faire par certificat (authentification forte en vert) ou par identifiant et mot de passe (authentification plus faible en orange).
 \item \textbf{Passif (MAC)~:} Contrairement à l'utilisateur actif, le passif n'a pas conscience de s'authentifier sur le réseau. C'est donc la seule information qu'il transmet qui est utilisée pour le reconnaître, son adresse MAC. Cette authentification est très faible (il est facile d'usurper une adresse de ce type), mais il correspond parfaitement à des équipements comme les imprimantes qui ne savent pas s'authentifier de façon pro-active. Ce genre d'équipement a aussi l'avantage de n'avoir en général accès qu'à un réseau virtuel très limité (ce qui est configurable via SNACK).
 \item \textbf{Snack~:} Ce dernier type d'utilisateur correspond à un utilisateur qui a le droit d'accéder à l'interface de SNACK. Nous verrons qu'il peut évidemment être recoupé avec d'autres fonctions, pour être polyvalent.
 \end{enumerate}
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/menuusers.png}
+	    \includegraphics[width=0.5\textwidth]{img/menuusers.png}
 	\end{center}
 	\caption{Menu d'ajout d'utilisateur.}
 	\label{menuusers}
 \end{figure}
 
+Cette séparation des utilisateur a été mûrement réfléchie pour permettre à l'interface de s'abstraire des vrais types d'utilisateurs qui existent et qui peuvent se recouper~:
 
-L'ajout d'un utilisateur qui s'authentifie avec un identifiant et un mot de passe donne lieu à différentes options~:
+\begin{itemize}
+\item Utilisateur s'identifiant sur le réseau en utilisant un identifiant / mot de passe.
+\item Utilisateur s'identifiant sur le réseau en utilisant un chiffrement TLS.
+\item Utilisateur s'identifiant sur le réseau en utilisant un chiffrement TTLS/PEAP.
+\item Utilisateur s'identifiant sur le réseau grâce à son adresse MAC.
+\item Utilisateur s'identifiant à la console d'administration des commutateurs avec un identifiant / mot de passe (en Telnet/SSH et/ou console).
+\item Utitisateur s'identifiant sur l'interface SNACK avec un identifiant / mot de passe.
+\end{itemize}
+
+Ainsi, un utilisateur actif par identifiant / mot de passe, en cochant les options adéquates sur l'interface, pourra s'identifier à la fois sur le réseau et sur les commutateurs avec le même couple d'identifiants s'il le souhaite (et en précisant le type de connexion autorisé).
+
+Il pourra également demander à vérifier le certificat serveur, le passant ainsi automatiquement en chiffrement TTLS pour la partie réseau. Pour encore plus de sécurité, il pourra demander à faire vérifier son adresse MAC, en plus de toutes les autres sécurités.
+
+Les utilisateurs Snack pourront être créé à partir des autres types d'utilisateur (ou non), et réutiliser leurs identifiants préalablement définis pour le réseau et/ou les commutateurs, s'ils le souhaitent. Différents rôles ont été définis pour caractériser les utilisateurs et leur offrir une vision plus ou moins limitée de l'interface~:
+
+\begin{description}
+\item[Utilisateur~:] Accès au réseau, pas à l'interface.
+\item[Tech~:] Voir les utilisateurs, télécharger les certificats.
+\item[Admin~:] Voir, créer, mettre à jour les utilisateurs.
+\item[Root~:] Voir, créer, mettre à jour, supprimer tous les objets.
+\end{description}
+
+Un type d'utilisateur est absent~: celui qui souhaite être actif et ne s'authentifier que via son adresse MAC. Cette configuration permet d'être plus rapide que le mode passif, qui nécessite l'attente d'un délai d'expiration. Cette option n'a pas été souhaitée par l'entreprise, qui juge que, si les humains ont en effet besoin que ça soit plus rapide que pour les machines, l'authentification par adresse MAC n'est pas souhaitable pour eux étant donné le peu de sécurité que ça apporte.
+
+Par exemple, l'ajout d'un utilisateur qui s'authentifie avec un identifiant et un mot de passe donne lieu à ces différentes options~:
 
 \begin{itemize}
 \item Outre le couple utilisateur/mot de passe qui est demandé, l'interface demande si cet utilisateur devra obligatoirement vérifier le certificat serveur pour s'authentifier. Elle demande également une adresse MAC facultative, pour permettre une double-authentification de l'utilisateur. Une date d'expiration peut aussi être positionnée, dans le cas d'un stagiaire, par exemple (résultat dans le tableau, sur la figure~\ref{usersexp} page~\pageref{usersexp}).
 \item Un utilisateur peut appartenir à un ou plusieurs groupes, sélectionnables par glissé-déposé.
 \item Comme l'illustre la figure~\ref{userscisco} page~\pageref{userscisco}, un utilisateur du réseau peut aussi être un utilisateur qui s'authentifie sur les équipements Cisco. Ainsi, l'interface propose d'activer cette possibilité pour cet utilisateur, en proposant de contrainte le mode de connexion (Telnet/SSH, Console ou les deux).
 \item Un numéro de réseau virtuel peut être automatiquement répondu lorsque cet utilisateur se connecte. Ainsi, il sera automatiquement contraint à des accès spécifiques.
-\item Et enfin son rôle, parmis ceux détaillés ci-dessous.
+\item Et enfin son rôle, pour devenir ou non un administrateur de l'interface SNACK.
 \end{itemize}
 
 \begin{figure}[!h]
@@ -550,44 +668,27 @@ L'ajout d'un utilisateur qui s'authentifie avec un identifiant et un mot de pass
 	\label{usersexp}
 \end{figure}
 
-Comme l'illustre la figure~\ref{snackrole} page~\pageref{snackrole}, un utilisateur peut être choisis parmis plusieurs rôles, associés à des droits différents sur l'interface~:
-
-\begin{description}
-\item[Utilisateur~:] Accès au réseau, pas à l'interface.
-\item[Tech~:] Voir les utilisateurs, télécharger les certificats.
-\item[Admin~:] Voir, créer, mettre à jour les utilisateurs.
-\item[Root~:] Voir, créer, mettre à jour, supprimer tous les objets.
-\end{description}
-
-\begin{figure}[!h]
-	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/snackrole.png}
-	\end{center}
-	\caption{Sélection du rôle de l'utilisateur dans l'interface SNACK.}
-	\label{snackrole}
-\end{figure}
-
 Les différentes copies d'écran de cette section ont permises de mettre en avant l'organisation en étapes avec une barre de progression qu'on retrouve dans toutes les pages de formulaire, pour une meilleure expérience utilisateur.
 
-Un second menu est proposé pour les utilisateurs~: il permet d'importer ou d'exporter des utilisateurs en utilisant un fichier CSV. Cette fonctionnalité permet d'ajouter des utilisateurs en grand nombre, ou d'exporter la base de données.
+Un second menu est proposé pour les utilisateurs~: il permet d'importer ou d'exporter des utilisateurs en utilisant un fichier CSV. Cette fonctionnalité permet d'ajouter des utilisateurs en grand nombre, ou d'exporter la base de données. L'exportation peut se faire finement, notamment grâce à la sélection multiple qui permet de choisir les utilisateurs à exporter.
 
 \subsection{Gestion des groupes}
 
-Une autre façon d'automatiser les droits sur le réseau pour un utilisateur est de lui affecter un groupe (figure~\ref{groupes} page~\pageref{groupes}). Ce groupe aura des droits similaires à ceux proposés pour les utilisateurs, et ils ne s'appliqueront que s'ils n'ont pas été positionnés par l'utilisateur. Cette fonctionnalité permet de créer des utilisateurs de façon efficace, en se contentant de les attribuer à des groupes qui ont été configurés au préalable. Un utilisateur peut être affecté à plusieurs groupes.
+Une autre façon d'automatiser les droits sur le réseau pour un utilisateur est de lui affecter un groupe (figure~\ref{groupes} page~\pageref{groupes}). Ce groupe aura des droits similaires à ceux proposés pour les utilisateurs, et ils ne s'appliqueront que s'ils n'ont pas été positionnés par l'utilisateur. Cette fonctionnalité permet de créer des utilisateurs de façon efficace, en se contentant de les associer à des groupes qui ont été configurés au préalable. Un utilisateur peut être affecté à plusieurs groupes.
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/groupes.png}
+	    \includegraphics[width=0.9\textwidth]{img/groupes.png}
 	\end{center}
 	\caption{Gestion des groupes.}
 	\label{groupes}
 \end{figure}
 
-Un groupe peut également avoir une date d'expiration. La figure~\ref{groupesedit} page~\pageref{groupesedit} illustre l'édition d'un groupe, qui permet entre autres de définir les utilisateurs qui sont dedans via des glissés-déposés.
+Un groupe peut également avoir une date d'expiration. La figure~\ref{groupesedit} page~\pageref{groupesedit} illustre l'édition d'un groupe, qui permet entre autres de définir les utilisateurs qui lui appartiennent via des glissés-déposés.
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/groupesedit.png}
+	    \includegraphics[width=0.5\textwidth]{img/groupesedit.png}
 	\end{center}
 	\caption{Édition d'un groupe.}
 	\label{groupesedit}
@@ -595,72 +696,72 @@ Un groupe peut également avoir une date d'expiration. La figure~\ref{groupesedi
 
 \subsection{Gestion des NAS}
 
-Comme on peut l'apercevoir dans la figure~\ref{nas} page~\pageref{nas}, un NAS n'est caractérisé que par quatre paramètres~:
+Comme on peut l'apercevoir dans la figure~\ref{nas} page~\pageref{nas}, un commutateur n'est caractérisé que par quatre paramètres~:
 
 \begin{enumerate}
 \item Son nom.
 \item Son IP.
 \item Sa clé secrète.
 \item Une description.
-\end{enumerate}.
+\end{enumerate}
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/nas.png}
+	    \includegraphics[width=0.9\textwidth]{img/nas.png}
 	\end{center}
-	\caption{Liste des NAS.}
+	\caption{Liste des commutateurs.}
 	\label{nas}
 \end{figure}
 
-La ligne en dessous du panneau des filtres indique qu'un des NAS a eu des changements dans sa mémoire, sans qu'ils ne soient synchronisés avec sa configuration de démarrage. Si ces changements ont bien été sauvegardés automatiquement dans l'interface, le NAS ne la chargera pas s'il redémarre. Il est donc important de préciser à l'utilisateur qu'il a fait un oubli de grande importance.
+La ligne en dessous du panneau des filtres indique qu'un des commutateurs a eu des changements dans sa mémoire, sans qu'ils ne soient synchronisés avec sa configuration de démarrage. Si ces changements ont bien été sauvegardés automatiquement dans l'interface, le commutateur ne la chargera pas s'il redémarre. Il est donc important de préciser à l'utilisateur qu'il a fait un oubli de grande importance.
 
-Par ailleurs, l'icône de la section NAS change de couleur selon si tous les NAS sont synchronisés ou non (figure~\ref{menunas} page~\pageref{menunas}).
+Par ailleurs, l'icône de la section NAS change de couleur selon si tous les commutateurs sont synchronisés ou non (figure~\ref{menunas} page~\pageref{menunas}).
 
 La dernière colonne permet d'accéder à la liste des sauvegardes automatisées qui ont eu lieu. La section suivante en explicite le contenu.
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/menunas.png}
+	    \includegraphics[width=0.3\textwidth]{img/menunas.png}
 	\end{center}
-	\caption{L'icône est verte ou rouge selon si tous les NAS sont synchronisés ou non.}
+	\caption{L'icône est verte ou rouge selon si tous les commutateurs sont synchronisés ou non.}
 	\label{menunas}
 \end{figure}
 
 \subsection{Gestion des sauvegardes}
 
-Un exemple de liste des sauvegardes automatiques pour un NAS est donnée en figure~\ref{backups} page~\pageref{backups}.
+Un exemple de liste des sauvegardes automatiques pour un commutateur est donnée en figure~\ref{backups} page~\pageref{backups}.
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/backups.png}
+	    \includegraphics[width=0.9\textwidth]{img/backups.png}
 	\end{center}
-	\caption{Liste des sauvegardes pour un NAS.}
+	\caption{Liste des sauvegardes pour un commutateur.}
 	\label{backups}
 \end{figure}
 
-Cette liste montre qu'il y a eu trois sauvegardes, avec des modifications de la configuration du NAS, entre chacune. On peut constater qu'il s'agit d'un cycle classique de connexion, écriture et déconnexion. Mais on constate grâce aux icônes de couleur, que Brigitte a fait des modifications dans la configuration depuis sa dernière écriture, et a quitté sans synchroniser. Elles sont donc sauvegardées sur le serveur, mais le NAS ne les prendre pas en compte en cas de redémarrage.
+Cette liste montre qu'il y a eu trois sauvegardes, avec des modifications de la configuration du commutateur, entre chacune. On peut constater qu'il s'agit d'un cycle classique de connexion, écriture et déconnexion. Mais on constate grâce aux icônes de couleur, que Brigitte a fait des modifications dans la configuration depuis sa dernière écriture, et a quitté sans synchroniser. Elles sont donc sauvegardées sur le serveur, mais le commutateur ne les prendra pas en compte en cas de redémarrage.
 
 Pour mieux comprendre les changements, l'interface permet de comparer chacune des versions, avec un affichage convivial visible dans la figure~\ref{backupsdiff} page~\pageref{backupsdiff}.
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/backupsdiff.png}
+	    \includegraphics[width=0.8\textwidth]{img/backupsdiff.png}
 	\end{center}
 	\caption{Comparaison entre deux sauvegardes.}
 	\label{backupsdiff}
 \end{figure}
 
-Si on affiche une sauvegarde, comme l'illustre la figure~\ref{backupsview} page~\pageref{backupsview}, trouve trois parties principales~:
+En affichant une sauvegarde, comme l'illustre la figure~\ref{backupsview} page~\pageref{backupsview}, trois parties principales se dégagent~:
 
 \begin{enumerate}
-\item La comparaison avec la configuration currente sur le NAS, si la sauvegarde visualisée n'est pas la plus récente (acec un affichage coloré des différences).
-\item La vue \emph{in extenso} de la configuration, à cette version. Dérouler ce panneau permet en plus d'accéder à un bouton pour restaurer la configuration sur le NAS.
-\item Si d'autres sauvegardes automatiques ont eu lieu mais que la configuration n'a pas changée depuis la dernière sauvegarde, elles sont listées dans le tableau de la dernière partie.
+\item La comparaison avec la configuration courante du commutateur, si la sauvegarde visualisée n'est pas la plus récente (acec un affichage coloré des différences).
+\item La vue \emph{in extenso} de la configuration, à cette version. Dérouler ce panneau permet en plus d'accéder à un bouton pour restaurer la configuration sur le commutateur.
+\item Si d'autres sauvegardes automatiques ont eu lieu mais que la configuration n'a pas changée depuis la dernière sauvegarde, elles sont listées dans le tableau de la dernière partie (et invisibles depuis la liste des sauvegardes du commutateur).
 \end{enumerate}
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/backupsview.png}
+	    \includegraphics[width=0.9\textwidth]{img/backupsview.png}
 	\end{center}
 	\caption{Visualisation d'une sauvegarde.}
 	\label{backupsview}
@@ -672,15 +773,15 @@ La figure~\ref{sessions} page~\pageref{sessions} présente une liste de sessions
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/sessions.png}
+	    \includegraphics[width=0.9\textwidth]{img/sessions.png}
 	\end{center}
 	\caption{Visualisation d'une sauvegarde.}
 	\label{sessions}
 \end{figure}
 
-Que ça soit des authentifications pour de l'administration sur un NAS, un utilisateur qui se connecte, ou un utilisateur qui se connecte en série au NAS, tout est enregistré. On peut apercevoir sur la copie d'écran que la troisième session affiche une petite horloge à côté de sa durée. Le temps de connexion est mis à jour en temps réel sur l'interface, pour signifier à l'administrateur que cette session n'est pas encore terminée. Puisque le type de port correspond à du 802.1X, on peut en conclure que René est actuellement connecté via le Switch2, et sur le  poste \texttt{00:21:70:d6:e7:c7} et depuis plus de trois jours.
+Que ça soit des authentifications pour de l'administration sur un commutateur, un utilisateur qui se connecte, ou un utilisateur qui se connecte en série au commutateur, tout est enregistré. On peut apercevoir sur la copie d'écran~\ref{sessions} que la troisième session affiche une petite horloge à côté de sa durée. Le temps de connexion est mis à jour dynamiquement en temps réel sur l'interface, pour signifier à l'administrateur que cette session n'est pas encore terminée. Puisque le type de port correspond à du 802.1x, on peut en conclure que René est actuellement connecté via le Switch2, et sur le  poste \texttt{00:21:70:d6:e7:c7} et depuis plus de trois jours.
 
-Les autres connexion de l'exemple se sont faîtes avec un lien série, directement sur le NAS. La vue d'une session donne beaucoup d'informations supplémentaires.
+Les autres connexion de l'exemple se sont faîtes avec un lien série, directement sur le commutateur. La vue d'une session donne beaucoup d'informations supplémentaires.
 
 \subsection{Gestion des journaux systèmes}
 
@@ -688,7 +789,7 @@ La figure~\ref{logs} page~\pageref{logs} révèle la présence de deux onglets p
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/logs.png}
+	    \includegraphics[width=0.9\textwidth]{img/logs.png}
 	\end{center}
 	\caption{Affichage des journaux systèmes.}
 	\label{logs}
@@ -702,7 +803,7 @@ Le tableau de bord (figure~\ref{dashboard} page~\pageref{dashboard}) est un outi
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/dashboard.png}
+	    \includegraphics[width=0.9\textwidth]{img/dashboard.png}
 	\end{center}
 	\caption{Tableau de bord.}
 	\label{dashboard}
@@ -729,7 +830,7 @@ Comme le montre la figure~\ref{parametres} page~\pageref{parametres}, certains p
 
 \begin{figure}[!h]
 	\begin{center}
-	    \includegraphics[width=0.6\textwidth]{img/parametres.png}
+	    \includegraphics[width=0.9\textwidth]{img/parametres.png}
 	\end{center}
 	\caption{Paramètres du serveur SNACK.}
 	\label{parametres}
@@ -737,7 +838,9 @@ Comme le montre la figure~\ref{parametres} page~\pageref{parametres}, certains p
 
 \section{Conclusion}
 
-Cette première partie du rapport final étant rédigée pour la soutenance intermédiaire, le temps imparti pour la réalisation du projet est écoulé de moitié. Avec une interface déjà bien avancée et la plupart des recherches abouties, l'équipe démarrera la seconde grande étape dès janvier, respectant ainsi parfaitement les délais prévus dans le planning.
+migration bt et cake
+
+
 
 Le matériel attribué au projet dans la salle des projets aura posé beaucoup de problèmes (matériel non-reconnu, disques durs corrompus, crashs inexpliqués, etc.), et aura déjà coûté beaucoup de temps aux membres de l'équipe. Quelques exigences supplémentaires arrivent parfois de la part de l'entreprise (comme la gestion d'utilisateurs d'un pare-feu), venant surcharger le cahier des charges. Nous essayons de faire avec ces contre-temps pour satisfaire l'ensemble des observateurs du projet.
 
@@ -768,29 +871,8 @@ Le système de sauvegardes de la seconde partie impliquant plus de travail sur l
 	\includegraphics[width=\textwidth]{img/gantt2.png}
 \end{center}
 
-\newpage
-\section{Captures de l'interface}
-\label{captures}
-
-	\begin{figure}[!h]
-	\begin{center}
-		\includegraphics[width=\textwidth]{img/capture2.png}
-	\end{center}
-	\caption{Liste des utilisateurs Radius}
-	\end{figure}
-
-	\begin{figure}[!h]
-	\begin{center}
-		\includegraphics[width=\textwidth]{img/capture1.png}
-	\end{center}
-	\caption{Formulaire d'ajout d'un utilisateur Cisco}
-	\end{figure}
-
-	\begin{figure}[!h]
-	\begin{center}
-		\includegraphics[width=\textwidth]{img/capture3.png}
-	\end{center}
-	\caption{Liste des groupes Radius}
-	\end{figure}
+\section{Documentation technique}
+\label{doc-install}
+\includepdf[pages=-]{doc_install.pdf}
 
 \end{document}
