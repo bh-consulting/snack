@@ -75,18 +75,22 @@ class SysLog implements CakeLogInterface {
  * @return boolean success of write. 
  */ 
     public function write($type, $message) { 
-        $debugTypes = array('notice', 'info', 'debug'); 
-        $priority = LOG_INFO; 
-        if ($type == 'error' || $type == 'warning') { 
-            $priority = LOG_ERR; 
-        } elseif (in_array($type, $debugTypes)) { 
-            $priority = LOG_DEBUG; 
-        } 
-        $output = date('Y-m-d H:i:s') . ' ' . ucfirst($type) . ': ' . $message . "\n"; 
+        $levels = array(
+            'emergency' => LOG_EMERG,
+            'alert' => LOG_ALERT,
+            'critical' => LOG_CRIT,
+            'error' => LOG_ERR,
+            'warning' => LOG_WARNING,
+            'notice' => LOG_NOTICE,
+            'info' => LOG_INFO,
+            'debug' => LOG_DEBUG,
+        );
+
+        $priority = (isset($levels[$type]) ? $levels[$type] : LOG_INFO);
         if (!openlog($this->_ident, LOG_PID | LOG_PERROR, $this->_facility)) { 
             return false; 
         } 
-        $result = syslog($priority, $output); 
+        $result = syslog($priority, $message); 
         closelog(); 
         return $result; 
     } 

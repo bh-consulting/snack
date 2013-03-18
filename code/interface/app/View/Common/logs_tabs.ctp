@@ -19,7 +19,7 @@ $this->assign('logs_active', 'active');
             <li class="<?php echo $this->fetch('snacklogs_active'); ?>">
                 <?php
                 echo $this->Html->link(
-                    __('Snack'),
+                    __('SNACK'),
                     array('controller' => 'loglines', 'action' => 'snack_logs')
                 );
                 ?>

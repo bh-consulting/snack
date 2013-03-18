@@ -164,7 +164,7 @@ if(AuthComponent::user('role') == 'root'){
     echo $this->element('modalDelete', array(
 	'id'   => 'delall',
 	'link' => $this->Form->postLink(
-		'<i class="icon-remove icon-white"></i> ' . __('Delete all logs from %s', ucfirst($program)),
+		'<i class="icon-remove icon-white"></i> ' . __('Delete all logs from %s', strtoupper($program)),
 		array('action' => 'deleteAll', $program),
 		array(
 		    'escape' => false,
