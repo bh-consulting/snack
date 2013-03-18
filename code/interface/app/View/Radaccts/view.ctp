@@ -66,7 +66,9 @@ echo $this->element('block-dl', array(
     'title' => __('Network Access Server:'),
     'fields' => array(
         __('IP address') => $radacct['Radacct']['nasipaddress'],
-        __('Port') => $radacct['Radacct']['nasporttype'] . $portid
+        __('Port') => (isset($types[$radacct['Radacct']['nasporttype']]) ?
+		    $types[$radacct['Radacct']['nasporttype']] :
+		    $radacct['Radacct']['nasporttype']) . $portid
     ),
 ));
 

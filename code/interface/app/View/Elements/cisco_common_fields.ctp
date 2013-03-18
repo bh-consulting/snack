@@ -22,7 +22,7 @@ if($type != 'loginpass'){
 echo $this->Form->input('nas-port-type', array(
     'options' => array(
 	0 => __('Console'),
-	5 => __('VTY'),
+	5 => __('Telnet/SSH'),
 	10 => __('Both'),
     ),
     'empty' => false,

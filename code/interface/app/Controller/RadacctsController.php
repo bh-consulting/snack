@@ -182,6 +182,7 @@ class RadacctsController extends AppController {
 	    $session['Radacct']['durationsec'] = -1;
 
         $this->set('radacct', $session);
+        $this->set('types', $this->Radacct->types);
     }
 
     public function delete($id = null) {
