@@ -225,6 +225,18 @@ Après discussions entre membres de l'équipe sur les avantages et les inconvén
 
 Lorsque le poste client envoie les informations permettant son authentification au commutateur qui se situe à l'autre bout de la prise murale, ce dernier transmet automatiquement les informations à un serveur chargé de l'authentification et de la mise en place des autorisations. Si l'authentification est bonne, le serveur indique au commutateur l'action qu'il doit entreprendre dans le cadre du protocole 802.1x. Soit le port reste fermé, et le poste client n'a pas accès au réseau, soit il s'ouvre et le réseau est accessible. Selon le type d'utilisateur reconnu, le serveur peut spécifier un numéro de réseau virtuel (VLAN) en particulier. Cette spécificité aura pour effet de placer automatiquement le poste client dans un réseau qui bénéficie de plus ou moins de privilèges d'accès.
 
+Le schéma~\ref{dot1x} page~\pageref{dot1x} résume le fonctionnement général du 802.1x. Le plus important à comprendre, c'est que le client (\emph{supplicant}) communique avec le commutateur (NAS) en EAP, et que ce dernier communique en conséquent avec le serveur d'authentification (le serveur SNACK) en RADIUS (la plupart du temps en encapsulant au passage le message EAP original). L'EAP est un protocole virtuel qui permet de s'abstraire des vrais protocoles utilisés, pour améliorer la compatibilité des commutateurs.
+
+\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{img/dot1x-rapport.pdf}
+	\end{center}
+	\caption{Fonctionnement protocolaire du 802.1x.}
+	\label{dot1x}
+\end{figure}
+
+Le serveur Radius est le seul à connaître la base des utilisateurs et les différents paramètres qui lui sont associés. Il s'agit d'un standard largement utilisé dans le cadre du 802.1x. Le client n'a aucune conscience de la présence du serveur Radius sur le réseau. Nous verrons plus en détail l'utilité de la dernière partie des échanges (\emph{accounting}) dans la section~\ref{accounting} page~\pageref{accounting}.
+
 Cette technologie présente un second avantage pour l'entreprise~: en cas de remplacement du commutateur, la configuration du nouveau matériel sera rapide à remettre en place, dans la mesure où toutes les informations sont stockées au niveau du serveur d'authentification et les ports sont entièrement dynamiques.
 
 Les serveurs d'authentification les plus connus dans le domaine des réseaux, et en particulier du 802.1x, sont ceux qui sont basés sur le protocole Radius. Il en existe plusieurs implémentations, parmi lesquelles un choix a dû être fait.
@@ -364,6 +376,7 @@ Un autre problème de taille de ce protocole imposé, est qu'il n'est pas orient
 Les deux autres événements sont plus simples à détecter, grâce à l'\emph{accounting}.
 
 \subsubsection{Détection des connexions / déconnexions}
+\label{accounting}
 
 Une partie de l'équipe ayant travaillé sur le module de gestion des sessions, une bonne partie du travail a déjà été effectuée pour comprendre les mécanismes d'\emph{accounting} de Freeradius. Cette fonctionnalité est utilisée en général pour identifier la longueur d'une session, dans le but de la facturer. Elle assure donc de correctement détecter son début et sa fin. Après différents tests, nous avons constaté que la fin de session intervenait quoiqu'il arrive, au pire grâce à un délai d'expiration. La seule exception étant une coupure électrique brutale du commutateur, pour laquelle nous avons mis en place un mécanisme de détection du démarrage permettant de fermer automatiquement toutes les sessions résiduelles restées ouvertes.
 
