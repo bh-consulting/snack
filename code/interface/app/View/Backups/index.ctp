@@ -185,7 +185,7 @@ if (!empty($backups)) {
             case 'compare':
                 if ($i != 0) {
                     echo $this->Form->radio(
-                        'b',
+                        'a',
                         array($backup['Backup']['id'] => ''),
                         array(
                             'hiddenField' => false,
@@ -205,7 +205,7 @@ if (!empty($backups)) {
 
                 if ($i != count($backups)-1) {
                     echo $this->Form->radio(
-                        'a',
+                        'b',
                         array($backup['Backup']['id'] => ''),
                         array(
                             'hiddenField' => false,

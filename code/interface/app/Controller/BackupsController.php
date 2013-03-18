@@ -185,29 +185,34 @@ class BackupsController extends AppController {
         try {
             if(!isset($this->params['url']['nas'])
                 || !isset($this->params['url']['a'])
-                || !isset($this->params['url']['b'])) {
+                || !isset($this->params['url']['b'])
+            ) {
 
-                    throw new BadBackupOrNasID(
-                        'Please select specific versions for a specific NAS.'
-                    );
-                }
+                throw new BadBackupOrNasID(
+                    'Please select specific versions for a specific NAS.'
+                );
+            }
 
-		if(is_null($commitB)) {
-		    exec("cd $this->git; git diff "
-			. "$commitA:{$backupA['Backup']['nas']}"
-			. " :{$backupA['Backup']['nas']}",
-			$output);
+            $nas = new Nas($this->params['url']['nas']);
+            $nas = $nas->read();
 
-		} else {
+            if (!$nas) {
+                throw new BadBackupOrNasID(
+                    __('Please select an existant NAS.')
+                );
+            }
 
-		    exec("cd $this->git; git diff "
-			. "$commitB:{$backupB['Backup']['nas']}"
-			. " $commitA:{$backupA['Backup']['nas']}",
-			$output);
-		}
+            $data = $this->getDifferences(
+                $this->params['url']['a'],
+                $this->params['url']['b'],
+                $nas['Nas']['nasname']
+            );
 
-		$this->set('diff', implode("\n", $output));
-
+            $this->set('nas', $nas);
+            $this->set('left', $data['left']['info']);
+            $this->set('right', $data['right']['info']);
+            $this->set('rawDiff', implode("\n", $data['diff']['raw']));
+            $this->set('graphicalDiff', $data['diff']['graphical']);
         } catch(BadBackupOrNasID $e) {
             $this->Session->setFlash(
                 $e->getMessage(),
@@ -341,6 +346,81 @@ class BackupsController extends AppController {
         return array('left' => $left, 'right' => $right);
     }
 
+    private function getBackup($idBackup, $nasname) {
+        // Backup.
+        $backup = $this->Backup->read(null, $idBackup);
+
+        if (!$backup) {
+            throw new BadBackupOrNasID(
+                __('Please select an existant backup.')
+            );
+        }
+
+        $backup['Backup']['users'] = 
+            $this->Users->extendUsers($backup['Backup']['users']);
+        $backup['Backup']['datetime'] = Utils::formatDate(
+            $backup['Backup']['datetime'],
+            'display'
+        );
+        if (isset($this->Backup->actions[$backup['Backup']['action']])) {
+            $backup['Backup']['action'] = 
+                $this->Backup->actions[$backup['Backup']['action']];
+        }
+
+        $content = Utils::shell(
+            "cd $this->git; "
+            . "git show {$backup['Backup']['commit']}:{$nasname}"
+        );
+
+        if ($content['code']) {
+            $content = __(
+                'Error while retrieving file content: %s.',
+                "{$backup['Backup']['commit']}:{$nasname}"
+            );
+        } else {
+            $content = $content['msg'];
+        }
+
+        return array(
+            'info' => $backup,
+            'nasname' => $nasname,
+            'file' => $content,
+        );
+    }
+
+    private function getDifferences($idLeft, $idRight, $nasname) {
+        // Backup left.
+        $left = $this->getBackup($idLeft, $nasname);
+
+        // Backup right.
+        $right = $this->getBackup($idRight, $nasname);
+
+        // Differences.
+        $diff = Utils::shell(
+            "cd $this->git;"
+            . "git diff -U0 {$left['info']['Backup']['commit']} "
+            . "{$right['info']['Backup']['commit']}"
+        );
+
+        if ($diff['code']) {
+            $diff = __(
+                'Error while comparing commit %s and %s.',
+                $left['info']['Backup']['commit'],
+                $right['info']['Backup']['commit']
+            );
+        } else {
+            $diff = $diff['msg'];
+        }
+
+        $diffExtend = $this->renderDiff($left['file'], $right['file'], $diff);
+
+        return array(
+            'left' => $left,
+            'right' => $right,
+            'diff' => array('raw' => $diff, 'graphical' => $diffExtend),
+        );
+    }
+
     /**
      * Show details about a backup:
      * - Information like nas, when, who, why
@@ -448,7 +528,7 @@ class BackupsController extends AppController {
 
                 // Similar backups.
                 // Users information.
-                
+
                 $this->Filters->addStringConstraint(array(
                     'fields' => 'commit', 
                     'input' => 'commit', 

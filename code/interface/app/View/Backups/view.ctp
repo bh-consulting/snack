@@ -65,7 +65,7 @@ if (!empty($diff)) {
     <i class="icon-chevron-down"></i>
 </div>
 
-<div class="tabbable" style="display: none">
+<div style="display: none">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab1" data-toggle="tab">
             <?php echo __('Graphical diff'); ?>
@@ -244,9 +244,12 @@ echo $this->Html->link(
     '<i class="icon-arrow-left icon-white"></i> '
     . '<i class="icon-camera icon-white"></i> '
     . __('Go back to backups'),
-    '#',
+        array(
+            'controller' => 'backups',
+            'action' => 'index',
+            $nas['Nas']['id'],
+        ),
     array(
-        'onclick' => 'history.go(-1)',
         'escape' => false,
         'class' => 'btn btn-primary',
     )
