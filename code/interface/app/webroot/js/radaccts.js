@@ -5,9 +5,9 @@ var secPerMonth = secPerDay * 30;
 var secPerYear = secPerMonth * 12;
 
 function addAsecondToDurations() {
-    $('*[-data-duration]').each(function() {
-	var time = $(this).attr('-data-duration');
-	var format = $(this).attr('-data-duration-format').split(',');
+    $('*[data-duration]').each(function() {
+	var time = $(this).attr('data-duration');
+	var format = $(this).attr('data-duration-format').split(',');
 	var duration = ' ';
 
 	var interval = parseInt(time) + 1;
@@ -44,7 +44,7 @@ function addAsecondToDurations() {
 	
 	duration = duration.substring(1);
 
-	$(this).attr('-data-duration', parseInt(time) + 1);
+	$(this).attr('data-duration', parseInt(time) + 1);
 	$(this).text(duration);
     });
 

@@ -209,8 +209,8 @@ if (!empty($radaccts)) {
 		    echo '<span title="' . __('User still connected') . '">';
 		    echo '<i class="icon-time"></i> ';
 		    echo "<span ";
-		    echo " -data-duration='{$acct['Radacct']['durationsec']}'";
-		    echo " -data-duration-format='" . __('y,m,d,h,min,s') . "'>";
+		    echo " data-duration='{$acct['Radacct']['durationsec']}'";
+		    echo " data-duration-format='" . __('y,m,d,h,min,s') . "'>";
 		    echo $acct['Radacct'][$field];
 		    echo '</span></span>';
 		} else {
