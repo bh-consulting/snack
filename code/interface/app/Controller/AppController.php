@@ -132,7 +132,7 @@ class AppController extends Controller {
      * Authorize all actions for super admin and stop other users.
      */
     public function isAuthorized($user) {
-        // Super admin can access everything.
+        // Root can access everything.
         if (isset($user['role']) && $user['role'] === 'root') {
             return true;
         }

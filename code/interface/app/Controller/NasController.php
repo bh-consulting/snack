@@ -169,16 +169,27 @@ class NasController extends AppController {
     	$this->set('isunwritten', $this->BackupsChanges->areThereChangesUnwrittenInThisNAS($nas));
     }
 
-    // method to display a warning field to restart the server after Nas changes
+    /**
+     * method to display a warning field to restart the server after Nas changes
+     */
     public function alert_restart_server(){
         $this->Session->setFlash(
-            __('You HAVE to restart the Radius server to apply NAS changes!') .
-                '<a href="http://localhost/interface/systemDetails/restart/freeradius" 
-                    class="btn btn-danger btn-mini" style="margin-left:10px;">  
-                    <i class="icon-refresh icon-white"></i> ' . __('Restart Freeradius') .
-                '</a>',
-            'flash_error'
+            __('You HAVE to restart the Radius server to apply NAS changes!'),
+            'flash_error_link',
+            array(
+                'title' => __('Restart Freeradius') . ' <i class="icon-refresh icon-white"></i>',
+                'url' => array(
+                    'controller' => 'systemDetails',
+                    'action' => 'restart/freeradius',
+                ),
+                'style' => array(
+                    'class' => 'btn btn-danger btn-mini',
+                    'escape' => false,
+                    'style' => 'margin-left: 15px;'
+                ),
+            )
         );
+        Utils::userlog(__('restarted the Radius server'));
     }
 
     public function add(){
