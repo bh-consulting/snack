@@ -687,10 +687,10 @@ class RadusersController extends AppController {
 
             $nasPortType = $this->request->data['Raduser']['nas-port-type'];
 
-            if($nasPortType == 10){
-                $nasPortTypeRegexp = '0|5|15';
+            if($nasPortType == 'both'){
+                $nasPortTypeRegexp = 'Async|Virtual|Ethernet';
             } else {
-                $nasPortTypeRegexp = $nasPortType . '|15';
+                $nasPortTypeRegexp = $nasPortType . '|Ethernet';
             }
 
             $checks[$nasPortTypeIndex]= array(
@@ -710,7 +710,7 @@ class RadusersController extends AppController {
                     );
                 }
         } else {
-            $checks[$nasPortTypeIndex] = array($username, 'NAS-Port-Type', '=~', '15');
+            $checks[$nasPortTypeIndex] = array($username, 'NAS-Port-Type', '=~', 'Ethernet');
             $this->request->data['Raduser']['is_cisco'] = 0;
         }
 
@@ -760,7 +760,7 @@ class RadusersController extends AppController {
                         $username,
                         'NAS-Port-Type',
                         '==',
-                        '15',
+                        'Ethernet',
                     ),
                     array(
                         $username,
@@ -809,7 +809,7 @@ class RadusersController extends AppController {
                         $username,
                         'NAS-Port-Type',
                         '==',
-                        '15'
+                        'Ethernet'
                     ),
                     array(
                         $username,
@@ -852,7 +852,7 @@ class RadusersController extends AppController {
                         $username,
                         'NAS-Port-Type',
                         '==',
-                        '15',
+                        'Ethernet',
                     ),
                     array(
                         $username,

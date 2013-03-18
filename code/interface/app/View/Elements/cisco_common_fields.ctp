@@ -21,9 +21,9 @@ if($type != 'loginpass'){
 
 echo $this->Form->input('nas-port-type', array(
     'options' => array(
-	0 => __('Console'),
-	5 => __('Telnet/SSH'),
-	10 => __('Both'),
+	'Async' => __('Console'),
+	'Virtual' => __('Telnet/SSH'),
+	'both' => __('Both'),
     ),
     'empty' => false,
     'label' => __('NAS Port Type'),

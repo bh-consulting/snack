@@ -139,12 +139,11 @@ class Parameter extends AppModel {
 
     public function save($data = null, $validate = true, $fieldList = array()) {
         if ($this->validates()) {
-            Configure::dump(
+            return Configure::dump(
                 'parameters.php',
                 'default',
                 array('Parameters')
             );
-            return true;
         } else {
             return false;
         }
