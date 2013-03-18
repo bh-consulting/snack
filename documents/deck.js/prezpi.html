@@ -41,18 +41,16 @@
 <section class="slide" id="start">
 	<h1>Projet industriel SNACK</h1>
 	<p class="subh1">Secure Network Access Control <em>for Kids</em></p>
-	<div style="text-align: center; padding-top: 50px;">
+	<div class="text-center">
 		<p><em>Nicolas BOUGET, Julien GUÉPIN, Marc PINHÈDE, Julien VAUBOURG</em></p>
 		<p>Encadré par Guillaume ROCHE et Jean-François SCHEID</p>
 		<p><strong>21 mars 2013</strong></p>
 	</div>
-	<div style="padding-top: 100px;">
-		<img src="prezpi/img/telecom-nancy.jpg" style="float:left; width: 20%;" />
-		<img src="prezpi/img/ul.png" style="float:right; width: 20%;" />
-		<span style="margin-left: auto; margin-right: auto;">
-			<img src="prezpi/img/BHConsulting.jpg" style="width: 20%;" />
-		</span>
-	</div>
+	<img src="prezpi/img/telecom-nancy.jpg" style="float:left; width: 20%;" />
+	<img src="prezpi/img/ul.png" style="float:right; width: 20%;" />
+	<span style="margin-left: auto; margin-right: auto;">
+		<img src="prezpi/img/BHConsulting.jpg" style="width: 20%;" />
+	</span>
 </section>
 
 <section class="slide" id="plan">
@@ -63,6 +61,7 @@
 		<li>Authentification sur le réseau</li>
 		<li>Sauvegarde de configurations</li>
 		<li>Interface utilisateur SNACK</li>
+		<li>Améliorations possibles</li>
 	</ol>
 </section>
 
@@ -127,15 +126,20 @@
 	<h2>Gestion du projet : VMproject</h2>
 	<p>Application proposée par l'école pour aider la gestion des projets industriels</p>
 	<p>Définition et affectation des tâches, suivi de progression</p>
-	<p>Génération d'un diagramme Gantt</p>
+	<p>Génération d'un diagramme de Gantt</p>
 	<img src="prezpi/img/vmproject_logo.png" style="float: right;" />
 	<p>Feuilles de temps</p>
 	<p>Rapports de réunions</p>
 </section>
 
-<section class="slide" id="planning">
-	<h3>Gestion du projet : planning prévisionnel</h3>
-	<img src="prezpi/img/gantt.png" />
+<section class="slide" id="planning1">
+	<h3>Gestion du projet : diagramme de Gantt</h3>
+	<iframe src="prezpi/img/gantt1.png" class="snack_frame"></iframe>
+</section>
+
+<section class="slide" id="planning2">
+	<h3>Gestion du projet : diagramme de Gantt</h3>
+	<iframe src="prezpi/img/gantt2.png" class="snack_frame"></iframe>
 </section>
 
 <section class="slide" id="redmine">
@@ -174,10 +178,41 @@
 	<p>Stockage des données dans <strong>MySQL</strong></p>
 </section>
 
-<section class="slide" id="radius_fonctionnement">
+<section class="slide" id="radius_fonctionnement1">
 	<h3>Fonctionnement de 802.1x</h3>
-	<p>Schema trop cool a mettre ici</p>
+	<img src="prezpi/img/dot1x_1.png" />
 </section>
+
+<section class="slide" id="radius_fonctionnement2">
+	<h3>Fonctionnement de 802.1x</h3>
+	<img src="prezpi/img/dot1x_2.png" />
+</section>
+
+<section class="slide" id="radius_certificates">
+	<h2>Contrôle d'accès : certificats</h2>
+	<p>Méthode d'authentification la plus sécurisée</p>
+	<p>Utilisation du protocole EAP</p>
+	<p>Deux méthodes proposées :</p>
+	<ul>
+		<li>TLS</li>
+		<li>TTLS</li>
+	</ul>
+	<p>Hashage avec MSCHAPV2</p>
+</section>
+
+<section class="slide" id="radius_fonctionnement3">
+	<h3>Fonctionnement de TTLS</h3>
+	<img src="prezpi/img/tls-ttls.svg" style="width: 70%" />
+</section>
+
+<section class="slide" id="radius_problems">
+    <h2>Contrôle d'accès : problèmes rencontrés</h2>
+    <p>Matériel : installation sur les machines en salle PI</p>
+    <p>Environnement de travail : utilisation de VM, tests longs</p>
+    <p>Documentation sur l'interaction <strong>Cisco / Radius</strong></p>
+    <p><strong>Certificats</strong> sous Windows</p>
+</section>
+
 
 <section class="slide" id="confs">
 	<h2>Gestion des configurations</h2>
@@ -189,9 +224,9 @@
 <section class="slide" id="confs_impl">
 	<h2>Gestion des configurations : implémentation</h2>
 	<p>Sauvegarde manuelle et à chaque connexion à l'équipement</p>
-	<p>Transmission de la configuration par TFTP</p>
-	<p>Détection de fin de connexion grâce à un trap SNMP</p>
-	<p>Versionnage des configurations dans un dépôt Git</p>
+	<p>Transmission de la configuration par <strong>TFTP</strong></p>
+	<p>Détection de fin de connexion grâce à un <strong>trap SNMP</strong></p>
+	<p>Versionnage des configurations dans un dépôt <strong>Git</strong></p>
 </section>
 
 <section class="slide" id="confs_fonctionnement_auth">
@@ -202,6 +237,11 @@
 <section class="slide" id="confs_fonctionnement_wrmem">
     <h3>Fonctionnement de la sauvegarde : écriture mémoire</h3>
     <img src="prezpi/img/wrmem.svg" style="width:80%;" />
+</section>
+
+<section class="slide" id="confs_problems">
+    <h2>Gestion des configurations : problèmes rencontrés</h2>
+    <p>Détection fin transmission TFTP</p>
 </section>
 
 
@@ -215,47 +255,53 @@
 </section>
 
 <section class="slide" id="snack_impl">
-    <h2>Interface utilisateur SNACK : implémentation</h2>
+    <h2>Interface utilisateur : implémentation</h2>
     <img src="prezpi/img/php_logo.png" style="float:right; width: 15%;" />
     <p>Serveur <strong>LAMP</strong></p>
-    <p><strong>CakePHP</strong> pour les traitements</p>
+    <p><strong>CakePHP</strong> pour les traitements serveur</p>
     <img src="prezpi/img/cake_logo.png" style="float:right; width: 15%;" />
-    <p><strong>Bootstrap</strong> pour l'affichage</p>
-    <p><strong>jQuery</strong> pour simplifier le traitement côté client</p>
+    <p><strong>Bootstrap</strong> pour l'affichage moderne</p>
+    <p><strong>jQuery</strong> pour simplifier le traitement côté client et les animations</p>
+</section>
+
+<section class="slide" id="snack_problems">
+	<h2>Interface utilisateur : problèmes rencontrés</h2>
+	<p>Schéma de la base de données Radius</p>
+	<p>Fusion CakePHP / Bootstrap</p>
 </section>
 
 <section class="slide" id="demo_users">
-	<h3>Démo : gestion des utilisateurs</h3>
+	<h3><a href="http://localhost/interface/radusers" target="_blank">Démo : gestion des utilisateurs</a></h3>
 	<iframe class="snack_frame" src="http://localhost/interface/radusers"></iframe>
 </section>
 
 <section class="slide" id="demo_groups">
-	<h3>Démo : gestion des groupes</h3>
+	<h3><a href="http://localhost/interface/radgroups" target="_blank">Démo : gestion des groupes</a></h3>
 	<iframe class="snack_frame" src="http://localhost/interface/radgroups"></iframe>
 </section>
 
 <section class="slide" id="demo_nas">
-	<h3>Démo : gestion des NAS et des configurations</h3>
+	<h3><a href="http://localhost/interface/nas" target="_blank">Démo : gestion des NAS et des configurations</a></h3>
 	<iframe class="snack_frame" src="http://localhost/interface/nas"></iframe>
 </section>
 
 <section class="slide" id="demo_sessions">
-	<h3>Démo : affichage des sessions</h3>
+	<h3><a href="http://localhost/interface/radaccts" target="_blank">Démo : affichage des sessions</a></h3>
 	<iframe class="snack_frame" src="http://localhost/interface/radaccts"></iframe>
 </section>
 
 <section class="slide" id="demo_logs">
-	<h3>Démo : affichage des logs</h3>
+	<h3><a href="http://localhost/interface/loglines" target="_blank">Démo : affichage des logs</a></h3>
 	<iframe class="snack_frame" src="http://localhost/interface/loglines"></iframe>
 </section>
 
 <section class="slide" id="demo_dashboard">
-	<h3>Démo : tableau de bord du système</h3>
+	<h3><a href="http://localhost/interface/systemDetails" target="_blank">Démo : tableau de bord du système</a></h3>
 	<iframe class="snack_frame" src="http://localhost/interface/systemDetails"></iframe>
 </section>
 
 <section class="slide" id="demo_parameters">
-	<h3>Démo : paramétrage du serveur</h3>
+	<h3><a href="http://localhost/interface/parameters" target="_blank">Démo : paramétrage du serveur</a></h3>
 	<iframe class="snack_frame" src="http://localhost/interface/parameters"></iframe>
 </section>
 
@@ -270,6 +316,7 @@
     	<li>Auto-configuration des switchs</li>
     </ul>
     <p>Utilisation de <strong>LDAP</strong> au lieu de MySQL</p>
+    <p>Tests unitaires</p>
 </section>
 
 <section class="slide" id="ccl">
