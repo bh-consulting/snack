@@ -158,8 +158,12 @@ div.menutopphone {
 	margin-right: 20px;
 }
 
-.copyright {
-	padding-top: 6px;
+.copyright img {
+	margin-top: 4px;
+}
+
+#snackcopy {
+    font-variant: small-caps;
 }
 
 .tooltip {

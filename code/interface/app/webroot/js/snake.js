@@ -89,17 +89,13 @@ function Tastendruck(Druck)
 	}
 
 	switch(k) {
-	    case 69:
-		code = 0;
+	    case 76:
+		if(code == 3)
+		    snake();
 	    break;
 
 	    case 83:
 		if(code == 0)
-			code++;
-	    break;
-
-	    case 73:
-		if(code == 1)
 			code++;
 	    break;
 
@@ -108,9 +104,13 @@ function Tastendruck(Druck)
 		    code++;
 	    break;
 
-	    case 76:
-		if(code == 3)
-		    snake();
+	    case 69:
+		code = 0;
+	    break;
+
+	    case 73:
+		if(code == 1)
+			code++;
 	    break;
 	}
 }
