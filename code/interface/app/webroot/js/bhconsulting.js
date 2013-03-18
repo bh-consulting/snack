@@ -49,6 +49,8 @@ $(document).ready(function() {
         }
     }});
 
+    $("input[type='password']").val('');
+
     document.onkeydown = Tastendruck;
 });
 
