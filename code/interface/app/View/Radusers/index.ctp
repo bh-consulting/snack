@@ -93,14 +93,14 @@ $dropdownUsersButtonItems = array(
         array('escape' => false)
     ),
     $this->Html->link(
-        __('Snack'), 
+        __('SNACK'), 
         array('action' => 'add_snack'),
         array('escape' => false)
     ),
 );
 
 if(AuthComponent::user('role') != 'root'){
-    unset($dropdownUsersButtonItems[__('Snack')]);
+    unset($dropdownUsersButtonItems[__('SNACK')]);
 }
 
 if(AuthComponent::user('role') == 'admin' || AuthComponent::user('role') == 'root'){

@@ -3,7 +3,7 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
 
-echo '<h1>' . __('Add an admin user') . '</h1>';
+echo '<h1>' . __('Add a SNACK user') . '</h1>';
 
 echo $this->Form->create('Raduser', array('novalidate' => true));
 

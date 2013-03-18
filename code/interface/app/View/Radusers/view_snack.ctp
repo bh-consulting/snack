@@ -6,7 +6,7 @@ $this->assign('users_active', 'active');
 echo $this->element(
     'viewInfo',
     array(
-        'title' => __('Snack user'),
+        'title' => __('SNACK user'),
         'icon' => 'icon-user',
         'name' => $raduser['Raduser']['username'],
         'id' => $raduser['Raduser']['id'],
