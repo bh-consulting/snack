@@ -291,32 +291,148 @@ class RadusersController extends AppController {
         }
     }
 
+    public function import() {
+        if ($this->request->isPost()) {
+            $handle = fopen($_FILES['data']['tmp_name']['importCsv']['file'], "r");
+            $results = array();
+
+            while (($fields = fgetcsv($handle)) != false) {
+                switch ($fields[0]) {
+                case 'Raduser':
+                    if (count($fields) >= 7) {
+                        $user = new Raduser();
+                        $user->set('username', $fields[1]);
+                        $user->set('role', $fields[2]);
+                        $user->set('is_cisco', $fields[3]);
+                        $user->set('is_loginpass', $fields[4]);
+                        $user->set('is_cert', $fields[5]);
+                        $user->set('is_mac', $fields[6]);
+
+                        if (isset($fields[7])) {
+                            $user->set('comment', $fields[7]);
+                        }
+
+                        if ($user->save()) {
+                             $results[] = __('%s was added', $fields[1]);
+                        } else {
+                             $results[] = __('ERROR: %s was not added', $fields[1]);
+                        }
+                    }
+                    break;
+                case 'Radcheck':
+                    if (count($fields) == 4) {
+                        $check = new Radcheck();
+                        $check->set('username', $fields[1]);
+                        $check->set('attribute', $fields[2]);
+                        $check->set('op', $fields[3]);
+                        $check->set('value', $fields[4]);
+
+                        if ($check->save()) {
+                             $results[] = __('%s (%s) was added', $fields[1], $fields[2]);
+                        } else {
+                             $results[] = __('ERROR: %s (%s) was not added', $fields[1], $fields[2]);
+                        }
+                    }
+                    break;
+                case 'Radreply':
+                    if (count($fields) == 4) {
+                        $reply = new Radcheck();
+                        $reply->set('username', $fields[1]);
+                        $reply->set('attribute', $fields[2]);
+                        $reply->set('op', $fields[3]);
+                        $reply->set('value', $fields[4]);
+
+                        if ($reply->save()) {
+                             $results[] = __('%s (%s) was added', $fields[1], $fields[2]);
+                        } else {
+                             $results[] = __('ERROR: %s (%s) was not added', $fields[1], $fields[2]);
+                        }
+                    }
+                    break;
+                case 'Radusergroup':
+                    if (count($fields) >= 2) {
+                        $usergroup = new Radusergroup();
+                        $usergroup->set('username', $fields[1]);
+                        $usergroup->set('groupname', $fields[2]);
+
+                        if (isset($fields[3])) {
+                            $usergroup->set('priority', $fields[3]);
+                        } else {
+                            $usergroup->set('priority', 1);
+                        }
+
+                        if ($usergroup->save()) {
+                             $results[] = __('%s was added to %s', $fields[1], $fields[2]);
+                        } else {
+                             $results[] = __('ERROR: %s was not added to %s', $fields[1], $fields[2]);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            $this->set('results', $results);
+        } else {
+            $this->redirect(array('controller' => 'Radusers', 'action' => 'index'));
+        }
+    }
+
+    public function exportAll() {
+       $ids =  $this->Raduser->find('list', array('fields' => 'id'));
+
+       $this->redirect(array('controller' => 'Radusers', 'action' => 'export', implode($ids, ',') . '.csv'));
+    }
+
     public function export($userIds) {
         $usersData = array();
-        $user = new Raduser();
         foreach (explode(',', $userIds) as $userId) {
             if (preg_match('#^[0-9]+$#', $userId)) {
-                $user->id = $userId;
-                $user->read();
-                $checks = $this->Checks->getChecks($userId);
-                $replies = $this->Checks->getReplies($userId);
-                $usersData[] = array_merge(
-                    array('type' => 'Raduser'),
-                    $user->data['Raduser']
-                );
+                $user = $this->Raduser->read(null, $userId);
 
-                foreach ($checks as $check) {
-                    $usersData[] = array_merge(
-                        array('type' => 'Radcheck'),
-                        $check['Radcheck']
-                    );
-                }
+                if ($user['Raduser']) {
+                    $checks = $this->Checks->getChecks($userId);
+                    $replies = $this->Checks->getReplies($userId);
+                    $usergroups = $this->Checks->getUserGroups($userId);
 
-                foreach ($replies as $reply) {
-                    $usersData[] = array_merge(
-                        array('type' => 'Radreply'),
-                        $reply['Radreply']
+                    $usersData[] = array(
+                        'Raduser',
+                        $user['Raduser']['username'],
+                        !empty($user['Raduser']['role']) ? $user['Raduser']['role'] : 'user',
+                        isset($user['Raduser']['is_cisco']) && $user['Raduser']['is_cisco'],
+                        isset($user['Raduser']['is_loginpass']) && $user['Raduser']['is_loginpass'],
+                        isset($user['Raduser']['is_cert']) && $user['Raduser']['is_cert'],
+                        isset($user['Raduser']['is_mac']) && $user['Raduser']['is_mac'],
+                        $user['Raduser']['comment'],
                     );
+
+                    foreach ($checks as $check) {
+                        $usersData[] = array(
+                            'Radcheck',
+                            $check['Radcheck']['username'],
+                            $check['Radcheck']['attribute'],
+                            $check['Radcheck']['op'],
+                            $check['Radcheck']['value'],
+                        );
+                    }
+
+                    foreach ($replies as $reply) {
+                        $usersData[] = array(
+                            'Radreply',
+                            $reply['Radreply']['username'],
+                            $reply['Radreply']['attribute'],
+                            $reply['Radreply']['op'],
+                            $reply['Radreply']['value'],
+                        );
+                    }
+
+                    foreach ($usergroups as $usergroup) {
+                        $usersData[] = array(
+                            'Radusergroup',
+                            $usergroup['Radusergroup']['username'],
+                            $usergroup['Radusergroup']['groupname'],
+                            $usergroup['Radusergroup']['priority'],
+                        );
+                    }
                 }
             }
         }

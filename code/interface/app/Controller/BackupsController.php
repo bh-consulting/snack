@@ -584,7 +584,7 @@ class BackupsController extends AppController {
 
         $restore = Utils::shell("~snack/scripts/restore {$backup['Backup']['commit']} $nasname");
 
-        if ($restore['code'] == 42) {
+        if ($restore['code'] == 0) {
             $this->Session->setFlash(__(
                     "Commit %s restored on NAS %s.%sDon't forget to reload the NAS.",
                     $backup['Backup']['commit'],

@@ -116,12 +116,15 @@ if(AuthComponent::user('role') == 'admin' || AuthComponent::user('role') == 'roo
 $dropdownCsvButtonItems = array(
     $this->Html->link(
         '<i class="icon-upload"></i> ' . __('Import users'),
-        array('action' => 'import_csv'),
-        array('escape' => false)
+        '#confirmimport',
+        array(
+            'escape' => false,
+            'data-toggle' => 'modal',
+        )
     ),
     $this->Html->link(
         '<i class="icon-download"></i> ' . __('Export users'),
-        array('action' => 'export_csv'),
+        array('action' => 'exportAll'),
         array('escape' => false)
     ),
 );
@@ -137,6 +140,24 @@ echo $this->element('dropdownButton', array(
     'icon' => 'icon-file',
     'items' => $dropdownCsvButtonItems
 ));
+
+echo '<div id="modalimport">';
+echo $this->element('modalImport', array(
+    'id'   => 'import',
+    'link' => $this->Html->link(
+        '<i class="icon-upload icon-white"></i> ' . __('Upload'),
+        array(
+            'controller' => 'Radusers',
+            'action' => 'import',
+        ),
+        array(
+            'escape' => false,
+            'class'  => 'btn btn-primary'
+        )
+    )
+));
+echo '</div>';
+
 
 echo $this->element('filters_panel', array(
     'controller' => 'radusers/index',
