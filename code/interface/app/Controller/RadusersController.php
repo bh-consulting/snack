@@ -845,6 +845,7 @@ class RadusersController extends AppController {
                     Utils::cleanMAC($this->request->data['Raduser']['mac']);
 
                 $this->request->data['Raduser']['username'] = $username;
+                $this->request->data['Raduser']['role'] = 'user';
 
                 $this->request->data['Raduser']['is_mac'] = 1;
                 $rads = array(

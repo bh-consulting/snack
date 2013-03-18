@@ -153,7 +153,7 @@ class Raduser extends AppModel {
      * Check if user has 'root rights'.
      * Only root have these rights.
      */
-    public function isSuperAdmin($id){
+    public function isRoot($id){
         return $this->getRole($id) == 'root';
     }
 
