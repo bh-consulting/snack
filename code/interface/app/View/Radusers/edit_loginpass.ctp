@@ -77,4 +77,7 @@ echo $this->element('wizard', array(
     'finishButton' => $finish,
 ));
 
+$this->start('script');
+$this->Html->script('wizard_focus');
+$this->end();
 ?>

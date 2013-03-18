@@ -76,16 +76,6 @@ echo $this->element('wizard', array(
 ));
 
 $this->start('script');
-?>
-<script>
-$(document).ready(function(){
-    $('input.form-error').first().each(function(){
-        var pos = $(this).parents('div.tab-pane').attr('id');
-        $('#rootwizard').bootstrapWizard('show', pos.substr(-1));
-        $(this).focus();
-    });
-});
-</script>
-<?php
+$this->Html->script('wizard_focus');
 $this->end();
 ?>

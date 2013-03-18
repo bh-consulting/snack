@@ -75,6 +75,7 @@ $role = $this->element('snack_role_input');
 
 $finish = $this->Form->input('id', array('type' => 'hidden'));
 $finish .= $this->Form->input('was_cisco', array('type' => 'hidden'));
+$finish .= $this->Form->input('was_user', array('type' => 'hidden'));
 
 $finish .= $this->Form->end(array(
     'label' => __('Update'),
@@ -93,4 +94,7 @@ echo $this->element('wizard', array(
     'finishButton' => $finish,
 ));
 
+$this->start('script');
+$this->Html->script('wizard_focus');
+$this->end();
 ?>

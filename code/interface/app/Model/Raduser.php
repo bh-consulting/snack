@@ -29,7 +29,7 @@ class Raduser extends AppModel {
             ),
         ),
         'passwd' => array(
-            'rule' => array('notEmptyIfCiscoOrLoginpass', 'was_cisco'),
+            'rule' => array('notEmptyIfCiscoOrLoginpass', 'was_cisco', 'was_user'),
             'message' => 'You have to type a password',
         ),
         'confirm_password' => array(

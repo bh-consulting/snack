@@ -7,12 +7,13 @@ class ValidationBehavior extends ModelBehavior {
      * Check if the field is not empty while adding/updating cisco or md5 user or role > user.
      */
     public static function notEmptyIfCiscoOrLoginpass($model, $field = array(),
-        $was_cisco = null) {
+        $was_cisco = null, $was_user = null) {
 
         $data = &$model->data[$model->name];
 
         $value = array_shift($field);
         $was_cisco = isset($data[$was_cisco]) ? $data[$was_cisco] : false;
+        $was_user = isset($data[$was_user]) ? $data[$was_user] : false;
 
         // NEW raduser (no id set)
         if (!isset($data['id'])) {
@@ -29,6 +30,17 @@ class ValidationBehavior extends ModelBehavior {
                 if(empty($value)
                     && !$was_cisco
                     && $data['is_cisco']
+                    && !(isset($data['is_loginpass'])
+                        && $data['is_loginpass'])
+                ){
+                    return false;
+                }
+            }
+
+            if(isset($data['role'])){
+                if(empty($value)
+                    && $was_user
+                    && $data['role'] !== 'user'
                     && !(isset($data['is_loginpass'])
                         && $data['is_loginpass'])
                 ){

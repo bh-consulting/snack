@@ -1125,6 +1125,7 @@ class RadusersController extends AppController {
 
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
+            $this->request->data['Raduser']['was_user'] = $this->request->data['Raduser']['role'] === 'user';
         } else {
             try {
                 $this->request->data['Raduser']['is_cert'] = 1;
