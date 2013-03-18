@@ -549,8 +549,12 @@ class RadusersController extends AppController {
      * @param $checks - array of radchecks lines
      */
     private function setCommonCiscoMacFields(&$checks=array()) {
-        $this->Raduser->id = $this->request->data['Raduser']['id'];
-        $username = $this->Raduser->field('username');
+        if (isset($this->request->data['Raduser']['username'])) {
+            $username = $this->request->data['Raduser']['username'];
+        } else if (isset($this->request->data['Raduser']['id'])) {
+            $this->Raduser->id = $this->request->data['Raduser']['id'];
+            $username = $this->Raduser->field('username');
+        }
 
         // retrieve nas-port-type check
         $nasPortTypeIndex = -1;
