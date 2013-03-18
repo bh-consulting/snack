@@ -1,4 +1,60 @@
-// MODIFIE DEPUIS : http://www.freejavascriptgames.info/games/snake.html
+function snakeFrucht() {
+	frucht = Math.floor((Math.random() * 1000) % fruchts.length);
+	return fruchts[frucht];
+}
+
+function snake() {
+    var Zeilen, Spalten;
+    var Index = 0;
+
+    if($('#snake').length == 0) {
+	$('.bhbody').after('<div id="snakescore" style="display: none">');
+	$('.bhbody').after('<div id="snakelevel" style="display: none">');
+	$('.bhbody').after('<div id="snakefade" style="display: none">');
+	$('.bhbody').after('<table id="snake" cellspacing="0" cellpadding="0">');
+
+	for (Zeilen = 0; Zeilen < 11; Zeilen++)
+	{
+	    $('#snake').append('<tr>');
+
+	    for (Spalten = 0; Spalten < 20; Spalten++)
+	    {
+		$('#snake tr:last-child').append('<td id="Zelle' + Index + '">');
+		Index++;
+	    }
+	}
+
+	$('#snake').wrap('<div id="snakewrap" style="display: none">');
+   }
+
+   $(document).scrollTop(0);
+
+   $(document).on('scroll', function() {
+       $(document).scrollTop(0);
+       $(document).scrollLeft(0);
+   });
+
+   $('#snakefade').fadeTo(700, 0.9, function() {
+	$('#snakefade').fadeTo(700, 0.6);
+	$('#snakewrap').slideToggle(800, function() {
+	    Start();
+	});
+   });
+}
+
+function snakeEnd() {
+	Game = false;
+        $(document).off('scroll');
+	$('#snakewrap').fadeOut();
+	$('#snakefade').fadeOut();
+	$('#snakescore').fadeOut();
+	$('#snakelevel').fadeOut();
+}
+
+
+//
+// SNAKE FROM: http://www.freejavascriptgames.info/games/snake.html
+//
 
 var i;
 Richtung = '+1';
@@ -19,7 +75,10 @@ var fruchts = [ 'icon-glass', 'icon-music', 'icon-search', 'icon-envelope', 'ico
 
 function Tastendruck(Druck)
 {
-	if (document.all) k = window.event.keyCode; else k = Druck.which;
+	if (document.all)
+	    k = window.event.keyCode;
+	else
+	    k = Druck.which;
 
 	if(Game) {
 	    if (k == 27) { Countdown = 3; reset(); snakeEnd(); }
@@ -29,12 +88,31 @@ function Tastendruck(Druck)
 	    if (k == 40 && !block && Richtung != '-20') { Richtung = '+20'; block = 1; }
 	}
 
-	if (k == 69) { code = 0; }
-	if (k == 83) { if(code == 0) code++; }
-	if (k == 73) { if(code == 1) code++; }
-	if (k == 65) { if(code == 2) code++; }
-	if (k == 76) { if(code == 3) snake(); }
-	
+	switch(k) {
+	    case 69:
+		code = 0;
+	    break;
+
+	    case 83:
+		if(code == 0)
+			code++;
+	    break;
+
+	    case 73:
+		if(code == 1)
+			code++;
+	    break;
+
+	    case 65:
+		if(code == 2)
+		    code++;
+	    break;
+
+	    case 76:
+		if(code == 3)
+		    snake();
+	    break;
+	}
 }
 
 var C3 = [48, 49, 67, 70, 90, 109, 130, 147, 150, 168, 169];
@@ -93,8 +171,6 @@ var noFruit14 = [29, 49, 69, 89, 101, 102, 103, 104, 105, 106, 107, 111, 112, 11
 
 function Start()
 {
-//	document.getElementById('nG').style.visibility = 'hidden';
-//	document.getElementById('Level').firstChild.nodeValue = 'Level ' + (Level + 1);
 	block = 1;
 	Game = true;
 	if (Countdown && !fnord)
@@ -116,7 +192,6 @@ function Start()
 
 		reset();
 		Fruechte = 10;
-		//document.getElementById('frucht').value = Fruechte;
 		$('#snakescore').text(Fruechte);
 		$('#snakelevel').text(Level + 1);
 		while (Snake[0]) Snake.pop();
@@ -127,7 +202,6 @@ function Start()
 		Richtung = '+1';
 		Happen();
 		Hindernisse();
-		//document.getElementById('pause').style.visibility = 'hidden';
 		Verlauf();
 	}
 }
@@ -135,7 +209,6 @@ function Start()
 function Pause()
 {
 	fnord = !fnord;
-	//if (fnord) document.getElementById('pause').value = "Weiter"; else document.getElementById('pause').value = "Pause";
 	Countdown = 3;
 	Start();
 }
@@ -174,7 +247,6 @@ function Verlauf()
 		else
 		{
 			Fruechte--;
-			//document.getElementById('frucht').value = Fruechte;
 			$('#snakescore').text(Fruechte);
 			Snake.push(Kopf);
 			Happen();
@@ -207,7 +279,6 @@ function Verlauf()
 
 function Jubel(x)
 {
-	//document.getElementById('nG').style.visibility = 'visible';
 	reset();
 	if (x) 
 	{
@@ -233,7 +304,6 @@ function Jubel(x)
 function Smiley_malen()
 {
 	reset();
-	//document.getElementById('pause').style.visibility = 'visible';
 	for (i = 0; i < Smiley.length; i++)
 	{
 		Zelle = 'Zelle' + Smiley[i];
@@ -246,7 +316,6 @@ function Smiley_malen()
 function Frowny_malen()
 {
 	reset();
-	//document.getElementById('nG').style.visibility = 'visible';
 	for (i = 0; i < Frowny.length; i++)
 	{
 		Zelle = 'Zelle' + Frowny[i];
@@ -278,57 +347,4 @@ function reset()
 		document.getElementById(Zelle).style.backgroundColor = '#f5f5f5';
 		$('#' + Zelle + ' i:first-child').remove();
 	}
-}
-
-function snakeFrucht() {
-	frucht = Math.floor((Math.random() * 1000) % fruchts.length);
-	return fruchts[frucht];
-}
-
-function snake() {
-    var Zeilen, Spalten;
-    var Index = 0;
-
-    if($('#snake').length == 0) {
-	$('.bhbody').after('<div id="snakescore" style="display: none">');
-	$('.bhbody').after('<div id="snakelevel" style="display: none">');
-	$('.bhbody').after('<div id="snakefade" style="display: none">');
-	$('.bhbody').after('<table id="snake" cellspacing="0" cellpadding="0">');
-
-	for (Zeilen = 0; Zeilen < 11; Zeilen++)
-	{
-	    $('#snake').append('<tr>');
-
-	    for (Spalten = 0; Spalten < 20; Spalten++)
-	    {
-		$('#snake tr:last-child').append('<td id="Zelle' + Index + '">');
-		Index++;
-	    }
-	}
-
-	$('#snake').wrap('<div id="snakewrap" style="display: none">');
-   }
-
-   $(document).scrollTop(0);
-
-   $(document).on('scroll', function() {
-       $(document).scrollTop(0);
-       $(document).scrollLeft(0);
-   });
-
-   $('#snakefade').fadeTo(700, 0.9, function() {
-	$('#snakefade').fadeTo(700, 0.6);
-	$('#snakewrap').slideToggle(800, function() {
-	    Start();
-	});
-   });
-}
-
-function snakeEnd() {
-	Game = false;
-        $(document).off('scroll');
-	$('#snakewrap').fadeOut();
-	$('#snakefade').fadeOut();
-	$('#snakescore').fadeOut();
-	$('#snakelevel').fadeOut();
 }

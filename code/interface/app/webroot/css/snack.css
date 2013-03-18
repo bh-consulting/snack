@@ -334,3 +334,7 @@ tr.loglevelwarn {
 tr.loglevelwarn a {
 	color: #fff;
 }
+
+.form-signin {
+        max-width: 570px;
+}
