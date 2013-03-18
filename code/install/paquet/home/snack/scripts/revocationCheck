@@ -1,26 +1,21 @@
 #!/bin/sh
 
-PAQUETNAME=snack
-USER_HOME=/home
-PATHTOCERTS=$USER_HOME/$PAQUETNAME/cert
-
-CRLCERT=$PATHTOCERTS/certs
-PATHTOUSER=$PATHTOCERTS/users
-
-
-if [ ! $# -eq 1 ]
+if [ ! $# -eq 2 ]
 then
-	if [ $# -gt 1 ]
-	then
-		echo "Usage: revocationCheck [name]"
-		echo "No more argument needed"
-		exit
-	else
-		read -p "Enter user name: " USERNAME
-	fi
+	echo "Usage: revocationCheck CertsDirectory Username"
+	exit 1
 else
-	USERNAME=$1
-	
+	CERTSPATH=$1
+        USERNAME=$2
 fi
 
-openssl verify  -CApath $CRLCERT -crl_check $PATHTOUSER/${USERNAME}_cert.pem
+# Check if certificate is revoked.
+openssl verify  -CApath $CERTSPATH/certs -crl_check ${CERTSPATH}/users/${USERNAME}_cert.pem
+
+if [ ! $? -eq 0 ]
+then
+	echo "Certificate is revoked!"
+	exit 1
+fi
+
+exit 0
