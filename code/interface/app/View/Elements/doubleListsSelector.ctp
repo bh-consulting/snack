@@ -1,3 +1,6 @@
+<?php
+if (!empty($contents)) {
+?>
 <div class="lists-wrapper">
 	<div class="pull-left list-container">
 	<div class="list-title"><?php echo $leftTitle; ?></div>
@@ -19,3 +22,6 @@
 		</ul>
 	</div>
 </div>
+<?php
+} 
+?>
