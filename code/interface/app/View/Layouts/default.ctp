@@ -59,7 +59,7 @@ $cakeDescription = __('SNACK');
     <![endif]-->
 </head>
 <body>
-<div class="navbar navbar-fixed-top maintopmenu">
+<div class="navbar navbar-inverse navbar-fixed-top maintopmenu">
     <div class="navbar-inner">
         <div class="container">
             <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -104,7 +104,7 @@ $cakeDescription = __('SNACK');
                     echo '<li>' .
                         $this->Html->link(
                             __('Logout from %s', $this->Session->read('Auth.User.username')) .
-                            ' <i class="icon-off"></i>',
+                            ' <i class="icon-off icon-white"></i>',
                             array(
                                 'controller' => 'radusers',
                                 'action' => 'logout'
