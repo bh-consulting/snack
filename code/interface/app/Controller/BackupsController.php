@@ -576,8 +576,49 @@ class BackupsController extends AppController {
         }
     }
 
-    public function restore($id, $nas) {
+    public function restore($nasId, $backupId) {
+        $nas = new Nas($nasId);
+        $nasname = $nas->field('nasname');
 
+        $backup = $this->Backup->read(null, $backupId);
+
+        $restore = Utils::shell("~snack/scripts/restore {$backup['Backup']['commit']} $nasname");
+
+        if ($restore['code'] == 42) {
+            $this->Session->setFlash(__(
+                    "Commit %s restored on NAS %s.%sDon't forget to reload the NAS.",
+                    $backup['Backup']['commit'],
+                    $nasname,
+                    '</br>'
+                ),
+                'flash_warning'
+            );
+
+            $this->redirect(
+                array(
+                    'controller' => 'backups',
+                    'action' => 'index',
+                    $nasId,
+                )
+            );
+        } else {
+            $this->Session->setFlash(__(
+                    'Unable de restore commit %s on NAS %s.',
+                    $backup['Backup']['commit'],
+                    $nasname
+                ),
+                'flash_error'
+            );
+
+            $this->redirect(
+                array(
+                    'controller' => 'backups',
+                    'action' => 'view',
+                    $backupId,
+                    $nasId,
+                )
+            );
+        }
     }
 }
 

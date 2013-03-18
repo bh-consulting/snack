@@ -24,7 +24,7 @@ case 'line':
             'hiddenField' => false,
         )
     );
-break;
+    break;
 case 'end':
     $items = array();
 
@@ -33,30 +33,30 @@ case 'end':
             switch ($option) {
             case 'delete':
                 $items[] = $this->Html->link(
-			'<i class="icon-remove"></i> ' . __('Delete selected'),
-			"#confirmmultiple",
-			array(
-			    'escape' => false,
-			    'data-toggle' => 'modal',
-			    'onclick' => 'countItems()'
-			)
-		    );
+                    '<i class="icon-remove"></i> ' . __('Delete selected'),
+                    "#confirmmultiple",
+                    array(
+                        'escape' => false,
+                        'data-toggle' => 'modal',
+                        'onclick' => 'countItems()'
+                    )
+                );
 
-		echo '<div id="modaldel">';
-		echo $this->element('modalDelete', array(
-		    'id'   => 'multiple',
-		    'link' => $this->Html->link(
-			    '<i class="icon-remove icon-white"></i> ' . __('Delete 0 items'),
-			    '#',
-			    array(
-				'onclick' => "$('#selectionAction').attr('value', 'delete');"
-				. "$('#MultiSelectionIndexForm').submit()",
-				'escape' => false,
-				'class'  => 'btn btn-primary btn-danger'
-			    )
-			)
-		));
-		echo '</div>';
+                echo '<div id="modaldel">';
+                echo $this->element('modalDelete', array(
+                    'id'   => 'multiple',
+                    'link' => $this->Html->link(
+                        '<i class="icon-remove icon-white"></i> ' . __('Delete 0 items'),
+                        '#',
+                        array(
+                            'onclick' => "$('#selectionAction').attr('value', 'delete');"
+                            . "$('#MultiSelectionIndexForm').submit()",
+                                'escape' => false,
+                                'class'  => 'btn btn-primary btn-danger'
+                            )
+                        )
+                    ));
+                echo '</div>';
 
                 break;
             case 'export':
@@ -66,9 +66,9 @@ case 'end':
                     array(
                         'onClick' => "$('#selectionAction').attr('value', 'export');"
                         . "$('#MultiSelectionIndexForm').submit();",
-                        'escape' => false,
-                    )
-                );
+                            'escape' => false,
+                        )
+                    );
                 break;
             }
         }

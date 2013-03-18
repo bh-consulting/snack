@@ -1,7 +1,7 @@
 <?
 if(AuthComponent::user('role') != 'tech'){
 ?>
-    <ul style="z-index:5000;" class="nav nav-list bs-sidenav affix mainmenu">
+    <ul style="z-index:100;" class="nav nav-list bs-sidenav affix mainmenu">
 	<li class="<?php echo $this->fetch('users_active'); ?>">
 <?php
 echo $this->Html->link(

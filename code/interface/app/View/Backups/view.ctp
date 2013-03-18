@@ -143,16 +143,30 @@ if (!empty($content)) {
     <pre class="well"><?php echo trim($content) ?></pre>
 <?php
     if (!empty($diff) && !empty($current) && !empty($nas)) {
+        echo '<div id="modaldel">';
+        echo $this->element('modalDelete', array(
+            'id'   => 'restore',
+            'title' => __('Restore'),
+            'link' => $this->Html->link(
+                '<i class="icon-refresh icon-white"></i> ' . __('Restore'),
+                array(
+                    'controller' => 'backups',
+                    'action' => 'restore',
+                    $nas['Nas']['id'],
+                    $current['Backup']['id'],
+                ),
+                array(
+                    'escape' => false,
+                    'class'  => 'btn btn-primary'
+                )
+            )
+        ));
+        echo '</div>';
         echo $this->Html->link(
             '<i class="icon-repeat icon-white"></i> ' . __('Restore'),
+            '#confirmrestore',
             array(
-                'controller' => 'backups',
-                'action' => 'restore',
-                $current['Backup']['id'],
-                $nas['Nas']['id'],
-            ),
-            array(
-                'onclick' => "return confirm('" . __('Are you sure?') . "')",
+                'data-toggle' => 'modal',
                 'escape' => false,
                 'class' => 'btn btn-primary',
             )
