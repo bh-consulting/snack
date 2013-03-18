@@ -58,8 +58,8 @@
 	<ol class="plan">
 		<li>Contexte</li>
 		<li>Gestion du projet</li>
-		<li>Authentification sur le réseau</li>
-		<li>Sauvegarde de configurations</li>
+		<li>Contrôle d'accès au réseau</li>
+		<li>Gestion des configurations</li>
 		<li>Interface utilisateur SNACK</li>
 		<li>Améliorations possibles</li>
 	</ol>
@@ -202,15 +202,16 @@
 
 <section class="slide" id="radius_fonctionnement3">
 	<h3>Fonctionnement de TTLS</h3>
-	<img src="prezpi/img/tls-ttls.svg" style="width: 70%" />
+	<img src="prezpi/img/tls-ttls.svg" style="width: 70%; vertical-align: top; overflow: visible" />
 </section>
 
 <section class="slide" id="radius_problems">
     <h2>Contrôle d'accès : problèmes rencontrés</h2>
-    <p>Matériel : installation sur les machines en salle PI</p>
-    <p>Environnement de travail : utilisation de VM, tests longs</p>
-    <p>Documentation sur l'interaction <strong>Cisco / Radius</strong></p>
+    <p>Matériel à disposition en salle PI</p>
+    <p>Interaction entre <strong>Cisco et Radius</strong></p>
+    <p>Versions d'IOS</p>
     <p><strong>Certificats</strong> sous Windows</p>
+    <p>Paquets d'installation : fichiers et tests</p>
 </section>
 
 
@@ -241,7 +242,8 @@
 
 <section class="slide" id="confs_problems">
     <h2>Gestion des configurations : problèmes rencontrés</h2>
-    <p>Détection fin transmission TFTP</p>
+    <p>Utilisation du TFTP : non sécurisé et pas de fin de connexion</p>
+    <p>MIB Cisco : gestion des OID pour SNMP</p>
 </section>
 
 
@@ -266,11 +268,13 @@
 
 <section class="slide" id="snack_problems">
 	<h2>Interface utilisateur : problèmes rencontrés</h2>
-	<p>Schéma de la base de données Radius</p>
-	<p>Fusion CakePHP / Bootstrap</p>
+	<p><strong>Schéma</strong> de la base de données Radius</p>
+	<p>Adaptation de CakePHP à <strong>Bootstrap</strong></p>
+	<p>Compatibilité des navigateurs (notamment <strong>Internet Explorer</strong>)</p>
+	<p><strong>Internationalisation</strong> et localisation : anglais et français</p>
 </section>
 
-<section class="slide" id="demo_users">
+<!-- <section class="slide" id="demo_users">
 	<h3><a href="http://localhost/interface/radusers" target="_blank">Démo : gestion des utilisateurs</a></h3>
 	<iframe class="snack_frame" src="http://localhost/interface/radusers"></iframe>
 </section>
@@ -304,11 +308,12 @@
 	<h3><a href="http://localhost/interface/parameters" target="_blank">Démo : paramétrage du serveur</a></h3>
 	<iframe class="snack_frame" src="http://localhost/interface/parameters"></iframe>
 </section>
-
+ -->
 
 <section class="slide" id="future">
     <h2>Améliorations possibles</h2>
     <p><strong>Terminal</strong> virtuel</p>
+    <p>Tests unitaires</p>
     <p>Gestion des équipements :</p>
     <ul>
     	<li>Versions d'IOS</li>
@@ -316,14 +321,13 @@
     	<li>Auto-configuration des switchs</li>
     </ul>
     <p>Utilisation de <strong>LDAP</strong> au lieu de MySQL</p>
-    <p>Tests unitaires</p>
 </section>
 
 <section class="slide" id="ccl">
 	<h2>Conclusion</h2>
 	<p><strong>Solution complète, simple et fonctionnelle</strong></p>
+	<p>Découverte de nombreux outils</p>
 	<p>Utilisation en production rapidement par b.h. consulting</p>
-	<p>Projet enrichissant et utile</p>
 </section>
 
 <section class="slide" id="end">
@@ -359,8 +363,8 @@
 </form>
 
 <!-- deck.hash snippet -->
-<!-- <a href="." title="Permalink to this slide" class="deck-permalink">#</a>
- -->
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
 <!-- End extension snippets. -->
 
 
