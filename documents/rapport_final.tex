@@ -357,7 +357,7 @@ Sur un équipement Cisco, la configuration qui est utilisée est stockée dans l
 
 La synchronisation entre la \emph{running-configuration} et la \emph{startup-configuration} sur le commutateur est une action à la discrétion de l'administrateur, totalement décorellée de l'\emph{accounting}. Pour lancer une sauvegarde automatique lors de cette action, il faut alors détecter un événement asynchrone et imprévisible.
 
-Nous donc avons dû recourir au protocole SNMP. Ce dernier est particulièrement utilisé dans la supervision des réseaux, et propose une interface de communication épurée et facile à prendre en main. Ses messages sont systématiquement de type \og~OID~: valeur~\fg, que ça soit pour une question ou une réponse. Puisque c'est un standard largement utilisé, tous les équipements Cisco implémentent des fonctionnalités l'exploitant. Ainsi, dès lors que le commutateur est correctement configuré, un événement SNMP est envoyé à chaque enregistrement de la configuration. Un serveur externe peut alors attraper ce message (on parle de \emph{trap} dans le vocabulaire SNMP), en déduit l'action effectuée en fonction de l'OID (l'identifiant unique d'une ressource particulière) et de sa valeur, et exécute le script correspondant.
+Nous avons donc dû recourir au protocole SNMP. Ce dernier est particulièrement utilisé dans la supervision des réseaux, et propose une interface de communication épurée et facile à prendre en main. Ses messages sont systématiquement de type \og~OID~: valeur~\fg, que ça soit pour une question ou une réponse. Puisque c'est un standard largement utilisé, tous les équipements Cisco implémentent des fonctionnalités l'exploitant. Ainsi, dès lors que le commutateur est correctement configuré, un événement SNMP est envoyé à chaque enregistrement de la configuration. Un serveur externe peut alors attraper ce message (on parle de \emph{trap} dans le vocabulaire SNMP), en déduit l'action effectuée en fonction de l'OID (l'identifiant unique d'une ressource particulière) et de sa valeur, et exécute le script correspondant.
 
 Le schéma~\ref{schema_wrmem} page~\pageref{schema_wrmem} illustre le mécanisme que nous avons mis en place pour exploiter cette possibilité. Un gestionnaire de versions est utilisé pour stocker les configurations de chacun des commutateurs, ce qui permet de les stocker de façon incrémentale, c'est à dire en stockant que les changements (\emph{commits}).
 
@@ -369,7 +369,7 @@ Le schéma~\ref{schema_wrmem} page~\pageref{schema_wrmem} illustre le mécanisme
 	\label{schema_wrmem}
 \end{figure}
 
-À noter que les matériels Cisco ne permettent de récupérer leur configuration qu'au travers du protocole TFTP. Celui-ci est une version simplifiée du protocole de transfert de fichiers FTP, non-sécurisée. Toutefois, les transferts devraient avoir lieu dans un réseau virtuel suffisamment restreint pour que ça ne puisse poser de problème.
+À noter que les matériels Cisco ne permettent de récupérer leur configuration qu'au travers du protocole TFTP. Celui-ci est une version simplifiée du protocole de transfert de fichiers FTP, non-sécurisée. Toutefois, les transferts devraient avoir lieu dans un réseau virtuel suffisamment restreint pour que ça ne puisse pas poser de problème.
 
 Un autre problème de taille de ce protocole imposé, est qu'il n'est pas orienté connexion. Ainsi, il est impossible de détecter la fin d'un transfert, pour l'ajouter ensuite dans le gestionnaire de versions. C'est pour cette raison que le schéma~\ref{schema_wrmem} page~\pageref{schema_wrmem} montre l'utilisation d'une nouvelle trap SNMP, que nous avons découverte, pour détecter la fin de l'opération.
 
@@ -392,13 +392,13 @@ Le schéma~\ref{schema_auth} page~\pageref{schema_auth} illustre les interaction
 	\label{schema_auth}
 \end{figure}
 
-La principale différence avec le schéma précédent est que le processus de sauvegarde est déclenché automatiquement directement par l'utilisateur, directement depuis le serveur SNACK, plutôt qu'indirectement par le commutateur.
+La principale différence avec le schéma précédent est que le processus de sauvegarde est déclenché automatiquement par l'utilisateur, directement depuis le serveur SNACK, plutôt qu'indirectement par le commutateur.
 
 \subsection{Installation automatisée}
 
 Pour que notre solution logicielle soit facilement et rapidement déployable sur de nombreux parcs informatiques, nous avons choisis de profiter de la puissance du gestionnaire de paquets du système cible. Ainsi, nous avons conçu un simple paquet Debian, qui s'occupe d'installer tous les fichiers et toutes les dépendances, pour une solution entièrement clé en main.
 
-Pour plus de confort, le paquet propose une interface d'installation conviviale, comme l'illustrent les copies d'écran en figure~\ref{install_start}, \ref{install_prompt} et \ref{install_progress} en pages~\pageref{install_start}, \pageref{install_prompt} et \pageref{install_progress}.
+Pour plus de confort, le paquet propose une interface d'installation conviviale, comme l'illustrent les copies d'écran en figure~\ref{install_start} page ~\pageref{install_start}, \ref{install_prompt} page \pageref{install_prompt} et \ref{install_progress} page \pageref{install_progress}.
 
 \begin{figure}[!h]
 	\begin{center}
@@ -696,7 +696,7 @@ Par exemple, l'ajout d'un utilisateur qui s'authentifie avec un identifiant et u
 	\label{usersexp}
 \end{figure}
 
-Les différentes copies d'écran de cette section ont permises de mettre en avant l'organisation en étapes avec une barre de progression qu'on retrouve dans toutes les pages de formulaire, pour une meilleure expérience utilisateur.
+La copie d'écran ~\ref{userscisco} page~\pageref{userscisco} a permis de mettre en avant l'organisation en étapes avec une barre de progression qu'on retrouve dans toutes les pages de formulaire, pour une meilleure expérience utilisateur.
 
 Un second menu est proposé pour les utilisateurs~: il permet d'importer ou d'exporter des utilisateurs en utilisant un fichier CSV. Cette fonctionnalité permet d'ajouter des utilisateurs en grand nombre, ou d'exporter la base de données. L'exportation peut se faire finement, notamment grâce à la sélection multiple qui permet de choisir les utilisateurs à exporter.
 
