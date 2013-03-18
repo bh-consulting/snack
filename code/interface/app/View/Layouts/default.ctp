@@ -155,10 +155,8 @@ echo $this->Html->script('bootstrap-datetimepicker.min');
 echo $this->Html->script('doubleListsSelector');
 echo $this->Html->script('backups');
 echo $this->Html->script('checkboxRangeSelection');
-echo $this->Html->script('jquery.terminal.min');
 echo $this->Html->script('jquery.mousewheel-min');
 echo $this->Html->script('jquery.bootstrap.wizard.min');
-echo $this->Html->script('myterm');
 echo $this->Html->script('bhconsulting');
 echo $this->fetch('script');
 ?>

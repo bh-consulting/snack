@@ -8,3 +8,13 @@ $this->assign('term_active', 'active');
         <div class="cmd" style="width: 100%; height:300px;">
     </div>
 </div>
+
+
+<?php
+
+$this->start('script');
+echo $this->Html->script('jquery.terminal.min');
+echo $this->Html->script('myterm');
+$this->end();
+
+?>
