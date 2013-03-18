@@ -199,7 +199,7 @@ class ChecksComponent extends Component {
                     array(
                         $name,
                         'Simultaneous-Use',
-                        '==',
+                        ':=',
                         $request->data[$this->baseClassName]['simultaneous_use']
                     )
                 ));
