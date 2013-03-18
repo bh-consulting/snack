@@ -1,0 +1,332 @@
+\newpage
+\appendix
+%\begin{appendix}
+\section{Script backup\_create.sh}
+
+\begin{lstlisting}
+#!/bin/bash
+
+## FUNCTIONS
+
+#Extracts database parameters from a file
+function extract_db() {
+    awk -F \' "/$1.*=>.*'/ {print \$4}"\
+	~snack/interface/app/Config/database.php | head -n1
+}
+
+#Set up a line in the database and ask the nas to tftp its running configuration.
+function backup() {
+    if [ $1 = restore ]
+    then
+    	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
+		-e "$(printf "$sqline_restore" $1 ${USER_NAME//\"} $RESTORE_VALUE)"
+    elif [ $1 = boot ]
+    then
+    	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
+		-e "$(printf "$sqline" $1 ${USER_NAME//\"})"
+    	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
+		-e "$(printf "$sqlcloses_sessions")"
+	/usr/bin/radzap -N $NAS_IP_ADDRESS 127.0.0.1 $secret
+		
+
+    else
+    	/usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
+		-e "$(printf "$sqline" $1 ${USER_NAME//\"})"
+    fi
+
+    /usr/bin/snmpset -t 5 -c private -v 2c $NAS_IP_ADDRESS\
+	$oid_writeNet.$ip_address s $NAS_IP_ADDRESS
+
+}
+
+## VARIABLES
+
+oid_writeNet=iso.3.6.1.4.1.9.2.1.55
+
+ip_address=$(awk -F \' '/ipAddress/ {print $4}'\
+    ~snack/interface/app/Config/parameters.php)
+
+db_login=$(extract_db login)
+db_password=$(extract_db password)
+db_name=$(extract_db database)
+db_host=$(extract_db host)
+db_prefix=$(extract_db prefix)
+
+#only used by radzap to close opened connections.
+secret=loopsecret
+
+read sqline <<SQL
+    INSERT INTO\\
+    ${db_prefix}backups(datetime, nas, action, users)\\
+    VALUES(NOW(), '$NAS_IP_ADDRESS', '%s', '%s')\\
+SQL
+
+read sqline_restore <<SQL
+    INSERT INTO\\
+    ${db_prefix}backups(datetime, nas, action, users,restore)\\
+    VALUES(NOW(), '$NAS_IP_ADDRESS', '%s', '%s', '%s')\\
+SQL
+
+read sqlcloses_sessions <<SQL
+    UPDATE radacct\\
+    SET ACCTSTOPTIME=(\\
+	SELECT datetime FROM backups\\
+	WHERE action='reload'\\
+	ORDER BY datetime DESC\\
+	LIMIT 1)\\
+    WHERE acctstoptime IS NULL\\
+SQL
+
+
+## PROGRAM
+
+case "$ACCT_STATUS_TYPE" in
+    Interim-Update|Start)
+	backup login
+    ;;
+
+    Stop)
+	backup logoff
+    ;;
+
+    Write)
+	backup wrmem
+    ;;
+
+    Restore)
+	backup restore
+    ;;
+    Reload)
+	backup boot
+    ;;
+esac
+
+exit 0
+
+\end{lstlisting}
+%\end{appendix}
+
+\newpage
+%\begin{appendix}
+\section{Script backup\_traps.sh}
+
+\begin{lstlisting}
+#!/bin/bash
+
+
+## FUNCTIONS
+
+#Extracts database parameters from a file
+function extract_db() {
+    awk -F \' "/$1.*=>.*'/ {print \$4}"\
+	~snack/interface/app/Config/database.php | head -n1
+}
+
+## VARIABLES
+
+#Write mem and tftp oid
+oid_ccmHistoryEventCommandSource=iso.3.6.1.4.1.9.9.43.1.1.6.1.3
+oid_ccmHistoryEventConfigSource=iso.3.6.1.4.1.9.9.43.1.1.6.1.4
+oid_ccmHistoryEventConfigDestination=iso.3.6.1.4.1.9.9.43.1.1.6.1.5
+
+#Boot oid
+oid_sysUpTime=iso.3.6.1.2.1.1.3.0
+oid_whyReload=iso.3.6.1.4.1.9.2.1.2.0
+
+
+db_login=$(extract_db login)
+db_password=$(extract_db password)
+db_name=$(extract_db database)
+db_host=$(extract_db host)
+db_prefix=$(extract_db prefix)
+
+
+#Read the informations given by snmptrapd
+read NAS_IP_ADDRESS
+for i in {1..3}; do read void; done
+read ccmHistoryEventCommandSource
+read ccmHistoryEventConfigSource
+read ccmHistoryEventConfigDestination
+
+read sql_tftpdone <<SQL
+    UPDATE ${db_prefix}backups\\
+    SET commit='%s'\\
+    WHERE commit IS NULL\\
+    AND nas='$NAS_IP_ADDRESS'\\
+    ORDER BY datetime DESC\\
+    LIMIT 1\\
+SQL
+
+read sql_sessionusers <<SQL
+    SELECT DISTINCT username\\
+    FROM ${db_prefix}radacct\\
+    WHERE acctstoptime IS NULL\\
+    ORDER BY radacctid\\
+SQL
+
+## PROGRAM
+
+# Trap write mem event
+if [[\
+    "$ccmHistoryEventCommandSource" =~ $oid_ccmHistoryEventCommandSource.[0-9]+\ 1 \
+    && "$ccmHistoryEventConfigSource" =~ $oid_ccmHistoryEventConfigSource.[0-9]+\ 3 \
+    && "$ccmHistoryEventConfigDestination" =~ $oid_ccmHistoryEventConfigDestination.[0-9]+\ 4 \
+]]; then
+
+    users=$(/usr/bin/mysql -B -h $db_host -u $db_login -p$db_password $db_name\
+	-e "$sql_sessionusers" | tail -n+2  | paste -sd ,)
+
+    export NAS_IP_ADDRESS
+    export USER_NAME=$users
+    export ACCT_STATUS_TYPE=Write
+
+    ~snack/scripts/backup_create.sh
+
+# Trap tftp done when receiving configuration (backup).
+elif [[\
+    "$ccmHistoryEventCommandSource" =~ $oid_ccmHistoryEventCommandSource.[0-9]+\ 2 \
+    && "$ccmHistoryEventConfigSource" =~ $oid_ccmHistoryEventConfigSource.[0-9]+\ 3 \
+    && "$ccmHistoryEventConfigDestination" =~ $oid_ccmHistoryEventConfigDestination.[0-9]+\ 6 \
+]]; then
+
+    cd ~snack/backups.git/
+
+    /usr/bin/git add $NAS_IP_ADDRESS
+    /usr/bin/git commit -m AUTO-COMMIT $NAS_IP_ADDRESS
+
+    commit=$(/usr/bin/git log --pretty=oneline -1 HEAD | cut -d\  -f1)
+
+    /usr/bin/mysql -h $db_host -u $db_login -p$db_password $db_name\
+	-e "$(printf "$sql_tftpdone" $commit)"
+    #if a restaure is currently waiting, let it continue
+    if test -e $NAS_IP_ADDRESS.pid
+    then
+	sonPID=`cat $NAS_IP_ADDRESS.pid`
+	kill -10 $sonPID
+    fi
+
+# Trap tftp done when sending configuration (restore).
+elif [[\
+    "$ccmHistoryEventCommandSource" =~ $oid_ccmHistoryEventCommandSource.[0-9]+\ 2 \
+    && "$ccmHistoryEventConfigSource" =~ $oid_ccmHistoryEventConfigSource.[0-9]+\ 6 \
+    && "$ccmHistoryEventConfigDestination" =~ $oid_ccmHistoryEventConfigDestination.[0-9]+\ 4 \
+]]; then
+    
+    cd ~snack/backups.git/
+    rm $NAS_IP_ADDRESS.pid
+
+
+
+# Trap reload (boot) event
+elif [[\
+    "$ccmHistoryEventCommandSource" =~ $oid_sysUpTime\ [0-9]*:[0-9]*:[0-9]*:[0-9]*.[0-9]* \
+    && "$ccmHistoryEventConfigSource" =~ $oid_whyReload\ \"power-on\" \
+]]; then
+
+    users=$(/usr/bin/mysql -B -h $db_host -u $db_login -p$db_password $db_name\
+	-e "$sql_sessionusers" | tail -n+2  | paste -sd ,)
+
+    export NAS_IP_ADDRESS
+    export USER_NAME=$users
+    export ACCT_STATUS_TYPE=Reload
+
+    ~snack/scripts/backup_create.sh
+
+
+
+
+fi
+
+exit 0
+\end{lstlisting}
+%\end{appendix}
+\newpage
+\section{Script restore}
+\begin{lstlisting}
+
+#!/bin/bash
+
+if [ $# -ne '2' ]
+then
+	echo "Usage: restore commitNumber nas"
+	exit
+fi
+
+
+## FUNCTION
+
+#Extracts database parameters from a file
+function extract_db() {
+    awk -F \' "/$1.*=>.*'/ {print \$4}"\
+	~snack/interface/app/Config/database.php | head -n1
+}
+
+#Create a temp file containing the revision to restore and ask the nas to tftp from the server to its startup-config.
+function restore(){
+	
+	(cd $TFTP_FOLDER;
+	git show $1:$2 >  $2.tftp)
+	# https://supportforums.cisco.com/docs/DOC-1860
+	snmpset -v 2c -c private $2 \
+	.1.3.6.1.4.1.9.9.96.1.1.1.1.2.$RAND i 1 \
+	.1.3.6.1.4.1.9.9.96.1.1.1.1.3.$RAND i 1 \
+	.1.3.6.1.4.1.9.9.96.1.1.1.1.4.$RAND i 3 \
+	.1.3.6.1.4.1.9.9.96.1.1.1.1.5.$RAND a $IP \
+	.1.3.6.1.4.1.9.9.96.1.1.1.1.6.$RAND s "$2.tftp" \
+	.1.3.6.1.4.1.9.9.96.1.1.1.1.14.$RAND i 4
+}
+
+
+## VARIABLES
+
+TFTP_FOLDER=/home/snack/backups.git
+IP=$(awk -F \' '/ipAddress/ {print $4}'\
+    ~snack/interface/app/Config/parameters.php)
+RAND=$((RANDOM%200))
+
+db_login=$(extract_db login)
+db_password=$(extract_db password)
+db_name=$(extract_db database)
+db_host=$(extract_db host)
+db_prefix=$(extract_db prefix)
+
+
+read sql_sessionusers <<SQL
+    SELECT DISTINCT username\\
+    FROM ${db_prefix}radacct\\
+    WHERE acctstoptime IS NULL\\
+    ORDER BY radacctid\\
+SQL
+
+users=$(/usr/bin/mysql -B -h $db_host -u $db_login -p$db_password $db_name\
+        -e "$sql_sessionusers" | tail -n+2  | paste -sd ,)
+export NAS_IP_ADDRESS=$2
+export USER_NAME=$users
+echo "setting users" >> /tmp/trape
+export ACCT_STATUS_TYPE=Restore
+export RESTORE_VALUE=$1
+
+
+## PROGRAM
+
+#check that no process is already backuping or restoring
+while test -e $TFTP_FOLDER/$NAS_IP_ADDRESS.pid
+do
+    sleep 1
+done
+
+#now, my turn 
+echo $$ > $TFTP_FOLDER/$NAS_IP_ADDRESS.pid
+
+#lanch backups
+~snack/scripts/backup_create.sh
+
+trap "restore $1 $2 ; exit 0" USR1
+#wait the end of the backups
+while true
+do
+	sleep 1
+done
+
+\end{lstlisting}
+

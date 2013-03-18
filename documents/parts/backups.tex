@@ -7,11 +7,11 @@ Installer les paquets suivants en super-utilisateur~:
 $ sudo apt-get install snmp snmpd git tftpd-hpa
 \end{lstlisting}
 
-Puis, configurer les paquets de la façon suivante~:
+Puis, configurer les paquets comme décris ci-dessous.
 
 \subsubsection{radius}
 
-/etc/freeradius/sites-enabled/snack~:
+dans /etc/freeradius/sites-enabled/snack, completez la section accounting par l'appel conditionnel d'un module snack-backups~:
 \begin{lstlisting}
     accounting{
 	if(((NAS-Port-Type == Async)||(NAS-Port-Type == Virtual))&&((Acct-Status-Type == Start)||(Acct-Status-Type == Stop))) {
@@ -21,33 +21,36 @@ Puis, configurer les paquets de la façon suivante~:
 	...
 \end{lstlisting}
 
-et creer snack-backups~:
-/etc/freeradius/modules/snack-backups~:
+et créer le-dit module snack-backups, en créant le fichier /etc/freeradius/modules/snack-backups comme suit~:
 \begin{lstlisting}
 exec snack-backups {
-            program = "/home/snack/scripts/backup_create.sh"
+            program = "path_to_script/backup_create.sh"
             wait = no
             input_pairs = request
             shell_escape = yes
             output = none
 }
 \end{lstlisting}
+Le path\_to\_script correspond au chemin vers le script 'backup\_create.sh' donné en annexe. Nous utilisons '/home/snack/scritps'.
 
 
 \subsubsection{snmptrapd}
 
-/etc/snmp/snmptrapd.conf~:
+Configurer le fichier /etc/snmp/snmptrapd.conf, initalement vide, de la façon suivante~:
 \begin{lstlisting}
 	donotlogtraps false
 	logOption f /var/log/snmptraps.log
 	authCommunity log,execute,net private
-	traphandle default /home/snack/scripts/backup_traps.sh
+	traphandle default path_to_script/backup_traps.sh
 \end{lstlisting}
 
-/etc/init.d/snmpd ET /etc/default/snmpd~:
+Puis forcer le lancement de snmptrapd avec snmp en corrigant /etc/init.d/snmpd {\color{red}ET} /etc/default/snmpd. La variable TRAPDRUN dois prendre la valeur 'yes' au lieu de 'no'~:
 
 \begin{lstlisting}
+    SNMPDRUN=yes
+    SNMPDOPTS='-Lsd -Lf /dev/null -p /var/run/snmpd.pid'
     TRAPDRUN=yes
+    TRAPDOPTS='-Lsd -p /var/run/snmptrapd.pid'
 \end{lstlisting}
 
 Puis redémarrer le service~:
@@ -59,47 +62,73 @@ $ sudo snmptrapd
 
 \subsubsection{tftp}
 
-Créer un dossier réservé aux sauvegardes de configurations.
+Créer un dossier réservé aux sauvegardes de configurations. Nous utilisons par défault le path\_to\_backups '/home/snack/.
 
 \begin{lstlisting}
-    mkdir /home/snack/backups.git
+    mkdir path_to_backups/backups.git
 \end{lstlisting}
 
-/etc/init/tftpd-hpa.conf~:
+
+Editer le fichier /etc/init/tftpd-hpa.conf pour forcer l'écoute sur le bon dossier~:
 
 \begin{lstlisting}
-exec /usr/sbin/in.tftpd --listen --user snack --address 0.0.0.0:69 --secure /home/snack/backups.git -c"\
+script
+
+    if [ -f ${DEFAULTS} ]; then
+        . ${DEFAULTS}
+    fi
+    
+    if [ ! -d "${TFTP_DIRECTORY}" ]; then
+	echo "${TFTP_DIRECTORY} missing, aborting."
+	exit 1
+    fi
+    
+    
+    exec /usr/sbin/in.tftpd --listen --address 0.0.0.0:69 --secure path_to_backups/backups.git -c"\
+end script
 \end{lstlisting}
+l'option '--user username' peut-être utilisée pour force tftp à prendre l'UID d'un utilisateur donné lors de l'écriture.\\
 
-/etc/default/tftpd-hpa~:
+Modifier aussi la variabl 'TFTP\_DIRECTORY' du fichier /etc/default/tftpd-hpa, pour que les NAS puissent lire le bon dossier et récuperer d'ancienne configurations~:
 \begin{lstlisting}
-TFTP_DIRECTORY="/home/snack/backups.git"
+TFTP_USERNAME="tftp"
+TFTP_DIRECTORY="path_to_backups/backups.git"
+TFTP_ADDRESS="0.0.0.0:69"
+TFTP_OPTIONS="--secure"
 \end{lstlisting}
 
 Puis redémarrer le service~:
 \begin{lstlisting}
 sudo service tftpd-hpa stop
 
-/usr/sbin/in.tftpd --listen --user snack --address 0.0.0.0:69 --secure $TFTP_FOLDER -c
+/usr/sbin/in.tftpd --listen --address 0.0.0.0:69 --secure path_to_backups/backups.git -c
 \end{lstlisting}
 
 \subsubsection{git}
 
-Initialiser le dépôt git~:
+Initialiser le dépôt git dans le répertoire créé dans la section précedente~:
 
 \begin{lstlisting}
-~ $ cd /home/snack/backups.git
+~ $ cd path_to_backups/backups.git
 backups.git $ git init
-Initialized empty Git repository in /home/snack/backups.git/.git/
+Initialized empty Git repository in path_to_backups/backups.git/.git/
 \end{lstlisting}
 
 
 \subsubsection{Interface}
 
-Les script de mise à jours utilisent l'adresse IP du radius. Celle ci peut être réglée via l'interface ou directement en modifiant /home/snack/interface/app/Config/parameters.php:
+Les scripts de mise à jours utilisent l'adresse IP du radius. Celle ci peut être réglée via l'interface ou directement en modifiant /home/snack/interface/app/Config/parameters.php:
 \begin{lstlisting}
-    'ipAddress' => '192.168.1.10'
+    ...
+    'configurationEmail' => 'pi@bh.net',
+    'errorEmail' => 'pi@bh.net',
+    'ipAddress' => '192.168.1.10',
+    'paginationCount' => '10',
+    ...
 \end{lstlisting}
+
+\subsubsection{Restauration}
+Pour la restauration de configuration, il suffit d'utiliser le script 'restore', donné en annexe.
 
 
 \subsection{Commutateur}
@@ -108,7 +137,7 @@ En mode de configuration du terminal, activer l'envoi des trappes SNMP sur le co
 
 \begin{lstlisting}
 Switch(config)# snmp-server community private rw
-Switch(config)# snmp-server host $RADIUS_IP version 2c private
+Switch(config)# snmp-server host 192.168.1.10 version 2c private
 Switch(config)# snmp-server enable traps config
 Switch(config)# snmp-server enable traps snmp coldstart
 \end{lstlisting}
@@ -116,17 +145,17 @@ Switch(config)# snmp-server enable traps snmp coldstart
 
 \subsection{Correction de l'accounting}
 
-Nos observation nous on permis de découvrir que les sessions d'accounting sont écrasée par radius lors d'un 'reload' du commutateur. Ceci est du au fait que les session accounting sont identifiées par un id supposé unique envoyé par le commutateur. Cependant, celui-ci re-utilise les même id une fois re-démarré.\\
+Nos observations nous ont permis de découvrir que les sessions d'accounting étaient écrasées par radius lors d'un 'reload' du commutateur. Ceci est dû au fait que les sessions accounting sont identifiées par un id supposé unique envoyé par le commutateur. Cependant, celui-ci re-utilise les même id une fois re-démarré.\\
+Si la sauvegarde des sessions est appliquée, et en particulier le redémarrage des équipements actifs monitorés, ce comportement peut être corrigé coté radius.\\
 
-Si la sauvegarde des sessions est appliquée, et en particulier le redémarrage des équipement actif monitoré, ce comportement peut être corrigé coté radius.\\
-Modifier le fichier /etc/freeradius/modules/acct\_unique~:
+Modifier le fichier /etc/freeradius/modules/acct\_unique, en forcant l'utilisation de Tmp-String-0 dans la génération de la clé~:
 \begin{lstlisting}
 acct_unique {
         key = "User-Name, Acct-Session-Id, NAS-IP-Address, Client-IP-Address, NAS-Port, Tmp-String-0"
 	}
 \end{lstlisting}
 
-puis le fichier /etc/freeradius/sites-enabled/snack~:
+puis le fichier /etc/freeradius/sites-enabled/snack, section preacct, ou on affecte à Tmp-String-0 la date du dernier reload~:
 \begin{lstlisting}
 preacct {
 	update request {
@@ -136,7 +165,7 @@ preacct {
 	...
 \end{lstlisting}
 
-enfin, le fichier /etc/freeradius/sql/mysql/dialup.conf~:
+enfin, dans le fichier /etc/freeradius/sql/mysql/dialup.conf, forcer l'utilisation de l'acctuniqueid au lieu de l'acctsessionid~:
 \begin{lstlisting}
 ...
 	accounting_update_query = " \
@@ -148,7 +177,7 @@ enfin, le fichier /etc/freeradius/sql/mysql/dialup.conf~:
 				  '%{%{Acct-Input-Octets}:-0}', \
 	    acctoutputoctets    = '%{%{Acct-Output-Gigawords}:-0}' << 32 | \
 				  '%{%{Acct-Output-Octets}:-0}' \
-	WHERE acctuniqueid  = '%{Acct-Unique-Session-ID}' \
+	WHERE §\textbf{acctuniqueid}§    = '%{§\textbf{Acct-Unique-Session-ID}§}' \
 	AND username        = '%{SQL-User-Name}' \
 	AND nasipaddress    = '%{NAS-IP-Address}'"
 ...
@@ -157,7 +186,7 @@ enfin, le fichier /etc/freeradius/sql/mysql/dialup.conf~:
 	    acctstarttime     = '%S', \
 	    acctstartdelay    = '%{%{Acct-Delay-Time}:-0}', \
 	    connectinfo_start = '%{Connect-Info}' \
-	WHERE acctuniqueid    = '%{Acct-Unique-Session-ID}' \
+	WHERE §\textbf{acctuniqueid}§    = '%{§\textbf{Acct-Unique-Session-ID}§}' \
 	AND username         = '%{SQL-User-Name}' \
 	AND nasipaddress     = '%{NAS-IP-Address}'"
 ...
@@ -172,7 +201,7 @@ enfin, le fichier /etc/freeradius/sql/mysql/dialup.conf~:
 	    acctterminatecause = '%{Acct-Terminate-Cause}', \
 	    acctstopdelay      = '%{%{Acct-Delay-Time}:-0}', \
 	    connectinfo_stop   = '%{Connect-Info}' \
-	WHERE acctuniqueid    = '%{Acct-Unique-Session-ID}' \
+	WHERE §\textbf{acctuniqueid}§    = '%{§\textbf{Acct-Unique-Session-ID}§}' \
 	AND username          = '%{SQL-User-Name}' \
 	AND nasipaddress      = '%{NAS-IP-Address}'"
 ...
