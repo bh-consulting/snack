@@ -19,6 +19,11 @@ This module adds a (current)/(total) style status indicator to the deck.
 			to + 1 :
 			$[deck]('getSlide', to).data('rootSlide')
 		);
+		if(to === 0){
+			$(opts.selectors.statusDiv).hide('slow');
+		} else {
+			$(opts.selectors.statusDiv).show('slow');
+		}
 	};
 	
 	/*
@@ -37,7 +42,8 @@ This module adds a (current)/(total) style status indicator to the deck.
 	$.extend(true, $[deck].defaults, {
 		selectors: {
 			statusCurrent: '.deck-status-current',
-			statusTotal: '.deck-status-total'
+			statusTotal: '.deck-status-total',
+			statusDiv: '.deck-status',
 		},
 		
 		countNested: true

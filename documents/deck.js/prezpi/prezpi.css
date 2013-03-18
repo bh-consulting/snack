@@ -70,3 +70,11 @@
     opacity:1;
     filter:alpha(opacity=100);
 }
+
+.deck-container .subh1 {
+    font-family: Biolinum, sans-serif;
+    color: #72336b;
+    text-align: center;
+    font-size: 2em;
+    font-style: bold;
+}
