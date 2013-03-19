@@ -61,6 +61,8 @@
 		<li>Interface utilisateur SNACK</li>
 		<li>Contrôle d'accès au réseau</li>
 		<li>Gestion des configurations</li>
+		<li>Journalisation des accès</li>
+		<li>Configuration de SNACK</li>
 		<li>Améliorations possibles</li>
 	</ol>
 </section>
@@ -87,7 +89,7 @@
 		<br />
 		<li>Fondée par Bertrand PÉTAT en 2000</li>
 	</ul>
-	<img src="prezpi/img/BHConsulting.jpg" style="width: 20%;" />
+	<img src="prezpi/img/BHConsulting.jpg" style="width: 30%;" />
 </section>
 
 <section class="slide" id="organigramme">
@@ -100,18 +102,23 @@
 	<h2>Contexte : notre équipe</h2>
 	<ul>
 		<li>Nicolas BOUGET, chef de projet (TRS)</li>
+		<br />
 		<li>Julien GUÉPIN (IL)</li>
+		<br />
 		<li>Marc PINHÈDE (LE)</li>
+		<br />
 		<li>Julien VAUBOURG (TRS)</li>
 	</ul>
 </section>
 
 <section class="slide" id="ctx_goals">
 	<h2>Contexte : objectifs du projet</h2>
-	<p>Sécurite des réseaux d'entreprise</p>
-	<p>Contrôle des accès au réseau</p>
-	<p>Gestion des configurations des équipements</p>
-	<p><strong>Application simple à installer et à utiliser</strong></p>
+	<ul>
+		<li>Outils pour la sécurité des réseaux d'entreprise</li>
+		<br>
+		<li><strong>Application simple à installer et à utiliser</strong></li>
+	</ul>
+	<br>
 	<p>Notre solution : <strong>SNACK</strong> (<strong>S</strong>ecure <strong>N</strong>etwork <strong>A</strong>ccess <strong>C</strong>ontrol <em>for <strong>K</strong>ids</em>)</p>
 </section>
 
@@ -133,12 +140,18 @@
 
 <section class="slide" id="vmproject">
 	<h2>Gestion du projet : VMproject</h2>
-	<p>Application proposée par l'école pour aider la gestion des projets industriels</p>
-	<p>Définition et affectation des tâches, suivi de progression</p>
-	<p>Génération d'un diagramme de Gantt</p>
-	<img src="prezpi/img/vmproject_logo.png" style="float: right;" />
-	<p>Feuilles de temps</p>
-	<p>Rapports de réunions</p>
+	<ul>
+		<li>Application proposée par l'école pour aider la gestion des projets industriels</li>
+		<br>
+		<li>Définition et affectation des tâches, suivi de progression</li>
+		<br>
+		<li>Génération d'un diagramme de Gantt</li>
+		<br>
+		<img src="prezpi/img/vmproject_logo.png" style="float: right;" />
+		<li>Feuilles de temps</li>
+		<br>
+		<li>Rapports de réunions</li>
+	</ul>
 </section>
 
 <section class="slide" id="planning1">
@@ -153,9 +166,11 @@
 
 <section class="slide" id="redmine">
 	<h2>Gestion du projet : Redmine</h2>
-	<p>Dépôt de sources <strong>Subversion</strong> hébergé par l'école</p>
-	<p>Tickets : gestion des <strong>bugs et demandes</strong> de fonctionnalités</p>
-	<p>Conventions de codage sur le wiki</p>
+	<ul>
+		<li>Dépôt de sources <strong>Subversion</strong> hébergé par l'école</li>
+		<li>Tickets : gestion des <strong>bugs et demandes</strong> de fonctionnalités</li>
+		<li>Conventions de codage sur le wiki</li>
+	</ul>
 	<img src="prezpi/img/redmine_logo.png" />
 </section>
 
@@ -165,140 +180,212 @@
 </section>
 
 
-<section class="slide" id="radius">
-	<h2>Contrôle d'accès au réseau</h2>
-	<p>Authentification des utilisateurs du réseau de l'entreprise</p>
-	<p>Journalisation des accès</p>
-	<p>Plusieurs méthodes d'authentification :</p>
-	<ul>
-		<li>Certificat</li>
-		<li>Identifiant et mot de passe</li>
-		<li>Adresse MAC</li>
-	</ul>
-</section>
-
-<section class="slide" id="radius_impl">
-	<h2>Contrôle d'accès : implémentation</h2>
-	<img src="prezpi/img/freeradius.png" style="float: right; width: 20%;" />
-	<p>Utilisation du protocole <strong>802.1x</strong></p>
-	<p>Implémentation avec le serveur libre <strong>FreeRadius</strong></p>
-	<p>Installation sur un serveur GNU/Linux <strong>Ubuntu Server</strong></p>
-	<img src="prezpi/img/mysql.png" style="float: right; width: 20%;" />
-	<p>Stockage des données dans <strong>MySQL</strong></p>
-</section>
-
-<section class="slide" id="radius_fonctionnement1">
-	<h3>Fonctionnement de 802.1x</h3>
-	<img src="prezpi/img/dot1x_1.png" />
-</section>
-
-<section class="slide" id="radius_fonctionnement2">
-	<h3>Fonctionnement de 802.1x</h3>
-	<img src="prezpi/img/dot1x_2.png" />
-</section>
-
-<section class="slide" id="radius_certificates">
-	<h2>Contrôle d'accès : certificats</h2>
-	<p>Méthode d'authentification la plus sécurisée</p>
-	<p>Utilisation du protocole EAP</p>
-	<p>Deux méthodes proposées :</p>
-	<ul>
-		<li>TLS</li>
-		<li>TTLS</li>
-	</ul>
-	<p>Hashage avec MSCHAPV2</p>
-</section>
-
-<section class="slide" id="radius_fonctionnement3">
-	<h3>Fonctionnement de TTLS</h3>
-	<img src="prezpi/img/tls-ttls.svg" style="width: 70%; vertical-align: top; overflow: visible" />
-</section>
-
-<section class="slide" id="radius_problems">
-    <h2>Contrôle d'accès : problèmes rencontrés</h2>
-    <p>Matériel à disposition en salle PI</p>
-    <p>Interaction entre <strong>Cisco et Radius</strong></p>
-    <p>Versions d'IOS</p>
-    <p><strong>Certificats</strong> sous Windows</p>
-    <p>Paquets d'installation : fichiers et tests</p>
-</section>
-
-
-<section class="slide" id="confs">
-	<h2>Gestion des configurations</h2>
-	<p><strong>Sauvegarde</strong> des configurations des équipements réseau</p>
-	<p><strong>Versionnage et comparaison</strong> des configurations</p>
-	<p><strong>Restauration</strong> d'une ancienne configuration</p>
-</section>
-
-<section class="slide" id="confs_impl">
-	<h2>Gestion des configurations : implémentation</h2>
-	<p>Sauvegarde manuelle et à chaque connexion à l'équipement</p>
-	<p>Transmission de la configuration par <strong>TFTP</strong></p>
-	<p>Détection de fin de connexion grâce à un <strong>trap SNMP</strong></p>
-	<p>Versionnage des configurations dans un dépôt <strong>Git</strong></p>
-</section>
-
-<section class="slide" id="confs_fonctionnement_auth">
-    <h3>Fonctionnement de la sauvegarde : authentification</h3>
-    <img src="prezpi/img/auth.svg" style="width:80%;" />
-</section>
-
-<section class="slide" id="confs_fonctionnement_wrmem">
-    <h3>Fonctionnement de la sauvegarde : écriture mémoire</h3>
-    <img src="prezpi/img/wrmem.svg" style="width:80%;" />
-</section>
-
-<section class="slide" id="confs_problems">
-    <h2>Gestion des configurations : problèmes rencontrés</h2>
-    <p>Utilisation du TFTP : non sécurisé et pas de fin de connexion</p>
-    <p>MIB Cisco : gestion des OID pour SNMP</p>
-</section>
-
-
 <section class="slide" id="snack">
-	<h2>Interface utilisateur SNACK</h2>
-	<p>Application web <strong>simple</strong>, ergonomique et sécurisée</p>
-	<p>Gestion des utilisateurs du réseau</p>
-	<p>Configuration du serveur Radius</p>
-	<p>Supervision des accès réseau</p>
-	<p>Gestion des configurations</p>
+	<h2>Interface utilisateur SNACK : problématique</h2>
+	<p>Application web :</p>
+	<ul>
+		<li><strong>simple</strong>,</li>
+		<li>ergonomique,</li>
+		<li>sécurisée.</li>
+	</ul>
 </section>
 
-<section class="slide" id="snack_impl">
-    <h2>Interface utilisateur : implémentation</h2>
+<section class="slide" id="snack_solution">
+    <h2>Interface utilisateur : solution</h2>
     <img src="prezpi/img/php_logo.png" style="float:right; width: 15%;" />
-    <p>Serveur <strong>LAMP</strong></p>
-    <p><strong>CakePHP</strong> pour les traitements serveur</p>
-    <img src="prezpi/img/cake_logo.png" style="float:right; width: 15%;" />
-    <p><strong>Bootstrap</strong> pour l'affichage moderne</p>
-    <p><strong>jQuery</strong> pour simplifier le traitement côté client et les animations</p>
+    <ul>
+	    <li>Serveur <strong>LAMP</strong></li>
+	    <br>
+	    <li><strong>CakePHP</strong> pour les traitements serveur</li>
+	    <br>
+	    <img src="prezpi/img/cake_logo.png" style="float:right; width: 15%;" />
+	    <li><strong>Bootstrap</strong> pour l'affichage moderne</li>
+	    <br>
+	    <li><strong>jQuery</strong> pour simplifier le traitement côté client et les animations</li>
 </section>
 
-<section class="slide" id="snack_problems">
-	<h2>Interface utilisateur : problèmes rencontrés</h2>
-	<p><strong>Schéma</strong> de la base de données Radius</p>
-	<p>Adaptation de CakePHP à <strong>Bootstrap</strong></p>
-	<p>Compatibilité des navigateurs (notamment <strong>Internet Explorer</strong>)</p>
-	<p><strong>Internationalisation</strong> et localisation : anglais et français</p>
-</section>
-
-<section class="slide" id="demo">
+<section class="slide" id="demo_snack">
 	<h1><a href="http://localhost/interface/" target="_blank">Démonstration de l'interface</a></h1>
 </section>
 
 
+<section class="slide" id="radius">
+	<h2>Contrôle d'accès au réseau : problématique</h2>
+	<p><strong>Authentification</strong> des utilisateurs du réseau de l'entreprise</p>
+	<br>
+	<p>Plusieurs méthodes :</p>
+	<ul>
+		<li>Certificat</li>
+		<br>
+		<li>Identifiant et mot de passe</li>
+		<br>
+		<li>Adresse MAC</li>
+	</ul>
+</section>
+
+<section class="slide" id="radius_solution">
+	<h2>Contrôle d'accès au réseau : solution</h2>
+	<img src="prezpi/img/freeradius.png" style="float: right; width: 20%;" />
+	<ul>
+		<li>Utilisation du protocole <strong>802.1x</strong></li>
+		<br>
+		<li>Implémentation avec le logiciel libre <strong>FreeRadius</strong></li>
+		<br>
+		<li>Installation sur un serveur GNU/Linux <strong>Ubuntu Server</strong></li>
+		<br>
+		<img src="prezpi/img/mysql.png" style="float: right; width: 20%;" />
+		<li>Stockage des données dans <strong>MySQL</strong></li>
+	</ul>
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Fonctionnement de 802.1x</h2>
+	<img src="prezpi/img/dot1x_1.png" />
+</section>
+
+<section class="slide" id="controle_fonctionnement2">
+	<h2>Fonctionnement de 802.1x</h2>
+	<img src="prezpi/img/dot1x_2.png" />
+</section>
+
+<section class="slide" id="controle_certificates">
+	<h2>Contrôle d'accès au réseau : les certificats</h2>
+	<ul>
+		<li>Méthode d'authentification la plus sécurisée</li>
+		<br>
+		<li>Utilisation du protocole EAP</li>
+		<br>
+		<li>Deux méthodes proposées :</li>
+		<br>
+		<ul>
+			<li>TLS</li>
+			<br>
+			<li>TTLS</li>
+		</ul>
+		<li>Hashage avec MSCHAPV2</li>
+		<br>
+	</ul>
+</section>
+
+<section class="slide" id="controle_fonctionnement3">
+	<h2>Fonctionnement de TTLS</h2>
+	<img src="prezpi/img/tls-ttls.svg" style="width: 100%;" />
+</section>
+
+<section class="slide" id="demo_controle">
+    <h1><a href="http://localhost/interface/radusers" target="_blank">Démonstration du contrôle d'accès</a></h1>
+</section>
+
+
+<section class="slide" id="radius_problems">
+    <h2>Contrôle d'accès : problèmes rencontrés</h2>
+    <ul>
+	    <li>Matériel à disposition en salle PI</li>
+	    <br>
+	    <li>Interaction entre <strong>Cisco et Radius</strong></li>
+	    <br>
+	    <li>Versions d'IOS</li>
+	    <br>
+	    <li><strong>Certificats</strong> sous Windows</li>
+	    <br>
+	    <li>Paquets d'installation : fichiers et tests</li>
+	</ul>
+</section>
+
+
+<section class="slide" id="confs">
+	<h2>Gestion des configurations : problématique</h2>
+	<ul>
+		<li><strong>Sauvegarde</strong> des configurations des équipements réseau</li>
+		<br>
+		<li><strong>Versionnage et comparaison</strong> des configurations</li>
+		<br>
+		<li><strong>Restauration</strong> d'une ancienne configuration</li>
+	</ul>
+</section>
+
+<section class="slide" id="confs_solution">
+	<h2>Gestion des configurations : solution</h2>
+	<ul>
+		<li>Sauvegarde :</li>
+		<ul>
+			<li>manuelle</li>
+			<li>à chaque connexion à l'équipement</li>
+		</ul>
+		<li>Transmission de la configuration par <strong>TFTP</strong></li>
+		<br>
+		<li>Dialogue avec les équipements en SNMP</strong></li>
+		<br>
+		<li>Versionnage des configurations dans un dépôt <strong>Git</strong></li>
+	</ul>
+</section>
+
+<section class="slide" id="confs_fonctionnement_auth">
+    <h2>Fonctionnement de la sauvegarde : authentification</h2>
+    <img src="prezpi/img/auth.svg" style="width:100%;" />
+</section>
+
+<section class="slide" id="confs_fonctionnement_wrmem">
+    <h2>Fonctionnement de la sauvegarde : écriture mémoire</h2>
+    <img src="prezpi/img/wrmem.svg" style="width:100%;" />
+</section>
+
+<section class="slide" id="demo_confs">
+    <h1><a href="http://localhost/interface/nas" target="_blank">Démonstration de la gestion des configurations</a></h1>
+</section>
+
+<section class="slide" id="confs_problems">
+    <h2>Gestion des configurations : problèmes rencontrés</h2>
+    <ul>
+	    <li>Utilisation du TFTP : non sécurisé et pas de fin de connexion</li>
+	    <br>
+	    <li>MIB Cisco : gestion des OID pour SNMP</li>
+	</ul>
+</section>
+
+<section class="slide" id="logs">
+    <h2>Journalisation des accès</h2>
+</section>
+
+<section class="slide" id="demo_logs">
+    <h1><a href="http://localhost/interface/radaccts" target="_blank">Démonstration de la journalisation des accès</a></h1>
+</section>
+
+<section class="slide" id="logs">
+	<h2>Configuration du serveur et des outils</h2>
+</section>
+
+<section class="slide" id="demo_params">
+    <h1><a href="http://localhost/interface/systemDetails" target="_blank">Démonstration de la configuration de SNACK</a></h1>
+</section>
+
+<section class="slide" id="snack_problems">
+	<h2>Interface utilisateur : problèmes rencontrés</h2>
+	<ul>
+		<li><strong>Schéma</strong> de la base de données Radius</li>
+		<br>
+		<li>Adaptation de CakePHP à <strong>Bootstrap</strong></li>
+		<br>
+		<li>Compatibilité des navigateurs (notamment <strong>Internet Explorer</strong>)</li>
+		<br>
+		<li><strong>Internationalisation</strong> et localisation : anglais et français</li>
+	</ul>
+</section>
+
 <section class="slide" id="future">
     <h2>Améliorations possibles</h2>
-    <p><strong>Terminal</strong> virtuel</p>
-    <p>Tests unitaires</p>
-    <p>Gestion des équipements :</p>
     <ul>
-    	<li>Versions d'IOS</li>
-    	<li>Firewall Astaro</li>
-    	<li>Auto-configuration des switchs</li>
-    </ul>
-    <p>Utilisation de <strong>LDAP</strong> au lieu de MySQL</p>
+	    <li><strong>Terminal</strong> virtuel</li>
+		<br>
+	    <li>Tests unitaires</li>
+		<br>
+	    <li>Gestion des équipements :</li>
+	    <ul>
+	    	<li>Versions d'IOS</li>
+	    	<li>Pare-feu Astaro</li>
+	    	<li>Auto-configuration des commutateurs</li>
+	    </ul>
+	    <li>Utilisation de <strong>LDAP</strong> au lieu de MySQL</li>
 </section>
 
 <section class="slide" id="ccl">
