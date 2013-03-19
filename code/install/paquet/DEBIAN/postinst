@@ -283,7 +283,7 @@ echo 5 | whiptail \
 {
 sed \
 	-e "s|^\(dir\s*=\s*\)\S\+\(.*\)$|\1$DEST_PATH\2|"\
-	-e "s|^\(certificate\s*=\s*\)\S\+\(.*\)$|\1\$dir/private/cacert.pem\2|"\
+	-e "s|^\(certificate\s*=\s*\)\S\+\(.*\)$|\1\$dir/private/$CA_CERT\2|"\
 	-i $SSL_CONF
 echo "" >> $SSL_CONF
 
@@ -346,6 +346,10 @@ openssl ca \
 	-extensions v3_ca \
 	-infiles $DEST_PATH/private/$CA_REQ
 } >> $OUT 2>>$LOG
+
+# Symlink for the interface
+ln -s $DEST_PATH/private/$CA_CERT $DEST_PATH/$CA_CERT
+chown $INTERFACE_USER: $DEST_PATH/$CA_CERT
 
 echo 30 | whiptail \
 	--title "SNACK ${VERSION}" \

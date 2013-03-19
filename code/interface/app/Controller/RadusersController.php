@@ -504,6 +504,7 @@ class RadusersController extends AppController {
         $certsPath = Utils::getUserCertsPath($username);
         $attributes['Certificate path'] = $certsPath['public'];
         $attributes['Key path'] = $certsPath['key'];
+        $attributes['Server certificate path'] = Utils::getServerCertPath();
         $attributes['Cisco'] = $views['base']['Raduser']['is_cisco'] 
             ? _('Yes') : _('No');
 
@@ -539,6 +540,7 @@ class RadusersController extends AppController {
             'Comment',
             'Certificate path',
             'Key path',
+	    'Server certificate path',
             'EAP-Type',
             'Expiration',
             'Simultaneous-Use', 

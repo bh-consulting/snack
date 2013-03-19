@@ -7,7 +7,7 @@ $this->assign('users_active', 'active');
 $attributes['Certificate path'] = $this->Html->link(
     __($attributes['Certificate path']), 
     array(
-    	'action' => 'get_public' . '/' . $attributes['Username'],
+    	'action' => 'get_public/' . $attributes['Username'],
     	'controller' => 'certs',
     )
 );
@@ -15,7 +15,15 @@ $attributes['Certificate path'] = $this->Html->link(
 $attributes['Key path'] = $this->Html->link(
     __($attributes['Key path']), 
     array(
-    	'action' => 'get_key' . '/' . $attributes['Username'],
+    	'action' => 'get_key/' . $attributes['Username'],
+    	'controller' => 'certs',
+    )
+);
+
+$attributes['Server certificate path'] = $this->Html->link(
+    __($attributes['Server certificate path']),
+    array(
+    	'action' => 'get_public/server',
     	'controller' => 'certs',
     )
 );

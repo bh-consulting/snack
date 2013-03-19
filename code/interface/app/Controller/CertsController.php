@@ -21,8 +21,13 @@ class CertsController extends AppController {
      * @return response file to download
      */
     private function get_cert($user, $file_type) {
-        $userCert = Utils::getUserCertsPath($user);
-        $file = $userCert[$file_type];
+	if($user == 'server') {
+	    $file = Utils::getServerCertPath();
+	} else {
+	    $userCert = Utils::getUserCertsPath($user);
+	    $file = $userCert[$file_type];
+	}
+
         try {
             $this->response->file($file);
             return $this->response;

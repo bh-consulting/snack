@@ -1,4 +1,4 @@
-<h2><?php echo $title; ?></h2>
+<h1><?php echo $title; ?></h1>
 <?php
 echo $this->element('dropdownButton', array(
 	'buttonCount' => 2,

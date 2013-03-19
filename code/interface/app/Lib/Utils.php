@@ -232,6 +232,10 @@ class Utils {
 		return $result;
 	}
 
+    public static function getServerCertPath() {
+	return Configure::read('Parameters.certsPath') . '/cacert.pem';
+    }
+
     public static function getUserCertsPath($username) {
         $base = Configure::read('Parameters.certsPath') . '/users/' . $username;
         return array(
