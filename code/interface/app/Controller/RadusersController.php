@@ -1264,6 +1264,7 @@ class RadusersController extends AppController {
     }
 
     public function delete ($id = null) {
+        $alreadyFlashed = false;
         try {
             if($this->request->is('get')){
                 throw new MethodNotAllowedException();
@@ -1275,20 +1276,31 @@ class RadusersController extends AppController {
             // Revoke and remove certificate for user
             if ($this->Raduser->field('is_cert') == 1) {
                 //TODO: gérer les exceptions
-                $this->removeCertificate(
-                    $id,
-                    $this->Raduser->field('username')
-                );
+                try {
+                    $this->removeCertificate(
+                        $id,
+                        $this->Raduser->field('username')
+                    );
+                } catch(CertificateNotFoundException $e){
+                    $this->Session->setFlash(
+                        $e->getMessage(),
+                        'flash_warning'
+                    );
+                    Utils::userlog(__('warning: while deleting user %s, certificate files not found!', $id), 'error');
+                    $alreadyFlashed = true;
+                }
             }
 
             $this->Checks->delete($this->request, $id);
             Utils::userlog(__('deleted user %s', $id));
 
-            $this->Session->setFlash(
-                __('The user has been deleted.'),
-                'flash_success'
-            );
-        } catch(UserGroupException $e) {
+            if(! $alreadyFlashed) {
+                $this->Session->setFlash(
+                    __('The user has been deleted.'),
+                    'flash_success'
+                );
+            }
+        } catch(Exception $e) {
             $this->Session->setFlash(
                 $e->getMessage(),
                 'flash_error'
