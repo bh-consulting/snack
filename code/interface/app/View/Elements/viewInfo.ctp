@@ -1,38 +1,49 @@
 <h1><?php echo $title; ?></h1>
 <?php
-echo $this->element('dropdownButton', array(
-	'buttonCount' => 2,
-	'title' => h($name),
-	'icon' => $icon,
-	'linkOptions' => array('action' => $editAction, $id),
-	'items' => array(
-		$this->Html->link(
+
+// Don't show the edit/delete button for tech users
+// => show only for admin and root users
+if(AuthComponent::user('role') !== 'tech'){
+    $items = array(
+        $this->Html->link(
 			'<i class="icon-edit"></i> ' . __('Edit'),
 			array('action' => $editAction, $id),
 			array('escape' => false)
-		),
-		$this->Html->link(
+        ),
+    );
+
+    // show delete button only for root users
+    if(AuthComponent::user('role') === 'root'){
+		$items[]= $this->Html->link(
 			'<i class="icon-remove"></i> ' . __('Delete'),
 			"#confirm$id",
 			array(
 			    'escape' => false,
 			    'data-toggle' => 'modal'
 			)
-		)
-	)
-));
+		);
 
-echo $this->element('modalDelete', array(
-    'id'   => $id,
-    'link' => $this->Form->postLink(
-    	    '<i class="icon-remove icon-white"></i> ' . __('Delete'),
-    	    array('action' => 'delete', $id),
-    	    array(
-    		'escape' => false,
-    		'class' => 'btn btn-primary btn-danger'
-    	    )
-    	)
-));
+        echo $this->element('modalDelete', array(
+            'id'   => $id,
+            'link' => $this->Form->postLink(
+                    '<i class="icon-remove icon-white"></i> ' . __('Delete'),
+                    array('action' => 'delete', $id),
+                    array(
+                        'escape' => false,
+                        'class' => 'btn btn-primary btn-danger'
+                    )
+                )
+        ));
+    }
+
+    echo $this->element('dropdownButton', array(
+        'buttonCount' => 2,
+        'title' => h($name),
+        'icon' => $icon,
+        'linkOptions' => array('action' => $editAction, $id),
+        'items' => $items,
+    ));
+}
 
 ?>
 
