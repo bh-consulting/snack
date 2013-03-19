@@ -47,6 +47,8 @@ $(document).ready(function() {
             $('#rootwizard').find('.pager .next').show();
             $('#rootwizard').find('.pager .finish').hide();
         }
+
+        $('html, body').animate({scrollTop: 0}, 500);
     }});
 
     $("input[type='password']").val('');
