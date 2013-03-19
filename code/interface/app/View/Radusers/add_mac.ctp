@@ -52,6 +52,6 @@ echo $this->element('wizard', array(
 ));
 
 $this->start('script');
-$this->Html->script('wizard_focus');
+echo $this->Html->script('wizard_focus');
 $this->end();
 ?>
