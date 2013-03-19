@@ -891,32 +891,37 @@ class RadusersController extends AppController {
     public function add_snack() {
         if($this->request->is('post')){
             $found = false;
-            $Radcheck = new Radcheck;
+            $username = '';
+            $Radcheck = new Radcheck();
 
             // add the admin rights to an existing user
             if(isset($this->request->data['Raduser']['existing_user'])
                 && !empty($this->request->data['Raduser']['existing_user'])
             ){
                 $user = $this->Raduser->findById($this->request->data['Raduser']['existing_user']);
-                $user['Raduser']['role'] = $this->request->data['Raduser']['role'];
-                $this->request->data['Raduser']['username'] = $user['Raduser']['username'];
 
-                // change or add the password to the user
-                if(isset($this->request->data['Raduser']['passwd'])){
-                    $checks = $this->Checks->getChecks($this->request->data['Raduser']['existing_user']);
-                    foreach ($checks as $check) {
-                        if($check['Radcheck']['attribute'] == 'Cleartext-Password'){
-                            $check['Radcheck']['value'] = $this->request->data['Raduser']['passwd'];
-                            $found = true;
-                            $Radcheck->save($check);
-                            break;
+                if ($user) {
+                    $user['Raduser']['role'] = $this->request->data['Raduser']['role'];
+                    $username = $user['Raduser']['username'];
+
+                    // change or add the password to the user
+                    if (isset($this->request->data['Raduser']['passwd'])) {
+                        $checks = $this->Checks->getChecks($this->request->data['Raduser']['existing_user']);
+                        foreach ($checks as $check) {
+                            if($check['Radcheck']['attribute'] == 'Cleartext-Password'){
+                                $check['Radcheck']['value'] = $this->request->data['Raduser']['passwd'];
+                                $found = true;
+                                $Radcheck->save($check);
+                                break;
+                            }
                         }
                     }
+
+                    $success = $this->Raduser->save($user, true, array('role'));
+                } else {
+                    $success = false;
                 }
-
-                $success = $this->Raduser->save($user);
-
-                // create a new user (only admin)
+            // create a new user (only admin)
             } else {
                 $this->Raduser->create();
                 $success = $this->Raduser->save($this->request->data);
@@ -924,13 +929,20 @@ class RadusersController extends AppController {
 
             // the user does not exist in radcheck, create it
             if(!$found){
-                $Radcheck->create();
-                $Radcheck->save(array(
-                    'username' => $this->request->data['Raduser']['username'],
-                    'attribute' => 'Cleartext-Password',
-                    'op' => ':=',
-                    'value' => $this->request->data['Raduser']['passwd']
-                ));
+                if (!empty($this->request->data['Raduser']['passwd'])
+                    && !empty($username)
+                    && $this->request->data['Raduser']['passwd'] == $this->request->data['Raduser']['confirm_password']
+                ) {
+                    $Radcheck->create();
+                    $Radcheck->save(array(
+                        'username' => $username,
+                        'attribute' => 'Cleartext-Password',
+                        'op' => ':=',
+                        'value' => $this->request->data['Raduser']['passwd']
+                    ));
+                } else {
+                    $success = false;
+                }
             }
 
             if($success){
@@ -950,10 +962,28 @@ class RadusersController extends AppController {
             }
         }
 
-        $users = $this->Raduser->find('all', array('conditions' => array('Raduser.role !=' => 'root')));
+        $users = $this->Raduser->find(
+            'all',
+            array(
+                'fields' => array(
+                    '*',
+                    '(SELECT attribute from radcheck where username=Raduser.username and attribute=\'Cleartext-Password\' limit 1) as pwd',
+                ),
+                'conditions' => array(
+                    'Raduser.role' => 'user',
+                ),
+            )
+        );
+
         $values = array();
         foreach ($users as $u) {
-            $values[$u['Raduser']['id']]= $u['Raduser']['username'];
+            if ($this->Checks->getType($u['Raduser'], false) != 'mac') {
+                $values[]= array(
+                    'name' => $u['Raduser']['username'],
+                    'value' => $u['Raduser']['id'],
+                    'data-pwd' => is_null($u[0]['pwd']),
+                );
+            }
         }
         $this->set('users', $values);
         $this->set('roles', $this->Raduser->roles);

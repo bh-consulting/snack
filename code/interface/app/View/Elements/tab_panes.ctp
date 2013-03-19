@@ -5,7 +5,7 @@ if(!isset($active)){
 ?>
 
 <div class="tabbable">
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" id="subtab">
         <?php
         $i = 1;
         foreach($items as $title => $content){
