@@ -137,7 +137,10 @@ foreach ($columns as $field => $info) {
         echo $this->Paginator->sort(
             $field,
             $info['text'] . ' '. $sort,
-            array('escape' => false)
+            array(
+                'escape' => false,
+                'url' => array('page' => 1),
+            )
         );
         break;
     }
