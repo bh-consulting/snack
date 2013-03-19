@@ -30,7 +30,7 @@ echo $this->Html->link(
     <dd>
 <?php
 echo $radiusstate;
-if(AuthComponent::user('role') == 'superadmin'){
+if(AuthComponent::user('role') == 'root'){
     echo $this->Html->link(
         '<i class="icon-refresh icon-white"></i> ' . __('Restart Freeradius'),
         array(
@@ -50,7 +50,7 @@ if(AuthComponent::user('role') == 'superadmin'){
     <dd>
 <?php
 echo $mysqlstate;
-if(AuthComponent::user('role') == 'superadmin'){
+if(AuthComponent::user('role') == 'root'){
     echo $this->Html->link(
         '<i class="icon-refresh icon-white"></i> ' . __('Restart Mysql'),
         array(
