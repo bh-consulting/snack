@@ -26,7 +26,7 @@ $userInfo .= $this->element('tab_panes', array(
             'existing_user',
             array(
                 'type' => 'select',
-                'options' => array_merge(array('' => __('Select an user...')), $users),
+                'options' => array_merge(array('' => __('Select a user...')), $users),
                 'label' => __('Existing user')
             )
         ) . '<div id="passwords">' . $passwords . '</div>',
