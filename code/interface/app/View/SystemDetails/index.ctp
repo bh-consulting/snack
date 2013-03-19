@@ -24,6 +24,22 @@ echo $this->Html->link(
     <dd><?php echo $hostname; ?></dd>
 </dl>
 
+<h4><?php echo __('Certificates:'); ?></h4>
+<dl class="well dl-horizontal">
+    <dt><?php echo __('CA link'); ?></dt>
+    <dd>
+<?php
+echo $this->Html->link(
+    Utils::getServerCertPath(),
+    array(
+    	'action' => 'get_public/server',
+    	'controller' => 'certs',
+    )
+);
+?>
+    </dd>
+</dl>
+
 <h4><?php echo __('Services:'); ?></h4>
 <dl class="well dl-horizontal">
     <dt><?php echo __('Freeradius'); ?></dt>

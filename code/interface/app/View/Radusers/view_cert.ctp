@@ -5,7 +5,7 @@ $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
 
 $attributes['Certificate path'] = $this->Html->link(
-    __($attributes['Certificate path']), 
+    $attributes['Certificate path'], 
     array(
     	'action' => 'get_public/' . $attributes['Username'],
     	'controller' => 'certs',
@@ -13,7 +13,7 @@ $attributes['Certificate path'] = $this->Html->link(
 );
 
 $attributes['Key path'] = $this->Html->link(
-    __($attributes['Key path']), 
+    $attributes['Key path'], 
     array(
     	'action' => 'get_key/' . $attributes['Username'],
     	'controller' => 'certs',
@@ -21,7 +21,7 @@ $attributes['Key path'] = $this->Html->link(
 );
 
 $attributes['Server certificate path'] = $this->Html->link(
-    __($attributes['Server certificate path']),
+    $attributes['Server certificate path'],
     array(
     	'action' => 'get_public/server',
     	'controller' => 'certs',
