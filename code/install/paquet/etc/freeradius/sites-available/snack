@@ -1,5 +1,6 @@
 server snack {
 	authorize {
+        rewrite_calling_station_id
 		preprocess
 		suffix
 		expiration
