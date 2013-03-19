@@ -9,7 +9,7 @@ echo '<h1>' . __('Add a group') . '</h1>';
 echo $this->Form->create('Radgroup', array('novalidate' => true));
 
 $info = '<fieldset>';
-$info .= '<legend>' . __('Checks') . '</legend>';
+$info .= '<legend>' . __('Information') . '</legend>';
 $info .= $this->Form->input('groupname', array('label' => __('Name')));
 $info .= $this->element('doubleListsSelector', array('leftTitle' => __('Users'), 'rightTitle' => __('Selected users'), 'contents' => $users, 'selectedContents' => array()));
 $info .= $this->Form->input('users', array('type' => 'select', 'id' => 'select-right', 'label' => '', 'class' => 'hidden', 'multiple' => 'multiple'));
