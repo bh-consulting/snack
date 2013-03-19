@@ -513,17 +513,32 @@ class ChecksComponent extends Component {
                 }
             }
             if(!$found && !empty($value)){
+                // set operator depending on attribute value
+                switch ($key) {
+                    case 'Calling-Station-Id':
+                        $operator = '==';
+                        break;
+                    
+                    case 'NAS-Port-Type':
+                        $operator = '~=';
+                        break;
+
+                    default:
+                        $operator = ':=';
+                        break;
+                }
+
                 if (!$this->createCheck(
                     $this->baseClass->field($this->displayName),
                     $key,
-                    ':=',//TODO: ceci n'est pas vrai pour tous les attributs (==, =~..)
+                    $operator,
                     $value
                 )) {
                     throw new CheckAddException(
                         $this->baseClassName,
                         $this->baseClass->id,
                         $this->baseClass->field($this->displayName),
-                        $key.':='.$value
+                        $key.$operator.$value
                     );
                 }
             }
