@@ -42,9 +42,12 @@
 	<h1>Projet industriel SNACK</h1>
 	<p class="subh1">Secure Network Access Control <em>for Kids</em></p>
 	<div class="text-center">
-		<p><em>N. BOUGET, J. GUÉPIN, M. PINHÈDE, J. VAUBOURG</em></p>
-		<p>Encadré par G. ROCHE et J.-F. SCHEID</p>
+		<p style="font-size: 25px"><em>N. BOUGET, J. GUÉPIN, M. PINHÈDE, J. VAUBOURG</em></p>
+		<p style="font-size: 25px">Encadré par G. ROCHE et J.-F. SCHEID</p>
+		<br>
 		<p><strong>21 mars 2013</strong></p>
+		<br>
+		<br>
 	</div>
 	<img src="prezpi/img/telecom-nancy.jpg" style="float:left; width: 20%;" />
 	<img src="prezpi/img/ul.png" style="float:right; width: 20%;" />
@@ -96,7 +99,7 @@
 	<ul>
 		<li class="slide">Spécialisée dans l'<strong>implantation de réseaux d'entreprise</strong></li>
 		<br />
-		<li class="slide">Petite entreprise à <strong>taille humaine</strong></li>
+		<li class="slide">Entreprise à <strong>taille humaine</strong></li>
 		<br />
 		<li class="slide">Fondée par <strong>Bertrand PÉTAT</strong> en 2000</li>
 	</ul>
@@ -217,7 +220,7 @@
     <h2>Solutions</h2>
     <!-- <img src="prezpi/img/php_logo.png" style="float:right; width: 15%;" /> -->
     <ul>
-	    <li class="slide">Serveur <strong>LAMP</strong></li>
+	    <li class="slide">Serveur <strong>LAMP</strong> (GNU/Linux, Apache, MySQL, PHP)</li>
 	    <br>
 	    <li class="slide"><strong>CakePHP</strong></li>
 	    <br>
@@ -230,6 +233,19 @@
 
 <section class="slide" id="demo_snack">
 	<h1><a href="http://localhost/interface/" target="_blank">Démonstration</a></h1>
+</section>
+
+<section class="slide" id="snack_problems">
+	<h2>Problèmes rencontrés</h2>
+	<ul>
+		<li class="slide"><strong>Schéma</strong> MySQL de la base de données imposé</li>
+		<br>
+		<li class="slide">Adaptation de CakePHP à <strong>Bootstrap</strong></li>
+		<br>
+		<li class="slide">Compatibilité des navigateurs (<strong>Internet Explorer</strong>)</li>
+		<br>
+		<li class="slide"><strong>Internationalisation</strong> et localisation</li>
+	</ul>
 </section>
 
 <section class="slide" id="demo_controle">
@@ -319,8 +335,6 @@
 	    <li class="slide"><strong>Incompatibilités</strong> des versions de Cisco IOS</li>
 	    <br>
 	    <li class="slide">Certificats sous <strong>Windows</strong></li>
-	    <br>
-	    <li class="slide"><strong>Conflits</strong> avec le paquet d'installation</li>
 	</ul>
 </section>
 
@@ -332,7 +346,7 @@
 	<h2>Problématique</h2>
 	<ul>
 	    <li class="slide">
-		<strong>Trace des accès</strong> contrôlés</li>
+		<strong>Trace des accès</strong> contrôlés :</li>
 		<br>
 		<ul>    
 		    <li class="slide">Pour la <strong>sécurité</strong> du client</li>
@@ -391,7 +405,7 @@
 <section class="slide" id="radius_solution">
 	<h2>Solutions</h2>
 	<ul>
-		<li class="slide">Module d'<strong>accounting</strong> de FreeRadius</li>
+		<li class="slide">Module d'<strong><em>accounting</em></strong> de FreeRadius</li>
 		<br>
 		<li class="slide"><strong>Réauthentifications régulières</strong> sur les commutateurs.</li>
 		<br>
@@ -410,6 +424,8 @@
 <section class="slide" id="confs">
 	<h2>Problématique</h2>
 	<ul>
+		<li class="slide"><strong>Authentification</strong> des administrateurs</li>
+		<br>
 		<li class="slide"><strong>Sauvegarde</strong> des configurations</li>
 		<br>
 		<li class="slide"><strong>Stockage et comparaison</strong> des configurations</li>
@@ -420,6 +436,8 @@
 
 <section class="slide" id="confs">
 	<h2>Problématique</h2>
+	<ul><li><strong>Suivi</strong> des mises à jour et <strong>sécurisation</strong> des actions en détectant :</li>
+	<br />
 	<ol>
 		<li class="slide"><strong>Connexion</strong> d'un administrateur</li>
 		<br>
@@ -526,24 +544,11 @@
 </section>
 
 <section class="slide" id="demo_controle">
-    <h1>Gestion des journaux &amp; paramètres</h1>
+    <h1>Gestion des journaux, supervision &amp; paramètres</h1>
 </section>
 
 <section class="slide" id="demo_params">
     <h1><a href="http://localhost/interface/systemDetails" target="_blank">Démonstration</a></h1>
-</section>
-
-<section class="slide" id="snack_problems">
-	<h2>Problèmes rencontrés pour l'interface</h2>
-	<ul>
-		<li class="slide"><strong>Schéma</strong> de la base de données Radius</li>
-		<br>
-		<li class="slide">Adaptation de CakePHP à <strong>Bootstrap</strong></li>
-		<br>
-		<li class="slide">Compatibilité des navigateurs (notamment <strong>Internet Explorer</strong>)</li>
-		<br>
-		<li class="slide"><strong>Internationalisation</strong> et localisation : anglais et français</li>
-	</ul>
 </section>
 
 <section class="slide" id="demo_controle">
@@ -551,18 +556,19 @@
 </section>
 
 <section class="slide" id="controle_fonctionnement1">
-	<h2>Information</h2>
+	<h2>Installation SNACK</h2>
 	<img src="prezpi/img/install_start.png" />
-</section>
-
-<section class="slide" id="controle_fonctionnement1">
-	<h2>Invite de saisie</h2>
+	<br>
 	<img src="prezpi/img/install_prompt.png" />
+	<br>
+	<img src="prezpi/img/install_progress.png" />
 </section>
 
-<section class="slide" id="controle_fonctionnement1">
-	<h2>Barre de progression</h2>
-	<img src="prezpi/img/install_progress.png" />
+<section class="slide" id="radius_problems">
+    <h2>Problèmes rencontrés</h2>
+    <ul>
+	<li class="slide"><strong>Conflits</strong> avec les autres paquets</li>
+    </ul>
 </section>
 
 <section class="slide" id="demo_controle">
@@ -574,21 +580,21 @@
     <ul>
 	    <li class="slide"><strong>Terminal</strong> virtuel</li>
 		<br>
-	    <li class="slide">Tests unitaires</li>
+	    <li class="slide"><strong>Tests</strong> unitaires</li>
 		<br>
 	    <li class="slide">Gestion des équipements :</li>
 		<br>
 	    <ul>
-	    	<li class="slide">Versions d'IOS</li>
-	    	<li class="slide">Pare-feu Astaro</li>
-	    	<li class="slide">Auto-configuration des commutateurs</li>
+	    	<li class="slide"><strong>Compatibilité</strong> autre que Cisco (Juniper ?)</li>
+	    	<li class="slide"><strong>Pare-feu</strong> Astaro</li>
+	    	<li class="slide"><strong>Auto-configuration</strong> des commutateurs</li>
 	    </ul>
-	    <li class="slide">Utilisation de <strong>LDAP</strong> au lieu de MySQL</li>
+	    <li class="slide"><strong>LDAP</strong> au lieu de MySQL</li>
 </section>
 
 <section class="slide" id="ccl">
 	<h2>Conclusion</h2>
-	<p><strong>Solution complète, simple et fonctionnelle</strong></p>
+	<p><strong>Solution complète, simple et puissant</strong></p>
 		<br>
 	<p>Découverte de <strong>nombreux outils</strong></p>
 		<br>
