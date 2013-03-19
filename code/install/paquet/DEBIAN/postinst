@@ -39,6 +39,8 @@ RADIUS_KEY=radius_key.pem
 RADIUS_REQ=radius_req.pem
 RADIUS_CERT=radius_cert.pem
 
+INNER_TUNNEL_VIRTUAL_SERVER=${RADIUS_PATH}/sites-available/inner-tunnel
+
 EAP_CONF=${RADIUS_PATH}/eap.conf
 SQL_CONF=${RADIUS_PATH}/sql.conf
 RADIUSD_CONF=${RADIUS_PATH}/radiusd.conf
@@ -468,6 +470,15 @@ echo 70 | whiptail \
 # onfiguration du fichier eap.conf
 
 # TLS
+sed\
+	-e "{N 
+	    s/\s*#  Read the 'users' file\n\s*files/\\t#  Read the 'users' file\n#\\tfiles/
+	    }" \
+	-e "{N
+	    s/\s*#  See \"Authorization Queries\" in sql.conf\n\s*#\s*sql/\\t#  See \"Authorization Queries\" in sql.conf\n\\tsql/
+	    }" \
+	-i $INNER_TUNNEL_VIRTUAL_SERVER \
+>> $OUT 2>>$LOG
 sed\
         -e "/certdir =/i \\\t\t\tconfdir = $DEST_PATH"\
         -e "/certdir =/c \\\t\t\tcertdir = \${confdir}"\
