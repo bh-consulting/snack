@@ -42,8 +42,8 @@
 	<h1>Projet industriel SNACK</h1>
 	<p class="subh1">Secure Network Access Control <em>for Kids</em></p>
 	<div class="text-center">
-		<p><em>Nicolas BOUGET, Julien GUÉPIN, Marc PINHÈDE, Julien VAUBOURG</em></p>
-		<p>Encadré par Guillaume ROCHE et Jean-François SCHEID</p>
+		<p><em>N. BOUGET, J. GUÉPIN, M. PINHÈDE, J. VAUBOURG</em></p>
+		<p>Encadré par G. ROCHE et J.-F. SCHEID</p>
 		<p><strong>21 mars 2013</strong></p>
 	</div>
 	<img src="prezpi/img/telecom-nancy.jpg" style="float:left; width: 20%;" />
@@ -58,27 +58,36 @@
 	<ol class="plan">
 		<li>Contexte</li>
 		<li>Gestion du projet</li>
+		<li>Interface utilisateur SNACK</li>
 		<li>Contrôle d'accès au réseau</li>
 		<li>Gestion des configurations</li>
-		<li>Interface utilisateur SNACK</li>
 		<li>Améliorations possibles</li>
 	</ol>
 </section>
 
 <section class="slide" id="ctx_pi">
 	<h2>Contexte : le projet industriel</h2>
-	<p>Projet dans un contexte industriel en 3<sup>ème</sup> année de TELECOM Nancy</p>
-	<p>Découverte de la gestion du cycle complet d'un projet</p>
-	<p><strong>250 heures</strong> par étudiant (12 heures par semaine)</p>
-	<p>Suivi par un encadrant industriel (<strong>Guillaume ROCHE</strong>) et un encadrant universitaire (<strong>Jean-François SCHEID</strong>)</p>
+	<ul>
+		<li>Projet dans un contexte industriel en 3<sup>ème</sup> année de TELECOM Nancy</li>
+		<br />
+		<li>Découverte de la gestion du cycle complet d'un projet</li>
+		<br />
+		<li><strong>250 heures</strong> par étudiant (12 heures par semaine)</li>
+		<br />
+		<li>Suivi par un encadrant industriel (<strong>Guillaume ROCHE</strong>) et un encadrant universitaire (<strong>Jean-François SCHEID</strong>)</li>
+	</li>
 </section>
 
 <section class="slide" id="ctx_bh">
 	<h2>Contexte : le client, b.h. consulting</h2>
-	<p>Entreprise spécialisée dans l'<strong>implantation de réseaux d'entreprise</strong></p>
-	<p>Petite entreprise à taille humaine</p>
-	<p>Fondée par Bertrand PÉTAT en 2000</p>
-	<img src="prezpi/img/reseaubh.gif" />
+	<ul>
+		<li>Entreprise spécialisée dans l'<strong>implantation de réseaux d'entreprise</strong></li>
+		<br />
+		<li>Petite entreprise à taille humaine</li>
+		<br />
+		<li>Fondée par Bertrand PÉTAT en 2000</li>
+	</ul>
+	<img src="prezpi/img/BHConsulting.jpg" style="width: 20%;" />
 </section>
 
 <section class="slide" id="organigramme">
@@ -133,12 +142,12 @@
 </section>
 
 <section class="slide" id="planning1">
-	<h3>Gestion du projet : diagramme de Gantt</h3>
+	<h2>Gestion du projet : diagramme de Gantt</h2>
 	<iframe src="prezpi/img/gantt1.png" class="snack_frame"></iframe>
 </section>
 
 <section class="slide" id="planning2">
-	<h3>Gestion du projet : diagramme de Gantt</h3>
+	<h2>Gestion du projet : diagramme de Gantt</h2>
 	<iframe src="prezpi/img/gantt2.png" class="snack_frame"></iframe>
 </section>
 
@@ -151,7 +160,7 @@
 </section>
 
 <section class="slide" id="redmine_screenshot">
-    <h3>Demande de fonctionnalité : afficher les logs de l'interface</h3>
+    <h2>Demande de fonctionnalité : afficher les logs de l'interface</h2>
     <img src="prezpi/img/screenshot_ticket.png" />
 </section>
 
@@ -274,41 +283,10 @@
 	<p><strong>Internationalisation</strong> et localisation : anglais et français</p>
 </section>
 
-<!-- <section class="slide" id="demo_users">
-	<h3><a href="http://localhost/interface/radusers" target="_blank">Démo : gestion des utilisateurs</a></h3>
-	<iframe class="snack_frame" src="http://localhost/interface/radusers"></iframe>
+<section class="slide" id="demo">
+	<h1><a href="http://localhost/interface/" target="_blank">Démonstration de l'interface</a></h1>
 </section>
 
-<section class="slide" id="demo_groups">
-	<h3><a href="http://localhost/interface/radgroups" target="_blank">Démo : gestion des groupes</a></h3>
-	<iframe class="snack_frame" src="http://localhost/interface/radgroups"></iframe>
-</section>
-
-<section class="slide" id="demo_nas">
-	<h3><a href="http://localhost/interface/nas" target="_blank">Démo : gestion des NAS et des configurations</a></h3>
-	<iframe class="snack_frame" src="http://localhost/interface/nas"></iframe>
-</section>
-
-<section class="slide" id="demo_sessions">
-	<h3><a href="http://localhost/interface/radaccts" target="_blank">Démo : affichage des sessions</a></h3>
-	<iframe class="snack_frame" src="http://localhost/interface/radaccts"></iframe>
-</section>
-
-<section class="slide" id="demo_logs">
-	<h3><a href="http://localhost/interface/loglines" target="_blank">Démo : affichage des logs</a></h3>
-	<iframe class="snack_frame" src="http://localhost/interface/loglines"></iframe>
-</section>
-
-<section class="slide" id="demo_dashboard">
-	<h3><a href="http://localhost/interface/systemDetails" target="_blank">Démo : tableau de bord du système</a></h3>
-	<iframe class="snack_frame" src="http://localhost/interface/systemDetails"></iframe>
-</section>
-
-<section class="slide" id="demo_parameters">
-	<h3><a href="http://localhost/interface/parameters" target="_blank">Démo : paramétrage du serveur</a></h3>
-	<iframe class="snack_frame" src="http://localhost/interface/parameters"></iframe>
-</section>
- -->
 
 <section class="slide" id="future">
     <h2>Améliorations possibles</h2>
@@ -331,8 +309,8 @@
 </section>
 
 <section class="slide" id="end">
-	<h1>Vacances !</h1>
-	<p class="subh1">Merci pour votre attention</p>
+	<h1>Merci pour votre attention</h1>
+	<p class="subh1">Questions ?</p>
 </section>
 <!-- End slides. -->
 

@@ -16,6 +16,7 @@
 }
 .deck-container .slide h2 {
     color: #006cb7;
+    font-size: 1.4375em;
 }
 
 .deck-container .slide ::-moz-selection {
@@ -39,13 +40,14 @@
     height: 650px;
 }
 
-.plan li{
-    font-size: 2.5em;
-    margin-left: 50px;
-}
 
 .deck-container li, .deck-container p{
-    font-size: 1.3em;
+    font-size: 1em;
+}
+
+.plan li{
+    font-size: 1.2em;
+    margin-left: 50px;
 }
 
 .deck-container h1 {

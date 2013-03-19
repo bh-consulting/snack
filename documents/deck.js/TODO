@@ -1,0 +1,8 @@
+global: centrer en hauteur
+1:  texte + petit
+4: logo normal + gros
+7: securite
+10-11: gantt en 1 fois
+22: snmp -> dialogue avec routeur snmp, pas trap
+25: documentation cisco pour SNMP
+36: firewall = parefeu, switch = commutateur
