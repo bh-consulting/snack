@@ -510,6 +510,9 @@ class RadusersController extends AppController {
 
         // Radchecks
         foreach($views['checks'] as $check){
+	    if($check['Radcheck']['attribute'] == 'EAP-Type')
+		$check['Radcheck']['attribute'] = 'Check server certificate';
+
             $attributes[ $check['Radcheck']['attribute'] ] =
                 $check['Radcheck']['value'];
             if($check['Radcheck']['attribute'] == 'Calling-Station-Id'){
@@ -541,7 +544,6 @@ class RadusersController extends AppController {
             'Certificate path',
             'Key path',
 	    'Server certificate path',
-            'EAP-Type',
             'Expiration',
             'Simultaneous-Use', 
             'Groups',
@@ -571,6 +573,7 @@ class RadusersController extends AppController {
             'Groups',
             'Cisco',
             'MAC address',
+            'Check server certificate',
             'Role',
         );
 
@@ -1059,8 +1062,14 @@ class RadusersController extends AppController {
         $this->Raduser->id = $id;
         $success = false;
 
+	foreach ($this->Checks->getChecks($id) AS $check) {
+	    if($check['Radcheck']['attribute'] == 'EAP-Type')
+		$ttls = ($check['Radcheck']['value'] == 'EAP-TTLS') ? 1 : 0;
+	}
+
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
+	    $this->request->data['Raduser']['ttls'] = $ttls;
         } else {
             try {
                 $this->request->data['Raduser']['is_loginpass'] = 1;
@@ -1084,6 +1093,13 @@ class RadusersController extends AppController {
                 foreach ($checksCiscoMac as $c) {
                     $checkClassFields[$c[1]] = $c[3];
                 }
+
+                if (isset($this->request->data['Raduser']['ttls'])
+                    && $this->request->data['Raduser']['ttls'] == 1) {
+			$checkClassFields['EAP-Type'] = 'EAP-TTLS';
+                    } else {
+			$checkClassFields['EAP-Type'] = 'MD5-CHALLENGE';
+                    }
 
                 $this->Checks->updateRadcheckFields(
                     $id,

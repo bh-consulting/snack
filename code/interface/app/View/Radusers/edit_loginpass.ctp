@@ -25,7 +25,8 @@ $checks .= $this->Form->input(
     'ttls',
     array(
 	'type' => 'checkbox',
-	'label' => __('Check server certificate')
+	'label' => __('Check server certificate'),
+	'class' => 'switchbtn'
     )
 );
 $checks .= $this->Form->input('calling-station-id', array('label' => __('MAC address')));
