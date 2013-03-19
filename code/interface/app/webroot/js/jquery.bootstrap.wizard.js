@@ -168,7 +168,7 @@
 	// Work the next/previous buttons
 	obj.fixNavigationButtons();
 
-	$('a[data-toggle="wtab"]', element).on('click', function (e) {
+	$('a.wtab', element).on('click', function (e) {
 	    // Get the index of the clicked tab
 	    var clickedIndex = $navigation.find('li').index($(e.currentTarget).parent('li'));
 	    if($settings.onTabClick && typeof $settings.onTabClick === 'function' && $settings.onTabClick($activeTab, $navigation, obj.currentIndex(), clickedIndex)===false){
@@ -176,7 +176,7 @@
 	    }
 	});
 
-	$('a[data-toggle="wtab"]', element).on('show', function (e) {
+	$('a.wtab', element).on('show', function (e) {
 	    $element = $(e.target).parent();
 	    // If it's disabled then do not change
 	    if($element.hasClass('disabled')) {
