@@ -510,9 +510,6 @@ class RadusersController extends AppController {
 
         // Radchecks
         foreach($views['checks'] as $check){
-	    if($check['Radcheck']['attribute'] == 'EAP-Type')
-		$check['Radcheck']['attribute'] = 'Check server certificate';
-
             $attributes[ $check['Radcheck']['attribute'] ] =
                 $check['Radcheck']['value'];
             if($check['Radcheck']['attribute'] == 'Calling-Station-Id'){
@@ -573,7 +570,7 @@ class RadusersController extends AppController {
             'Groups',
             'Cisco',
             'MAC address',
-            'Check server certificate',
+            'EAP-Type',
             'Role',
         );
 

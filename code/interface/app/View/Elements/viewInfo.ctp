@@ -62,8 +62,40 @@ if(AuthComponent::user('role') !== 'tech'){
 				}
 				echo '</dd>';
 			} else {
+				if($attr == 'EAP-Type') {
+				    $attr = 'Check server certificate';
+
+				    if($value == 'EAP-TTLS')
+					$value = 'Yes (TTLS)';
+				    else
+					$value = 'No (challenge MD5)';
+				}
+
+				if($attr == 'NAS-Port-Type') {
+				    $attr = 'NAS Port Type';
+
+				    $values = explode('|', $value);
+				    $i18n_values = array();
+
+				    foreach ($values AS $val) {
+					switch($val) {
+						case 'Async':
+						    $i18n_values[] = __('Console');
+						    break;
+						case 'Virtual':
+						    $i18n_values[] = __('Telnet/SSH');
+						    break;
+						case 'Ethernet':
+						    $i18n_values[] = __('802.1x');
+						    break;
+					}
+				    }
+
+				    $value = implode(', ', $i18n_values);
+				}
+
 				echo '<dt>' . __($attr) . '</dt>'
-					. '<dd>' . ( ( !empty($value) ) ? $value : __('Not defined') ) . '</dd>';
+					. '<dd>' . ( ( !empty($value) ) ? __($value) : __('Not defined') ) . '</dd>';
 			}
 		}
 	}
