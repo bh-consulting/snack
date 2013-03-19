@@ -112,6 +112,10 @@ function Tastendruck(Druck)
 		if(code == 1)
 			code++;
 	    break;
+
+        default:
+        code = 0;
+        break;
 	}
 }
 
