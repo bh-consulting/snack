@@ -1,6 +1,10 @@
 <h1><?php echo $title; ?></h1>
 <?php
 
+// Pour le cake extract :
+__('Yes');
+__('No');
+
 // Don't show the edit/delete button for tech users
 // => show only for admin and root users
 if(AuthComponent::user('role') !== 'tech'){
