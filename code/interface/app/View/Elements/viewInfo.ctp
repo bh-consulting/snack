@@ -67,7 +67,7 @@ if(AuthComponent::user('role') !== 'tech'){
 				echo '</dd>';
 			} else {
 				if($attr == 'EAP-Type') {
-				    $attr = 'Check server certificate';
+				    $attr = 'Check CA';
 
 				    if($value == 'EAP-TTLS')
 					$value = 'Yes (TTLS)';

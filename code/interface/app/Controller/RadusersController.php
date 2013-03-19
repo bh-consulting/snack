@@ -540,7 +540,7 @@ class RadusersController extends AppController {
             'Comment',
             'Certificate path',
             'Key path',
-	    'Server certificate path',
+            'Server certificate path',
             'Expiration',
             'Simultaneous-Use', 
             'Groups',
@@ -571,6 +571,7 @@ class RadusersController extends AppController {
             'Cisco',
             'MAC address',
             'EAP-Type',
+            'Server certificate path',
             'Role',
         );
 
