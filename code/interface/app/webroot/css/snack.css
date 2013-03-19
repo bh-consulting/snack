@@ -342,3 +342,7 @@ tr.loglevelwarn a {
 .form-signin {
         max-width: 570px;
 }
+
+.btn + .btn-group {
+    margin-left: 5px;
+}

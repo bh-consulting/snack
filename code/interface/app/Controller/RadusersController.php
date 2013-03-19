@@ -78,7 +78,7 @@ class RadusersController extends AppController {
     }
 
     public function isAuthorized($user) {
-        
+
         // All registered user can view users
         if (in_array($this->action, array(
             'index', 'view_mac', 'view_cert', 'view_loginpass', 'export', 
@@ -105,7 +105,7 @@ class RadusersController extends AppController {
     public function beforeValidateForFilters() {
         unset($this->Raduser->validate['username']['notEmpty']['required']);
     }
-    
+
     public function getRegexExpiration($args = array()) {
         if (!empty($args['input'])) {
             $data = &$this->request->data['Raduser'][$args['input']];
@@ -129,17 +129,17 @@ class RadusersController extends AppController {
         if ($this->request->is('post')) {
             if (isset($this->request->data['action'])) {
                 switch ($this->request->data['action']) {
-                    case "delete":
-                        $this->multipleDelete(
-			    isset($this->request->data['MultiSelection']) ?
-				$this->request->data['MultiSelection']['users'] : 0
-                        );
-                        break;
-                    case "export":
-                        $this->multipleExport(
-                            $this->request->data['MultiSelection']['users']
-                        );
-                        break;
+                case "delete":
+                    $this->multipleDelete(
+                        isset($this->request->data['MultiSelection']) ?
+                        $this->request->data['MultiSelection']['users'] : 0
+                    );
+                    break;
+                case "export":
+                    $this->multipleExport(
+                        $this->request->data['MultiSelection']['users']
+                    );
+                    break;
                 }
             }
         }

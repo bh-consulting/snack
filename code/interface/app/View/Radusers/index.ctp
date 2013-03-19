@@ -144,6 +144,10 @@ echo $this->element('dropdownButton', array(
 echo '<div id="modalimport">';
 echo $this->element('modalImport', array(
     'id'   => 'import',
+    'url' => array(
+        'controller' => 'Radusers',
+        'action' => 'import',
+    ),
     'link' => $this->Html->link(
         '<i class="icon-upload icon-white"></i> ' . __('Upload'),
         array(

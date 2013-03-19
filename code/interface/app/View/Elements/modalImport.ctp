@@ -4,7 +4,7 @@ $title = isset($title) ? $title : __('Import');
 
 <div id="confirm<?php echo $id ?>" class="modal hide fade">
 <?php
-echo $this->Form->create('importCsv', array('url' => array('controller' => 'Radusers', 'action' => 'import'), 'enctype' => 'multipart/form-data'));
+echo $this->Form->create('importCsv', array('url' => $url, 'enctype' => 'multipart/form-data'));
 ?>
     <div class="modal-header">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

@@ -5,7 +5,7 @@ App::import('Model', 'Raduser');
 
 class RadgroupsController extends AppController {
 
-    public $helpers = array('Html', 'Form', 'JqueryEngine');
+    public $helpers = array('Html', 'Form', 'JqueryEngine', 'Csv');
     public $paginate = array('limit' => 10, 'order' => array('id' => 'asc'));
     public $components = array(
         'Filters',
@@ -15,7 +15,9 @@ class RadgroupsController extends AppController {
             'checkClass' => 'Radgroupcheck',
             'replyClass' => 'Radgroupreply'
         ),
-        'Session');
+        'Session',
+        'RequestHandler',
+    );
 
     public function isAuthorized($user) {
         if($user['role'] === 'admin' && in_array($this->action, array(
@@ -52,7 +54,12 @@ class RadgroupsController extends AppController {
             case "delete":
                 $this->multipleDelete(
                     isset($this->request->data['MultiSelection']) ?
-			$this->request->data['MultiSelection']['groups'] : 0
+                    $this->request->data['MultiSelection']['groups'] : 0
+                );
+                break;
+            case "export":
+                $this->multipleExport(
+                    $this->request->data['MultiSelection']['groups']
                 );
                 break;
             }
@@ -165,6 +172,173 @@ class RadgroupsController extends AppController {
         }
     }
 
+    public function import() {
+        if ($this->request->isPost()) {
+            $handle = fopen($_FILES['data']['tmp_name']['importCsv']['file'], "r");
+            $results = array();
+
+            while (($fields = fgetcsv($handle)) != false) {
+                switch ($fields[0]) {
+                case 'Radgroup':
+                    if (count($fields) >= 2) {
+                        $group = new Radgroup();
+                        $group->set('groupname', $fields[1]);
+
+                        if (isset($fields[2])) {
+                            $group->set('comment', $fields[2]);
+                        }
+
+                        if ($group->save()) {
+                             $results[] = __('%s was added', $fields[1]);
+                        } else {
+                             $results[] = __('ERROR: %s was not added', $fields[1]);
+                        }
+                    }
+                    break;
+                case 'Radgroupcheck':
+                    if (count($fields) == 4) {
+                        $check = new Radgroupcheck();
+                        $check->set('groupname', $fields[1]);
+                        $check->set('attribute', $fields[2]);
+                        $check->set('op', $fields[3]);
+                        $check->set('value', $fields[4]);
+
+                        if ($check->save()) {
+                             $results[] = __('%s (%s) was added', $fields[1], $fields[2]);
+                        } else {
+                             $results[] = __('ERROR: %s (%s) was not added', $fields[1], $fields[2]);
+                        }
+                    }
+                    break;
+                case 'Radgroupreply':
+                    if (count($fields) == 4) {
+                        $reply = new Radgroupcheck();
+                        $reply->set('groupname', $fields[1]);
+                        $reply->set('attribute', $fields[2]);
+                        $reply->set('op', $fields[3]);
+                        $reply->set('value', $fields[4]);
+
+                        if ($reply->save()) {
+                             $results[] = __('%s (%s) was added', $fields[1], $fields[2]);
+                        } else {
+                             $results[] = __('ERROR: %s (%s) was not added', $fields[1], $fields[2]);
+                        }
+                    }
+                    break;
+                case 'Radusergroup':
+                    if (count($fields) >= 2) {
+                        $usergroup = new Radusergroup();
+                        $usergroup->set('username', $fields[1]);
+                        $usergroup->set('groupname', $fields[2]);
+
+                        if (isset($fields[3])) {
+                            $usergroup->set('priority', $fields[3]);
+                        } else {
+                            $usergroup->set('priority', 1);
+                        }
+
+                        if ($usergroup->save()) {
+                             $results[] = __('%s was added to %s', $fields[1], $fields[2]);
+                        } else {
+                             $results[] = __('ERROR: %s was not added to %s', $fields[1], $fields[2]);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            $this->set('results', $results);
+        } else {
+            $this->redirect(array('controller' => 'Radgroups', 'action' => 'index'));
+        }
+    }
+
+    public function exportAll() {
+       $ids =  $this->Radgroup->find('list', array('fields' => 'id'));
+
+       $this->redirect(array('controller' => 'Radgroups', 'action' => 'export', implode($ids, ',') . '.csv'));
+    }
+
+    public function export($groupIds) {
+        $groupsData = array();
+        foreach (explode(',', $groupIds) as $groupId) {
+            if (preg_match('#^[0-9]+$#', $groupId)) {
+                $group = $this->Radgroup->read(null, $groupId);
+
+                if ($group['Radgroup']) {
+                    $checks = $this->Checks->getChecks($groupId);
+                    $replies = $this->Checks->getReplies($groupId);
+                    $usergroups = $this->Checks->getUserGroups($groupId);
+
+                    $groupsData[] = array(
+                        'Radgroup',
+                        $group['Radgroup']['groupname'],
+                        $group['Radgroup']['comment'],
+                    );
+
+                    foreach ($checks as $check) {
+                        $groupsData[] = array(
+                            'Radcheck',
+                            $check['Radcheck']['groupname'],
+                            $check['Radcheck']['attribute'],
+                            $check['Radcheck']['op'],
+                            $check['Radcheck']['value'],
+                        );
+                    }
+
+                    foreach ($replies as $reply) {
+                        $groupsData[] = array(
+                            'Radreply',
+                            $reply['Radreply']['groupname'],
+                            $reply['Radreply']['attribute'],
+                            $reply['Radreply']['op'],
+                            $reply['Radreply']['value'],
+                        );
+                    }
+
+                    foreach ($usergroups as $usergroup) {
+                        $groupsData[] = array(
+                            'Radusergroup',
+                            $usergroup['Radusergroup']['username'],
+                            $usergroup['Radusergroup']['groupname'],
+                            $usergroup['Radusergroup']['priority'],
+                        );
+                    }
+                }
+            }
+        }
+
+        $this->set('groupsData', $groupsData);
+        $this->set('filename', 'groups_' . date('d-m-Y'));
+    }
+
+    /**
+     * Export severals groups.
+     *
+     * @param ids - array of group ID.
+     */
+    private function multipleExport($ids = array()) {
+        if (isset($ids) && is_array($ids)) {
+            try {
+                $this->redirect(array('action' => 'export', implode(',', $ids) . '.csv'));
+
+                $this->Session->setFlash(
+                    __('Groups have been exported.'),
+                    'flash_success'
+                );
+            } catch (UserGroupException $e) {
+                $this->Session->setFlash(
+                    $e->getMessage(),
+                    'flash_error'
+                );
+            }
+        } else {
+            $this->Session->setFlash(
+                __('Please, select at least one group!'),
+                'flash_warning'
+            );
+        }
+    }
     public function view($id = null){
         $views = $this->Checks->view($id);
         $this->set('radgroup', $views['base']);

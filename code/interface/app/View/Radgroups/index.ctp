@@ -59,6 +59,55 @@ echo $this->Html->link(
     array('escape' => false, 'class' => 'btn btn-primary')
 );
 
+$dropdownCsvButtonItems = array(
+    $this->Html->link(
+        '<i class="icon-upload"></i> ' . __('Import groups'),
+        '#confirmimport',
+        array(
+            'escape' => false,
+            'data-toggle' => 'modal',
+        )
+    ),
+    $this->Html->link(
+        '<i class="icon-download"></i> ' . __('Export groups'),
+        array('action' => 'exportAll'),
+        array('escape' => false)
+    ),
+);
+
+if(AuthComponent::user('role') != 'admin' && AuthComponent::user('role') != 'root'){
+    unset($dropdownCsvButtonItems[0]);
+}
+
+echo $this->element('dropdownButton', array(
+    'buttonCount' => 1,
+    'class' => 'btn-primary',
+    'title' => __('CSV'),
+    'icon' => 'icon-file',
+    'items' => $dropdownCsvButtonItems
+));
+
+echo '<div id="modalimport">';
+echo $this->element('modalImport', array(
+    'id'   => 'import',
+    'url' => array(
+        'controller' => 'Radgroups',
+        'action' => 'import',
+    ),
+    'link' => $this->Html->link(
+        '<i class="icon-upload icon-white"></i> ' . __('Upload'),
+        array(
+            'controller' => 'Radgroups',
+            'action' => 'import',
+        ),
+        array(
+            'escape' => false,
+            'class'  => 'btn btn-primary'
+        )
+    )
+));
+echo '</div>';
+
 echo $this->element('filters_panel', array(
     'controller' => 'radgroups/index',
     'inputs' => array(
