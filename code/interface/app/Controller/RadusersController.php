@@ -950,7 +950,7 @@ class RadusersController extends AppController {
 
             if($success){
                 $this->Session->setFlash(__(
-                    'The admin user %s was added', $this->request->data['Raduser']['username']),
+                    'The SNACK user %s was added', $this->request->data['Raduser']['username']),
                 'flash_success'
             );
                 Utils::userlog(__('added admin user %s', $this->request->data['Raduser']['username']), 'error');
@@ -958,10 +958,10 @@ class RadusersController extends AppController {
 
             } else {
                 $this->Session->setFlash(
-                    'Unable to add the admin user',
+                    'Unable to add the SNACK user',
                     'flash_error'
                 );
-                Utils::userlog(__('error while adding an admin user'), 'error');
+                Utils::userlog(__('error while adding a SNACK user'), 'error');
             }
         }
 
