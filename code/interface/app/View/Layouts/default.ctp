@@ -157,7 +157,7 @@ echo $this->Html->script('doubleListsSelector');
 echo $this->Html->script('backups');
 echo $this->Html->script('checkboxRangeSelection');
 echo $this->Html->script('jquery.mousewheel-min');
-echo $this->Html->script('jquery.bootstrap.wizard.min');
+echo $this->Html->script('jquery.bootstrap.wizard');
 echo $this->Html->script('snack');
 echo $this->fetch('script');
 ?>
