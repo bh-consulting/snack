@@ -123,7 +123,7 @@ if [ $? != 0 ]; then
 	exit 1
 fi
 
-while [ -z "${PASSWORD_RADIUS}" -o ${PASSWORD_RADIUS} != ${PASSWORD_RADIUS_BIS} ] 
+while [ -z "${PASSWORD_RADIUS}" -o -z "${PASSWORD_RADIUS_BIS}" -o "${PASSWORD_RADIUS}" != "${PASSWORD_RADIUS_BIS}" ] 
 do
     if [ -n "${PASSWORD_RADIUS}" ]
     then
