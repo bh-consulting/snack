@@ -16,7 +16,7 @@ class BackupsChangesComponent extends Component {
                 "id = (SELECT MAX(id) FROM backups GROUP BY nas HAVING nas='"
 		    . Sanitize::escape($nas['Nas']['nasname'])
 		    . "')",
-                'action !=' => 'wrmem'
+                'action NOT REGEXP' => '^(wrmem|boot)$'
             ),
         ));
 
@@ -46,7 +46,7 @@ class BackupsChangesComponent extends Component {
         $lastWrmem = $backup->find('first', array(
             'conditions' => array(
                 'nas'    => $nas['Nas']['nasname'],
-                'action' => 'wrmem'
+                'action REGEXP' => '^(wrmem|boot)$'
             ),
             'fields'     => array('id'),
             'order'      => array('id DESC'),
@@ -84,7 +84,7 @@ class BackupsChangesComponent extends Component {
 		    'nasname NOT IN (SELECT DISTINCT nas FROM backups)',
 		    'AND' => array(
 			'Backup.id IN (SELECT MAX(id) FROM backups GROUP BY nas)',
-			'action !=' => 'wrmem'
+			'action NOT REGEXP' => '^(wrmem|boot)$'
 		     )
 		),
             ),
