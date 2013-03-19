@@ -3,6 +3,24 @@
     src: url('font/LinBiolinum_R.ttf');
 }
 
+body {
+    text-align: center;
+}
+
+ol,ul,h1,h2,h3 {
+    text-align: left;
+}
+
+ul li {
+     list-style-type: none;
+}
+
+ul li:before {
+	 content: "•";
+	 font-size: 110%; /* or whatever */
+	 padding-right: 5px;
+}
+
 .deck-container {
     font-family: "Helvetica Neue", sans-serif;
 }
@@ -14,6 +32,11 @@
 .deck-container .slide h1 {
     color: #72336b;
 }
+
+.deck-container .slide h1 a {
+    font-size: 40px;
+}
+
 .deck-container .slide h2 {
     color: #006cb7;
     font-size: 1.4375em;
@@ -80,3 +103,8 @@
     font-size: 2em;
     font-style: bold;
 }
+
+.deck-container .slide h2 {
+    margin-bottom: 70px;
+}
+

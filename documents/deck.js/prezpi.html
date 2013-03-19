@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+</strong><!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
@@ -25,7 +25,7 @@
 	<link rel="stylesheet" href="prezpi/prezpi.css">
 	
 	<!-- Transition theme. More available in /themes/transition/ or create your own. -->
-	<link rel="stylesheet" href="themes/transition/horizontal-slide.css">
+	<!-- <link rel="stylesheet" href="themes/transition/horizontal-slide.css"> -->
 	
 	<!-- Required Modernizr file -->
 	<script src="modernizr.custom.js"></script>
@@ -56,347 +56,549 @@
 <section class="slide" id="plan">
 	<h2>Plan</h2>
 	<ol class="plan">
-		<li>Contexte</li>
-		<li>Gestion du projet</li>
-		<li>Interface utilisateur SNACK</li>
-		<li>Contrôle d'accès au réseau</li>
-		<li>Gestion des configurations</li>
-		<li>Journalisation des accès</li>
-		<li>Configuration de SNACK</li>
-		<li>Améliorations possibles</li>
+		<li class="slide">Contexte</li>
+		<li class="slide">Gestion du projet</li>
+		<li class="slide">Fonctionnalités</li>
+		<li class="slide">Installation</li>
+		<li class="slide">Améliorations possibles</li>
 	</ol>
 </section>
 
+<section class="slide" id="demo_controle">
+    <h1>Contexte du projet</h1>
+</section>
+
 <section class="slide" id="ctx_pi">
-	<h2>Contexte : le projet industriel</h2>
+	<h2>Le projet industriel</h2>
 	<ul>
-		<li>Projet dans un contexte industriel en 3<sup>ème</sup> année de TELECOM Nancy</li>
+		<li class="slide"><strong>Projet Industriel</strong> (3<sup>ème</sup> année de TELECOM Nancy)</li>
 		<br />
-		<li>Découverte de la gestion du cycle complet d'un projet</li>
+		<li class="slide">Gestion du <strong>cycle complet</strong> d'un projet</li>
 		<br />
-		<li><strong>250 heures</strong> par étudiant (12 heures par semaine)</li>
+		<li class="slide">Environ 250 heures par étudiant (<strong>total de 1000 heures</strong>)</li>
 		<br />
-		<li>Suivi par un encadrant industriel (<strong>Guillaume ROCHE</strong>) et un encadrant universitaire (<strong>Jean-François SCHEID</strong>)</li>
+		<li class="slide">Suivi par deux encadrants :
+		    <br>
+		    <br>
+		    <ul>
+			<li class="slide"><strong>Industriel :</strong> Guillaume ROCHE</li>
+			<br>
+			<li class="slide"><strong>Universitaire :</strong> Jean-François SCHEID</li>
+		    </ul>
+		</li>
 	</li>
 </section>
 
 <section class="slide" id="ctx_bh">
-	<h2>Contexte : le client, b.h. consulting</h2>
-	<ul>
-		<li>Entreprise spécialisée dans l'<strong>implantation de réseaux d'entreprise</strong></li>
-		<br />
-		<li>Petite entreprise à taille humaine</li>
-		<br />
-		<li>Fondée par Bertrand PÉTAT en 2000</li>
-	</ul>
+	<h2>b.h. consulting</h2>
 	<img src="prezpi/img/BHConsulting.jpg" style="width: 30%;" />
+	<br>
+	<ul>
+		<li class="slide">Spécialisée dans l'<strong>implantation de réseaux d'entreprise</strong></li>
+		<br />
+		<li class="slide">Petite entreprise à <strong>taille humaine</strong></li>
+		<br />
+		<li class="slide">Fondée par <strong>Bertrand PÉTAT</strong> en 2000</li>
+	</ul>
 </section>
 
 <section class="slide" id="organigramme">
-	<h2>Contexte : le client, b.h. consulting</h2>
-	<p>4 employés :</p>
+	<h2>b.h. consulting</h2>
+	<p>4 employés et 1 gérant :</p>
+	<br>
 	<img src="prezpi/img/organigramme.svg" style="width: 80%;" />
 </section>
 
 <section class="slide" id="ctx_team">
-	<h2>Contexte : notre équipe</h2>
+	<h2>Équipe</h2>
 	<ul>
-		<li>Nicolas BOUGET, chef de projet (TRS)</li>
+		<li class="slide">Nicolas BOUGET, chef de projet (TRS)</li>
 		<br />
-		<li>Julien GUÉPIN (IL)</li>
+		<li class="slide">Julien GUÉPIN (IL)</li>
 		<br />
-		<li>Marc PINHÈDE (LE)</li>
+		<li class="slide">Marc PINHÈDE (LE)</li>
 		<br />
-		<li>Julien VAUBOURG (TRS)</li>
+		<li class="slide">Julien VAUBOURG (TRS)</li>
 	</ul>
 </section>
 
 <section class="slide" id="ctx_goals">
-	<h2>Contexte : objectifs du projet</h2>
+	<h2>Objectifs du projet</h2>
 	<ul>
-		<li>Outils pour la sécurité des réseaux d'entreprise</li>
+		<li class="slide"><strong>Sécurité</strong> et <strong>supervision</strong> des réseaux</li>
 		<br>
-		<li><strong>Application simple à installer et à utiliser</strong></li>
+		<li class="slide"><strong>Déploiement rapide</strong></li>
+		<br>
+		<li class="slide">Interface <strong>accessible</strong>, <strong>ergonomique</strong> et <strong>conviviale</strong></li>
 	</ul>
 	<br>
-	<p>Notre solution : <strong>SNACK</strong> (<strong>S</strong>ecure <strong>N</strong>etwork <strong>A</strong>ccess <strong>C</strong>ontrol <em>for <strong>K</strong>ids</em>)</p>
+	<p class="slide"><strong>SNACK</strong> (<strong>S</strong>ecure <strong>N</strong>etwork <strong>A</strong>ccess <strong>C</strong>ontrol <em>for <strong>K</strong>ids</em>)</p>
 </section>
 
+<section class="slide" id="demo_controle">
+    <h1>Gestion du projet</h1>
+</section>
 
 <section class="slide" id="gestion">
-	<h2>Gestion du projet</h2>
+	<h2>Encadrants</h2>
 
-	<p><strong>Réunions :</strong></p>
+	<p style="text-align: left"><strong class="slide">Réunions :</strong></p>
 		<ul>
-			<li>hebdomadaires avec Guillaume ROCHE</li>
-			<li>mensuelles avec Jean-François SCHEID</li>
+			<li class="slide">Hebdomadaires avec Guillaume ROCHE</li>
+			<li class="slide">Mensuelles avec Jean-François SCHEID</li>
 		</ul>
-	<p><strong>Outils utilisés :</strong></p>
+	<p style="text-align: left"><strong class="slide">Outils utilisés :</strong></p>
 		<ul>
-			<li>VMproject</li>
-			<li>Redmine</li>
+			<li class="slide">VM-Project</li>
+			<li class="slide">Redmine</li>
 		</ul>
 </section>
 
 <section class="slide" id="vmproject">
-	<h2>Gestion du projet : VMproject</h2>
+	<h2>VM-Project</h2>
+	<img src="prezpi/img/vmproject_logo.png" />
+	<br >
 	<ul>
-		<li>Application proposée par l'école pour aider la gestion des projets industriels</li>
+		<li class="slide"><strong>Application imposée</strong> (gestion de projets)</li>
 		<br>
-		<li>Définition et affectation des tâches, suivi de progression</li>
+		<li class="slide"><strong>Suivi</strong> des tâches</strong></li>
 		<br>
-		<li>Génération d'un diagramme de Gantt</li>
+		<li class="slide">Diagramme de <strong>Gantt</strong></li>
 		<br>
-		<img src="prezpi/img/vmproject_logo.png" style="float: right;" />
-		<li>Feuilles de temps</li>
+		<li class="slide"><strong>Feuilles de temps</strong></li>
 		<br>
-		<li>Rapports de réunions</li>
+		<li class="slide"><strong>Rapports</strong> de réunions</li>
 	</ul>
 </section>
 
 <section class="slide" id="planning1">
-	<h2>Gestion du projet : diagramme de Gantt</h2>
+	<h2>Diagramme de Gantt</h2>
 	<iframe src="prezpi/img/gantt1.png" class="snack_frame"></iframe>
 </section>
 
-<section class="slide" id="planning2">
-	<h2>Gestion du projet : diagramme de Gantt</h2>
-	<iframe src="prezpi/img/gantt2.png" class="snack_frame"></iframe>
-</section>
-
 <section class="slide" id="redmine">
-	<h2>Gestion du projet : Redmine</h2>
+	<h2>Redmine</h2>
+	<img src="prezpi/img/redmine_logo.png" style="width:190px" />
+	<br>
 	<ul>
-		<li>Dépôt de sources <strong>Subversion</strong> hébergé par l'école</li>
-		<li>Tickets : gestion des <strong>bugs et demandes</strong> de fonctionnalités</li>
-		<li>Conventions de codage sur le wiki</li>
+		<li class="slide">Gestionnaire de <strong>versions</strong> Subversion</li>
+		<br>
+		<li class="slide">Gestionnaire de <strong>tickets</strong></li>
+		<br>
+		<li class="slide">Wiki (<strong>conventions de codage</strong>)</li>
+		<br>
 	</ul>
-	<img src="prezpi/img/redmine_logo.png" />
 </section>
 
 <section class="slide" id="redmine_screenshot">
-    <h2>Demande de fonctionnalité : afficher les logs de l'interface</h2>
+    <h2>Redmine</h2>
     <img src="prezpi/img/screenshot_ticket.png" />
 </section>
 
+<section class="slide" id="demo_controle">
+    <h1>Interface web</h1>
+</section>
 
 <section class="slide" id="snack">
-	<h2>Interface utilisateur SNACK : problématique</h2>
-	<p>Application web :</p>
+	<h2>Problématique</h2>
+	<p style="text-align: left">Utilisation :</p>
 	<ul>
-		<li><strong>simple</strong>,</li>
-		<li>ergonomique,</li>
-		<li>sécurisée.</li>
+		<li class="slide"><strong>Simple</strong></strong></li>
+		<br>
+		<li class="slide"><strong>Ergonomique</strong></li>
+		<br>
+		<li class="slide"><strong>Conviviale</strong></li>
+		<br>
+		<li class="slide"><strong>Sécurisée</strong></li>
 	</ul>
 </section>
 
 <section class="slide" id="snack_solution">
-    <h2>Interface utilisateur : solution</h2>
-    <img src="prezpi/img/php_logo.png" style="float:right; width: 15%;" />
+    <h2>Solutions</h2>
+    <!-- <img src="prezpi/img/php_logo.png" style="float:right; width: 15%;" /> -->
     <ul>
-	    <li>Serveur <strong>LAMP</strong></li>
+	    <li class="slide">Serveur <strong>LAMP</strong></li>
 	    <br>
-	    <li><strong>CakePHP</strong> pour les traitements serveur</li>
+	    <li class="slide"><strong>CakePHP</strong></li>
 	    <br>
-	    <img src="prezpi/img/cake_logo.png" style="float:right; width: 15%;" />
-	    <li><strong>Bootstrap</strong> pour l'affichage moderne</li>
+<!--	    <img src="prezpi/img/cake_logo.png" style="float:right; width: 15%;" /> -->
+	    <li class="slide"><strong>Bootstrap</strong></li>
 	    <br>
-	    <li><strong>jQuery</strong> pour simplifier le traitement côté client et les animations</li>
+	    <li class="slide"><strong>jQuery</strong></li>
+    </ul>
 </section>
 
 <section class="slide" id="demo_snack">
-	<h1><a href="http://localhost/interface/" target="_blank">Démonstration de l'interface</a></h1>
+	<h1><a href="http://localhost/interface/" target="_blank">Démonstration</a></h1>
 </section>
 
+<section class="slide" id="demo_controle">
+    <h1>Contrôles d'accès</h1>
+</section>
 
 <section class="slide" id="radius">
-	<h2>Contrôle d'accès au réseau : problématique</h2>
-	<p><strong>Authentification</strong> des utilisateurs du réseau de l'entreprise</p>
+	<h2>Problématique</h2>
+	<p><strong>Authentification</strong> des utilisateurs du réseau de l'entreprise.</p>
 	<br>
 	<p>Plusieurs méthodes :</p>
 	<ul>
-		<li>Certificat</li>
+		<li class="slide">Par <strong>certificat</strong></li>
 		<br>
-		<li>Identifiant et mot de passe</li>
+		<li class="slide">Par <strong>identifiant et mot de passe</strong></li>
 		<br>
-		<li>Adresse MAC</li>
-	</ul>
-</section>
-
-<section class="slide" id="radius_solution">
-	<h2>Contrôle d'accès au réseau : solution</h2>
-	<img src="prezpi/img/freeradius.png" style="float: right; width: 20%;" />
-	<ul>
-		<li>Utilisation du protocole <strong>802.1x</strong></li>
-		<br>
-		<li>Implémentation avec le logiciel libre <strong>FreeRadius</strong></li>
-		<br>
-		<li>Installation sur un serveur GNU/Linux <strong>Ubuntu Server</strong></li>
-		<br>
-		<img src="prezpi/img/mysql.png" style="float: right; width: 20%;" />
-		<li>Stockage des données dans <strong>MySQL</strong></li>
+		<li class="slide">Par <strong>adresse MAC</strong></li>
 	</ul>
 </section>
 
 <section class="slide" id="controle_fonctionnement1">
-	<h2>Fonctionnement de 802.1x</h2>
-	<img src="prezpi/img/dot1x_1.png" />
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/dot1x_1.svg" style="width: 100%" />
 </section>
 
-<section class="slide" id="controle_fonctionnement2">
-	<h2>Fonctionnement de 802.1x</h2>
-	<img src="prezpi/img/dot1x_2.png" />
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/dot1x_2.svg" style="width: 100%" />
 </section>
 
-<section class="slide" id="controle_certificates">
-	<h2>Contrôle d'accès au réseau : les certificats</h2>
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/dot1x_3.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/dot1x_4.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="radius_solution">
+	<h2>Solutions</h2>
 	<ul>
-		<li>Méthode d'authentification la plus sécurisée</li>
+		<li class="slide">Protocole <strong>802.1x</strong></li>
 		<br>
-		<li>Utilisation du protocole EAP</li>
+		<li class="slide">Serveur d'authentification <strong>FreeRadius</strong></li>
 		<br>
-		<li>Deux méthodes proposées :</li>
+		<li class="slide">Gestionnaire de bases de données <strong>MySQL</strong></li>
+		<br>
+		<li class="slide">Système d'exploitation <strong>GNU/Linux</strong></li>
+	</ul>
+</section>
+
+<!-- <section class="slide" id="controle_certificates">
+	<h2>Les certificats</h2>
+	<ul>
+		<li class="slide">Méthode d'authentification <strong>fortement sécurisée</strong></li>
+		<br>
+		<li class="slide">Utilisation du protocole EAP</li>
+		<br>
+		<li class="slide">Deux implémentations :</li>
 		<br>
 		<ul>
-			<li>TLS</li>
+			<li class="slide">TLS</li>
 			<br>
-			<li>TTLS</li>
+			<li class="slide">TTLS</li>
 		</ul>
-		<li>Hashage avec MSCHAPV2</li>
-		<br>
 	</ul>
 </section>
 
 <section class="slide" id="controle_fonctionnement3">
-	<h2>Fonctionnement de TTLS</h2>
+	<h2>Les certificats</h2>
 	<img src="prezpi/img/tls-ttls.svg" style="width: 100%;" />
+</section> -->
+
+<section class="slide" id="demo_controle">
+    <h1><a href="http://localhost/interface/radusers" target="_blank">Démonstration</a></h1>
+</section>
+
+<section class="slide" id="radius_problems">
+    <h2>Problèmes rencontrés</h2>
+    <ul>
+	    <li class="slide"><strong>Défaillances</strong> du matériel</li>
+	    <br>
+	    <li class="slide">Interactions entre <strong>Cisco et Radius</strong></li>
+	    <br>
+	    <li class="slide"><strong>Incompatibilités</strong> des versions de Cisco IOS</li>
+	    <br>
+	    <li class="slide">Certificats sous <strong>Windows</strong></li>
+	    <br>
+	    <li class="slide"><strong>Conflits</strong> avec le paquet d'installation</li>
+	</ul>
 </section>
 
 <section class="slide" id="demo_controle">
-    <h1><a href="http://localhost/interface/radusers" target="_blank">Démonstration du contrôle d'accès</a></h1>
+    <h1>Gestion des sessions</h1>
 </section>
 
-
-<section class="slide" id="radius_problems">
-    <h2>Contrôle d'accès : problèmes rencontrés</h2>
-    <ul>
-	    <li>Matériel à disposition en salle PI</li>
-	    <br>
-	    <li>Interaction entre <strong>Cisco et Radius</strong></li>
-	    <br>
-	    <li>Versions d'IOS</li>
-	    <br>
-	    <li><strong>Certificats</strong> sous Windows</li>
-	    <br>
-	    <li>Paquets d'installation : fichiers et tests</li>
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Problématique</h2>
+	<ul>
+	    <li class="slide">
+		<strong>Trace des accès</strong> contrôlés</li>
+		<br>
+		<ul>    
+		    <li class="slide">Pour la <strong>sécurité</strong> du client</li>
+		    <br>
+		    <li class="slide">Pour le <strong>suivi</strong> de b.h. consulting</li>
+		</ul>
+	    </li>
 	</ul>
 </section>
 
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/sessions_1.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/sessions_2.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/sessions_3.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/sessions_4.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/sessions_5.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/sessions_6.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/sessions_7.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/sessions_8.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation</h2>
+	<img src="prezpi/img/sessions_9.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="radius_solution">
+	<h2>Solutions</h2>
+	<ul>
+		<li class="slide">Module d'<strong>accounting</strong> de FreeRadius</li>
+		<br>
+		<li class="slide"><strong>Réauthentifications régulières</strong> sur les commutateurs.</li>
+		<br>
+		<li class="slide">Utilisation d'un <strong>délai d'expiration</strong>.</li>
+	</ul>
+</section>
+
+<section class="slide" id="demo_controle">
+    <h1><a href="http://localhost/interface/radusers" target="_blank">Démonstration</a></h1>
+</section>
+
+<section class="slide" id="demo_controle">
+    <h1>Gestion des configurations</h1>
+</section>
 
 <section class="slide" id="confs">
-	<h2>Gestion des configurations : problématique</h2>
+	<h2>Problématique</h2>
 	<ul>
-		<li><strong>Sauvegarde</strong> des configurations des équipements réseau</li>
+		<li class="slide"><strong>Sauvegarde</strong> des configurations</li>
 		<br>
-		<li><strong>Versionnage et comparaison</strong> des configurations</li>
+		<li class="slide"><strong>Stockage et comparaison</strong> des configurations</li>
 		<br>
-		<li><strong>Restauration</strong> d'une ancienne configuration</li>
+		<li class="slide"><strong>Restauration</strong> d'une ancienne configuration</li>
 	</ul>
+</section>
+
+<section class="slide" id="confs">
+	<h2>Problématique</h2>
+	<ol>
+		<li class="slide"><strong>Connexion</strong> d'un administrateur</li>
+		<br>
+		<li class="slide"><strong>Déconnexion</strong> d'un administrateur</li>
+		<br>
+		<li class="slide"><strong>Écriture</strong> sur la mémoire du commutateur</li>
+	</ol>
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (connexion / déconnexion)</h2>
+	<img src="prezpi/img/backups_auth_1.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (connexion / déconnexion)</h2>
+	<img src="prezpi/img/backups_auth_2.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (connexion / déconnexion)</h2>
+	<img src="prezpi/img/backups_auth_3.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (connexion / déconnexion)</h2>
+	<img src="prezpi/img/backups_auth_4.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (connexion / déconnexion)</h2>
+	<img src="prezpi/img/backups_auth_5.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (connexion / déconnexion)</h2>
+	<img src="prezpi/img/backups_auth_6.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (connexion / déconnexion)</h2>
+	<img src="prezpi/img/backups_auth_7.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (connexion / déconnexion)</h2>
+	<img src="prezpi/img/backups_auth_8.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (connexion / déconnexion)</h2>
+	<img src="prezpi/img/backups_auth_9.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (écriture)</h2>
+	<img src="prezpi/img/backups_wrmem_1.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (écriture)</h2>
+	<img src="prezpi/img/backups_wrmem_2.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (écriture)</h2>
+	<img src="prezpi/img/backups_wrmem_3.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (écriture)</h2>
+	<img src="prezpi/img/backups_wrmem_4.svg" style="width: 100%" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Implémentation (écriture)</h2>
+	<img src="prezpi/img/backups_wrmem_5.svg" style="width: 100%" />
 </section>
 
 <section class="slide" id="confs_solution">
-	<h2>Gestion des configurations : solution</h2>
+	<h2>Solutions</h2>
 	<ul>
-		<li>Sauvegarde :</li>
-		<ul>
-			<li>manuelle</li>
-			<li>à chaque connexion à l'équipement</li>
-		</ul>
-		<li>Transmission de la configuration par <strong>TFTP</strong></li>
+		<li class="slide"><strong>Transmission</strong> en TFTP</li>
 		<br>
-		<li>Dialogue avec les équipements en SNMP</strong></li>
+		<li class="slide">Détection des <strong>événements asynchrones</strong> avec SNMP</li>
 		<br>
-		<li>Versionnage des configurations dans un dépôt <strong>Git</strong></li>
+		<li class="slide"><strong>Sauvegardes incrémentales</strong> avec GIT</li>
 	</ul>
-</section>
-
-<section class="slide" id="confs_fonctionnement_auth">
-    <h2>Fonctionnement de la sauvegarde : authentification</h2>
-    <img src="prezpi/img/auth.svg" style="width:100%;" />
-</section>
-
-<section class="slide" id="confs_fonctionnement_wrmem">
-    <h2>Fonctionnement de la sauvegarde : écriture mémoire</h2>
-    <img src="prezpi/img/wrmem.svg" style="width:100%;" />
 </section>
 
 <section class="slide" id="demo_confs">
-    <h1><a href="http://localhost/interface/nas" target="_blank">Démonstration de la gestion des configurations</a></h1>
+    <h1><a href="http://localhost/interface/nas" target="_blank">Démonstration</a></h1>
 </section>
 
 <section class="slide" id="confs_problems">
-    <h2>Gestion des configurations : problèmes rencontrés</h2>
+    <h2>Problèmes rencontrés</h2>
     <ul>
-	    <li>Utilisation du TFTP : non sécurisé et pas de fin de connexion</li>
+	    <li class="slide">TFTP <strong>non sécurisé</strong></li>
 	    <br>
-	    <li>MIB Cisco : gestion des OID pour SNMP</li>
+	    <li class="slide">Protocole UDP <strong>non-orienté connexion</strong></li>
+	    <br>
+	    <li class="slide"><strong>Documentation</strong> SNMP de Cisco</li>
 	</ul>
 </section>
 
-<section class="slide" id="logs">
-    <h2>Journalisation des accès</h2>
-</section>
-
-<section class="slide" id="demo_logs">
-    <h1><a href="http://localhost/interface/radaccts" target="_blank">Démonstration de la journalisation des accès</a></h1>
-</section>
-
-<section class="slide" id="logs">
-	<h2>Configuration du serveur et des outils</h2>
+<section class="slide" id="demo_controle">
+    <h1>Gestion des journaux &amp; paramètres</h1>
 </section>
 
 <section class="slide" id="demo_params">
-    <h1><a href="http://localhost/interface/systemDetails" target="_blank">Démonstration de la configuration de SNACK</a></h1>
+    <h1><a href="http://localhost/interface/systemDetails" target="_blank">Démonstration</a></h1>
 </section>
 
 <section class="slide" id="snack_problems">
-	<h2>Interface utilisateur : problèmes rencontrés</h2>
+	<h2>Problèmes rencontrés pour l'interface</h2>
 	<ul>
-		<li><strong>Schéma</strong> de la base de données Radius</li>
+		<li class="slide"><strong>Schéma</strong> de la base de données Radius</li>
 		<br>
-		<li>Adaptation de CakePHP à <strong>Bootstrap</strong></li>
+		<li class="slide">Adaptation de CakePHP à <strong>Bootstrap</strong></li>
 		<br>
-		<li>Compatibilité des navigateurs (notamment <strong>Internet Explorer</strong>)</li>
+		<li class="slide">Compatibilité des navigateurs (notamment <strong>Internet Explorer</strong>)</li>
 		<br>
-		<li><strong>Internationalisation</strong> et localisation : anglais et français</li>
+		<li class="slide"><strong>Internationalisation</strong> et localisation : anglais et français</li>
 	</ul>
+</section>
+
+<section class="slide" id="demo_controle">
+    <h1>Installation automatique</h1>
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Information</h2>
+	<img src="prezpi/img/install_start.png" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Invite de saisie</h2>
+	<img src="prezpi/img/install_prompt.png" />
+</section>
+
+<section class="slide" id="controle_fonctionnement1">
+	<h2>Barre de progression</h2>
+	<img src="prezpi/img/install_progress.png" />
+</section>
+
+<section class="slide" id="demo_controle">
+    <h1>Améliorations possibles</h1>
 </section>
 
 <section class="slide" id="future">
     <h2>Améliorations possibles</h2>
     <ul>
-	    <li><strong>Terminal</strong> virtuel</li>
+	    <li class="slide"><strong>Terminal</strong> virtuel</li>
 		<br>
-	    <li>Tests unitaires</li>
+	    <li class="slide">Tests unitaires</li>
 		<br>
-	    <li>Gestion des équipements :</li>
+	    <li class="slide">Gestion des équipements :</li>
+		<br>
 	    <ul>
-	    	<li>Versions d'IOS</li>
-	    	<li>Pare-feu Astaro</li>
-	    	<li>Auto-configuration des commutateurs</li>
+	    	<li class="slide">Versions d'IOS</li>
+	    	<li class="slide">Pare-feu Astaro</li>
+	    	<li class="slide">Auto-configuration des commutateurs</li>
 	    </ul>
-	    <li>Utilisation de <strong>LDAP</strong> au lieu de MySQL</li>
+	    <li class="slide">Utilisation de <strong>LDAP</strong> au lieu de MySQL</li>
 </section>
 
 <section class="slide" id="ccl">
 	<h2>Conclusion</h2>
 	<p><strong>Solution complète, simple et fonctionnelle</strong></p>
-	<p>Découverte de nombreux outils</p>
-	<p>Utilisation en production rapidement par b.h. consulting</p>
+		<br>
+	<p>Découverte de <strong>nombreux outils</strong></p>
+		<br>
+	<p>Utilisation <strong>en production rapidement</strong> par b.h. consulting</p>
 </section>
 
 <section class="slide" id="end">
 	<h1>Merci pour votre attention</h1>
+	<br>
+	<br>
 	<p class="subh1">Questions ?</p>
 </section>
 <!-- End slides. -->
