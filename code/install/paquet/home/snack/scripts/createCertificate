@@ -20,7 +20,7 @@ USERKEY=${USERNAME}_key.pem
 USERCERT=${USERNAME}_cert.pem
 USERREQ=${USERNAME}_req.pem
 USERCERTVALIDITY=3650  # 10 years
-KEY_LENGTH = 4096
+KEY_LENGTH=4096
 
 # Generate RSA key (private certificate part)
 openssl genrsa -out ${USERFILESPATH}/${USERKEY} ${KEY_LENGTH}
