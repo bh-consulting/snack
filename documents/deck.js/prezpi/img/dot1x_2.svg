@@ -411,9 +411,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4406421"
-     inkscape:cx="301.42449"
-     inkscape:cy="-21.453579"
+     inkscape:zoom="1.0186878"
+     inkscape:cx="113.33873"
+     inkscape:cy="-54.626433"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -590,24 +590,20 @@
            id="tspan8399-1-9-3-4-14-1"
            sodipodi:role="line">USER</tspan></text>
     </g>
-    <g
-       id="g4312"
-       transform="matrix(1,0,0,0.86596687,0,16.049739)">
-      <rect
-         y="192.69501"
-         x="289.54993"
-         height="85.346367"
-         width="73.214073"
-         id="rect10582-9-0"
-         style="fill:#44ff44;fill-opacity:1;fill-rule:nonzero;stroke:none" />
-      <rect
-         y="119.74456"
-         x="289.01868"
-         height="74.240211"
-         width="73.214073"
-         id="rect10582-9"
-         style="fill:#ff2a2a;fill-opacity:1;fill-rule:nonzero;stroke:none" />
-    </g>
+    <rect
+       style="fill:#44ff44;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect10582-9-0"
+       width="73.214073"
+       height="73.907127"
+       x="289.01868"
+       y="182.91724" />
+    <rect
+       style="fill:#ff2a2a;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect10582-9"
+       width="73.214073"
+       height="64.289566"
+       x="289.01868"
+       y="119.74456" />
     <g
        id="g7402"
        transform="matrix(0.95085378,0,0,0.88298416,114.31409,-468.52916)">
