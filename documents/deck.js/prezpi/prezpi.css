@@ -31,6 +31,7 @@ ul li:before {
 
 .deck-container .slide h1 {
     color: #72336b;
+    font-size: 3em;
 }
 
 .deck-container .slide h1 a {
@@ -73,17 +74,13 @@ ul li:before {
     margin-left: 50px;
 }
 
-.deck-container h1 {
-    font-size: 3em;
-}
-
 .text-center {
     text-align: center;
 }
 
 .deck-status .deck-status-current {
     color: #000;
-    font-style: bold;
+    font-weight: bold;
 }
 
 .deck-container .deck-prev-link, .deck-container .deck-next-link {
@@ -101,7 +98,7 @@ ul li:before {
     color: #72336b;
     text-align: center;
     font-size: 2em;
-    font-style: bold;
+    font-weight: bold;
 }
 
 .deck-container .slide h2 {
