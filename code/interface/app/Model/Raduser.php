@@ -103,10 +103,10 @@ class Raduser extends AppModel {
      */
     public function __construct($id = false, $table = null, $ds = null) {
         $this->roles = array(
-            'user' => __('User'),
-            'tech' => __('Tech'),
-            'admin' => __('Admin'),
-            'root' => __('Root'),
+            'user' => 'User',
+            'tech' => 'Tech',
+            'admin' => 'Admin',
+            'root' => 'Root',
         );
 
         parent::__construct($id, $table, $ds);

@@ -327,9 +327,9 @@ if (!empty($radusers)) {
                 break;
             case 'role':
                 if (isset($roles[$user['Raduser'][$field]])) {
-                    echo $roles[$user['Raduser'][$field]];
+                    echo __($roles[$user['Raduser'][$field]]);
                 } else {
-                    echo $user['Raduser'][$field];
+                    echo __($user['Raduser'][$field]);
                 }
                 break;
             case 'username':
