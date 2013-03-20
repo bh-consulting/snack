@@ -21,6 +21,10 @@ ul li:before {
 	 padding-right: 5px;
 }
 
+li li {
+    font-size: 1.2em;
+}
+
 .deck-container {
     font-family: "Helvetica Neue", sans-serif;
 }
