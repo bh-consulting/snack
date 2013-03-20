@@ -247,20 +247,20 @@ sed\
 >> $OUT 2>>$LOG
 
 read ADD <<STUFF
-rewrite_calling_station_id { \
-    if (Calling-Station-Id =~ /([0-9a-f]{2})[-:]?([0-9a-f]{2})[-:]?([0-9a-f]{2})[-:]?([0-9a-f]{2})[-:]?([0-9a-f]{2})[-:]?([0-9a-f]{2})/i){ \
-        update request { \
-            Calling-Station-Id := "%{tolower:%{1}%{2}%{3}%{4}%{5}%{6}}" \
-        } \
-    } \
-    else { \
-        noop \
-    } \
+rewrite_calling_station_id { \\\n\
+    if (Calling-Station-Id =~ /([0-9a-f]{2})[-:]?([0-9a-f]{2})[-:]?([0-9a-f]{2})[-:]?([0-9a-f]{2})[-:]?([0-9a-f]{2})[-:]?([0-9a-f]{2})/i){ \\\n\
+        update request { \\\n\
+            Calling-Station-Id := "%{tolower:%{1}%{2}%{3}%{4}%{5}%{6}}" \\\n\
+        } \\\n\
+    } \\\n\
+    else { \\\n\
+        noop \\\n\
+    } \\\n\
 }
 STUFF
 
 sed\
-	-e "/policy {/a \n$ADD" \
+	-e "/policy {/a \\\n$ADD" \
 	-i $POLICY_CONF \
  >> $OUT 2>>$LOG
 
