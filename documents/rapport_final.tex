@@ -1,4 +1,4 @@
-\newcommand{\titreA}{Secure Network Access Control \emph{for Kids}}
+\newcommand{\titreA}{Solution efficiente pour la s\'{e}curisation des r\'{e}seaux d'entreprise}
 \newcommand{\titreB}{Rapport de projet industriel}
 \input{entetes.tex}
 
@@ -8,7 +8,7 @@
 \section{Introduction}
 \subsection{Préambule}
 
-La réalisation du travail décrit dans ce document s'incrit dans une démarche étudiante, visant à valider la dernière année de la formation ingénieure de l'école TELECOM Nancy. Elle s'effectue sur une durée de six mois, en partenariat avec l'entreprise B.H. Consulting. Jean-François SCHEID, maître de conférences et enseignant à l'école, a accepté d'encadrer le projet en tant qu'intervenant universitaire.
+Le travail décrit dans ce document est réalisé dans le cadre des projets industriels de la dernière année de la formation ingénieure de l'école TELECOM Nancy. Ce module s'effectue sur une durée de six mois, en partenariat avec l'entreprise B.H. Consulting. Jean-François SCHEID, maître de conférences et enseignant à l'école, a accepté d'encadrer le projet en tant qu'intervenant universitaire.
 
 L'entreprise rémunère l'école pour le travail effectué en deux paiements, dont le second dépend de sa satisfaction à la vue du travail effectué. L'équipe du projet est constituée de quatre étudiants, qui s'engagent à travailler 1000 heures, soit 250 heures par personne.
 
@@ -70,28 +70,30 @@ Elle propose les prestations suivantes~:
 
 La sensibilisation croissante aux notions de sécurisation des réseaux des entreprises a conduit B.H. Consulting à devoir répondre à de nouveaux types d'exigences.
 
-Les réseaux d'une entreprise sont en effet devenus un point critique de toutes les nouvelles sociétés, qui sont régulièrement amenées à perdre des heures considérables de travail dès lors que ceux-ci ne sont plus accessibles. Au-delà de l'aspect fonctionnel, les réseaux sont la voie royale vers les serveurs les plus sensibles des administrations, qui y stockent les informations les plus confidentielles.
+Les réseaux d'une entreprise sont en effet devenus un point critique de toutes les nouvelles sociétés, qui sont régulièrement amenées à perdre des heures considérables de travail dès lors que ceux-ci ne sont plus accessibles. Au-delà de l'aspect fonctionnel, les réseaux sont des accès particulièrement critiques pour les serveurs les plus sensibles des administrations, qui stockent les informations les plus confidentielles d'une entreprise.
 
 Qu'ils soient filaires ou non, ces réseaux sont accessibles dès lors qu'on est dans les locaux des entreprises~: prises murales, émissions wifi, etc. N'importe quel individu ayant alors la possibilité de se relier physiquement aux réseaux, il faut mettre en place un mécanisme de contrôle logique pour restreindre ses accès. Pour autant, ce mécanisme ne doit pas être lourd à administrer, ce qui impliquerait rapidement un laxisme et une confusion dans les règles établies. Définir strictement les autorisations en fonction des points d'accès physiques, pour ensuite établir une carte des autorisations de l'ensemble des bâtiments n'est pas non plus la bonne solution, puisqu'il sera difficile de garantir les contrôles d'accès à ces prises. L'utilisation du réseau dépendra également de l'emplacement géographique de l'utilisateur, à l'encontre de toute logique vis-à-vis de la tendance actuelle au nomadisme constaté dans les entreprises.
 
-Pour répondre à toutes ces exigences, critiques pour une entreprise qui souhaite garantir l'intégrité de son réseau et la confidentialité de ses données (tout en sauvegardant la liberté de mouvement de ses employés), B.H. Consulting est régulièrement contraint d'exploiter les nouvelles technologies les plus adéquates. La première problématique de ce projet industriel sera donc de permettre à B.H. Consulting d'avoir à disposition la documentation nécessaire pour déployer l'une des solutions existantes, facilement et rapidement.
+Pour répondre à toutes ces exigences, critiques pour une entreprise qui souhaite garantir l'intégrité de son réseau et la confidentialité de ses données (tout en sauvegardant la liberté de mouvement de ses employés), B.H. Consulting est régulièrement contraint d'exploiter les nouvelles technologies les plus adéquates. De nouveaux outils d'administration doivent donc être régulièrement développés pour pouvoir être proposés à ses clients.
 
-Au delà du déploiement, B.H. Consulting souhaite offrir une souplesse d'administration exemplaire de son système, en permettant aussi bien à ses clients que ses propres employés de modifier les permissions des réseaux. Aucune des solutions d'interface existantes ne répondant à ce besoin actuellement, il s'agit du second objectif de ce projet industriel. L'interface devra devra donc être accessible, ergonomique et complète. Des fonctionnalités d'administration poussées comme la gestion d'un historique, d'une console virtuelle et la gestion des équipements actifs la compléteront durant ce projet.
+Au delà du déploiement des politiques de sécurisation, B.H. Consulting souhaite offrir une souplesse d'administration exemplaire de son système, en permettant aussi bien à ses clients que ses propres employés de modifier aisément les permissions des réseaux. Aucune des solutions d'interface existantes ne semble répondre à ce besoin actuellement. En plus d'une interface accessible, ergonomique et complète, B.H Consulting souhaiterait proposer des fonctionnalités poussées comme la gestion d'un historique, des équipements actifs ou encore une console virtuelle.
 
 Les objectifs de ce projet industriel émanent directement des besoins des clients, auxquels B.H. Consulting doit faire face.
 
 \subsection{Objectifs}
 
-Plusieurs objectifs peuvent être tirés des problématiques sus-évoquées~:
+Plusieurs objectifs peuvent être déduits du contexte.
+
+La première étape majeure du projet sera donc~:
 
 \begin{enumerate}
-\item Définir la technologie qui permettra de définir des accès aux réseaux de façon dynamique, souple et sécurisée.
+\item Déterminer la technologie qui permettra de définir des accès aux réseaux de façon dynamique, souple et sécurisée.
 \item Former l'équipe du projet industriel sur cette technologie, à l'aide de documentations et d'expérimentations concrètes sur les différents aspects sous-jacents.
 \item Écrire une documentation sur le sujet qui sera restreinte et utile à B.H. Consulting dans le cadre de ses besoins.
 \item Concevoir une solution logicielle permettant le déploiement rapide et efficace de la technologie sur les réseaux des clients.
 \end{enumerate}
 
-Une seconde liste d'objectifs se dégage rapidement, de façon relativement indépendante de la première~:
+De façon relativement indépendante de la première, la seconde étape majeure sera~:
 
 \begin{enumerate}
 \item Concevoir une interface permettant la configuration des accès au réseau, avec des profils d'utilisateurs définis par des ensembles de permissions.
@@ -140,17 +142,18 @@ Les différentes tâches, ainsi que la description des différents concepts tech
 \subsection{Organisation}
 \subsubsection{Outils de gestion}
 
-Pour une organisation optimale du travail fourni, l'équipe a recouru à une solution logicielle de gestion de projet.
+Pour une organisation optimale du travail fourni, l'équipe a utilisé VMproject, une solution logicielle de gestion de projets.
 
 L'équipe a défini ensemble, lors des premières réunions, les principales tâches qui constituaient ce projet, en dégageant notamment les deux étapes majeures. Le nombre de jour-hommes a été évalué pour chacune d'entre elles, permettant ainsi d'aboutir à un diagramme de Gantt qui précise l'enchaînement logique de ces tâches.
 
 Toutes les grandes tâches qui pouvaient être parallélisées et qui débutaient dès le lancement du projet ont été revues en détail, pour obtenir une vision plus précise de l'organisation de cette période du planning. Au fur et à mesure que le projet avançait, les sous-tâches ont été définies en réunion et se sont ajoutées aux étapes principales, permettant à l'ensemble de l'équipe d'avoir une vision globale pour le long terme et une vision claire pour le court terme. Les contraintes rencontrées qui n'étaient initialement pas prévues ont dû être gérées en fonction de ce planning.
 
-L'outil de gestion permettant d'attribuer les tâches aux différents membres de l'équipe, aucune d'entre elles qui aurait pu mettre l'avancement du projet en péril n'a été laissée de côté. Enfin, les membres de l'équipe ont eu l'occasion d'ajouter des feuilles de temps chaque fois qu'ils ont travaillé sur l'une de leurs tâches en particulier, permettant ainsi de suivre progressivement le bon avancement de celle-ci.
+L'outil de gestion permet d'attribuer les tâches aux différents membres de l'équipe, permettant ainsi à chacune d'entre elles d'avoir l'assurance d'être surveillée dans son avancement. Enfin, les membres de l'équipe ont eu l'occasion d'ajouter des feuilles de temps chaque fois qu'ils ont travaillé sur l'une de leurs tâches en particulier, permettant ainsi de suivre progressivement leur évolution.
 
 Chaque réunion a donné lieu à un rapport, transmis à l'ensemble des membres de l'équipe ainsi qu'à l'intervenant industriel et l'encadrant universitaire.
 
-En interne, nous avons utilisé la puissance du gestionnaire de versions Subversion pour être capables de travailler tous ensemble, simultanément, sur les mêmes parties du projet. Pour tenir au courant les autres développeurs des problèmes rencontrés avec une fonctionnalité que nous n'avions pas implémenté, nous avons usé et abusé d'un gestionnaire de tickets (capture d'écran en figure~\ref{tickets} page~\pageref{tickets}).
+En interne, nous avons utilisé la puissance du gestionnaire de versions Subversion pour être capables de travailler collaborativement et simultanément sur les mêmes fichiers:w
+ du projet. Pour tenir au courant les autres membres de l'équipe des problèmes rencontrés avec une fonctionnalité déjà implémentée, nous avons usé et abusé d'un gestionnaire de tickets (capture d'écran en figure~\ref{tickets} page~\pageref{tickets}).
 
 \begin{figure}[!h]
 	\begin{center}
@@ -359,7 +362,7 @@ La synchronisation entre la \emph{running-configuration} et la \emph{startup-con
 
 Nous avons donc dû recourir au protocole SNMP. Ce dernier est particulièrement utilisé dans la supervision des réseaux, et propose une interface de communication épurée et facile à prendre en main. Ses messages sont systématiquement de type \og~OID~: valeur~\fg, que ça soit pour une question ou une réponse. Puisque c'est un standard largement utilisé, tous les équipements Cisco implémentent des fonctionnalités l'exploitant. Ainsi, dès lors que le commutateur est correctement configuré, un événement SNMP est envoyé à chaque enregistrement de la configuration. Un serveur externe peut alors attraper ce message (on parle de \emph{trap} dans le vocabulaire SNMP), en déduit l'action effectuée en fonction de l'OID (l'identifiant unique d'une ressource particulière) et de sa valeur, et exécute le script correspondant.
 
-Le schéma~\ref{schema_wrmem} page~\pageref{schema_wrmem} illustre le mécanisme que nous avons mis en place pour exploiter cette possibilité. Un gestionnaire de versions est utilisé pour stocker les configurations de chacun des commutateurs, ce qui permet de les stocker de façon incrémentale, c'est à dire en stockant que les changements (\emph{commits}).
+Le schéma~\ref{schema_wrmem} page~\pageref{schema_wrmem} illustre le mécanisme que nous avons mis en place pour exploiter cette possibilité. Un gestionnaire de versions est utilisé pour stocker les configurations de chacun des commutateurs, ce qui permet de les stocker de façon incrémentale, c'est à dire en ne stockant que les changements (\emph{commits}).
 
 \begin{figure}[!h]
 	\begin{center}
@@ -396,7 +399,7 @@ La principale différence avec le schéma précédent est que le processus de sa
 
 \subsection{Installation automatisée}
 
-Pour que notre solution logicielle soit facilement et rapidement déployable sur de nombreux parcs informatiques, nous avons choisis de profiter de la puissance du gestionnaire de paquets du système cible. Ainsi, nous avons conçu un simple paquet Debian, qui s'occupe d'installer tous les fichiers et toutes les dépendances, pour une solution entièrement clé en main.
+Pour que notre solution logicielle soit facilement et rapidement déployable sur de nombreux parcs informatiques, nous avons choisi de profiter de la puissance du gestionnaire de paquets du système cible. Ainsi, nous avons conçu un simple paquet Debian, qui s'occupe d'installer tous les fichiers et toutes les dépendances, pour une solution entièrement clé en main.
 
 Pour plus de confort, le paquet propose une interface d'installation conviviale, comme l'illustrent les copies d'écran en figure~\ref{install_start} page ~\pageref{install_start}, \ref{install_prompt} page \pageref{install_prompt} et \ref{install_progress} page \pageref{install_progress}.
 
