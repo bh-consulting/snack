@@ -132,7 +132,7 @@ $cakeDescription = __('SNACK');
         <p>
 	    <a href="http://bh-consulting.net" class="copyright"><?php echo $this->Html->image('BHConsulting.png', array('class' => 'logobh', 'alt' => 'B.H. Consulting')) ?></a>
 	    <p>
-		<strong id="snackcopy">Snack 1.0</strong> &mdash; <em>Secure Network Access Control for Kids</em><br />
+		<strong id="snackcopy">SNACK 1.0</strong> &mdash; <em>Secure Network Access Control for Kids</em><br />
 		<strong><?php echo __('Authors:') ?></strong> Nicolas BOUGET, <a href="http://julien.guepin.fr">Julien GUÉPIN</a>, Marc PINHÈDE, <a href="http://julien.vaubourg.com">Julien VAUBOURG</a>.<br />
 		<em>Copyright <a href="http://www.gnu.org/licenses/">GPL v3</a> &copy; 2013 <a href="http://bh-consulting.net">b.h. consulting</a></em>
 	    </p>
