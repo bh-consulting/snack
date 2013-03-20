@@ -827,7 +827,7 @@ class RadusersController extends AppController {
                         $username,
                         'EAP-Type',
                         ':=',
-                        'TLS'
+                        'EAP-TLS'
                     )
                 );
                 $this->setCommonCiscoMacFields($rads);
