@@ -108,3 +108,6 @@ ul li:before {
     margin-bottom: 70px;
 }
 
+.deck-container > .slide .deck-before, .deck-container > .slide .deck-previous {
+  opacity: 0.8;
+}
