@@ -242,6 +242,7 @@ sed\
 	-e 's/#\(\s*\$INCLUDE sql\/mysql\/counter.conf\)/\1/'\
 	-e 'N; s/\(#\s*clients\s*=\s*per_socket_clients.*\)\(}\)/\1\tvirtual_server = snack\n\2/'\
 	-e 's/\(\$INCLUDE clients\.conf\)/#\1/'\
+	-e 's/\(auth_badpass\s*=\).*/\1 yes/'\
 	-i $RADIUSD_CONF \
 >> $OUT 2>>$LOG
 
