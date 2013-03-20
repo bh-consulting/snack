@@ -111,10 +111,10 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.71072085"
-     inkscape:cx="515.76716"
+     inkscape:cx="265.31721"
      inkscape:cy="229.67832"
      inkscape:document-units="px"
-     inkscape:current-layer="g4384"
+     inkscape:current-layer="layer1"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -187,7 +187,7 @@
     </g>
     <g
        id="g4384"
-       transform="translate(188.54097,19.602234)">
+       transform="translate(-253.45903,19.602234)">
       <rect
          ry="20.338879"
          y="535.92542"
@@ -211,7 +211,7 @@
     </g>
     <g
        id="g4392"
-       transform="translate(-111.15475,221.51794)">
+       transform="translate(136.70222,221.51794)">
       <rect
          ry="20.338879"
          y="334.0097"
@@ -227,7 +227,7 @@
          x="80.33889"
          style="font-size:40px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeXGyreHeros;-inkscape-font-specification:TeXGyreHeros Bold Italic"
          xml:space="preserve"><tspan
-           style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans Bold Italic;font-size:35px"
+           style="font-size:35px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans Bold Italic"
            y="391.91876"
            x="80.33889"
            id="tspan3757-3-9-6-1-5"
@@ -243,12 +243,12 @@
          y="363.60751" />
     </g>
     <g
-       id="g4465"
-       transform="translate(-208.23928,152.57385)">
+       id="g3032"
+       transform="translate(249.85697,0)">
       <rect
          ry="20.338879"
-         y="402.9538"
-         x="-108.84972"
+         y="555.52765"
+         x="-317.08899"
          height="88.98259"
          width="137.41264"
          id="rect2985-4-5-9-8-4-1"
@@ -256,31 +256,31 @@
       <text
          sodipodi:linespacing="125%"
          id="text3755-6-9-9-8-7-6"
-         y="460.86285"
-         x="-99.230911"
+         y="613.43671"
+         x="-307.47018"
          style="font-size:40px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeXGyreHeros;-inkscape-font-specification:TeXGyreHeros Bold Italic"
          xml:space="preserve"><tspan
-           style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans Bold Italic;font-size:35px"
-           y="460.86285"
-           x="-99.230911"
+           style="font-size:35px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans Bold Italic"
+           y="613.43671"
+           x="-307.47018"
            id="tspan3757-3-9-6-1-5-5"
            sodipodi:role="line">SNMP</tspan></text>
-      <text
-         sodipodi:linespacing="125%"
-         id="text3755-6-9-9-8-7-6-4"
-         y="329.14951"
-         x="-85.234879"
-         style="font-size:40px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeXGyreHeros;-inkscape-font-specification:TeXGyreHeros Bold Italic"
-         xml:space="preserve"><tspan
-           style="font-size:48px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans Bold Italic"
-           y="329.14951"
-           x="-85.234879"
-           id="tspan3757-3-9-6-1-5-5-9"
-           sodipodi:role="line">Serveur SNACK</tspan></text>
     </g>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeXGyreHeros;-inkscape-font-specification:TeXGyreHeros Bold Italic"
+       x="-293.47415"
+       y="481.72336"
+       id="text3755-6-9-9-8-7-6-4"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3757-3-9-6-1-5-5-9"
+         x="-293.47415"
+         y="481.72336"
+         style="font-size:48px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans Bold Italic">Serveur SNACK</tspan></text>
     <g
        id="g4460"
-       transform="translate(-291.25359,170.86514)">
+       transform="translate(-41.396617,170.86514)">
       <rect
          ry="20.338879"
          y="384.66251"
@@ -296,7 +296,7 @@
          x="128.7067"
          style="font-size:40px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeXGyreHeros;-inkscape-font-specification:TeXGyreHeros Bold Italic"
          xml:space="preserve"><tspan
-           style="font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans Bold Italic;font-size:35px"
+           style="font-size:35px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:Sans Bold Italic"
            y="442.57156"
            x="128.7067"
            id="tspan3757-3-9-6-1-5-6"
