@@ -4,9 +4,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SNACK\n"
-"POT-Creation-Date: 2013-03-19 14:09+0100\n"
-"PO-Revision-Date: 2013-03-19 14:09+0100\n"
-"Last-Translator: Julien VAUBOURG <julien@vaubourg.com>\n"
+"POT-Creation-Date: 2013-03-19 20:01+0100\n"
+"PO-Revision-Date: 2013-03-19 20:18+0100\n"
+"Last-Translator: Julien Guépin <julien@guepin.fr>\n"
 "Language-Team: \n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -89,7 +89,6 @@ msgid "Unable to delete NAS."
 msgstr "Impossible de supprimer le NAS."
 
 #: Controller/NasController.php:98
-#, fuzzy
 msgid "Please, select at least one NAS!"
 msgstr "Veuillez sélectionner au moins un NAS !"
 
@@ -98,7 +97,7 @@ msgid "You HAVE to restart the Radius server to apply NAS changes!"
 msgstr "Vous DEVEZ redémarrer le serveur Radius pour appliquer les modifications sur les NAS !"
 
 #: Controller/NasController.php:180
-#: View/SystemDetails/index.ctp:35
+#: View/SystemDetails/index.ctp:51
 msgid "Restart Freeradius"
 msgstr "Redémarrer Freeradius"
 
@@ -123,7 +122,6 @@ msgid "edited NAS %s"
 msgstr "NAS %s édité"
 
 #: Controller/NasController.php:229
-#, fuzzy
 msgid "Unable to update NAS."
 msgstr "Impossible de mettre à jour le NAS."
 
@@ -168,7 +166,6 @@ msgid "Unable to delete sessions."
 msgstr "Impossible de supprimer les sessions."
 
 #: Controller/RadacctsController.php:78
-#, fuzzy
 msgid "Please, select at least one session!"
 msgstr "Veuillez sélectionner au moins une session !"
 
@@ -181,61 +178,93 @@ msgid "The session has been deleted"
 msgstr "La session a été supprimée."
 
 #: Controller/RadacctsController.php:209
-#, fuzzy
 msgid "Unable to delete session."
-msgstr "Impossible de supprimer les sessions."
+msgstr "Impossible de supprimer la session."
 
-#: Controller/RadgroupsController.php:76
+#: Controller/RadgroupsController.php:83
 #: Controller/RadusersController.php:185
 msgid "Expired"
 msgstr "Expiré"
 
-#: Controller/RadgroupsController.php:146;294
+#: Controller/RadgroupsController.php:153;468
 msgid "deleted group %s"
 msgstr "groupe %s supprimé"
 
-#: Controller/RadgroupsController.php:150
+#: Controller/RadgroupsController.php:157
 msgid "Groups have been deleted."
 msgstr "Les groupes ont été supprimés."
 
-#: Controller/RadgroupsController.php:158
+#: Controller/RadgroupsController.php:165
 msgid "error while deleting group"
 msgstr "erreur en supprimant le groupe"
 
-#: Controller/RadgroupsController.php:162
-#, fuzzy
+#: Controller/RadgroupsController.php:169;337
 msgid "Please, select at least one group!"
 msgstr "Veuillez sélectionner au moins un groupe !"
 
-#: Controller/RadgroupsController.php:212
+#: Controller/RadgroupsController.php:192
+#: Controller/RadusersController.php:316
+msgid "%s was added"
+msgstr "%s a été ajouté"
+
+#: Controller/RadgroupsController.php:194
+#: Controller/RadusersController.php:318
+msgid "ERROR: %s was not added"
+msgstr "ERREUR : %s n'a pas été ajouté"
+
+#: Controller/RadgroupsController.php:207;222
+#: Controller/RadusersController.php:331;346
+msgid "%s (%s) was added"
+msgstr "%s (%s) a été ajouté"
+
+#: Controller/RadgroupsController.php:209;224
+#: Controller/RadusersController.php:333;348
+msgid "ERROR: %s (%s) was not added"
+msgstr "ERREUR : %s (%s) n'a pas été ajouté."
+
+#: Controller/RadgroupsController.php:241
+#: Controller/RadusersController.php:365
+msgid "%s was added to %s"
+msgstr "%s a été ajouté à %s"
+
+#: Controller/RadgroupsController.php:243
+#: Controller/RadusersController.php:367
+msgid "ERROR: %s was not added to %s"
+msgstr "ERREUR : %s n'a pas été ajouté à %s"
+
+#: Controller/RadgroupsController.php:326
+msgid "Groups have been exported."
+msgstr "Les groupes ont été exportés."
+
+#: Controller/RadgroupsController.php:386
 msgid "New group added."
 msgstr "Nouveau groupe ajouté."
 
-#: Controller/RadgroupsController.php:215
+#: Controller/RadgroupsController.php:389
 msgid "added group %s"
 msgstr "groupe %s ajouté"
 
-#: Controller/RadgroupsController.php:223
+#: Controller/RadgroupsController.php:397
 msgid "error while adding group"
 msgstr "erreur en ajoutant le groupe"
 
-#: Controller/RadgroupsController.php:246
+#: Controller/RadgroupsController.php:420
 msgid "Group has been updated."
 msgstr "Le groupe a été mis à jour."
 
-#: Controller/RadgroupsController.php:249
+#: Controller/RadgroupsController.php:423
 msgid "edited group %s"
 msgstr "groupe %s édité"
 
-#: Controller/RadgroupsController.php:257
+#: Controller/RadgroupsController.php:431
 msgid "error while editing group %s"
 msgstr "erreur en éditant le groupe %s"
 
-#: Controller/RadgroupsController.php:290
+#: Controller/RadgroupsController.php:464
 msgid "The group has been deleted."
 msgstr "Le groupe a été supprimé."
 
-#: Controller/RadgroupsController.php:302
+#: Controller/RadgroupsController.php:476
 msgid "error while deleting group %s"
 msgstr "erreur en supprimant le groupe %s"
 
@@ -281,7 +310,7 @@ msgstr "Id/Mdp"
 msgid "Certificate"
 msgstr "Certificat"
 
-#: Controller/RadusersController.php:272;1285
+#: Controller/RadusersController.php:272;1296
 msgid "deleted user %s"
 msgstr "utilisateur %s supprimé"
 
@@ -294,111 +323,90 @@ msgid "error while deleting users"
 msgstr "erreur en supprimant des utilisateurs"
 
 #: Controller/RadusersController.php:288;466
-#, fuzzy
 msgid "Please, select at least one user!"
 msgstr "Veuillez sélectionner au moins un utilisateur !"
-
-#: Controller/RadusersController.php:316
-msgid "%s was added"
-msgstr "%s a été ajouté"
-
-#: Controller/RadusersController.php:318
-msgid "ERROR: %s was not added"
-msgstr "ERREUR : %s n'a pas été ajouté"
-
-#: Controller/RadusersController.php:331;346
-msgid "%s (%s) was added"
-msgstr "%s (%s) a été ajouté"
-
-#: Controller/RadusersController.php:333;348
-msgid "ERROR: %s (%s) was not added"
-msgstr "ERREUR : %s (%s) n'a pas été ajouté."
-
-#: Controller/RadusersController.php:365
-msgid "%s was added to %s"
-msgstr "%s a été ajouté à %s"
-
-#: Controller/RadusersController.php:367
-msgid "ERROR: %s was not added to %s"
-msgstr "ERREUR : %s n'a pas été ajouté à %s"
 
 #: Controller/RadusersController.php:455
 msgid "Users have been exported."
 msgstr "Les utilisateurs ont été exportés."
 
-#: Controller/RadusersController.php:638
+#: Controller/RadusersController.php:639
 msgid "New user added. His certificates are %s and %s."
 msgstr "Nouvel utilisateur ajouté. Ses certificats sont %s et %s."
 
-#: Controller/RadusersController.php:646
+#: Controller/RadusersController.php:647
 msgid "New user added."
 msgstr "Nouvel utilisateur ajouté."
 
-#: Controller/RadusersController.php:651
+#: Controller/RadusersController.php:652
 msgid "added user %s"
 msgstr "utilisateur %s ajouté"
 
-#: Controller/RadusersController.php:789
+#: Controller/RadusersController.php:790
 msgid "error while adding a loginpass user"
 msgstr "erreur en ajoutant un utilisateur identifiant / mot de passe"
 
-#: Controller/RadusersController.php:832
+#: Controller/RadusersController.php:833
 msgid "error while adding a cert user"
 msgstr "erreur en ajoutant un utilisateur par certificat"
 
-#: Controller/RadusersController.php:882
+#: Controller/RadusersController.php:883
 msgid "error while adding a MAC user"
 msgstr "erreur en ajoutant un utilisateur MAC"
 
-#: Controller/RadusersController.php:951
-msgid "The admin user %s was added"
-msgstr "L'administrateur %s a été ajouté"
+#: Controller/RadusersController.php:952
+msgid "The SNACK user %s was added"
+msgstr "L'utilisateur SNACK %s a été ajouté"
 
-#: Controller/RadusersController.php:955
+#: Controller/RadusersController.php:956
 msgid "added admin user %s"
 msgstr "administrateur %s ajouté"
 
-#: Controller/RadusersController.php:963
-msgid "error while adding an admin user"
-msgstr "erreur en ajoutant un administrateur"
+#: Controller/RadusersController.php:964
+msgid "error while adding a SNACK user"
+msgstr "erreur en ajoutant un utilisateur SNACK"
 
-#: Controller/RadusersController.php:998;1255
+#: Controller/RadusersController.php:999;1256
 msgid "User has been updated."
 msgstr "L'utilisateur a été mis à jour."
 
-#: Controller/RadusersController.php:1001;1258
+#: Controller/RadusersController.php:1002;1259
 msgid "edited user %s"
 msgstr "utilisateur %s édité"
 
-#: Controller/RadusersController.php:1119
+#: Controller/RadusersController.php:1120
 msgid "error while editing loginpass user %s"
 msgstr "erreur en éditant l'utilisateur identifiant / mot de passe %s"
 
-#: Controller/RadusersController.php:1159
+#: Controller/RadusersController.php:1160
 msgid "error while editing MAC user %s"
 msgstr "erreur en éditant l'utilisateur MAC %s"
 
-#: Controller/RadusersController.php:1213
+#: Controller/RadusersController.php:1214
 msgid "error while editing cert user %s"
 msgstr "erreur en éditant l'utilisateur certificat %s"
 
-#: Controller/RadusersController.php:1247
+#: Controller/RadusersController.php:1248
 msgid "error while editing Snack user %s"
 msgstr "erreur en éditant l'utilisateur Snack %s"
 
-#: Controller/RadusersController.php:1288
+#: Controller/RadusersController.php:1290
+msgid "warning: while deleting user %s, certificate files not found!"
+msgstr "attention : les fichiers des certificats n'ont pas été trouvés en supprimant l'utilisateur %s !"
+
+#: Controller/RadusersController.php:1300
 msgid "The user has been deleted."
 msgstr "L'utilisateur a été supprimé."
 
-#: Controller/RadusersController.php:1296
+#: Controller/RadusersController.php:1309
 msgid "error while deleting user %s"
 msgstr "erreur en supprimant l'utilisateur %s"
 
-#: Controller/RadusersController.php:1363
+#: Controller/RadusersController.php:1376
 msgid "created certificate for user %s"
 msgstr "certificat créé pour l'utilisateur %s"
 
-#: Controller/RadusersController.php:1394
+#: Controller/RadusersController.php:1407
 msgid "deleted certificate for user %s"
 msgstr "certificat supprimé pour l'utilisateur %s"
 
@@ -444,7 +452,6 @@ msgid "Unable to delete %s."
 msgstr "Impossible de supprimer %s."
 
 #: Controller/Component/MultipleActionComponent.php:83
-#, fuzzy
 msgid "Please, select at least one %s!"
 msgstr "Veuillez sélectionner au moins un %s !"
 
@@ -573,7 +580,7 @@ msgid "byte"
 msgstr "octet"
 
 #: Lib/Utils.php:190
-#: View/SystemDetails/index.ctp:171;223
+#: View/SystemDetails/index.ctp:187;239
 msgid "bytes"
 msgstr "octets"
 
@@ -707,10 +714,10 @@ msgid "Who"
 msgstr "Qui"
 
 #: View/Backups/index.ctp:33;157
-#: View/Nas/index.ctp:28;178
-#: View/Radaccts/index.ctp:33;158
-#: View/Radgroups/index.ctp:31;163
-#: View/Radusers/index.ctp:51;278
+#: View/Nas/index.ctp:28;181
+#: View/Radaccts/index.ctp:33;161
+#: View/Radgroups/index.ctp:31;215
+#: View/Radusers/index.ctp:51;285
 msgid "View"
 msgstr "Voir"
 
@@ -746,12 +753,12 @@ msgid "No backup found ("
 msgstr "Pas de sauvegarde trouvée ("
 
 #: View/Backups/index.ctp:243
-#: View/Elements/logs_element.ctp:137
+#: View/Elements/logs_element.ctp:140
 msgid "retry with no filters"
 msgstr "réessayer sans filtre"
 
 #: View/Backups/index.ctp:245
-#: View/Elements/logs_element.ctp:139
+#: View/Elements/logs_element.ctp:142
 msgid "no filters"
 msgstr "pas de filtre"
 
@@ -822,7 +829,7 @@ msgid "Logs"
 msgstr "Logs"
 
 #: View/Common/logs_tabs.ctp:14
-#: View/Layouts/default.ctp:77
+#: View/Layouts/default.ctp:76
 msgid "Radius"
 msgstr "Radius"
 
@@ -937,7 +944,7 @@ msgstr "Filtres"
 
 #: View/Elements/filters_panel.ctp:22
 msgid "No filters"
-msgstr "Pas de filtres"
+msgstr "Sans filtre"
 
 #: View/Elements/filters_panel.ctp:66
 msgid "Search"
@@ -967,23 +974,23 @@ msgstr "Sévérité à partir de"
 msgid "Message contains (accept regex)"
 msgstr "Le message contient (regex acceptées)"
 
-#: View/Elements/logs_element.ctp:103
+#: View/Elements/logs_element.ctp:106
 msgid "Search from this date"
 msgstr "Chercher depuis cette date"
 
-#: View/Elements/logs_element.ctp:115
+#: View/Elements/logs_element.ctp:118
 msgid "Search from this severity"
 msgstr "Rechercher depuis cette sévérité"
 
-#: View/Elements/logs_element.ctp:134
+#: View/Elements/logs_element.ctp:137
 msgid "No logs found"
 msgstr "Pas de log trouvé"
 
-#: View/Elements/logs_element.ctp:155
+#: View/Elements/logs_element.ctp:158
 msgid "Delete all"
 msgstr "Tout supprimer"
 
-#: View/Elements/logs_element.ctp:167
+#: View/Elements/logs_element.ctp:170
 msgid "Delete all logs from %s"
 msgstr "Supprimer tous les logs de %s"
 
@@ -1005,7 +1012,8 @@ msgid "Please, select a file:"
 msgstr "Sélectionner un fichier:"
 
 #: View/Elements/modalImport.ctp:26
-#: View/Radusers/index.ctp:148
+#: View/Radgroups/index.ctp:98
+#: View/Radusers/index.ctp:152
 msgid "Upload"
 msgstr "Envoyer"
 
@@ -1032,7 +1040,7 @@ msgstr "Droits Snack"
 #: View/Radusers/edit_cert.ctp:92
 #: View/Radusers/edit_loginpass.ctp:76
 #: View/Radusers/edit_snack.ctp:32
-#: View/Radusers/index.ctp:26;173
+#: View/Radusers/index.ctp:26;177
 msgid "Role"
 msgstr "Rôle"
 
@@ -1061,14 +1069,14 @@ msgid "No"
 msgstr "Non"
 
 #: View/Elements/viewInfo.ctp:13
-#: View/Nas/index.ctp:32;190
+#: View/Nas/index.ctp:32;193
 #: View/Radgroups/edit.ctp:7
-#: View/Radgroups/index.ctp:36;174
+#: View/Radgroups/index.ctp:36;226
 #: View/Radusers/edit_cert.ctp:8
 #: View/Radusers/edit_loginpass.ctp:6
 #: View/Radusers/edit_mac.ctp:6
 #: View/Radusers/edit_snack.ctp:6
-#: View/Radusers/index.ctp:56;294;298
+#: View/Radusers/index.ctp:56;301;305
 msgid "Edit"
 msgstr "Éditer"
 
@@ -1077,7 +1085,6 @@ msgid "Not defined"
 msgstr "Indéfini"
 
 #: View/Elements/viewInfo.ctp:93
-#, fuzzy
 msgid "802.1x"
 msgstr "802.1X"
 
@@ -1089,24 +1096,24 @@ msgstr "Précédent"
 msgid "Next"
 msgstr "Suivant"
 
-#: View/Layouts/default.ctp:88
+#: View/Layouts/default.ctp:87
 #: View/Terminal/index.ctp:4
 msgid "Terminal"
 msgstr "Terminal"
 
-#: View/Layouts/default.ctp:106
+#: View/Layouts/default.ctp:105
 msgid "Logout from %s"
 msgstr "Déconnexion de %s"
 
-#: View/Layouts/default.ctp:137
+#: View/Layouts/default.ctp:136
 msgid "Authors:"
 msgstr "Auteurs :"
 
-#: View/Layouts/default.ctp:142
+#: View/Layouts/default.ctp:141
 msgid "French"
 msgstr "Français"
 
-#: View/Layouts/default.ctp:143
+#: View/Layouts/default.ctp:142
 msgid "English"
 msgstr "Anglais"
 
@@ -1162,26 +1169,26 @@ msgstr "Mettre à jour"
 msgid "Description"
 msgstr "Description"
 
-#: View/Nas/index.ctp:40;203
+#: View/Nas/index.ctp:40;206
 msgid "Backups"
 msgstr "Sauvegardes"
 
 #: View/Nas/index.ctp:78
 #: View/Radaccts/index.ctp:69
-#: View/Radgroups/index.ctp:74
-#: View/Radusers/index.ctp:186
+#: View/Radgroups/index.ctp:123
+#: View/Radusers/index.ctp:190
 msgid "Contains (accept regex)"
 msgstr "Contient (regex acceptées)"
 
-#: View/Nas/index.ctp:199
+#: View/Nas/index.ctp:202
 msgid "Running configuration NOT synchronized with the starting one."
 msgstr "La configuration courante n'est PAS synchronisée avec celle de démarrage."
 
-#: View/Nas/index.ctp:200
+#: View/Nas/index.ctp:203
 msgid "Running configuration seems synchronized with the starting configuration."
 msgstr "La configuration courante semble synchronisée avec celle de démarrage."
 
-#: View/Nas/index.ctp:242
+#: View/Nas/index.ctp:245
 msgid "No NAS found."
 msgstr "Pas de NAS trouvé."
 
@@ -1253,7 +1260,7 @@ msgstr "Entreprise"
 #: View/Parameters/edit.ctp:56
 #: View/Parameters/index.ctp:88
 msgid "Pagination count"
-msgstr "Nombre d'éléments par page"
+msgstr "Pagination"
 
 #: View/Parameters/index.ctp:17
 #: View/SystemDetails/index.ctp:19
@@ -1301,25 +1308,25 @@ msgstr "Station"
 msgid "Port type"
 msgstr "Type de port"
 
-#: View/Radaccts/index.ctp:196
+#: View/Radaccts/index.ctp:199
 msgid "Directly connected"
 msgstr "Directement connecté"
 
-#: View/Radaccts/index.ctp:209
+#: View/Radaccts/index.ctp:212
 #: View/Radaccts/view.ctp:26
 msgid "User still connected"
 msgstr "Utilisateur encore connecté"
 
-#: View/Radaccts/index.ctp:213
+#: View/Radaccts/index.ctp:216
 #: View/Radaccts/view.ctp:30
 msgid "y,m,d,h,min,s"
 msgstr "a,m,j,h,min,s"
 
-#: View/Radaccts/index.ctp:217
+#: View/Radaccts/index.ctp:220
 msgid "Session ended the %s."
 msgstr "Session achevée le %s."
 
-#: View/Radaccts/index.ctp:236
+#: View/Radaccts/index.ctp:239
 msgid "No session found."
 msgstr "Pas de session trouvée."
 
@@ -1360,7 +1367,7 @@ msgid "Output data"
 msgstr "Données de sortie"
 
 #: View/Radaccts/view.ctp:55
-#: View/SystemDetails/index.ctp:71
+#: View/SystemDetails/index.ctp:87
 msgid "Statistics:"
 msgstr "Statistiques :"
 
@@ -1377,7 +1384,16 @@ msgstr "Port"
 msgid "Add a group"
 msgstr "Ajouter un groupe"
 
-#: View/Radgroups/add.ctp:12;19;37
+#: View/Radgroups/add.ctp:12
+msgid "Information"
+msgstr "Informations générales"
+
+#: View/Radgroups/add.ctp:14
+#: View/Radgroups/edit.ctp:16
+msgid "Selected users"
+msgstr "Utilisateurs sélectionnés"
+
+#: View/Radgroups/add.ctp:19;37
 #: View/Radgroups/edit.ctp:21;42
 #: View/Radusers/add_cert.ctp:36;83
 #: View/Radusers/add_loginpass.ctp:11;71
@@ -1387,11 +1403,6 @@ msgstr "Ajouter un groupe"
 #: View/Radusers/edit_mac.ctp:14;34
 msgid "Checks"
 msgstr "Vérifications"
-
-#: View/Radgroups/add.ctp:14
-#: View/Radgroups/edit.ctp:16
-msgid "Selected users"
-msgstr "Utilisateurs sélectionnés"
 
 #: View/Radgroups/add.ctp:24;38
 #: View/Radgroups/edit.ctp:26;43
@@ -1422,16 +1433,29 @@ msgstr "Membres"
 msgid "Comment"
 msgstr "Commentaire"
 
-#: View/Radgroups/index.ctp:67
-#: View/Radusers/index.ctp:179
+#: View/Radgroups/index.ctp:64
+msgid "Import groups"
+msgstr "Importer des groupes"
+
+#: View/Radgroups/index.ctp:72
+msgid "Export groups"
+msgstr "Exporter les groupes"
+
+#: View/Radgroups/index.ctp:85
+#: View/Radusers/index.ctp:139
+msgid "CSV"
+msgstr "CSV"
+
+#: View/Radgroups/index.ctp:116
+#: View/Radusers/index.ctp:183
 msgid "Expiration"
 msgstr "Expiration"
 
-#: View/Radgroups/index.ctp:195
+#: View/Radgroups/index.ctp:247
 msgid "Group expired since the %s."
 msgstr "Groupé expiré depuis le %s."
 
-#: View/Radgroups/index.ctp:220
+#: View/Radgroups/index.ctp:272
 msgid "No group found."
 msgstr "Pas de groupe trouvé."
 
@@ -1444,7 +1468,7 @@ msgstr "Ajouter un utilisateur avec un certificat"
 #: View/Radusers/add_mac.ctp:12
 #: View/Radusers/edit_cert.ctp:44
 #: View/Radusers/edit_loginpass.ctp:32
-#: View/SystemDetails/index.ctp:104
+#: View/SystemDetails/index.ctp:120
 msgid "MAC address"
 msgstr "Adresse MAC"
 
@@ -1487,7 +1511,7 @@ msgid "Existing"
 msgstr "Existant"
 
 #: View/Radusers/add_snack.ctp:29
-msgid "Select an user..."
+msgid "Select a user..."
 msgstr "Sélectionner un utilisateur..."
 
 #: View/Radusers/add_snack.ctp:30
@@ -1504,7 +1528,7 @@ msgstr "Générer un nouveau certificat"
 
 #: View/Radusers/edit_loginpass.ctp:7
 msgid "(login / password user)"
-msgstr "(utilisateur nom/mot de passe)"
+msgstr "(utilisateur identifiant/mot de passe)"
 
 #: View/Radusers/edit_mac.ctp:6
 msgid "(MAC user)"
@@ -1530,23 +1554,19 @@ msgstr "Importer des utilisateurs"
 msgid "Export users"
 msgstr "Exporter les utilisateurs"
 
-#: View/Radusers/index.ctp:139
-msgid "CSV"
-msgstr "CSV"
-
-#: View/Radusers/index.ctp:167
+#: View/Radusers/index.ctp:171
 msgid "Authentication type"
 msgstr "Type d'authentification"
 
-#: View/Radusers/index.ctp:291
+#: View/Radusers/index.ctp:298
 msgid "Not allowed!"
 msgstr "Non autorisé !"
 
-#: View/Radusers/index.ctp:331
+#: View/Radusers/index.ctp:338
 msgid "User expired since the %s."
 msgstr "Utilisateur expiré depuis le %s."
 
-#: View/Radusers/index.ctp:356
+#: View/Radusers/index.ctp:363
 msgid "No user found."
 msgstr "Pas d'utilisateur trouvé."
 
@@ -1562,9 +1582,9 @@ msgstr "Se connecter"
 msgid "Certificate user"
 msgstr "Utilisateur avec certificat"
 
-#: View/Radusers/view_loginpass.ctp:9
+#: View/Radusers/view_loginpass.ctp:23
 msgid "Login / Password User"
-msgstr "Utilisateur avec nom/mot de passe"
+msgstr "Utilisateur avec identifiant/mot de passe"
 
 #: View/Radusers/view_mac.ctp:9
 msgid "MAC User"
@@ -1587,172 +1607,168 @@ msgid "Hostname"
 msgstr "Nom d'hôte"
 
 #: View/SystemDetails/index.ctp:27
+msgid "Certificates:"
+msgstr "Certificats :"
+
+#: View/SystemDetails/index.ctp:29
+msgid "CA link"
+msgstr ""
+
+#: View/SystemDetails/index.ctp:43
 msgid "Services:"
 msgstr "Services :"
 
-#: View/SystemDetails/index.ctp:29
+#: View/SystemDetails/index.ctp:45
 msgid "Freeradius"
 msgstr "Freeradius"
 
-#: View/SystemDetails/index.ctp:49
+#: View/SystemDetails/index.ctp:65
 msgid "MySQL"
 msgstr "MySQL"
 
-#: View/SystemDetails/index.ctp:55
+#: View/SystemDetails/index.ctp:71
 msgid "Restart Mysql"
 msgstr "Redémarrer MySQL"
 
-#: View/SystemDetails/index.ctp:73
+#: View/SystemDetails/index.ctp:89
 msgid "Uptime"
 msgstr "Temps de fonctionnement"
 
-#: View/SystemDetails/index.ctp:75
+#: View/SystemDetails/index.ctp:91
 msgid "Idle time"
 msgstr "Temps d'attente"
 
-#: View/SystemDetails/index.ctp:77
+#: View/SystemDetails/index.ctp:93
 msgid "Load average"
 msgstr "Charge moyenne"
 
-#: View/SystemDetails/index.ctp:79
+#: View/SystemDetails/index.ctp:95
 msgid "Tasks"
 msgstr "Tâches"
 
-#: View/SystemDetails/index.ctp:83
+#: View/SystemDetails/index.ctp:99
 msgid "Memory:"
 msgstr "Mémoire :"
 
-#: View/SystemDetails/index.ctp:85
+#: View/SystemDetails/index.ctp:101
 msgid "Used memory"
 msgstr "Mémoire utilisée"
 
-#: View/SystemDetails/index.ctp:87
+#: View/SystemDetails/index.ctp:103
 msgid "Free memory"
 msgstr "Mémoire libre"
 
-#: View/SystemDetails/index.ctp:89
+#: View/SystemDetails/index.ctp:105
 msgid "Total memory"
 msgstr "Mémoire totale"
 
-#: View/SystemDetails/index.ctp:91
+#: View/SystemDetails/index.ctp:107
 msgid "Used disk"
 msgstr "Disque utilisé"
 
-#: View/SystemDetails/index.ctp:93
+#: View/SystemDetails/index.ctp:109
 msgid "Free disk"
 msgstr "Disque libre"
 
-#: View/SystemDetails/index.ctp:95
+#: View/SystemDetails/index.ctp:111
 msgid "Total disk"
 msgstr "Disque total"
 
-#: View/SystemDetails/index.ctp:99
+#: View/SystemDetails/index.ctp:115
 msgid "Network:"
 msgstr "Réseau :"
 
-#: View/SystemDetails/index.ctp:103;163;215
+#: View/SystemDetails/index.ctp:119;179;231
 msgid "Interface"
 msgstr "Interface"
 
-#: View/SystemDetails/index.ctp:105
+#: View/SystemDetails/index.ctp:121
 msgid "IPv4 adresses"
 msgstr "Adresses IPv4"
 
-#: View/SystemDetails/index.ctp:106
+#: View/SystemDetails/index.ctp:122
 msgid "IPv6 adresses"
 msgstr "Adresse IPv6"
 
-#: View/SystemDetails/index.ctp:126
+#: View/SystemDetails/index.ctp:142
 msgid "No IPv4 address."
 msgstr "Pas d'adresse IPv4."
 
-#: View/SystemDetails/index.ctp:137
+#: View/SystemDetails/index.ctp:153
 msgid "No IPv6 address."
 msgstr "Pas d'adresse IPv6."
 
-#: View/SystemDetails/index.ctp:152;205;257
+#: View/SystemDetails/index.ctp:168;221;273
 msgid "No interface"
 msgstr "Pas d'interface"
 
-#: View/SystemDetails/index.ctp:166
+#: View/SystemDetails/index.ctp:182
 msgid "Receive"
 msgstr "Réception"
 
-#: View/SystemDetails/index.ctp:172;224
+#: View/SystemDetails/index.ctp:188;240
 msgid "packets"
 msgstr "paquets"
 
-#: View/SystemDetails/index.ctp:173;225
+#: View/SystemDetails/index.ctp:189;241
 msgid "errors"
 msgstr "erreurs"
 
-#: View/SystemDetails/index.ctp:174;226
+#: View/SystemDetails/index.ctp:190;242
 msgid "drop"
 msgstr "supprimé"
 
-#: View/SystemDetails/index.ctp:175;227
+#: View/SystemDetails/index.ctp:191;243
 msgid "fifo"
 msgstr "fifo"
 
-#: View/SystemDetails/index.ctp:176
+#: View/SystemDetails/index.ctp:192
 msgid "frame"
 msgstr "cadre"
 
-#: View/SystemDetails/index.ctp:177;230
+#: View/SystemDetails/index.ctp:193;246
 msgid "compressed"
 msgstr "compressé"
 
-#: View/SystemDetails/index.ctp:178
+#: View/SystemDetails/index.ctp:194
 msgid "multicast"
 msgstr "multicast"
 
-#: View/SystemDetails/index.ctp:218
+#: View/SystemDetails/index.ctp:234
 msgid "Transmit"
 msgstr "Émission"
 
-#: View/SystemDetails/index.ctp:228
+#: View/SystemDetails/index.ctp:244
 msgid "collisions"
 msgstr "collisions"
 
-#: View/SystemDetails/index.ctp:229
+#: View/SystemDetails/index.ctp:245
 msgid "carrier"
 msgstr "porteuse"
 
-#: Model/Logline.php:validation
-#: for field datefrom
-msgid "Format error with date from."
-msgstr "Erreur de format dans la date de fin."
+#~ msgid "error while adding an admin user"
+#~ msgstr "erreur en ajoutant un administrateur"
 
-#: Model/Logline.php:validation
-#: for field dateto
-msgid "Format error with date to."
-msgstr "Erreur de format dans la date de début."
+#~ msgid "Format error with date from."
+#~ msgstr "Erreur de format dans la date de fin."
 
-#: Model/Logline.php:validation
-#: for field severity
-msgid "Format error with severity."
-msgstr "Erreur de format pour la sévérité."
+#~ msgid "Format error with date to."
+#~ msgstr "Erreur de format dans la date de début."
 
-#: Model/Parameter.php:validation
-#: for field configurationEmail;validation
-#: errorEmail
-msgid "Invalid email format."
-msgstr "Format de courriel invalide."
+#~ msgid "Format error with severity."
+#~ msgstr "Erreur de format pour la sévérité."
 
-#: Model/Parameter.php:validation
-#: for field ipAddress
-msgid "This is not an IP address format."
-msgstr "Ceci n'est pas un format d'adresse IP."
+#~ msgid "Invalid email format."
+#~ msgstr "Format de courriel invalide."
 
-#: Model/Parameter.php:validation
-#: for field scriptsPath;validation certsPath
-msgid "Directory does not exist."
-msgstr "Le dossier n'existe pas."
+#~ msgid "This is not an IP address format."
+#~ msgstr "Ceci n'est pas un format d'adresse IP."
 
-#: Model/Parameter.php:validation
-#: for field paginationCount
-msgid "The pagination count must be a number."
-msgstr "Le nombre d'éléments par page doit être un nombre."
+#~ msgid "Directory does not exist."
+#~ msgstr "Le dossier n'existe pas."
+
+#~ msgid "The pagination count must be a number."
+#~ msgstr "Le nombre d'éléments par page doit être un nombre."
 
 #~ msgid "<strong>%s:</strong> <em>%s</em>"
 #~ msgstr "<strong>%s : </strong> <em>%s</em>"
