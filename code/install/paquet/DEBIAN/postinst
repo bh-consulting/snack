@@ -512,6 +512,8 @@ sed\
         -e "/check_crl =/c \\\t\t\tcheck_crl = yes"\
         -e "/^\s*#*CA_path =/c \\\t\t\tCA_path = \${certdir}/certs"\
         -e "/^\s*#*\s*check_cert_cn =/c \\\t\t\tcheck_cert_cn = %{User-Name}"\
+	-e "/copy_request_to_tunnel =/c \\\t\t\tcopy_request_to_tunnel = yes"\
+	-e "/use_tunneled_reply =/c \\\t\t\tuse_tunneled_reply = yes"\
         -i $EAP_CONF \
 >> $OUT 2>>$LOG
 
