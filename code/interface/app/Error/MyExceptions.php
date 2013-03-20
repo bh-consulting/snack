@@ -88,22 +88,22 @@ class RevokeException extends UserGroupException {
 
 class CertificateRemoveException extends UserGroupException {
     public function __construct($id, $name) {
-        $certs = Utils::getUserCertsPath($name);
+        $cert = Utils::getUserCertsPath($name);
 
         parent::__construct(
-            __("User %s: cannot remove %s or %s."),
-                array($name, $certs['public'], $certs['key'])
+            __("User %s: cannot remove %s."),
+                array($name, $cert)
             ); 
     }
 }
 
 class CertificateNotFoundException extends UserGroupException {
     public function __construct($id, $name) {
-        $certs = Utils::getUserCertsPath($name);
+        $cert = Utils::getUserCertsPath($name);
 
         parent::__construct(
-            __("User %s: cannot find %s or %s."),
-                array($name, $certs['public'], $certs['key'])
+            __("User %s: cannot find %s."),
+                array($name, $cert)
             ); 
     }
 }

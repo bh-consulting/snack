@@ -32,7 +32,7 @@ echo $this->Html->link(
 echo $this->Html->link(
     Utils::getServerCertPath(),
     array(
-    	'action' => 'get_public/server',
+    	'action' => 'get_cert/server',
     	'controller' => 'certs',
     )
 );

@@ -5,9 +5,7 @@ class CertsController extends AppController {
     public function isAuthorized($user) {
         
         if (in_array($user['role'], array('tech', 'admin'))
-            && in_array($this->action, array(
-                'get_public', 'get_key',
-            ))
+            && $this->action == 'get_cert'
         ) {
             return true;
         }
@@ -20,12 +18,11 @@ class CertsController extends AppController {
      * @param  string $user user
      * @return response file to download
      */
-    private function get_cert($user, $file_type) {
+    public function get_cert($user) {
 	if($user == 'server') {
 	    $file = Utils::getServerCertPath();
 	} else {
-	    $userCert = Utils::getUserCertsPath($user);
-	    $file = $userCert[$file_type];
+	    $file = Utils::getUserCertsPath($user);
 	}
 
         try {
@@ -44,13 +41,6 @@ class CertsController extends AppController {
         }
     }
 
-    public function get_public($user) {
-        $this->get_cert($user, 'public');
-    }
-
-    public function get_key($user) {
-        $this->get_cert($user, 'key');
-    }
 }
 
 ?>

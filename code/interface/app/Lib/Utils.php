@@ -237,11 +237,8 @@ class Utils {
     }
 
     public static function getUserCertsPath($username) {
-        $base = Configure::read('Parameters.certsPath') . '/users/' . $username;
-        return array(
-            'public' => $base . '_cert.pem',
-            'key' => $base . '_key.pem',
-        );
+        return Configure::read('Parameters.certsPath') . '/users/' 
+            . $username . '.p12';
     }
 
     public static function getISOCode($httpAcceptLanguage) {

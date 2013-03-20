@@ -501,12 +501,10 @@ class RadusersController extends AppController {
         }
         $attributes['Comment'] = $views['base']['Raduser']['comment'];
         $attributes['Role'] = $this->Raduser->roles[$views['base']['Raduser']['role']];
-        $certsPath = Utils::getUserCertsPath($username);
-        $attributes['Certificate path'] = $certsPath['public'];
-        $attributes['Key path'] = $certsPath['key'];
+        $attributes['User certificate path'] = Utils::getUserCertsPath($username);
         $attributes['Server certificate path'] = Utils::getServerCertPath();
         $attributes['Cisco'] = $views['base']['Raduser']['is_cisco'] 
-            ? _('Yes') : _('No');
+            ? __('Yes') : __('No');
 
         // Radchecks
         foreach($views['checks'] as $check){
@@ -538,8 +536,7 @@ class RadusersController extends AppController {
             'Authentication type',
             'Username',
             'Comment',
-            'Certificate path',
-            'Key path',
+            'User certificate path',
             'Server certificate path',
             'Expiration',
             'Simultaneous-Use', 
@@ -632,16 +629,25 @@ class RadusersController extends AppController {
                     && $this->request->data['Raduser']['is_cert'] == 1
                 ) {
                     $username = $this->request->data['Raduser']['username'];
-                    $certs = Utils::getUserCertsPath(
-                        $username
+                    $cert = Utils::getUserCertsPath($username);
+
+                    $this->Session->setFlash(
+                        __('New user added. His certificate is in '),
+                        'flash_success_link',
+                        array(
+                            'title' => $cert,
+                            'url' => array(
+                                'controller' => 'certs',
+                                'action' => 'get_cert/' . $username,
+                            ),
+                            'style' => array(
+                                'class' => '',
+                                'escape' => false,
+                                'style' => '',
+                            ),
+                        )
                     );
 
-                    $this->Session->setFlash(__(
-                        'New user added. His certificates are %s and %s.',
-                        '<a href="certs/get_public/' . $username  . '">' . $certs['public'] . '</a>',
-                        '<a href="certs/get_key/' . $username . '">' . $certs['key'] . '</a>',
-                        'flash_success'
-                    ));
                 } else {
                     $this->Session->setFlash(
                         __('New user added.'),
@@ -1407,9 +1413,9 @@ class RadusersController extends AppController {
      * @return 0 if certificate was removed, error code otherwise.
      */
     public function removeCertificate($userID, $username) {
-        $certs = Utils::getUserCertsPath($username);
+        $cert = Utils::getUserCertsPath($username);
 
-        if (file_exists($certs['public']) && file_exists($certs['key'])) {
+        if (file_exists($cert)) {
             $command = Configure::read('Parameters.scriptsPath')
                 . '/revokeClient '
                 . '"' . Configure::read('Parameters.certsPath') . '" '
@@ -1429,7 +1435,7 @@ class RadusersController extends AppController {
             }
 
             // Delete
-            if (!unlink($certs['public']) || !unlink($certs['key'])) {
+            if (!unlink($cert)) {
                 throw new CertificateRemoveException($userID, $username);
             }
         } else {

@@ -9,7 +9,7 @@ if (isset($attributes['EAP-Type'])
     $attributes['Server certificate path'] = $this->Html->link(
         __($attributes['Server certificate path']),
         array(
-            'action' => 'get_public/server',
+            'action' => 'get_cert/server',
             'controller' => 'certs',
         )
     );

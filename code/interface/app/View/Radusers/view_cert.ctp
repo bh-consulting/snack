@@ -4,18 +4,10 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
 
-$attributes['Certificate path'] = $this->Html->link(
-    $attributes['Certificate path'], 
+$attributes['User certificate path'] = $this->Html->link(
+    $attributes['User certificate path'], 
     array(
-    	'action' => 'get_public/' . $attributes['Username'],
-    	'controller' => 'certs',
-    )
-);
-
-$attributes['Key path'] = $this->Html->link(
-    $attributes['Key path'], 
-    array(
-    	'action' => 'get_key/' . $attributes['Username'],
+    	'action' => 'get_cert/' . $attributes['Username'],
     	'controller' => 'certs',
     )
 );
@@ -23,7 +15,7 @@ $attributes['Key path'] = $this->Html->link(
 $attributes['Server certificate path'] = $this->Html->link(
     $attributes['Server certificate path'],
     array(
-    	'action' => 'get_public/server',
+    	'action' => 'get_cert/server',
     	'controller' => 'certs',
     )
 );
