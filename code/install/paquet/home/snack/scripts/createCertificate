@@ -19,6 +19,7 @@ USERFILESPATH=${CERTS_DIR}/users
 USERKEY=${USERNAME}_key.pem
 USERCERT=${USERNAME}_cert.pem
 USERREQ=${USERNAME}_req.pem
+USERP12=${USERNAME}.p12
 USERCERTVALIDITY=3650  # 10 years
 KEY_LENGTH=4096
 
@@ -52,7 +53,7 @@ then
 fi
 
 # Export to p12 format
-openssl pkcs12 -password pass: -export -in $USERFILESPATH/$USERCERT -inkey $USERFILESPATH/$USERKEY -out $USERFILESPATH/$USERP12 -clcerts
+openssl pkcs12 -password pass: -export -in ${USERFILESPATH}/${USERCERT} -inkey ${USERFILESPATH}/${USERKEY} -out ${USERFILESPATH}/${USERP12} -clcerts
 if [ ! $? -eq 0 ]
 then
 	echo "Export to p12 format failed!"
