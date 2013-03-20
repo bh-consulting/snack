@@ -216,6 +216,7 @@ mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} < ${TMP}/schema.sql >> $OUT 2>>$L
 echo "INSERT INTO radcheck(UserName, Attribute, op, Value) VALUES ('admin', 'Cleartext-Password', ':=', '${PASSWORD_RADIUS}');" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} >> $OUT 2>>$LOG
 echo "INSERT INTO raduser(UserName, Role) VALUES ('admin', 'root');" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} >> $OUT 2>>$LOG
 echo "INSERT INTO nas(nasname, shortname, secret) VALUES ('127.0.0.1', 'loop', 'loopsecret');" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} >> $OUT 2>>$LOG
+echo "INSERT INTO backups(nas,action) VALUES('127.0.0.1','boot');" | mysql -uroot -p${PASSWORD_DB_ROOT} ${DATABASE} >> $OUT 2>>$LOG
 
 echo 50 | whiptail \
 	--title "SNACK ${VERSION}" \

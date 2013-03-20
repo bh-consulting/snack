@@ -82,6 +82,13 @@ Switch(config-if)# dot1x port-control auto
 Switch(config-if)# exit
 \end{lstlisting}
 
+\subsubsection{Affectation de Vlan par radius}
+Activer l'affectation de Vlan par radius, en mode de configuration du terminal~:
+\begin{lstlisting}
+Switch(config)# aaa authorization network default group radius
+\end{lstlisting}
+Puis tester demandant à radius d'affecter un client à un Vlan particulier.
+
 \subsubsection{Test de l'authentification en 802.1x}
 
 Relier le client en ethernet au port configuré précédemment. Par défaut, le voyant du port devrait être orange sur le commutateur et le client ne devrait pas pouvoir accéder au réseau.
