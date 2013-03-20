@@ -15,7 +15,7 @@
    id="svg5907"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="backups_auth_9.svg">
+   sodipodi:docname="backups_auth_tech.svg">
   <defs
      id="defs5909">
     <marker
@@ -552,8 +552,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.0373756"
-     inkscape:cx="318.45919"
-     inkscape:cy="157.72446"
+     inkscape:cx="501.56453"
+     inkscape:cy="157.59109"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -1232,7 +1232,7 @@
              sodipodi:role="line"
              x="258.39209"
              y="280.53543"
-             style="font-size:10px;font-weight:bold;text-align:center;text-anchor:middle;fill:#ff0000"
+             style="font-size:10px;font-weight:bold;text-align:center;text-anchor:middle;fill:#0000ff"
              id="tspan4292">802.1x</tspan></text>
       </g>
       <g
@@ -1283,7 +1283,7 @@
              sodipodi:role="line"
              x="258.45316"
              y="280.53543"
-             style="font-size:10px;text-align:center;text-anchor:middle;font-weight:bold;fill:#ff0000"
+             style="font-size:10px;text-align:center;text-anchor:middle;font-weight:bold;fill:#0000ff"
              id="tspan10643">802.1x</tspan></text>
       </g>
       <g
@@ -1335,7 +1335,7 @@
              id="tspan11841-2-8-2"
              x="494.3382"
              y="397.41397"
-             style="font-size:10px;font-weight:bold;fill:#ff0000">SNMP</tspan></text>
+             style="font-size:10px;font-weight:bold;fill:#ff00ff">SNMP</tspan></text>
       </g>
       <g
          transform="matrix(0.86134208,0,0,0.79986158,-16.323868,-1.9294868)"
@@ -1382,7 +1382,7 @@
              id="tspan11841-2-8-2-5"
              x="476.83673"
              y="453.14899"
-             style="font-size:10.40384865000000048px;font-weight:bold;fill:#ff0000">TFTP</tspan></text>
+             style="font-size:10.40384865000000048px;font-weight:bold;fill:#ff6600">TFTP</tspan></text>
         <path
            style="fill:none;stroke:#000000;stroke-width:1.36399996;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
            d="m 429.16243,439.80947 162.52454,0"
@@ -1438,7 +1438,7 @@
              id="tspan11841-2-8-2-5-4"
              x="480.65186"
              y="459.82294"
-             style="font-size:10px;font-weight:bold;fill:#ff0000">Trap SNMP</tspan></text>
+             style="font-size:10px;font-weight:bold;fill:#ff00ff">Trap SNMP</tspan></text>
       </g>
       <g
          transform="translate(10.186233,181.84711)"
@@ -1488,24 +1488,14 @@
            xml:space="preserve"
            style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
            x="734.73608"
-           y="481.8999"
+           y="495.28125"
            id="text11839-0-0-3-4-6"
            sodipodi:linespacing="125%"><tspan
              sodipodi:role="line"
              x="734.73608"
-             y="481.8999"
-             style="font-size:10px;text-align:start;text-anchor:start;font-weight:bold"
-             id="tspan12060">Sauvegarde</tspan><tspan
-             sodipodi:role="line"
-             x="734.73608"
-             y="494.3999"
-             style="font-size:10px;text-align:start;text-anchor:start"
-             id="tspan10821">incrémentale</tspan><tspan
-             sodipodi:role="line"
-             x="734.73608"
-             y="506.8999"
-             style="font-size:10px;text-align:start;text-anchor:start"
-             id="tspan10823">de la config.</tspan></text>
+             y="495.28125"
+             style="font-size:10px;font-weight:bold;text-align:start;text-anchor:start;fill:#008080"
+             id="tspan10823">GIT</tspan></text>
       </g>
       <g
          transform="translate(215.35212,218.09497)"
