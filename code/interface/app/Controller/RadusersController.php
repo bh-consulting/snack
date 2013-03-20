@@ -941,20 +941,13 @@ class RadusersController extends AppController {
 
             // the user does not exist in radcheck, create it
             if(!$found){
-                if (!empty($this->request->data['Raduser']['passwd'])
-                    && !empty($username)
-                    && $this->request->data['Raduser']['passwd'] == $this->request->data['Raduser']['confirm_password']
-                ) {
-                    $Radcheck->create();
-                    $Radcheck->save(array(
-                        'username' => $username,
-                        'attribute' => 'Cleartext-Password',
-                        'op' => ':=',
-                        'value' => $this->request->data['Raduser']['passwd']
-                    ));
-                } else {
-                    $success = false;
-                }
+                $Radcheck->create();
+                $Radcheck->save(array(
+                    'username' => $username,
+                    'attribute' => 'Cleartext-Password',
+                    'op' => ':=',
+                    'value' => $this->request->data['Raduser']['passwd']
+                ));
             }
 
             if($success){
