@@ -805,7 +805,16 @@ class RadusersController extends AppController {
                 $this->request->data['Raduser']['is_cert'] = 1;
 
                 // Create certificate
-                $this->createCertificate(-1, $username);
+                $this->createCertificate(
+                    -1,
+                    $username,
+                    array(
+                        $this->request->data['Raduser']['country'],
+                        $this->request->data['Raduser']['province'],
+                        $this->request->data['Raduser']['locality'],
+                        $this->request->data['Raduser']['organization'],
+                    )
+                );
 
                 $rads = array(
                     array(
@@ -1361,15 +1370,26 @@ class RadusersController extends AppController {
      * 
      * @return 0 if certificate was generated, error code otherwise.
      */
-    public function createCertificate($userID, $username) {
-        $command = Configure::read('Parameters.scriptsPath')
-            . '/createCertificate '
-            . '"' . Configure::read('Parameters.certsPath') . '" '
-            . '"' . $username. '" '
-            . '"' . Configure::read('Parameters.countryName') . '" '
-            . '"' . Configure::read('Parameters.stateOrProvinceName') . '" '
-            . '"' . Configure::read('Parameters.localityName') . '" '
-            . '"' . Configure::read('Parameters.organizationName') . '" ';
+    public function createCertificate($userID, $username, $params=array()) {
+        if (!empty($params) && count($params) == 4 && is_array($params)) {
+            $command = Configure::read('Parameters.scriptsPath')
+                . '/createCertificate '
+                . '"' . Configure::read('Parameters.certsPath') . '" '
+                . '"' . $username. '" '
+                . '"' . Configure::read('Parameters.countryName') . '" '
+                . '"' . Configure::read('Parameters.stateOrProvinceName') . '" '
+                . '"' . Configure::read('Parameters.localityName') . '" '
+                . '"' . Configure::read('Parameters.organizationName') . '" ';
+        } else {
+            $command = Configure::read('Parameters.scriptsPath')
+                . '/createCertificate '
+                . '"' . Configure::read('Parameters.certsPath') . '" '
+                . '"' . $username. '" '
+                . '"' . $params[0] . '" '
+                . '"' . $params[1] . '" '
+                . '"' . $params[2] . '" '
+                . '"' . $params[3] . '" ';
+        }
 
         // Create new certificate
         $result = Utils::shell($command);
