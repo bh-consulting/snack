@@ -460,9 +460,9 @@ Le détail de cette tâche issu du diagramme de Gantt est donné en figure~\ref{
 	\label{gantt_sql}
 \end{figure}
 
-Après avoir dressé une liste des solutions Open Source les plus populaires, une recherche documentaire a été effectuée sur chacune, pour prendre en compte ses avantages et ses inconvénients. La compatibilité avec les trois principales implémentations Radius retenues a aussi été un critère de choix.
+Après avoir dressé une liste des solutions Open Source les plus populaires, une recherche documentaire a été effectuée sur chacune d'entre elles. La compatibilité avec les trois principales implémentations Radius retenues a aussi été un critère de choix.
 
-La solution retenue a été installée sur une machine de tests, au côté du Radius gagnant. Une dernière étape a consisté à réussir à lier les deux, pour que l'authentification Radius utilise la base de données SQL.
+La solution retenue a été installée sur une machine de tests, au côté du Radius gagnant. Une dernière étape a consisté à lier le gestionnaire de bases de données avec le Radius, pour que les autorisations puissent être accessibles dynamiquement.
 
 \subsection{802.1x}
 
@@ -587,7 +587,7 @@ Dans l'ensemble, si un temps excessif a parfois été perdu pour corriger des pr
 \section{L'interface web}
 \subsection{L'administration à la portée de tous}
 
-Les employés de B.H. Consulting en majorité de valeureux et talentueux administrateurs systèmes. La ligne de commandes est à leur portée, et les interfaces austères (et néammoins très efficaces) ne les rebutent pas. Mais ce qui est vrai en interne ne l'est pas forcément en externe. Ainsi, les clients qui sont les leurs n'ont pas systématiquement les compétences pour administrer leurs réseaux sans être guidés, et sans une nécessité certaine de mise en confiance par l'outil. Une interface graphique, colorée et assurément ergonomique est un luxe que B.H. Consulting souhaite leur apporter. L'outil le plus simple pour contacter une application étant le navigateur web, c'est le choix que nous avons fait.
+Les employés de B.H. Consulting sont en majorité de valeureux et talentueux administrateurs systèmes. La ligne de commandes est à leur portée, et les interfaces austères (et néammoins très efficaces) ne les rebutent pas. Mais ce qui est vrai en interne ne l'est pas forcément en externe. Ainsi, les clients qui sont les leurs n'ont pas systématiquement les compétences pour administrer leurs réseaux sans être guidés, et sans une nécessité certaine de mise en confiance par l'outil. Une interface graphique, colorée et assurément ergonomique est un luxe que B.H. Consulting souhaite leur apporter. L'outil le plus simple pour contacter une application étant le navigateur web, c'est le choix que nous avons fait.
 
 Une grosse partie de notre travail a donc consistée à dissimuler les mécanismes complexes que nous avons mis en place, derrière un outil accessible. Puisque les outils mis en oeuvre ont déjà été présentés dans une autre section, celle-ci est dédié à la présentation de l'aboutissement de notre projet, et de ses choix ergonomiques. Puisque ce sera probablement la langue la plus exploitée, l'interface est présentée en français.
 
@@ -665,7 +665,7 @@ Le menu principal (figure~\ref{menuusers} page~\pageref{menuusers}) de la page \
 
 \begin{enumerate}
 \item \textbf{Actif~:} Un utilisateur actif est un utilisateur qui s'authentifie sur le réseau de façon pro-active, avec un logiciel d'authentification (éventuellement intégré dans le système d'exploitation). C'est le cas de toutes les machines qui sont suffisamment puissantes et qui peuvent être contrôlées par un humain. L'authentification peut se faire par certificat (authentification forte en vert) ou par identifiant et mot de passe (authentification plus faible en orange).
-\item \textbf{Passif (MAC)~:} Contrairement à l'utilisateur actif, le passif n'a pas conscience de s'authentifier sur le réseau. C'est donc la seule information qu'il transmet qui est utilisée pour le reconnaître, son adresse MAC. Cette authentification est très faible (il est facile d'usurper une adresse de ce type), mais il correspond parfaitement à des équipements comme les imprimantes qui ne savent pas s'authentifier de façon pro-active. Ce genre d'équipement a aussi l'avantage de n'avoir en général accès qu'à un réseau virtuel très limité (ce qui est configurable via SNACK).
+\item \textbf{Passif (MAC)~:} Contrairement à l'utilisateur actif, le passif n'a pas conscience de s'authentifier sur le réseau. C'est donc la seule information qui est obligatoirement transmise par les équipements qui est utilisée : l'adresse physique (MAC). Cette authentification est très faible (il est facile d'usurper une adresse de ce type), mais il correspond parfaitement à des équipements comme les imprimantes qui ne savent pas s'authentifier de façon pro-active. Ce genre d'équipement a aussi l'avantage de n'avoir en général accès qu'à un réseau virtuel très limité (ce qui est configurable via SNACK).
 \item \textbf{Snack~:} Ce dernier type d'utilisateur correspond à un utilisateur qui a le droit d'accéder à l'interface de SNACK. Nous verrons qu'il peut évidemment être recoupé avec d'autres fonctions, pour être polyvalent.
 \end{enumerate}
 
@@ -677,7 +677,7 @@ Le menu principal (figure~\ref{menuusers} page~\pageref{menuusers}) de la page \
 	\label{menuusers}
 \end{figure}
 
-Cette séparation des utilisateur a été mûrement réfléchie pour permettre à l'interface de s'abstraire des vrais types d'utilisateurs qui existent et qui peuvent se recouper~:
+Cette séparation des utilisateurs a été mûrement réfléchie pour permettre à l'interface de s'abstraire des vrais types d'utilisateurs qui existent et qui peuvent se recouper~:
 
 \begin{itemize}
 \item Utilisateur s'identifiant sur le réseau en utilisant un identifiant / mot de passe.
@@ -776,7 +776,7 @@ Comme on peut l'apercevoir dans la figure~\ref{nas} page~\pageref{nas}, un commu
 
 La ligne en dessous du panneau des filtres indique qu'un des commutateurs a eu des changements dans sa mémoire, sans qu'ils ne soient synchronisés avec sa configuration de démarrage. Si ces changements ont bien été sauvegardés automatiquement dans l'interface, le commutateur ne la chargera pas s'il redémarre. Il est donc important de préciser à l'utilisateur qu'il a fait un oubli de grande importance.
 
-Par ailleurs, l'icône de la section NAS change de couleur selon si tous les commutateurs sont synchronisés ou non (figure~\ref{menunas} page~\pageref{menunas}).
+Par ailleurs, l'icône de la section NAS change de couleur selon que tous les commutateurs sont synchronisés ou non (figure~\ref{menunas} page~\pageref{menunas}).
 
 La dernière colonne permet d'accéder à la liste des sauvegardes automatisées qui ont eu lieu. La section suivante en explicite le contenu.
 
