@@ -13,19 +13,15 @@ class BackupsChangesComponent extends Component {
 
         $areThereUnwritten = $backup->find('count', array(
             'conditions' => array(
-                "id = (SELECT MAX(id) FROM backups GROUP BY nas HAVING nas='"
+                "commit = (SELECT commit FROM backups WHERE nas='"
 		    . Sanitize::escape($nas['Nas']['nasname'])
-		    . "')",
-                'action NOT REGEXP' => '^(wrmem|boot)$'
+		    . "' ORDER BY id DESC LIMIT 1)",
+		'nas' => $nas['Nas']['nasname'],
+                'action REGEXP' => '^(wrmem|boot)$'
             ),
         ));
 
-	if($areThereUnwritten == 0) {
-	    if(!$this->areThereBackupsForThisNAS($nas))
-		$areThereUnwritten = 1;
-	}
-
-        return $areThereUnwritten != 0;
+        return $areThereUnwritten == 0;
     }
 
     public function areThereBackupsForThisNAS($nas) {
@@ -69,28 +65,27 @@ class BackupsChangesComponent extends Component {
     public function areThereChangesUnwritten() {
         $backup = new Backup();
 
-        $writtenNasCount = $backup->find('count', array(
-	    'joins' => array(
-		array (
-		    'table' => 'nas',
-		    'type' => 'RIGHT',
-		    'conditions' => array(
-			    'nas = nasname'
-		    )
-		)
-	    ),
-            'conditions' => array(
-		'OR' => array(
-		    'nasname NOT IN (SELECT DISTINCT nas FROM backups)',
-		    'AND' => array(
-			'Backup.id IN (SELECT MAX(id) FROM backups GROUP BY nas)',
-			'action NOT REGEXP' => '^(wrmem|boot)$'
-		     )
-		),
-            ),
-        ));
+        $areThereChangesUnwritten = $backup->query("
+	    SELECT (
+		SELECT COUNT(*)
+		FROM (
+		    SELECT id
+		    FROM backups b, (
+			SELECT nas,commit
+			FROM (
+			    SELECT *
+			    FROM backups
+			    ORDER BY id DESC) b
+			GROUP BY b.nas) l
+			WHERE b.nas=l.nas
+			AND b.commit=l.commit
+			AND action REGEXP '^(wrmem|boot)\$') c
+	    ) = (
+		SELECT COUNT(*)
+		FROM nas) synchronized
+	    FROM DUAL");
 
-        return $writtenNasCount != 0;
+	return !$areThereChangesUnwritten[0][0]['synchronized'];
     }
 }
 
