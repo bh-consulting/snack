@@ -492,14 +492,11 @@ echo 70 | whiptail \
 
 # TLS
 sed\
-	-e "{N 
-	    s/\s*#  Read the 'users' file\n\s*files/\\t#  Read the 'users' file\n#\\tfiles/
-	    }" \
-	-e "{N
-	    s/\s*#  See \"Authorization Queries\" in sql.conf\n\s*#\s*sql/\\t#  See \"Authorization Queries\" in sql.conf\n\\tsql/
-	    }" \
+    -e "/Read the 'users' file/ {N; s/\(.*\n\s*\)files/\1# files/; }"
+    -e '/Authorization Queries/ {N; s/\(.*\n\)\(\s*\)#\?sql/\1\2sql\n\n\2update control {\n\2\2EAP-Type := MD5-CHALLENGE\n\2}/;}'
 	-i $INNER_TUNNEL_VIRTUAL_SERVER \
 >> $OUT 2>>$LOG
+
 sed\
         -e "/certdir =/i \\\t\t\tconfdir = $DEST_PATH"\
         -e "/certdir =/c \\\t\t\tcertdir = \${confdir}"\
