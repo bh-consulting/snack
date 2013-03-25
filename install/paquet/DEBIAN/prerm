@@ -1,5 +1,0 @@
-#!/bin/bash
-
-service freeradius stop
-
-exit 0
