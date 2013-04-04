@@ -44,6 +44,7 @@ read sql_sessionusers <<SQL
     SELECT DISTINCT username\\
     FROM ${db_prefix}radacct\\
     WHERE acctstoptime IS NULL\\
+    AND nasporttype REGEXP '^(Async|Virtual)$'\\
     ORDER BY radacctid\\
 SQL
 
