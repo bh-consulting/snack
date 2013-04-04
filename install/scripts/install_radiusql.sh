@@ -11,7 +11,7 @@ sed\
 sed\
 	-e 's/#\(\s*\$INCLUDE sql\.conf\)/\1/'\
 	-e 's/#\(\s*\$INCLUDE sql\/mysql\/counter.conf\)/\1/'\
-    -e 's/\(\s*auth\s*=\s*\)no/\1yes/'\
-	-i radiusd.conf
+	-e 's/\(\s*auth\s*=\s*\)no/\1yes/'\
+	-i /etc/freeradius/radiusd.conf
 
 exit 0
