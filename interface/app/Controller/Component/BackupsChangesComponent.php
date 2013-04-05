@@ -79,7 +79,8 @@ class BackupsChangesComponent extends Component {
 			GROUP BY b.nas) l
 			WHERE b.nas=l.nas
 			AND b.commit=l.commit
-			AND action REGEXP '^(wrmem|boot)\$') c
+			AND action REGEXP '^(wrmem|boot)\$'
+			GROUP BY b.nas) c
 	    ) = (
 		SELECT COUNT(*)
 		FROM nas) synchronized
