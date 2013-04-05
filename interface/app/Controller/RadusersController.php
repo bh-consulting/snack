@@ -768,8 +768,8 @@ class RadusersController extends AppController {
                     array(
                         $username,
                         'NAS-Port-Type',
-                        '==',
-                        'Ethernet',
+                        '=~',
+                        'Ethernet|Wireless-802.11',
                     ),
                     array(
                         $username,
@@ -826,8 +826,8 @@ class RadusersController extends AppController {
                     array(
                         $username,
                         'NAS-Port-Type',
-                        '==',
-                        'Ethernet'
+                        '=~',
+                        'Ethernet|Wireless-802.11',
                     ),
                     array(
                         $username,
@@ -870,8 +870,8 @@ class RadusersController extends AppController {
                     array(
                         $username,
                         'NAS-Port-Type',
-                        '==',
-                        'Ethernet',
+                        '=~',
+                        'Ethernet|Wireless-802.11',
                     ),
                     array(
                         $username,
