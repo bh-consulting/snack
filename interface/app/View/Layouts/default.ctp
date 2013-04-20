@@ -66,7 +66,7 @@ $cakeDescription = __('SNACK');
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="/interface/"><?php echo $cakeDescription ?></a>
+            <a class="brand" href=""><?php echo $cakeDescription ?></a>
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
