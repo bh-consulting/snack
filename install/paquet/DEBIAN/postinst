@@ -307,6 +307,7 @@ echo 5 | whiptail \
 sed \
 	-e "s|^\(dir\s*=\s*\)\S\+\(.*\)$|\1$DEST_PATH\2|"\
 	-e "s|^\(certificate\s*=\s*\)\S\+\(.*\)$|\1\$dir/private/$CA_CERT\2|"\
+	-e "s/^\(default_crl_days\s*=\s*\)[0-9]*\(.*\)$/\1$RADCERT_VALIDITY\2/"\
 	-i $SSL_CONF
 echo "" >> $SSL_CONF
 
