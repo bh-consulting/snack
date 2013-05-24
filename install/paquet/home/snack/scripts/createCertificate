@@ -44,7 +44,7 @@ then
 fi
 
 # Sign public certificate
-openssl ca -config /etc/ssl/openssl.cnf -policy policy_anything -out ${USERFILESPATH}/${USERCERT} -batch -infiles ${USERFILESPATH}/${USERREQ}
+openssl ca -config /etc/ssl/openssl.cnf -days ${USERCERTVALIDITY} -policy policy_anything -out ${USERFILESPATH}/${USERCERT} -batch -infiles ${USERFILESPATH}/${USERREQ}
 
 if [ ! $? -eq 0 ]
 then
