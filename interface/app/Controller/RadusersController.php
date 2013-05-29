@@ -81,7 +81,7 @@ class RadusersController extends AppController {
 
         // All registered user can view users
         if (in_array($this->action, array(
-            'index', 'view_mac', 'view_cert', 'view_loginpass', 'export', 
+            'index', 'view_mac', 'view_cert', 'view_loginpass', 'export',
         ))) {
             return true;
         }
@@ -213,12 +213,6 @@ class RadusersController extends AppController {
                     $user['Raduser'],
                     false
                 );
-
-                if ($user['Raduser']['type'] == "mac") {
-                    $user['Raduser']['username'] = Utils::formatMAC(
-                        $user['Raduser']['username']
-                    );
-                }
             }
 
             if (!empty($userList)) {
@@ -252,6 +246,13 @@ class RadusersController extends AppController {
                         $user['Raduser']['expiration'] = -1;
                     }
                 }
+            }
+            foreach ($radusers as &$user) {             ····
+              if ($user['Raduser']['type'] == "mac") {
+                $user['Raduser']['username'] = Utils::formatMAC(
+                  $user['Raduser']['username']
+                );
+              }
             }
         }
 
@@ -503,7 +504,7 @@ class RadusersController extends AppController {
         $attributes['Role'] = $this->Raduser->roles[$views['base']['Raduser']['role']];
         $attributes['User certificate path'] = Utils::getUserCertsPath($username);
         $attributes['Server certificate path'] = Utils::getServerCertPath();
-        $attributes['Cisco'] = $views['base']['Raduser']['is_cisco'] 
+        $attributes['Cisco'] = $views['base']['Raduser']['is_cisco']
             ? __('Yes') : __('No');
 
         // Radchecks
@@ -539,7 +540,7 @@ class RadusersController extends AppController {
             'User certificate path',
             'Server certificate path',
             'Expiration',
-            'Simultaneous-Use', 
+            'Simultaneous-Use',
             'Groups',
             'Cisco',
             'MAC address',
@@ -1366,7 +1367,7 @@ class RadusersController extends AppController {
     /*
      * Generate a certificate.
      * @param username - Identify the user in the certificate (Common Name)
-     * 
+     *
      * @return 0 if certificate was generated, error code otherwise.
      */
     public function createCertificate($userID, $username, $params=array()) {
@@ -1409,7 +1410,7 @@ class RadusersController extends AppController {
     /*
      * Delete and revoke a certificate.
      * @param username - Identify the user in the certificate (Common Name)
-     * 
+     *
      * @return 0 if certificate was removed, error code otherwise.
      */
     public function removeCertificate($userID, $username) {
@@ -1446,7 +1447,7 @@ class RadusersController extends AppController {
     /*
      * Generate a new certificate and delete the previous.
      * @param username - Identify the user in the certificate (Common Name)
-     * 
+     *
      * @return 0 if certificate was generated, error code otherwise.
      */
     public function renewCertificate($userID, $username) {
