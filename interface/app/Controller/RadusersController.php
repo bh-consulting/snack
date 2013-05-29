@@ -247,7 +247,7 @@ class RadusersController extends AppController {
                     }
                 }
             }
-            foreach ($radusers as &$user) {             ····
+            foreach ($radusers as &$user) {
               if ($user['Raduser']['type'] == "mac") {
                 $user['Raduser']['username'] = Utils::formatMAC(
                   $user['Raduser']['username']
