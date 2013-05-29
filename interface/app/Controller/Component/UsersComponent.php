@@ -18,11 +18,13 @@ class UsersComponent extends Component {
                 array_push($users, array(
                     'id' => -1,
                     'username' => $strUser,
+                    'comment' => '',
                 ));
             } else {
                 array_push($users, array(
                     'id' => $user['Raduser']['id'],
                     'username' => $strUser,
+                    'comment' => $user['Raduser']['comment'],
                 ));
             }
         }

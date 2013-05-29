@@ -16,7 +16,10 @@ $columns = array(
     ),
     'username' => array(
         'text' => __('Username'),
-    ),
+      ),
+    'comment' => array(
+        'text' => __('Comment'),
+      ),
     'callingstationid' => array(
         'text' => __('Station'),
         'fit' => true,
@@ -192,7 +195,9 @@ if (!empty($radaccts)) {
                 echo $this->element('formatUsersList', array(
                     'users' => $users[$acct['Radacct']['radacctid']]
                 ));
-
+                break;
+            case 'comment':
+                echo $users[$acct['Radacct']['radacctid']][0]['comment'];
                 break;
             case 'callingstationid':
 		if(empty($acct['Radacct'][$field]))
