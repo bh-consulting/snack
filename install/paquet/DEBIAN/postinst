@@ -23,7 +23,7 @@ CA_CERT_VALIDITY=3650 #ten years
 
 HOME_MODE=0070
 ONLY_RADIUS_ACCESS=0700
-INTERFACE_ACCESS=0770 
+INTERFACE_ACCESS=0770
 INTERFACE_THROUGH=0710
 READ_ONLY=0440
 ONLY_INTERFACE_ACCESS=0700
@@ -83,7 +83,7 @@ echo 0 | whiptail \
 {
 sed\
 	-e "s/\(\s*key\s*=\s*\".*\)\"/\1, Tmp-String-0\"/"\
-	-i $RADIUS_PATH/modules/acct_unique 
+	-i $RADIUS_PATH/modules/acct_unique
 sed\
 	-e "s/acctsessionid\s*=\s*'%{Acct-Session-Id}'/acctuniqueid\t= '%{Acct-Unique-Session-ID}'/" \
 	-i $RADIUS_PATH/sql/mysql/dialup.conf
@@ -97,7 +97,7 @@ sed\
 	-e "/exit/i service freeradius restart" \
 	-i /etc/rc.local >> $OUT 2>>$LOG
 
-	
+
 ##############################################################
 # Radius-Mysql configuration / Configuration de Radius-Mysql #
 ##############################################################
@@ -115,7 +115,7 @@ PASSWORD_DB_ROOT=$(whiptail \
 	--title "SNACK ${VERSION}" \
 	--passwordbox "\n\nWhat is the MySQL password for 'ROOT' user?" \
 	10 70 3>&1 1>&2 2>&3)
- 
+
 if [ $? != 0 ]; then
 	whiptail \
 		--title "SNACK ${VERSION}" \
@@ -124,7 +124,7 @@ if [ $? != 0 ]; then
 	exit 1
 fi
 
-while [ -z "${PASSWORD_RADIUS}" -o -z "${PASSWORD_RADIUS_BIS}" -o "${PASSWORD_RADIUS}" != "${PASSWORD_RADIUS_BIS}" ] 
+while [ -z "${PASSWORD_RADIUS}" -o -z "${PASSWORD_RADIUS_BIS}" -o "${PASSWORD_RADIUS}" != "${PASSWORD_RADIUS_BIS}" ]
 do
     if [ -n "${PASSWORD_RADIUS}" ]
     then
@@ -141,7 +141,7 @@ do
 	--title "SNACK ${VERSION}" \
 	--passwordbox "\n\nPlease, define the password for 'ADMIN' user:" \
 	10 70 3>&1 1>&2 2>&3)
-     
+
     if [ $? != 0 ]; then
 	whiptail \
 		--title "SNACK ${VERSION}" \
@@ -149,12 +149,12 @@ do
 		10 70
     	exit 1
     fi
-    
+
     PASSWORD_RADIUS_BIS=$(whiptail \
 	--title "SNACK ${VERSION}" \
 	--passwordbox "\n\nPlease, re-enter the password for 'ADMIN' user:" \
 	10 70 3>&1 1>&2 2>&3)
-     
+
     if [ $? != 0 ]; then
 	whiptail \
 		--title "SNACK ${VERSION}" \
@@ -191,7 +191,7 @@ do
 			--title "SNACK ${VERSION}" \
 			--passwordbox "\n\nError: Cannot create database!\nWhat is the Mysql password for root?" \
 			10 70 3>&1 1>&2 2>&3)
- 
+
 		if [ $? != 0 ]; then
 			whiptail \
 				--title "SNACK ${VERSION}" \
@@ -242,6 +242,7 @@ sed\
 	-e 's/#\(\s*\$INCLUDE sql\/mysql\/counter.conf\)/\1/'\
 	-e 'N; s/\(#\s*clients\s*=\s*per_socket_clients.*\)\(}\)/\1\tvirtual_server = snack\n\2/'\
 	-e 's/\(\$INCLUDE clients\.conf\)/#\1/'\
+        -e 's/\(auth\s*=\).*/\1 yes/'\
 	-e 's/\(auth_badpass\s*=\).*/\1 yes/'\
 	-i $RADIUSD_CONF \
 >> $OUT 2>>$LOG
@@ -286,7 +287,7 @@ CLIENTNAME=$(whiptail \
 	--title "SNACK ${VERSION}" \
 	--inputbox "\n\nEnter the name of the client (CA common name):" \
 	10 70 3>&1 1>&2 2>&3)
-     
+
 if [ $? != 0 ]; then
 	whiptail \
 		--title "SNACK ${VERSION}" \
@@ -752,7 +753,7 @@ echo 80 | whiptail \
 	10 70 0
 
 {
-snmptrapd 
+snmptrapd
 } >> $OUT 2>>$LOG
 
 echo 100 | whiptail \
