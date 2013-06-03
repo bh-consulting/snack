@@ -3,7 +3,6 @@ server snack {
         rewrite_calling_station_id
 		preprocess
 		suffix
-		expiration
 		logintime
 
 		eap {
@@ -13,6 +12,7 @@ server snack {
 
 		chap
 		pap
+                expiration
 	}
 
 	authenticate {
