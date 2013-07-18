@@ -291,6 +291,9 @@ msgstr "déconnecté"
 msgid "Cisco"
 msgstr "Cisco"
 
+msgid "Cisco Phones"
+msgstr "T&eacute;l&eacute;phones Cisco"
+
 #: Controller/RadusersController.php:163
 #: Controller/Component/ChecksComponent.php:65
 #: View/Radusers/index.ctp:42

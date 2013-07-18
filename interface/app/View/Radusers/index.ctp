@@ -38,6 +38,10 @@ $columns = array(
         'text' => __('Login/Pwd'),
         'fit' => true,
     ),
+    'is_phone' => array(
+        'text' => __('Phone'),
+        'fit' => true,
+    ),
     'is_mac' => array(
         'text' => __('MAC'),
         'fit' => true,
@@ -86,6 +90,11 @@ $dropdownUsersButtonItems = array(
             array('action' => 'add_loginpass'),
             array('escape' => false, 'class' => 'warning_auth')
         ),
+    ),
+    $this->Html->link(
+	__('Cisco Phones'),
+	array('action' => 'add_phone'),
+	array('escape' => false)
     ),
     $this->Html->link(
         __('Passive (MAC)'), 
@@ -321,7 +330,7 @@ if (!empty($radusers)) {
                     )
                 );
                 break;
-            case (preg_match("#is_(cert|loginpass|mac|cisco)#i", $field)
+            case (preg_match("#is_(cert|loginpass|phone|mac|cisco)#i", $field)
                 ? $field : !$field):
                 echo $user['Raduser'][$field] ? '<i class="icon-ok"></i>' : '';
                 break;
@@ -333,7 +342,7 @@ if (!empty($radusers)) {
                 }
                 break;
             case 'username':
-                if($user['Raduser']['expiration'] != -1) {
+		if($user['Raduser']['expiration'] != -1) {
                     echo '<span title="'
                         . __(
                             'User expired since the %s.',

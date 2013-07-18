@@ -162,6 +162,7 @@ CREATE TABLE radius.raduser (
     comment text,
     is_cisco boolean default '0',
     is_loginpass boolean default '0',
+    is_phone boolean default '0',
     is_cert boolean default '0',
     is_mac boolean default '0',
     PRIMARY KEY (id),

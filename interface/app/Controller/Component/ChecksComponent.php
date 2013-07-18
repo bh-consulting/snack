@@ -62,10 +62,12 @@ class ChecksComponent extends Component {
         $types = array(
             array('cisco', __('Cisco')),
             array('loginpass', __('Login / Password')),
+	    array('phone', __('Cisco Phones')),
             array('mac', __('MAC')),
             array('cert', __('Certificate'))
         );
-
+	if($rad['is_phone']);
+            return $types[4][$nice];
         if($rad['is_loginpass'])
             return $types[1][$nice];
         if($rad['is_cert']  )
@@ -147,7 +149,7 @@ class ChecksComponent extends Component {
                         $this->baseClassName,
                         $this->baseClass->id,
                         $displayName,
-                        'Tunnel-Medium-Type := IEEE-802'
+                        'Tunnel-Medeum-Type := IEEE-802'
                     );
                 }
             }
@@ -178,7 +180,8 @@ class ChecksComponent extends Component {
      * @param array $checks checks lines to add 
      */
     public function add($request, $checks) {
-        if ($request->is('post')) { 
+        pr("test");
+	if ($request->is('post')) { 
             // add common checks values (expiration date and simultaneous uses)
             $name = $request->data[$this->baseClassName][$this->displayName];
             if(isset($request->data[$this->baseClassName]['expiration_date'])){
@@ -204,6 +207,9 @@ class ChecksComponent extends Component {
                     )
                 ));
             }
+            /*if(isset($request->data[$this->baseClassName]['is_phone'])) {
+		
+	    }*/
 
             $this->baseClass->create();
             if (!$this->baseClass->save($request->data)) {
@@ -268,7 +274,14 @@ class ChecksComponent extends Component {
                     $request->data[$this->baseClassName]['session-timeout']
                 );
             }
-            
+            if(isset($request->data[$this->baseClassName]['is_phone']) && $request->data[$this->baseClassName]['is_phone']){
+                $replies[]= array(
+                    $name,
+                    'Cisco-AVPair',
+                    '=',
+ 	            'device-traffic-class=voice'                   
+                );
+            }
             foreach($replies as $reply){
                 $this->createReply($reply[0], $reply[1],$reply[2], $reply[3]);
             }
