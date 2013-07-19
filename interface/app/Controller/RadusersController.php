@@ -81,7 +81,7 @@ class RadusersController extends AppController {
 
         // All registered user can view users
         if (in_array($this->action, array(
-            'index', 'view_mac', 'view_cert', 'view_loginpass', 'export',
+            'index', 'view_mac', 'view_cert', 'view_loginpass', 'export', 
         ))) {
             return true;
         }
@@ -156,12 +156,13 @@ class RadusersController extends AppController {
         ));
 
         $this->Filters->addBooleanConstraint(array(
-            'fields' => array('is_loginpass', 'is_mac', 'is_cisco', 'is_cert'),
+            'fields' => array('is_loginpass', 'is_phone', 'is_mac', 'is_cisco', 'is_cert'),
             'input' => 'authtype',
             'items' => array(
                 'is_cisco' => __('Cisco'),
                 'is_mac' => __('MAC'),
                 'is_loginpass' => __('Login/Pwd'),
+		'is_phone' => __('Phone'),
                 'is_cert' => __('Certificate'),
             ),
         ));
@@ -217,7 +218,6 @@ class RadusersController extends AppController {
 
             if (!empty($userList)) {
                 $radcheck = new Radcheck();
-
                 $expirations = $radcheck->find(
                     'list',
                     array(
@@ -228,11 +228,10 @@ class RadusersController extends AppController {
                         )
                     )
                 );
-
                 foreach ($radusers as &$user) {
-                    if (isset($expirations[$user['Raduser']['username']])
+		    if (isset($expirations[$user['Raduser']['username']])
                         && Utils::formatDate(
-                            array(
+			    array(
                                 $expirations[$user['Raduser']['username']],
                                 date('d M Y H:i:s')
                             ),
@@ -247,13 +246,13 @@ class RadusersController extends AppController {
                     }
                 }
             }
-            foreach ($radusers as &$user) {
-              if ($user['Raduser']['type'] == "mac") {
-                $user['Raduser']['username'] = Utils::formatMAC(
-                  $user['Raduser']['username']
-                );
-              }
-            }
+	    foreach ($radusers as &$user) {		    
+		if ($user['Raduser']['type'] == "mac") {
+                    $user['Raduser']['username'] = Utils::formatMAC(
+                        $user['Raduser']['username']
+                    );
+                }
+	   }
         }
 
         $this->set('roles', $this->Raduser->roles);
@@ -504,7 +503,7 @@ class RadusersController extends AppController {
         $attributes['Role'] = $this->Raduser->roles[$views['base']['Raduser']['role']];
         $attributes['User certificate path'] = Utils::getUserCertsPath($username);
         $attributes['Server certificate path'] = Utils::getServerCertPath();
-        $attributes['Cisco'] = $views['base']['Raduser']['is_cisco']
+        $attributes['Cisco'] = $views['base']['Raduser']['is_cisco'] 
             ? __('Yes') : __('No');
 
         // Radchecks
@@ -540,7 +539,7 @@ class RadusersController extends AppController {
             'User certificate path',
             'Server certificate path',
             'Expiration',
-            'Simultaneous-Use',
+            'Simultaneous-Use', 
             'Groups',
             'Cisco',
             'MAC address',
@@ -757,6 +756,59 @@ class RadusersController extends AppController {
                 $username = $this->request->data['Raduser']['username'];
 
                 $this->request->data['Raduser']['is_loginpass'] = 1;
+
+                if (isset($this->request->data['Raduser']['ttls'])
+                    && $this->request->data['Raduser']['ttls'] == 1) {
+                        $eapType = 'EAP-TTLS';
+                    } else {
+                        $eapType = 'MD5-CHALLENGE';
+                    }
+
+                $rads = array(
+                    array(
+                        $username,
+                        'NAS-Port-Type',
+                        '=~',
+                        'Ethernet|Wireless-802.11',
+                    ),
+                    array(
+                        $username,
+                        'Cleartext-Password',
+                        ':=',
+                        $this->request->data['Raduser']['passwd'],
+                    ),
+                    array(
+                        $username,
+                        'EAP-Type',
+                        ':=',
+                        $eapType,
+                    )
+                );
+                $this->setCommonCiscoMacFields($rads);
+                $this->Checks->add($this->request, $rads);
+
+                $success = true;
+            } catch(UserGroupException $e) {
+                $this->Session->setFlash(
+                    $e->getMessage(),
+                    'flash_error'
+                );
+                Utils::userlog(__('error while adding a loginpass user'), 'error');
+                $success = false;
+            }
+        }
+
+        $this->add($success);
+    }
+
+    public function add_phone(){
+        $success = false;
+
+        if ($this->request->is('post')) {
+            try {
+                $username = $this->request->data['Raduser']['username'];
+
+                $this->request->data['Raduser']['is_phone'] = 1;
 
                 if (isset($this->request->data['Raduser']['ttls'])
                     && $this->request->data['Raduser']['ttls'] == 1) {
@@ -1367,7 +1419,7 @@ class RadusersController extends AppController {
     /*
      * Generate a certificate.
      * @param username - Identify the user in the certificate (Common Name)
-     *
+     * 
      * @return 0 if certificate was generated, error code otherwise.
      */
     public function createCertificate($userID, $username, $params=array()) {
@@ -1410,7 +1462,7 @@ class RadusersController extends AppController {
     /*
      * Delete and revoke a certificate.
      * @param username - Identify the user in the certificate (Common Name)
-     *
+     * 
      * @return 0 if certificate was removed, error code otherwise.
      */
     public function removeCertificate($userID, $username) {
@@ -1447,7 +1499,7 @@ class RadusersController extends AppController {
     /*
      * Generate a new certificate and delete the previous.
      * @param username - Identify the user in the certificate (Common Name)
-     *
+     * 
      * @return 0 if certificate was generated, error code otherwise.
      */
     public function renewCertificate($userID, $username) {
