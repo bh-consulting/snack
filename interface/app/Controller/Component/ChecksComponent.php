@@ -66,14 +66,14 @@ class ChecksComponent extends Component {
             array('mac', __('MAC')),
             array('cert', __('Certificate'))
         );
-	if($rad['is_phone']);
-            return $types[4][$nice];
+	if($rad['is_phone'])
+            return $types[2][$nice];
         if($rad['is_loginpass'])
             return $types[1][$nice];
-        if($rad['is_cert']  )
-            return $types[3][$nice];
+        if($rad['is_cert'])
+            return $types[4][$nice];
         if($rad['is_mac'])
-            return $types[2][$nice];
+            return $types[3][$nice];
         if($rad['is_cisco'])
             return $types[0][$nice];
         return "snack";

@@ -161,6 +161,7 @@ class RadusersController extends AppController {
             'items' => array(
                 'is_cisco' => __('Cisco'),
                 'is_mac' => __('MAC'),
+		'is_phone' => __('Phone'),
                 'is_loginpass' => __('Login/Pwd'),
 		'is_phone' => __('Phone'),
                 'is_cert' => __('Certificate'),
@@ -580,6 +581,31 @@ class RadusersController extends AppController {
         $this->set('showedAttr', $showedAttr);
         $this->view($id, array( 'Authentication type' => 'Login/Pwd' ));
     }
+
+    /**
+     * View a user with login/password.
+     * @param  $id - user id
+     */
+    public function view_phone($id = null) {
+        $showedAttr = array(
+            'Authentication type',
+            'Username',
+            'Comment',
+            'Expiration',
+            'Simultaneous-Use',
+            'Groups',
+            'Cisco',
+            'MAC address',
+            'EAP-Type',
+            'Server certificate path',
+        );
+
+        $raduser = $this->Raduser->findById($id);
+
+        $this->set('showedAttr', $showedAttr);
+        $this->view($id, array( 'Authentication type' => 'Login/Pwd' ));
+    }
+
 
     /**
      * View a user with mac address.
@@ -1185,6 +1211,77 @@ class RadusersController extends AppController {
 
         $this->edit($success);
     }
+
+    public function edit_phone($id = null) {
+        $this->Raduser->id = $id;
+        $success = false;
+
+        foreach ($this->Checks->getChecks($id) AS $check) {
+            if($check['Radcheck']['attribute'] == 'EAP-Type')
+                $ttls = ($check['Radcheck']['value'] == 'EAP-TTLS') ? 1 : 0;
+        }
+
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Raduser->read();
+            $this->request->data['Raduser']['ttls'] = $ttls;
+        } else {
+            try {
+                $this->request->data['Raduser']['is_phone'] = 1;
+
+                $checksCiscoMac = $this->setCommonCiscoMacFields();
+
+                if (!$this->Raduser->save($this->request->data)){
+                    throw new EditException(
+                        'Raduser',
+                        $id,
+                        $this->Raduser->field('username')
+                    );
+                }
+
+                // update radchecks fields
+                $checkClassFields = array(
+                    'Cleartext-Password' =>
+                    $this->request->data['Raduser']['passwd'],
+                );
+
+                foreach ($checksCiscoMac as $c) {
+                    $checkClassFields[$c[1]] = $c[3];
+                }
+
+                if (isset($this->request->data['Raduser']['ttls'])
+                    && $this->request->data['Raduser']['ttls'] == 1) {
+                        $checkClassFields['EAP-Type'] = 'EAP-TTLS';
+                    } else {
+                        $checkClassFields['EAP-Type'] = 'MD5-CHALLENGE';
+                    }
+
+                $this->Checks->updateRadcheckFields(
+                    $id,
+                    $this->request,
+                    $checkClassFields
+                );
+
+                // update radreply fields
+                $this->Checks->updateRadreplyFields($id, $this->request);
+
+                // update group list
+                $this->updateGroups($this->Raduser->id, $this->request);
+
+                $success = true;
+            } catch(UserGroupException $e) {
+                $this->Session->setFlash(
+                    $e->getMessage(),
+                    'flash_error'
+                );
+                Utils::userlog(__('error while editing phone user %s', $this->Raduser->id), 'error');
+                $success = false;
+            }
+        }
+
+        $this->edit($success);
+    }
+
+
 
     public function edit_mac($id = null) {
         $this->Raduser->id = $id;

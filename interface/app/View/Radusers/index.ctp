@@ -290,7 +290,7 @@ if (!empty($radusers)) {
                 break;
             case 'view':
 		        echo '<i class="icon-eye-open"></i> ';
-                echo $this->Html->link(
+		echo $this->Html->link(
                     __('View'),
                     array(
                         'action' => 'view_' . $user['Raduser']['type'],
