@@ -1,3 +1,5 @@
+source s_net { udp(); };
+
 filter f_freeradius { facility(local2); };
 filter f_snack { facility(local4); };
 
@@ -13,3 +15,5 @@ destination d_mysql {
 
 log { source(s_src); filter(f_freeradius); destination(d_mysql); };
 log { source(s_src); filter(f_snack); destination(d_mysql); };
+log { source(s_net); destination(d_mysql); };
+
