@@ -105,6 +105,22 @@ class RadacctsController extends AppController {
             'input' => 'porttype',
             'title' => __('Select a port type...'),
         ));
+	
+	$this->Filters->addComplexConstraint(array(
+            'select' => array(
+                'items' => array(
+                    'active' => __(' '),
+                ),
+                'input' => 'active',
+                'title' => false,
+            ),
+            'callback' => array(
+                'getActive',
+                array(
+                    'input' => 'active',
+                ),
+            )
+        ));
 
         $sessions = $this->Filters->paginate();
 
@@ -151,17 +167,15 @@ class RadacctsController extends AppController {
                 );
             }
         }
-
         $this->set('users', $users);
         $this->set('devices', $devices);
-        $this->set('types', $this->Radacct->types);
+	$this->set('types', $this->Radacct->types);
         $this->set('radaccts', $sessions);
     }
 
     public function view($id = null) {
         $this->Radacct->id = $id;
 	$session = $this->Radacct->read();
-
         $session['Radacct']['duration'] = Utils::formatDate(
             array(
                 $session['Radacct']['acctstarttime'],
@@ -214,6 +228,20 @@ class RadacctsController extends AppController {
                 'error'
             );
         }
+    }
+	
+    public function getActive($args = array()) {
+        if (!empty($args['input'])) {
+	    $data = &$this->request->data['Radacct'][$args['input']];
+
+            if (isset($data[0]) && $data[0] == 'active') {
+                return "(radacctid IN (SELECT radacctid from radacct "
+                    . "where acctstoptime is NULL ))";
+            } else {
+                return '(1=1)';
+            }
+        }
+
     }
 }
 

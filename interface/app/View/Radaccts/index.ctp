@@ -16,10 +16,10 @@ $columns = array(
     ),
     'username' => array(
         'text' => __('Username'),
-      ),
+    ),
     'comment' => array(
         'text' => __('Comment'),
-      ),
+    ),
     'callingstationid' => array(
         'text' => __('Station'),
         'fit' => true,
@@ -66,6 +66,13 @@ echo $this->element('filters_panel', array(
         array(
             'name' => 'porttype',
             'label' => __('Port type'),
+        ),
+	array(
+            'name' => 'active',
+            'label' => __('Active'),
+            'multiple' => 'checkbox',
+            'type' => 'checkgroup',
+            'escape' => false,
         ),
         array(
             'name' => 'text',
@@ -196,9 +203,9 @@ if (!empty($radaccts)) {
                     'users' => $users[$acct['Radacct']['radacctid']]
                 ));
                 break;
-            case 'comment':
-                echo $users[$acct['Radacct']['radacctid']][0]['comment'];
-                break;
+	    case 'comment':
+		echo $users[$acct['Radacct']['radacctid']][0]['comment'];
+		break;
             case 'callingstationid':
 		if(empty($acct['Radacct'][$field]))
 		    echo '<i class="icon-resize-small" title="' . __('Directly connected') . '"></i>';
