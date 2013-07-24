@@ -35,6 +35,15 @@ class LoglinesController extends AppController {
         ));
         $this->defaultValues();
     }
+    
+    public function nas_logs() {
+        $this->Filters->addStringConstraint(array(
+            'fields' => 'facility',
+            'input' => 'facility',
+	    'default' => 'local7',
+        ));
+        $this->defaultValues();
+    }
 
     private function defaultValues(){
         $this->Filters->addSliderConstraint(array(

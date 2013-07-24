@@ -13,6 +13,10 @@ $columns = array(
         'text' => __('Severity'),
         'fit' => true,
     ),
+    'host' => array(
+	'text' => __('Host'),
+        'fit' => true,
+    ),
     'msg' => array(
         'text' => __('Message'),
     ),

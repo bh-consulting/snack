@@ -24,6 +24,14 @@ $this->assign('logs_active', 'active');
                 );
                 ?>
             </li>
+	     <li class="<?php echo $this->fetch('naslogs_active'); ?>">
+                <?php
+                echo $this->Html->link(
+                    __('NAS'),
+                    array('controller' => 'loglines', 'action' => 'nas_logs')
+                );
+                ?>
+            </li>
     </ul>
     <div class="tab-content">
         <?php echo $this->fetch('content'); ?>
