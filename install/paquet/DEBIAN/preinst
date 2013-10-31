@@ -1,5 +1,0 @@
-#!/bin/bash
-
-useradd -d /home/snack snack -m -r -s /bin/false -U
-
-exit 0

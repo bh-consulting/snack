@@ -1,9 +1,0 @@
-Package: snack
-Version: 1.0
-Section: base
-Priority: optional
-Architecture: all
-Depends: bash, openssl, freeradius, freeradius-utils, freeradius-mysql, mysql-server, php5, php5-mysql, syslog-ng, syslog-ng-mod-sql, libdbd-mysql, snmp, snmpd, tftpd-hpa, git
-Maintainer: SNACK Team <tech@bh-consulting.net>
-Description: Secure Network Access Control for Kids
-
