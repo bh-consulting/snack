@@ -11,7 +11,7 @@ $config = array (
     'configurationEmail' => 'tech@bh-consulting.net',
     'errorEmail' => 'tech@bh-consulting.net',
     'ipAddress' => '192.168.1.146',
-    'paginationCount' => '10',
+    'paginationCount' => '40',
   ),
   'debug' => 0,
 );
