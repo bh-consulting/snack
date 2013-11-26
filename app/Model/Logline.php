@@ -40,6 +40,10 @@ class Logline extends AppModel {
 			'allowEmpty' => true,
 		)
 	);
+
+	public function paginateCount($conditions = null, $recursive = 0, $extra = array()) {
+       	    return 1000;
+    	}	
 }
 
 ?>

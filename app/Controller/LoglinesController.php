@@ -4,7 +4,7 @@ App::uses('Sanitize', 'Utility');
 
 class LoglinesController extends AppController {
     public $helpers = array('Html', 'Form');
-    public $paginate = array('limit' => 10, 'order' => array('id' => 'desc'));
+    public $paginate = array('maxLimit' => 2000, 'limit' => 10, 'order' => array('id' => 'desc'));
     public $components = array(
         'Filters' => array('model' => 'Logline'),
     );
