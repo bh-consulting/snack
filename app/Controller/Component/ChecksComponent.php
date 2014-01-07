@@ -279,7 +279,15 @@ class ChecksComponent extends Component {
                     $name,
                     'Cisco-AVPair',
                     '=',
- 	            'device-traffic-class=voice'                   
+ 	                'device-traffic-class=voice'                   
+                );
+            }
+            if(isset($request->data[$this->baseClassName]['is_cisco']) && $request->data[$this->baseClassName]['is_cisco']){
+                $replies[]= array(
+                    $name,
+                    'Service-Type',
+                    '=',
+ 	                'NAS-Prompt-User'                   
                 );
             }
             foreach($replies as $reply){
