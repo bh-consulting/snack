@@ -2,9 +2,10 @@
 USER=bhc
 BACK=10.254.20.254
 FILE=mac.txt
+CSV=snack.csv
 
 ssh $USER@$BACK show ip arp > $FILE
-
+echo "" > $CSV
 while read ligne
 do
     IP=`echo $ligne | cut -d" " -f2`
@@ -23,9 +24,9 @@ do
 		echo "$IP $MAC"
 		echo "Raduser,$MAC,user,,,,1,"
 	    fi
-	    echo "Radcheck,$MAC,NAS-Port-Type,=~,Ethernet|Wireless-802.11"
-	    echo "Radcheck,$MAC,Cleartext-Password,:=,$MAC"
-	    echo "Radcheck,$MAC,EAP-Type,:=,MD5-CHALLENGE"
+	    echo "Radcheck,$MAC,NAS-Port-Type,=~,Ethernet|Wireless-802.11" >> $CSV
+	    echo "Radcheck,$MAC,Cleartext-Password,:=,$MAC" >> $CSV
+	    echo "Radcheck,$MAC,EAP-Type,:=,MD5-CHALLENGE" >> $CSV
         fi
     fi
 done < $FILE
