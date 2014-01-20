@@ -337,7 +337,7 @@ class RadusersController extends AppController {
                     break;
                 case 'Radreply':
                     if (count($fields) == 5) {
-                        $reply = new Radcheck();
+                        $reply = new Radreply();
                         $reply->set('username', $fields[1]);
                         $reply->set('attribute', $fields[2]);
                         $reply->set('op', $fields[3]);
