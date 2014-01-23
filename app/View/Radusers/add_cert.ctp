@@ -13,6 +13,7 @@ $certificate = '<fieldset>';
 $certificate .= '<legend>' . __('Certificate') . '</legend>';
 
 $certificate .= $this->Form->input('username');
+$certificate .= $this->Form->input('password');
 $certificate .= $this->Form->input(
     'country',
     array('default' => Configure::read('Parameters.countryName'))

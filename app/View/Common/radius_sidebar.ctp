@@ -99,8 +99,21 @@ echo $this->Html->link(
     array('escape' => false)
 );
 ?>
-	</li>
+    </li>
     <?php } ?>
+    <li class="<?php echo $this->fetch('help_active'); ?>">
+<?php
+echo $this->Html->link(
+    '<i class="icon-question-sign"></i> ' . __('Help')
+    . '<i class="icon-chevron-right"></i>',
+    array(
+        'controller' => 'help',
+        'action' => 'index',
+    ),
+    array('escape' => false)
+);
+?>
+    </li>
     </ul>
 <div id="content" class="content">
     <?php } ?>

@@ -124,8 +124,16 @@ if(AuthComponent::user('role') == 'admin' || AuthComponent::user('role') == 'roo
 
 $dropdownCsvButtonItems = array(
     $this->Html->link(
-        '<i class="icon-upload"></i> ' . __('Import users'),
+        '<i class="icon-upload"></i> ' . __('Import config users'),
         '#confirmimport',
+        array(
+            'escape' => false,
+            'data-toggle' => 'modal',
+        )
+    ),
+    $this->Html->link(
+        '<i class="icon-upload"></i> ' . __('Import simple users'),
+        '#confirmimportSimple',
         array(
             'escape' => false,
             'data-toggle' => 'modal',
@@ -156,6 +164,27 @@ echo $this->element('modalImport', array(
     'url' => array(
         'controller' => 'Radusers',
         'action' => 'import',
+    ),
+    'link' => $this->Html->link(
+        '<i class="icon-upload icon-white"></i> ' . __('Upload'),
+        array(
+            'controller' => 'Radusers',
+            'action' => 'import',
+        ),
+        array(
+            'escape' => false,
+            'class'  => 'btn btn-primary'
+        )
+    )
+));
+echo '</div>';
+
+echo '<div id="modalimportSimple">';
+echo $this->element('modalImport', array(
+    'id'   => 'importSimple',
+    'url' => array(
+        'controller' => 'Radusers',
+        'action' => 'importSimple',
     ),
     'link' => $this->Html->link(
         '<i class="icon-upload icon-white"></i> ' . __('Upload'),
