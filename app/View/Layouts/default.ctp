@@ -28,20 +28,20 @@ $cakeDescription = __('SNACK');
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <?php
-    echo $this->Html->meta('icon');
+    echo $this->Html->meta('glyphicon glyphicon');
     echo $this->fetch('meta');
 
     echo $this->Html->css('bootstrap.min');
     echo $this->Html->css('mybootstrap');
-    echo $this->Html->css('bootstrap-responsive.min');
     echo $this->Html->css('bootstrap-datetimepicker.min');
     echo $this->Html->css('doubleListsSelector');
     echo $this->Html->css('snack');
     echo $this->Html->css('jquery-ui-bootstrap/jquery-ui-1.9.2.custom');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
     echo $this->Html->css('flags.css');
-    echo $this->Html->css('jquery.terminal.css');
-    echo $this->Html->css('bootstrap-toggle-buttons.css');
+    //echo $this->Html->css('jquery.terminal.css');
+    echo $this->Html->css('bootstrap-toggle-buttons');
+    echo $this->Html->css('sb-admin');
     echo $this->fetch('css');
 
     echo $this->Html->script('snake');
@@ -58,18 +58,20 @@ $cakeDescription = __('SNACK');
     <![endif]-->
 </head>
 <body>
-<div class="navbar navbar-inverse navbar-fixed-top maintopmenu">
-    <div class="navbar-inner">
-        <div class="container">
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <a class="brand" href=""><?php echo $cakeDescription ?></a>
-
-            <div class="nav-collapse collapse">
-                <ul class="nav">
+    
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">    
+    <div class="container">    
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="glyphicon glyphicon-bar"></span>
+                <span class="glyphicon glyphicon-bar"></span>
+                <span class="glyphicon glyphicon-bar"></span>
+            </button>
+            <a class="navbar-brand" href=""><?php echo $cakeDescription ?></a>
+        </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
                     <?php
                     echo '<li class="' . $this->fetch('radius_active') . '">' .
                         $this->Html->link(
@@ -95,7 +97,7 @@ $cakeDescription = __('SNACK');
                     }*/
                 ?>
                 </ul>
-                <ul class="nav pull-right">
+                <ul class="nav navbar-nav pull-right">
 
                 <?php
 
@@ -103,7 +105,7 @@ $cakeDescription = __('SNACK');
                     echo '<li>' .
                         $this->Html->link(
                             __('Logout from %s', $this->Session->read('Auth.User.username')) .
-                            ' <i class="icon-off icon-white"></i>',
+                            ' <i class="glyphicon glyphicon-off glyphicon glyphicon-white"></i>',
                             array(
                                 'controller' => 'radusers',
                                 'action' => 'logout'
@@ -121,8 +123,8 @@ $cakeDescription = __('SNACK');
 </div>
 
 
-<div class="container-fluid">
-    <div class="row-fluid bhbody">
+<div class="container">
+    <div class="row bhbody">
 
     <? echo $this->fetch('content'); ?>
 
@@ -145,13 +147,14 @@ $cakeDescription = __('SNACK');
     </footer>
 </div>
 <?php
-echo $this->element('sql_dump');
+//echo $this->element('sql_dump');
 echo $this->Html->script('jquery.min');
 echo $this->Html->script('jquery-ui.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapify');
 echo $this->Html->script('jquery.toggle.buttons');
-echo $this->Html->script('bootstrap-datetimepicker.min');
+echo $this->Html->script('bootstrap-datetimepicker');
+echo $this->Html->script('bootstrap-datetimepicker.fr');
 echo $this->Html->script('doubleListsSelector');
 echo $this->Html->script('backups');
 echo $this->Html->script('checkboxRangeSelection');

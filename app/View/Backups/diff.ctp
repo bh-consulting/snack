@@ -10,7 +10,7 @@ $this->assign('nas_active', 'active');
 
 <ul>
 <li><?php echo $this->Html->link(
-    "<i class='icon-hdd'></i> " . $nas['Nas']['shortname'],
+    "<i class='glyphicon glyphicon-hdd'></i> " . $nas['Nas']['shortname'],
     array(
         'controller' => 'nas',
         'action' => 'view',
@@ -23,7 +23,7 @@ $this->assign('nas_active', 'active');
 <li><?php echo __('<strong>%s:</strong> %s',
     __('From'),
     $this->Html->link(
-        "<i class='icon-camera'></i> " . $left['Backup']['datetime'],
+        "<i class='glyphicon glyphicon-camera'></i> " . $left['Backup']['datetime'],
         array(
             'controller' => 'backups',
             'action' => 'view',
@@ -38,7 +38,7 @@ $this->assign('nas_active', 'active');
 <li><?php echo __('<strong>%s:</strong> %s',
     __('To'),
     $this->Html->link(
-        "<i class='icon-camera'></i> " . $right['Backup']['datetime'],
+        "<i class='glyphicon glyphicon-camera'></i> " . $right['Backup']['datetime'],
         array(
             'controller' => 'backups',
             'action' => 'view',
@@ -117,8 +117,8 @@ for ($i=0; $i<count($graphicalDiff['left']); ++$i) {
 
 <?php
 echo $this->Html->link(
-    '<i class="icon-arrow-left icon-white"></i> '
-    . '<i class="icon-camera icon-white"></i> '
+    '<i class="glyphicon glyphicon-arrow-left glyphicon glyphicon-white"></i> '
+    . '<i class="glyphicon glyphicon-camera glyphicon glyphicon-white"></i> '
     . __('Go back to backups'),
         array(
             'controller' => 'backups',

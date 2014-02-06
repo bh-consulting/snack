@@ -21,7 +21,7 @@ echo $this->element(
 	'viewInfo',
 	array(
 		'title' => __('Cisco Phone'),
-		'icon' => 'icon-user',
+		'glyphicon glyphicon' => 'glyphicon glyphicon-user',
 		'name' => $raduser['Raduser']['username'],
 		'id' => $raduser['Raduser']['id'],
 		'editAction' => 'edit_' . $raduser['Raduser']['type'],

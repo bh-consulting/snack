@@ -8,7 +8,7 @@ $this->assign('param_active', 'active');
 
 <?php
 echo $this->Html->link(
-    '<i class="icon-wrench icon-white"></i> ' . __('Edit server parameters'),
+    '<i class="glyphicon glyphicon-wrench glyphicon glyphicon-white"></i> ' . __('Edit server parameters'),
     array('controller' => 'parameters', 'action' => 'edit'),
     array('escape' => false, 'class' => 'btn btn-primary')
 );

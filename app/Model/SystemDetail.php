@@ -110,6 +110,14 @@ class SystemDetail extends AppModel {
 
 		return $result;
 	}
+    
+    /* Get system/processor load in percent */
+    function getsystemLoadInPercent($coreCount = 2, $interval = 1) {
+        $rs = sys_getloadavg();
+        $interval = $interval >= 1 && 3 <= $interval ? $interval : 1;
+        $load = $rs[$interval];
+        return round(($load * 100) / $coreCount, 2);
+    }
 }
 
 ?>

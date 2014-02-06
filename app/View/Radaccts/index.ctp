@@ -166,7 +166,7 @@ if (!empty($radaccts)) {
                 );
                 break;
             case 'view':
-                echo '<i class="icon-eye-open"></i> ';
+                echo '<i class="glyphicon glyphicon-eye-open"></i> ';
                 echo $this->Html->link(
                     __('View'),
                     array(
@@ -177,7 +177,7 @@ if (!empty($radaccts)) {
                 );
                 break;
             case 'delete':
-                echo '<i class="icon-remove"></i> ';
+                echo '<i class="glyphicon glyphicon-remove"></i> ';
                 echo $this->element(
                     'delete_links',
                     array(
@@ -208,7 +208,7 @@ if (!empty($radaccts)) {
 		break;
             case 'callingstationid':
 		if(empty($acct['Radacct'][$field]))
-		    echo '<i class="icon-resize-small" title="' . __('Directly connected') . '"></i>';
+		    echo '<i class="glyphicon glyphicon-resize-small" title="' . __('Directly connected') . '"></i>';
 		else
 		    echo str_replace('-', ':', h($acct['Radacct'][$field]));
                 break;
@@ -222,7 +222,7 @@ if (!empty($radaccts)) {
             case 'duration':
 		if ($acct['Radacct']['durationsec'] != -1) {
 		    echo '<span title="' . __('User still connected') . '">';
-		    echo '<i class="icon-time"></i> ';
+		    echo '<i class="glyphicon glyphicon-time"></i> ';
 		    echo "<span ";
 		    echo " data-duration='{$acct['Radacct']['durationsec']}'";
 		    echo " data-duration-format='" . __('y,m,d,h,min,s') . "'>";

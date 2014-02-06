@@ -5,7 +5,7 @@ $this->assign('nas_active', 'active');
 
 echo $this->element('viewInfo', array(
     'title' => 'NAS',
-    'icon' => 'icon-hdd',
+    'icon' => 'glyphicon glyphicon-hdd',
     'name' => $nas['Nas']['shortname'],
     'id' => $nas['Nas']['id'],
     'editAction' => 'edit',
@@ -16,7 +16,7 @@ echo $this->element('viewInfo', array(
 echo '<strong>';
 
 if($isunwritten) {
-    echo '<i class="icon-camera icon-red"></i> ';
+    echo '<i class="glyphicon glyphicon-camera glyphicon-red"></i> ';
     echo __('There are %s not saved on the memory.',
 	$this->Html->link(
             __('some changes'),
@@ -28,7 +28,7 @@ if($isunwritten) {
         )
     );
 } else {
-    echo '<i class="icon-camera icon-green"></i> ';
+    echo '<i class="glyphicon glyphicon-camera glyphicon-green"></i> ';
     echo __('All %s on the memory.',
 	$this->Html->link(
             __('changes saved'),

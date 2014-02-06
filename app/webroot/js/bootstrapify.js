@@ -2,6 +2,7 @@
  * Twitter Bootstrappifier for CakePHP
  *
  * Author: Julien Guepin
+ * Modified by Guillaume Roche
  *
  * CakePHP Twitter Bootstrappifier
  *
@@ -16,25 +17,30 @@ var Boostrapify = {
 		// FORMS
 		$('form')
 			.not('#MultiSelectionIndexForm')
+            .not('#RaduserLoginForm')
 			.addClass('form-horizontal');
 		$('div.input')
 			.not('div.error')
-			.wrap('<div class="control-group"/>');
-		$('div.input.error').wrap('<div class="control-group error"/>');
+			.wrap('<div class="form-group"/>');
+		$('div.input.error').wrap('<div class="form-group error"/>');
 		$('input')
 			.not('input[type="checkbox"]')
 			.not('input[type="radio"]')
 			.not('input[type="hidden"]')
-			.wrap('<div class="controls"/>');
-		$('textarea').wrap('<div class="controls"/>');
-		$('select').wrap('<div class="controls"/>');
-		$('label').addClass('control-label');
+            .not('input[id="username_login"]')
+            .not('input[id="password_login"]')
+            .addClass('form-control')
+			.wrap('<div class="col-sm-4"/>');
+		$('textarea').wrap('<div class="col-sm-4"/>');
+        $('select').addClass('form-control');
+		$('select').wrap('<div class="col-sm-4"/>');
+		$('label').addClass('col-sm-4 control-label');
 		$('div.checkbox').wrapInner('<label class="checkbox"/>');
 		$('div.checkbox').removeClass('checkbox');
 		$('label.checkbox').before(function() {
 			return $(this).children('label');
 		});
-		$('label.checkbox').wrap('<div class="controls"/>');
+		$('label.checkbox').wrap('<div class="col-sm-1 control-label"/>');
 		$('label:empty').remove();
         $('.checkgroup').children('label').each(function() {
 			var content = $(this).html();
@@ -42,7 +48,7 @@ var Boostrapify = {
             $(this).prev('input').prependTo($(this));
         });
         $('div.select').each(function() {
-            $(this).children('.checkgroup').wrapAll('<div class="controls"/>');
+            $(this).children('.checkgroup').wrapAll('<div class="control-group col-sm-6"/>');
         });
         $('div.check-horizontal').contents().unwrap().wrap("<span class='checkgroup check-horizontal'/>");
 
@@ -83,7 +89,7 @@ var Boostrapify = {
 		$('table').addClass('table table-hover table-bordered');
 
 		// PAGINATION
-		$('div.pagination').wrapInner('<ul/>');
+		/*$('div.pagination').wrapInner('<ul/>');
 		$('div.pagination span').replaceWith(function() {
 			var content = $(this).html();
 			var attr = $(this).attr("class");
@@ -97,20 +103,31 @@ var Boostrapify = {
 				$(this).replaceWith("<li>" + content + "</li>");
 			}
 		});
-		$('div.pagination li.disabled').wrapInner('<a href="#"/>');
+		$('div.pagination li.disabled').wrapInner('<a href="#"/>');*/
 
 		// DATETIMEPICKER
-		$('.datetimepicker').wrap('<div class="input-append date ' +
-			'datetimepickerwrap" />');
-		$('.datetimepicker').attr('data-format', 'yyyy-MM-dd hh:mm:ss');
-		$('<span class="add-on datetimepickeradd" />')
-		.insertAfter('.datetimepicker');
-		$('.datetimepickeradd').append('<i data-time-icon="icon-time" ' +
-			'data-date-icon="icon-calendar" />');
-		$('.datetimepickerwrap').datetimepicker({
+        var_date=new Date();
+        str_date=var_date.getYear()+1900+"-"+var_date.getMonth()+"-"+var_date.getDate();
+        $('.datetimepicker').addClass('form-control');
+        $('.datetimepicker').wrap('<div class="input-group date form_datetime col-sm-12" data-date="'+str_date+'T05:25:07Z" data-date-format="yyyy MM dd - HH:ii p"></div>');
+        $('<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>').insertAfter(".datetimepicker");
+        $('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>').insertAfter(".datetimepicker");
+        $('.form_datetime').datetimepicker({
+            //language:  'fr',
+            format: "yyyy-mm-dd hh:ii:00",
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            forceParse: 0,
+            showMeridian: 0
+        });
+
+		/*$('.datetimepickerwrap').datetimepicker({
 			language: 'fr',
 			weekStart: 1
-		});
+		});*/
 
 		// SLIDER
 		function applySlider(index, elt, range) {

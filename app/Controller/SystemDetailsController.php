@@ -27,7 +27,10 @@ class SystemDetailsController extends AppController {
         $loads = $this->SystemDetail->getSystemLoad();
         $this->set('loadavg', $loads[0]);
         $this->set('tasks', $loads[1]);
-
+        
+        $cpu = $this->SystemDetail->getsystemLoadInPercent();
+        $this->set('cpu', $cpu);
+        
         $memory = $this->SystemDetail->getMemory();
         $this->set('freemem', $memory[0]);
         $this->set('totalmem', $memory[1]);

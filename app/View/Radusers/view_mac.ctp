@@ -7,7 +7,7 @@ echo $this->element(
 	'viewInfo',
 	array(
 		'title' => __('MAC User'),
-		'icon' => 'icon-user',
+		'glyphicon glyphicon' => 'glyphicon glyphicon-user',
 		'name' => $attributes['MAC address'],
 		'id' => $raduser['Raduser']['id'],
 		'editAction' => 'edit_' . $raduser['Raduser']['type'],

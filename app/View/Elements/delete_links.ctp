@@ -13,7 +13,7 @@ switch ($action) {
 	echo $this->element('modalDelete', array(
 	    'id'   => $id,
 	    'link' => $this->Html->link(
-		    '<i class="icon-remove icon-white"></i> ' . __('Delete'),
+		    '<i class="glyphicon glyphicon-remove glyphicon glyphicon-white"></i> ' . __('Delete'),
 		    '#',
 		    array(
 			'onclick' => "$('#{$model}DeleteForm input').val('$id');"

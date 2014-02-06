@@ -10,13 +10,13 @@ $columns = array(
         'bold' => true,
     ),
     'sync' => array(
-        'text' => '<i class="icon-ok-circle" title="'
+        'text' => '<i class="glyphicon glyphicon-ok-circle" title="'
         . __('Write memory') . '"></i>',
         'fit' => true,
         'id' => 'id',
     ),
     'compare' => array(
-        'text' => '<i class="icon-zoom-in"></i>',
+        'text' => '<i class="glyphicon glyphicon-zoom-in"></i>',
         'fit' => true,
     ),
     'datetime' => array(
@@ -152,7 +152,7 @@ if (!empty($backups)) {
 
             switch ($field) {
             case 'view':
-		        echo '<i class="icon-eye-open"></i> ';
+		        echo '<i class="glyphicon glyphicon-eye-open"></i> ';
                 echo $this->Html->link(
                     __('View'),
                     array(
@@ -173,11 +173,11 @@ if (!empty($backups)) {
                 break;
             case 'sync':
                 if(in_array($backup['Backup'][$info['id']], $unwrittenids)) {
-                    echo '<i class="icon-exclamation-sign icon-red" title="'
+                    echo '<i class="glyphicon glyphicon-exclamation-sign glyphicon glyphicon-red" title="'
                         . __('Configuration NOT loaded if the device restart.')
                         . '"></i>';
                 } else {
-                    echo '<i class="icon-ok-sign icon-green" title="'
+                    echo '<i class="glyphicon glyphicon-ok-sign glyphicon glyphicon-green" title="'
                         . __('Seems saved as starting configuration.')
                         . '"></i>';
                 }
@@ -257,7 +257,7 @@ if (!empty($backups)) {
 
 <?php
 echo $this->Form->button(
-    '<i class="icon-zoom-in icon-white"></i> ' . __('Compare'),
+    '<i class="glyphicon glyphicon-zoom-in glyphicon glyphicon-white"></i> ' . __('Compare'),
     array(
 	'type' => 'submit',
 	'escape' => false,

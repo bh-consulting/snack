@@ -5,7 +5,7 @@ $usersList = array();
 foreach($users AS $user) {
     if($user['id'] != -1) {
         $usersList[] = $this->Html->link(
-	    "<i class='icon-user'></i>&nbsp;{$user['username']}",
+	    "<i class='glyphicon glyphicon-user'></i>&nbsp;{$user['username']}",
 	    array(
 		'controller' => 'radusers',
 		'action' => 'view_snack',
@@ -16,7 +16,7 @@ foreach($users AS $user) {
 	    )
         );
     } else {
-	$usersList[] = "<span class='unknown' title='" . __('User unknown') . "'><i class='icon-user icon-red'></i>&nbsp;{$user['username']}</span>";
+	$usersList[] = "<span class='unknown' title='" . __('User unknown') . "'><i class='glyphicon glyphicon-user glyphicon glyphicon-red'></i>&nbsp;{$user['username']}</span>";
     }
 }
 

@@ -24,7 +24,7 @@ $fields = array();
 
 if ($radacct['Radacct']['durationsec'] != -1) {
     $duration = '<span title="' . __('User still connected') . '">'
-	. '<i class="icon-time"></i> '
+	. '<i class="glyphicon glyphicon-time"></i> '
 	. '<span'
 	. " data-duration='{$radacct['Radacct']['durationsec']}'"
 	. " data-duration-format='" . __('y,m,d,h,min,s') . "'>"

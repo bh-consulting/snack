@@ -1,7 +1,7 @@
 <div class="btn-group">
 
 <?php
-$color = (isset($color)) ? $color : 'icon-white';
+$color = (isset($color)) ? $color : 'glyphicon glyphicon-white';
 $icon = (isset($icon)
     && !empty($icon)) ? '<i class="' . $icon . ' ' . $color . '"></i> ' : '';
 $class = (isset($class)) ? $class : 'btn-primary';
@@ -34,15 +34,12 @@ if (isset($buttonCount) && $buttonCount == 1) {
 <?php
 foreach ($items as $key=>$item) {
     if (is_array($item)) {
-	echo '<li class="dropdown-submenu">'
-	    . '<a tabindex="-1" href="#">' . $key . '</a>'
-	    . '<ul class="dropdown-menu">';
 
 	foreach ($item as $subItem) {
 	    echo '<li>' . $subItem . '</li>';
 	}
 
-	echo '</ul>';
+
     } else {
 	echo '<li>' . $item . '</i>';
     }

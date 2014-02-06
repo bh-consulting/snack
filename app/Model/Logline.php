@@ -5,8 +5,8 @@ class Logline extends AppModel {
 	public $primaryKey = 'id';
 	public $displayField = 'msg';
 	public $name = 'Logline';
-
-	public $levels = array(
+   
+    public $levels = array(
 		'debug' => 'Debug',
 		'info' => 'Info',
 		'notice' => 'Notice',

@@ -25,7 +25,7 @@
         );
 	}
 
-	echo '<i class="icon-chevron-down"></i>';
+	echo '<i class="glyphicon glyphicon-chevron-down"></i>';
 	echo '</div>';
 
 	echo $this->Form->create(null, array(
@@ -62,6 +62,10 @@
 
 		echo $this->Form->input($input['name'], $options);
 	}
-
-	echo $this->Form->end(__('Search'));
+    $options = array(
+    'label' => __('Search'),
+    'div' => array(
+        'class' => 'col-sm-offset-2 col-sm-10',
+    ));
+    echo $this->Form->end($options);
 ?>

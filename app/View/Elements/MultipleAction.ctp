@@ -33,7 +33,7 @@ case 'end':
             switch ($option) {
             case 'delete':
                 $items[] = $this->Html->link(
-                    '<i class="icon-remove"></i> ' . __('Delete selected'),
+                    '<i class="glyphicon glyphicon-remove"></i> ' . __('Delete selected'),
                     "#confirmmultiple",
                     array(
                         'escape' => false,
@@ -46,7 +46,7 @@ case 'end':
                 echo $this->element('modalDelete', array(
                     'id'   => 'multiple',
                     'link' => $this->Html->link(
-                        '<i class="icon-remove icon-white"></i> ' . __('Delete 0 items'),
+                        '<i class="glyphicon glyphicon-remove glyphicon glyphicon-white"></i> ' . __('Delete 0 items'),
                         '#',
                         array(
                             'onclick' => "$('#selectionAction').attr('value', 'delete');"
@@ -61,7 +61,7 @@ case 'end':
                 break;
             case 'export':
                 $items[] = $this->Html->link(
-                    '<i class="icon-download"></i> ' . __('Export selected'),
+                    '<i class="glyphicon glyphicon-download"></i> ' . __('Export selected'),
                     '#',
                     array(
                         'onClick' => "$('#selectionAction').attr('value', 'export');"
@@ -77,7 +77,7 @@ case 'end':
     echo $this->element('dropdownButton', array(
         'buttonCount' => 1,
         'title' => __('Action'),
-        'icon' => '',
+        'glyphicon glyphicon' => '',
         'items' => $items,
     ));
 

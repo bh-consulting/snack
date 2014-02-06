@@ -117,14 +117,14 @@ if(AuthComponent::user('role') == 'admin' || AuthComponent::user('role') == 'roo
         'buttonCount' => 1,
         'class' => 'btn-primary',
         'title' => __('Add user'),
-        'icon' => 'icon-user',
+        'icon' => 'glyphicon glyphicon-user',
         'items' => $dropdownUsersButtonItems,
     ));
 }
 
 $dropdownCsvButtonItems = array(
     $this->Html->link(
-        '<i class="icon-upload"></i> ' . __('Import config users'),
+        '<i class="glyphicon glyphicon-upload"></i> ' . __('Import config users'),
         '#confirmimport',
         array(
             'escape' => false,
@@ -132,7 +132,7 @@ $dropdownCsvButtonItems = array(
         )
     ),
     $this->Html->link(
-        '<i class="icon-upload"></i> ' . __('Import simple users'),
+        '<i class="glyphicon glyphicon-upload"></i> ' . __('Import simple users'),
         '#confirmimportSimple',
         array(
             'escape' => false,
@@ -140,7 +140,7 @@ $dropdownCsvButtonItems = array(
         )
     ),
     $this->Html->link(
-        '<i class="icon-download"></i> ' . __('Export users'),
+        '<i class="glyphicon glyphicon-download"></i> ' . __('Export users'),
         array('action' => 'exportAll'),
         array('escape' => false)
     ),
@@ -154,7 +154,7 @@ echo $this->element('dropdownButton', array(
     'buttonCount' => 1,
     'class' => 'btn-primary',
     'title' => __('CSV'),
-    'icon' => 'icon-file',
+    'icon' => 'glyphicon glyphicon-file',
     'items' => $dropdownCsvButtonItems
 ));
 
@@ -166,7 +166,7 @@ echo $this->element('modalImport', array(
         'action' => 'import',
     ),
     'link' => $this->Html->link(
-        '<i class="icon-upload icon-white"></i> ' . __('Upload'),
+        '<i class="glyphicon glyphicon-upload glyphicon-white"></i> ' . __('Upload'),
         array(
             'controller' => 'Radusers',
             'action' => 'import',
@@ -187,7 +187,7 @@ echo $this->element('modalImport', array(
         'action' => 'importSimple',
     ),
     'link' => $this->Html->link(
-        '<i class="icon-upload icon-white"></i> ' . __('Upload'),
+        '<i class="glyphicon glyphicon-upload glyphicon-white"></i> ' . __('Upload'),
         array(
             'controller' => 'Radusers',
             'action' => 'import',
@@ -318,7 +318,7 @@ if (!empty($radusers)) {
                 );
                 break;
             case 'view':
-		        echo '<i class="icon-eye-open"></i> ';
+		        echo '<i class="glyphicon glyphicon-eye-open"></i> ';
 		echo $this->Html->link(
                     __('View'),
                     array(
@@ -335,10 +335,10 @@ if (!empty($radusers)) {
                     echo '<span class="unknown" title="'
                         . __('Not allowed!')
                         . '">'
-                        . '<i class="icon-edit icon-red"></i> '
+                        . '<i class="glyphicon glyphicon-edit glyphicon-red"></i> '
                         . __('Edit') . '</span>';
                 } else {
-                    echo '<i class="icon-edit"></i> ';
+                    echo '<i class="glyphicon glyphicon-edit"></i> ';
                     echo $this->Html->link(
                         __('Edit'),
                         array(
@@ -349,7 +349,7 @@ if (!empty($radusers)) {
                 }
                 break;
             case 'delete':
-                echo '<i class="icon-remove"></i> ';
+                echo '<i class="glyphicon glyphicon-remove"></i> ';
                 echo $this->element(
                     'delete_links',
                     array(
@@ -361,7 +361,7 @@ if (!empty($radusers)) {
                 break;
             case (preg_match("#is_(cert|loginpass|phone|mac|cisco)#i", $field)
                 ? $field : !$field):
-                echo $user['Raduser'][$field] ? '<i class="icon-ok"></i>' : '';
+                echo $user['Raduser'][$field] ? '<i class="glyphicon glyphicon-ok"></i>' : '';
                 break;
             case 'role':
                 if (isset($roles[$user['Raduser'][$field]])) {
@@ -377,7 +377,7 @@ if (!empty($radusers)) {
                             'User expired since the %s.',
                             $user['Raduser']['expiration']
                         )
-                        . '"><i class="icon-warning-sign icon-red"></i> '
+                        . '"><i class="glyphicon glyphicon-warning-sign glyphicon-red"></i> '
                         . h($user['Raduser'][$field])
                         . '</span>';
                 } else {

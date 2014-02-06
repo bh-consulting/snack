@@ -16,7 +16,7 @@ if (isset($current) && isset($nas)) {
     <dd>
 <?php
     echo $this->Html->link(
-        "<i class='icon-hdd'></i> {$nas['Nas']['shortname']}",
+        "<i class='glyphicon glyphicon-hdd'></i> {$nas['Nas']['shortname']}",
 		array(
 		    'controller' => 'nas',
 		    'action' => 'view',
@@ -44,7 +44,7 @@ if (isset($current) && isset($nas)) {
     if (empty($diff)) {
 ?>
     <h4>
-        <i class="icon-ok-sign icon-green" style="margin-top:4px;"></i>&nbsp;
+        <i class="glyphicon glyphicon-ok-sign glyphicon glyphicon-green" style="margin-top:4px;"></i>&nbsp;
         <?php echo __('This is the current configuration.') ?>
     </h4>
 <?php
@@ -62,7 +62,7 @@ if (!empty($diff)) {
 
 <div class="toggleBlock" onclick="toggleBlock(this)">
     <?php echo $this->Html->link(__('Show'), '#') ?>
-    <i class="icon-chevron-down"></i>
+    <i class="glyphicon glyphicon-chevron-down"></i>
 </div>
 
 <div style="display: none">
@@ -136,7 +136,7 @@ if (!empty($content)) {
 
 <div class="toggleBlock" onclick="toggleBlock(this)">
     <?php echo $this->Html->link(__('Show'), '#') ?>
-    <i class="icon-chevron-down"></i>
+    <i class="glyphicon glyphicon-chevron-down"></i>
 </div>
 
 <div style="display:none">
@@ -148,7 +148,7 @@ if (!empty($content)) {
             'id'   => 'restore',
             'title' => __('Restore'),
             'link' => $this->Html->link(
-                '<i class="icon-refresh icon-white"></i> ' . __('Restore'),
+                '<i class="glyphicon glyphicon-refresh glyphicon glyphicon-white"></i> ' . __('Restore'),
                 array(
                     'controller' => 'backups',
                     'action' => 'restore',
@@ -163,7 +163,7 @@ if (!empty($content)) {
         ));
         echo '</div>';
         echo $this->Html->link(
-            '<i class="icon-repeat icon-white"></i> ' . __('Restore'),
+            '<i class="glyphicon glyphicon-repeat glyphicon glyphicon-white"></i> ' . __('Restore'),
             '#confirmrestore',
             array(
                 'data-toggle' => 'modal',
@@ -255,8 +255,8 @@ echo $this->element('paginator_footer');
 
 <?php
 echo $this->Html->link(
-    '<i class="icon-arrow-left icon-white"></i> '
-    . '<i class="icon-camera icon-white"></i> '
+    '<i class="glyphicon glyphicon-arrow-left glyphicon glyphicon-white"></i> '
+    . '<i class="glyphicon glyphicon-camera glyphicon glyphicon-white"></i> '
     . __('Go back to backups'),
         array(
             'controller' => 'backups',

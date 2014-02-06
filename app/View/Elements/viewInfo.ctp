@@ -10,7 +10,7 @@ __('No');
 if(AuthComponent::user('role') !== 'tech'){
     $items = array(
         $this->Html->link(
-			'<i class="icon-edit"></i> ' . __('Edit'),
+			'<i class="glyphicon glyphicon-edit"></i> ' . __('Edit'),
 			array('action' => $editAction, $id),
 			array('escape' => false)
         ),
@@ -19,7 +19,7 @@ if(AuthComponent::user('role') !== 'tech'){
     // show delete button only for root users
     if(AuthComponent::user('role') === 'root'){
 		$items[]= $this->Html->link(
-			'<i class="icon-remove"></i> ' . __('Delete'),
+			'<i class="glyphicon glyphicon-remove"></i> ' . __('Delete'),
 			"#confirm$id",
 			array(
 			    'escape' => false,
@@ -30,7 +30,7 @@ if(AuthComponent::user('role') !== 'tech'){
         echo $this->element('modalDelete', array(
             'id'   => $id,
             'link' => $this->Form->postLink(
-                    '<i class="icon-remove icon-white"></i> ' . __('Delete'),
+                    '<i class="glyphicon glyphicon-remove glyphicon glyphicon-white"></i> ' . __('Delete'),
                     array('action' => 'delete', $id),
                     array(
                         'escape' => false,

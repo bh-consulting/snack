@@ -54,14 +54,14 @@ if(!in_array(AuthComponent::user('role'), array('root', 'admin'))){
 <h1><? echo __('Groups'); ?></h1>
 <?php
 echo $this->Html->link(
-    '<i class="icon-list icon-white"></i> ' . __('Add a group'),
+    '<i class="glyphicon glyphicon-list glyphicon glyphicon-white"></i> ' . __('Add a group'),
     array('controller' => 'radgroups', 'action' => 'add'),
     array('escape' => false, 'class' => 'btn btn-primary')
 );
 
 $dropdownCsvButtonItems = array(
     $this->Html->link(
-        '<i class="icon-upload"></i> ' . __('Import groups'),
+        '<i class="glyphicon glyphicon-upload"></i> ' . __('Import groups'),
         '#confirmimport',
         array(
             'escape' => false,
@@ -69,7 +69,7 @@ $dropdownCsvButtonItems = array(
         )
     ),
     $this->Html->link(
-        '<i class="icon-download"></i> ' . __('Export groups'),
+        '<i class="glyphicon glyphicon-download"></i> ' . __('Export groups'),
         array('action' => 'exportAll'),
         array('escape' => false)
     ),
@@ -83,7 +83,7 @@ echo $this->element('dropdownButton', array(
     'buttonCount' => 1,
     'class' => 'btn-primary',
     'title' => __('CSV'),
-    'icon' => 'icon-file',
+    'glyphicon glyphicon' => 'glyphicon glyphicon-file',
     'items' => $dropdownCsvButtonItems
 ));
 
@@ -95,7 +95,7 @@ echo $this->element('modalImport', array(
         'action' => 'import',
     ),
     'link' => $this->Html->link(
-        '<i class="icon-upload icon-white"></i> ' . __('Upload'),
+        '<i class="glyphicon glyphicon-upload glyphicon glyphicon-white"></i> ' . __('Upload'),
         array(
             'controller' => 'Radgroups',
             'action' => 'import',
@@ -210,7 +210,7 @@ if (!empty($radgroups)) {
                 );
                 break;
             case 'view':
-		        echo '<i class="icon-eye-open"></i> ';
+		        echo '<i class="glyphicon glyphicon-eye-open"></i> ';
                 echo $this->Html->link(
                     __('View'),
                     array(
@@ -221,7 +221,7 @@ if (!empty($radgroups)) {
                 );
                 break;
             case 'edit':
-                echo '<i class="icon-edit"></i> ';
+                echo '<i class="glyphicon glyphicon-edit"></i> ';
                 echo $this->Html->link(
                     __('Edit'),
                     array(
@@ -231,7 +231,7 @@ if (!empty($radgroups)) {
                 );
                 break;
             case 'delete':
-                echo '<i class="icon-remove"></i> ';
+                echo '<i class="glyphicon glyphicon-remove"></i> ';
                 echo $this->element(
                     'delete_links',
                     array(
@@ -248,7 +248,7 @@ if (!empty($radgroups)) {
                             'Group expired since the %s.',
                             $group['Radgroup']['expiration']
                         )
-                        . '"><i class="icon-warning-sign icon-red"></i> '
+                        . '"><i class="glyphicon glyphicon-warning-sign glyphicon glyphicon-red"></i> '
                         . h($group['Radgroup'][$field])
                         . '</span>';
                 } else {

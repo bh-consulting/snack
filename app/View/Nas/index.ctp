@@ -54,7 +54,7 @@ if(AuthComponent::user('role') != 'root'){
 <?php
 if(AuthComponent::user('role') == 'root'){
     echo $this->Html->link(
-        '<i class="icon-hdd icon-white"></i> ' . __('Add a NAS'),
+        '<i class="glyphicon glyphicon-hdd glyphicon glyphicon-white"></i> ' . __('Add a NAS'),
         array('controller' => 'nas', 'action' => 'add'),
         array('escape' => false, 'class' => 'btn btn-primary')
     );
@@ -91,10 +91,10 @@ echo $this->element('MultipleAction', array('action' => 'start'));
 echo '<strong>';
 
 if($nasunwritten) {
-    echo '<i class="icon-camera icon-red"></i> ';
+    echo '<i class="glyphicon glyphicon-camera glyphicon glyphicon-red"></i> ';
     echo __('There is at least one NAS not synchronized with the starting configuration.');
 } else {
-    echo '<i class="icon-camera icon-green"></i> ';
+    echo '<i class="glyphicon glyphicon-camera glyphicon glyphicon-green"></i> ';
     echo __('All NAS seem synchronized with the starting configuration.');
 }
 
@@ -176,7 +176,7 @@ if (!empty($nas)) {
                 );
                 break;
             case 'view':
-		        echo '<i class="icon-eye-open"></i> ';
+		        echo '<i class="glyphicon glyphicon-eye-open"></i> ';
                 echo $this->Html->link(
                     __('View'),
                     array(
@@ -188,7 +188,7 @@ if (!empty($nas)) {
                 break;
             case 'edit':
                 if(AuthComponent::user('role') == 'root'){
-                    echo '<i class="icon-edit"></i> ';
+                    echo '<i class="glyphicon glyphicon-edit"></i> ';
                     echo $this->Html->link(
                         __('Edit'),
                         array('action' => 'edit', $n['Nas']['id'])
@@ -197,7 +197,7 @@ if (!empty($nas)) {
                 break;
             case 'backups':
                 if(AuthComponent::user('role') == 'root'){
-                    echo '<i class="icon-camera icon-' . (
+                    echo '<i class="glyphicon glyphicon-camera glyphicon glyphicon-' . (
 			    in_array($n['Nas']['id'], $unwrittenids) ?
 				'red" title="' . __('Running configuration NOT synchronized with the starting one.') :
 				'green" title="' . __('Running configuration seems synchronized with the starting configuration.')
@@ -214,7 +214,7 @@ if (!empty($nas)) {
                 break;
             case 'delete':
                 if(AuthComponent::user('role') == 'root'){
-                    echo '<i class="icon-remove"></i> ';
+                    echo '<i class="glyphicon glyphicon-remove"></i> ';
                     echo $this->element(
                         'delete_links',
                         array(
