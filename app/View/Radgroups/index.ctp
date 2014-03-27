@@ -26,19 +26,9 @@ $columns = array(
     'comment' => array(
         'text' => __('Comment'),
     ),
-   'view' => array(
-        'id' => 'id',
-        'text' => __('View'),
-        'fit' => true,
-    ),
-    'edit' => array(
-        'id' => 'id',
-        'text' => __('Edit'),
-        'fit' => true,
-    ),
-    'delete' => array(
-        'id' => 'id',
-        'text' => __('Delete'),
+    'action' => array(
+        'id' =>  'id',
+        'text' => __('Action'),
         'fit' => true,
     ),
 );
@@ -209,29 +199,24 @@ if (!empty($radgroups)) {
                     )
                 );
                 break;
-            case 'view':
-		        echo '<i class="glyphicon glyphicon-eye-open"></i> ';
+            case 'action':
                 echo $this->Html->link(
-                    __('View'),
+                    '<i class="glyphicon glyphicon-eye-open" data-toggle="tooltip" data-placement="top" title='.__('View').'></i> ',
                     array(
                         'action' => 'view',
                         'controller' => 'radgroups',
                         $group['Radgroup'][$info['id']],
-                    )
+                    ),
+                    array('escape' => false)
                 );
-                break;
-            case 'edit':
-                echo '<i class="glyphicon glyphicon-edit"></i> ';
                 echo $this->Html->link(
-                    __('Edit'),
+                    '<i class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="top" title='.__('Edit').'></i> ',
                     array(
                         'action' => 'edit',
                         $group['Radgroup'][$info['id']]
-                    )
+                    ),
+                    array('escape' => false)
                 );
-                break;
-            case 'delete':
-                echo '<i class="glyphicon glyphicon-remove"></i> ';
                 echo $this->element(
                     'delete_links',
                     array(
@@ -240,6 +225,7 @@ if (!empty($radgroups)) {
                         'id' => $group['Radgroup'][$info['id']],
                     )
                 );
+
                 break;
             case 'groupname':
                 if($group['Radgroup']['expiration'] != -1) {

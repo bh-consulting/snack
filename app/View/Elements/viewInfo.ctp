@@ -30,7 +30,7 @@ if(AuthComponent::user('role') !== 'tech'){
         echo $this->element('modalDelete', array(
             'id'   => $id,
             'link' => $this->Form->postLink(
-                    '<i class="glyphicon glyphicon-remove glyphicon glyphicon-white"></i> ' . __('Delete'),
+                    '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ' . __('Delete'),
                     array('action' => 'delete', $id),
                     array(
                         'escape' => false,
@@ -43,7 +43,7 @@ if(AuthComponent::user('role') !== 'tech'){
     echo $this->element('dropdownButton', array(
         'buttonCount' => 2,
         'title' => h($name),
-        'icon' => $icon,
+        //'icon' => $icon,
         'linkOptions' => array('action' => $editAction, $id),
         'items' => $items,
     ));

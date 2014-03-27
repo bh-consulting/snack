@@ -20,8 +20,9 @@ class Utils {
             case 'display':
                 if (!empty($date)) {
                     $date = new DateTime($date);
-                    return $date->format('d/m/Y') . '&nbsp;'
-                        . __('at') . '&nbsp;' . $date->format('H:i:s');
+                    return $date->format('d/m/Y') . '<br>'
+                        //. __('at') . '&nbsp;' . $date->format('H:i:s');
+                        . $date->format('H:i:s');
                 }
                 break;
             case 'durdisplay':

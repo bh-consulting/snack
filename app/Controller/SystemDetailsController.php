@@ -1,6 +1,7 @@
 <?php
-
+App::uses('File', 'Utility');
 class SystemDetailsController extends AppController {
+    
     public $name = 'SystemDetails';
     public $helpers = array('Html', 'Form');
 
@@ -16,6 +17,13 @@ class SystemDetailsController extends AppController {
     }
 
     public function index() {
+        $values = preg_grep("/.*Not After : (.*)/", file(Utils::getServerCertPath()));
+        foreach ( $values as $val ) {
+            if(eregi("Not After : (.*)",$val,$regs)) {
+                continue;
+            }
+        }
+        $this->set('ca_expiration', $regs[1]);
         $this->set('hostname', $this->SystemDetail->getHostname());
 
         $uptimes = $this->SystemDetail->getUptimes();
@@ -57,6 +65,14 @@ class SystemDetailsController extends AppController {
             ($mysqlUptime == -1) ? __("Disabled") : __("Enabled for ")
             . $mysqlUptime
         );
+        $file = new File(APP.'tmp/updates', false, 0644);
+        $tmp="";
+        if ($file->exists()) {
+            $tmp=$file->read(false, 'rb', false);
+            if(eregi("^upgraded ([0-9]*).*",$tmp,$regs)) {
+                $this->set('nbupgraded', $regs[1]);
+            }
+        }
     }
 
     public function refresh() {
@@ -90,6 +106,34 @@ class SystemDetailsController extends AppController {
         }
 
         $this->redirect(array('action' => 'index'));
+    }
+    
+    public function checkupdates() {        
+        $return = shell_exec("sudo apt-get update && apt-get upgrade snack -s");
+        //$tmp=strstr($return, "snack");
+        //$tmp=strstr($tmp, "snack");
+        if(eregi("([0-9]*) upgraded, ([0-9]*) newly installed, ([0-9]*) to remove and ([0-9]*) not upgraded",$return,$regs)) {
+            $file = new File(APP.'tmp/updates', true, 0644);
+            $file->write("upgraded $regs[1]\nnewly installed $regs[2]\ntoremove $regs[3]\nupgraded $regs[4]");
+        }
+        if(eregi("([0-9]*) mis à jour, ([0-9]*) nouvellement installés, ([0-9]*) à enlever et ([0-9]*) non mis à jour",$return,$regs)) {
+            $file = new File(APP.'tmp/updates', true, 0644);
+            $file->write("upgraded $regs[1]\nnewly installed $regs[2]\ntoremove $regs[3]\nupgraded $regs[4]");
+        }
+        else {
+            $this->Session->setFlash(
+                __('Unable to check updates.'),
+                'flash_error');
+        }
+        
+        $this->redirect(
+            array('action' => 'index')
+        );
+    }
+    
+    public function upgrade() {
+        $return = shell_exec("sudo apt-get update && apt-get upgrade snack -s");
+        $this->set('return', $return);
     }
 }
 

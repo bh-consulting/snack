@@ -7,7 +7,10 @@ $this->assign('dashboard_active', 'active');
 <div class="pull-right">
     <?php
     echo $this->Html->link(
-            '<i class="glyphicon glyphicon-refresh glyphicon-white"></i> ' . __('Refresh'), array('controller' => 'systemDetails', 'action' => 'refresh'), array('class' => 'btn btn-success btn-large', 'escape' => false)
+        '<i class="glyphicon glyphicon-refresh glyphicon-white"></i> ' . __('Check Updates'), array('controller' => 'systemDetails', 'action' => 'checkupdates'), array('class' => 'btn btn-warning btn-large', 'escape' => false)
+    );
+    echo $this->Html->link(
+        '<i class="glyphicon glyphicon-refresh glyphicon-white"></i> ' . __('Refresh'), array('controller' => 'systemDetails', 'action' => 'refresh'), array('class' => 'btn btn-success btn-large', 'escape' => false)
     );
     ?>
 </div>
@@ -38,11 +41,31 @@ $this->assign('dashboard_active', 'active');
                         );
                         ?>
                     </dd>
+                    <dt><?php echo __('CA expiration'); ?></dt>
+                    <dd><?php echo $ca_expiration; ?></dd>
                 </dl>
             </div>
         </div>
     </div>
     
+    <div class="col-lg-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                 <?php echo __('Updates'); ?>
+            </div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <p>Nombre de mises à jour : <?php echo $nbupgraded;?></p>
+                    <p><?php  echo $this->Html->link(
+                        '<i class="glyphicon glyphicon-refresh glyphicon-white"></i> ' . __('Upgrade'), array('controller' => 'systemDetails', 'action' => 'upgrade'), array('class' => 'btn btn-success btn-large', 'escape' => false)
+                    );
+                    ?>
+                    </p>
+                </dl>
+            </div>
+        </div>
+    </div>    
+
     <div class="col-lg-6">
         <div class="panel panel-primary">
             <div class="panel-heading">

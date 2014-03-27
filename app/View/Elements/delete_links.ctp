@@ -8,12 +8,12 @@ switch ($action) {
 	break;
 
     case 'link':
-	echo "<a href='#confirm$id' data-toggle='modal'>" . __('Delete') . '</a>';
+	echo "<a href='#confirm$id' data-toggle='modal'><i class='glyphicon glyphicon-remove' data-toggle='tooltip' data-placement='top' title=".__('Delete')."></i></a>";
 
 	echo $this->element('modalDelete', array(
 	    'id'   => $id,
 	    'link' => $this->Html->link(
-		    '<i class="glyphicon glyphicon-remove glyphicon glyphicon-white"></i> ' . __('Delete'),
+		    '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ' . __('Delete'),
 		    '#',
 		    array(
 			'onclick' => "$('#{$model}DeleteForm input').val('$id');"

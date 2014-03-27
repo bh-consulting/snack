@@ -24,16 +24,8 @@ $columns = array(
     'description' => array(
         'text' => __('Description'),
     ),
-    'view' => array(
-        'text' => __('View'),
-        'fit' => true,
-    ),
-    'edit' => array(
-        'text' => __('Edit'),
-        'fit' => true,
-    ),
-    'delete' => array(
-        'text' => __('Delete'),
+    'action' => array(
+        'text' => __('Action'),
         'fit' => true,
     ),
     'backups' => array(
@@ -175,23 +167,31 @@ if (!empty($nas)) {
                     )
                 );
                 break;
-            case 'view':
-		        echo '<i class="glyphicon glyphicon-eye-open"></i> ';
+            case 'action':
                 echo $this->Html->link(
-                    __('View'),
+                    '<i class="glyphicon glyphicon-eye-open" data-toggle="tooltip" data-placement="top" title='.__('View').'></i> ',
                     array(
                         'action' => 'view',
                         'controller' => 'nas',
                         $n['Nas']['id'],
-                    )
+                    ),
+                    array('escape' => false)
                 );
-                break;
-            case 'edit':
                 if(AuthComponent::user('role') == 'root'){
-                    echo '<i class="glyphicon glyphicon-edit"></i> ';
                     echo $this->Html->link(
-                        __('Edit'),
-                        array('action' => 'edit', $n['Nas']['id'])
+                        '<i class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="top" title='.__('Edit').'></i> ',
+                        array('action' => 'edit', $n['Nas']['id']),
+                        array('escape' => false)
+                    );
+                }
+                if(AuthComponent::user('role') == 'root'){
+                    echo $this->element(
+                        'delete_links',
+                        array(
+                            'model' => 'Nas',
+                            'action' => 'link',
+                            'id' => $n['Nas']['id'],
+                        )
                     );
                 }
                 break;
@@ -208,19 +208,6 @@ if (!empty($nas)) {
                             'action' => 'index',
                             'controller' => 'backups',
                             $n['Nas']['id'],
-                        )
-                    );
-                }
-                break;
-            case 'delete':
-                if(AuthComponent::user('role') == 'root'){
-                    echo '<i class="glyphicon glyphicon-remove"></i> ';
-                    echo $this->element(
-                        'delete_links',
-                        array(
-                            'model' => 'Nas',
-                            'action' => 'link',
-                            'id' => $n['Nas']['id'],
                         )
                     );
                 }

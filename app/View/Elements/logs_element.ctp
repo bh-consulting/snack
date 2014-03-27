@@ -184,7 +184,7 @@ if(AuthComponent::user('role') == 'root'){
 ?>
 </div>
 <?php
-echo $this->element('paginator_footer');
+//echo $this->element('paginator_footer');
 
 $this->start('script');
 echo $this->Html->script('loglines');

@@ -29,6 +29,7 @@ var Boostrapify = {
 			.not('input[type="hidden"]')
             .not('input[id="username_login"]')
             .not('input[id="password_login"]')
+            .not('input[id="importCsvFile"]')
             .addClass('form-control')
 			.wrap('<div class="col-sm-4"/>');
 		$('textarea').wrap('<div class="col-sm-4"/>');

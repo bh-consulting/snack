@@ -6,7 +6,7 @@ $this->assign('session_active', 'active');
 $columns = array(
     'checkbox' => array(
         'id' => 'radacctid',
-        'fit' => true,
+        'fit' => 'true',
     ),
     'acctstarttime' => array(
         'text' => __('Start'),
@@ -20,6 +20,12 @@ $columns = array(
     'comment' => array(
         'text' => __('Comment'),
     ),
+    'type' => array(
+        'text' => __('Type'),
+    ),
+    'framedipaddress' => array(
+        'text' => __('IP'),
+    ),
     'callingstationid' => array(
         'text' => __('Station'),
         'fit' => true,
@@ -32,12 +38,8 @@ $columns = array(
         'text' => __('Port type'),
         'fit' => true,
     ),
-    'view' => array(
-        'text' => __('View'),
-        'fit' => true,
-    ),
-    'delete' => array(
-        'text' => __('Delete'),
+    'action' => array(
+        'text' => __('Action'),
         'fit' => true,
     ),
 );
@@ -165,27 +167,26 @@ if (!empty($radaccts)) {
                     )
                 );
                 break;
-            case 'view':
-                echo '<i class="glyphicon glyphicon-eye-open"></i> ';
+            case 'action':
                 echo $this->Html->link(
-                    __('View'),
+                    '<i class="glyphicon glyphicon-eye-open" data-toggle="tooltip" data-placement="top" title='.__('View').'></i> ',
                     array(
                         'action' => 'view',
                         'controller' => 'radaccts',
                         $acct['Radacct']['radacctid'],
-                    )
+                    ),
+                    array('escape' => false)
                 );
-                break;
-            case 'delete':
-                echo '<i class="glyphicon glyphicon-remove"></i> ';
                 echo $this->element(
                     'delete_links',
                     array(
                         'model' => 'Radacct',
                         'action' => 'link',
                         'id' => $acct['Radacct']['radacctid'],
-                    )
+                    ),
+                    array('escape' => false)
                 );
+
                 break;
             case 'nasipaddress':
                 echo $this->element('formatNasLink', array(
@@ -203,21 +204,36 @@ if (!empty($radaccts)) {
                     'users' => $users[$acct['Radacct']['radacctid']]
                 ));
                 break;
-	    case 'comment':
-		echo $users[$acct['Radacct']['radacctid']][0]['comment'];
-		break;
+	        case 'comment':
+		        echo $users[$acct['Radacct']['radacctid']][0]['comment'];
+                break;
+            case 'type':
+                if ($users[$acct['Radacct']['radacctid']][0]['is_cisco'] == 1)
+                    echo $this->Html->image('cisco.png', array('alt' => __('Cisco'), 'title' => __('Cisco')));
+                if ($users[$acct['Radacct']['radacctid']][0]['is_loginpass'] == 1)
+                    echo $this->Html->image('user_password.png', array('alt' => __('Login/Pwd'), 'title' => __('Login/Pwd')));
+                if ($users[$acct['Radacct']['radacctid']][0]['is_phone'] == 1)
+                    echo $this->Html->image('phone.png', array('alt' => __('Phone'), 'title' => __('Phone')));
+                if ($users[$acct['Radacct']['radacctid']][0]['is_cert'] == 1)
+                    echo $this->Html->image('certificate.png', array('alt' => __('Certificate'), 'title' => __('Certificate')));
+                if ($users[$acct['Radacct']['radacctid']][0]['is_mac'] == 1)
+                    echo $this->Html->image('mac.png', array('alt' => __('MAC'), 'title' => __('MAC')));    
+                break;
+            case 'framedipaddress':
+                echo $acct['Radacct'][$field];
+                break;
             case 'callingstationid':
-		if(empty($acct['Radacct'][$field]))
-		    echo '<i class="glyphicon glyphicon-resize-small" title="' . __('Directly connected') . '"></i>';
-		else
-		    echo str_replace('-', ':', h($acct['Radacct'][$field]));
+		        if(empty($acct['Radacct'][$field]))
+		            echo '<i class="glyphicon glyphicon-resize-small" title="' . __('Directly connected') . '"></i>';
+		        else
+		            echo str_replace('-', ':', h($acct['Radacct'][$field]));
                 break;
             case 'nasporttype':
                 $value = $acct['Radacct'][$field];
                 echo isset($types[$value]) ? $types[$value] : $value;
                 break;
             case 'acctstarttime':
-		echo $acct['Radacct'][$field];
+		        echo $acct['Radacct'][$field];
 		break;
             case 'duration':
 		if ($acct['Radacct']['durationsec'] != -1) {

@@ -31,40 +31,30 @@ $columns = array(
         'text' => __('Comment'),
     ),
     'is_cert' => array(
-        'text' => __('Certificate'),
+        'text' => $this->Html->image('certificate.png', array('alt' => __('Certificate'), 'title' => __('Certificate'))),
         'fit' => true,
     ),
     'is_loginpass' => array(
-        'text' => __('Login/Pwd'),
+        'text' => $this->Html->image('user_password.png', array('alt' => __('Login/Pwd'), 'title' => __('Login/Pwd'))),
         'fit' => true,
     ),
     'is_phone' => array(
-        'text' => __('Phone'),
+        'text' => $this->Html->image('phone.png', array('alt' => __('Phone'), 'title' => __('Phone'))),
         'fit' => true,
     ),
     'is_mac' => array(
-        'text' => __('MAC'),
+        'text' => $this->Html->image('mac.png', array('alt' => __('MAC'), 'title' => __('MAC'))),
         'fit' => true,
     ),
     'is_cisco' => array(
-        'text' => __('Cisco'),
+        'text' => $this->Html->image('cisco.png', array('alt' => __('Cisco'), 'title' => __('Cisco'))),
         'fit' => true,
     ),
-   'view' => array(
+   'action' => array(
         'id' => 'id',
-        'text' => __('View'),
+        'text' => __('Action'),
         'fit' => true,
-    ),
-    'edit' => array(
-        'id' => 'id',
-        'text' => __('Edit'),
-        'fit' => true,
-    ),
-    'delete' => array(
-        'id' => 'id',
-        'text' => __('Delete'),
-        'fit' => true,
-    ),
+   ),
 );
 
 if(AuthComponent::user('role') != 'root'){
@@ -317,18 +307,17 @@ if (!empty($radusers)) {
                     )
                 );
                 break;
-            case 'view':
-		        echo '<i class="glyphicon glyphicon-eye-open"></i> ';
-		echo $this->Html->link(
-                    __('View'),
+            case 'action':
+		        //echo '<i class="glyphicon glyphicon-eye-open"></i> ';
+                echo $this->Html->link(
+                    '<i class="glyphicon glyphicon-eye-open" data-toggle="tooltip" data-placement="top" title='.__('View').'></i> ',
                     array(
                         'action' => 'view_' . $user['Raduser']['type'],
                         'controller' => 'radusers',
                         $user['Raduser'][$info['id']],
-                    )
+                    ),
+                    array('escape' => false)
                 );
-                break;
-            case 'edit':
                 if (AuthComponent::user('role') === 'admin'
                     && $user['Raduser']['type'] === 'snack'
                 ) {
@@ -338,18 +327,16 @@ if (!empty($radusers)) {
                         . '<i class="glyphicon glyphicon-edit glyphicon-red"></i> '
                         . __('Edit') . '</span>';
                 } else {
-                    echo '<i class="glyphicon glyphicon-edit"></i> ';
+                    //echo '<i class="glyphicon glyphicon-edit"></i> ';
                     echo $this->Html->link(
-                        __('Edit'),
+                        '<i class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="top" title='.__('Edit').'></i> ',
                         array(
                             'action' => 'edit_' . $user['Raduser']['type'],
                             $user['Raduser'][$info['id']]
-                        )
+                        ),
+                        array('escape' => false)
                     );
                 }
-                break;
-            case 'delete':
-                echo '<i class="glyphicon glyphicon-remove"></i> ';
                 echo $this->element(
                     'delete_links',
                     array(
@@ -358,6 +345,7 @@ if (!empty($radusers)) {
                         'id' => $user['Raduser'][$info['id']],
                     )
                 );
+
                 break;
             case (preg_match("#is_(cert|loginpass|phone|mac|cisco)#i", $field)
                 ? $field : !$field):
@@ -371,7 +359,7 @@ if (!empty($radusers)) {
                 }
                 break;
             case 'username':
-		if($user['Raduser']['expiration'] != -1) {
+		        if($user['Raduser']['expiration'] != -1) {
                     echo '<span title="'
                         . __(
                             'User expired since the %s.',

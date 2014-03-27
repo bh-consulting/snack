@@ -65,7 +65,10 @@
     $options = array(
     'label' => __('Search'),
     'div' => array(
-        'class' => 'col-sm-offset-2 col-sm-10',
-    ));
+        'class' => 'form-group',
+    ),
+    'before' => '<div class="col-sm-offset-4 col-sm-4">',
+    'after' => '</div>'
+    );
     echo $this->Form->end($options);
 ?>

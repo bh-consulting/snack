@@ -5,6 +5,10 @@
 	color: #680e0e;
 }
 
+.pull-right .btn {
+    margin-left: 10px;
+}
+
 .toggleBlock {
 	background-color: rgb(245, 245, 245);
 	padding: 5px 10px;
