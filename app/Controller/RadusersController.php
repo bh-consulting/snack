@@ -972,7 +972,7 @@ class RadusersController extends AppController {
                 '=~',
                 $nasPortTypeRegexp,
             );
-
+           
             if(isset($this->request->data['Raduser']['is_mac'])
                 || isset($this->request->data['Raduser']['is_cert'])){
                     $checks[]= array(
@@ -1050,7 +1050,6 @@ class RadusersController extends AppController {
                 );
                 $this->setCommonCiscoMacFields($rads);
                 $this->Checks->add($this->request, $rads);
-
                 $success = true;
             } catch(UserGroupException $e) {
                 $this->Session->setFlash(

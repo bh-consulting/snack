@@ -40,21 +40,21 @@ class LoglinesController extends AppController {
         $this->Filters->addStringConstraint(array(
             'fields' => 'facility',
             'input' => 'facility',
-	    'default' => 'local7',
+            'default' => 'local7',
         ));
         $this->defaultValues();
     }
 
     private function defaultValues(){
         $this->Filters->addSliderConstraint(array(
-            'fields' => 'level', 
+            'fields' => 'level',
             'input' => 'level',
             'default' => 'info',
             'items' => $this->Logline->levels,
         ));
 
         $this->Filters->addDatesConstraint(array(
-            'fields' => 'datetime', 
+            'fields' => 'datetime',
             'from' => 'datefrom',
             'to' => 'dateto',
         ));

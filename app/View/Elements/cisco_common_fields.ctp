@@ -25,9 +25,20 @@ echo $this->Form->input('nas-port-type', array(
 	'Virtual' => __('Telnet/SSH'),
 	'both' => __('Both'),
     ),
+    //'disabled' => true,
     'empty' => false,
     'label' => __('NAS Port Type'),
 ));
+
+$priv = array();
+for($i=1;$i<16;$i++) {
+    $priv[$i]=$i;
+}
+echo $this->Form->input('privilege', array(
+      'options' => $priv,
+      'default' => '15',
+      'label' => __('Privilege'),
+  ));
 
 echo '</fieldset>';
 

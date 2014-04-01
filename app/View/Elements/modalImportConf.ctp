@@ -6,7 +6,7 @@ $title = isset($title) ? $title : __('Import');
     <div class="modal-dialog">
         <div class="modal-content">
             <?php
-            echo $this->Form->create('importCsv', array('url' => $url, 'enctype' => 'multipart/form-data'));
+            echo $this->Form->create('importConf', array('url' => $url, 'enctype' => 'multipart/form-data'));
             ?>
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

@@ -116,7 +116,7 @@ class SystemDetailsController extends AppController {
             $file = new File(APP.'tmp/updates', true, 0644);
             $file->write("upgraded $regs[1]\nnewly installed $regs[2]\ntoremove $regs[3]\nupgraded $regs[4]");
         }
-        if(eregi("([0-9]*) mis à jour, ([0-9]*) nouvellement installés, ([0-9]*) à enlever et ([0-9]*) non mis à jour",$return,$regs)) {
+        elseif(eregi("([0-9]*) mis à jour, ([0-9]*) nouvellement installés, ([0-9]*) à enlever et ([0-9]*) non mis à jour",$return,$regs)) {
             $file = new File(APP.'tmp/updates', true, 0644);
             $file->write("upgraded $regs[1]\nnewly installed $regs[2]\ntoremove $regs[3]\nupgraded $regs[4]");
         }
@@ -134,6 +134,28 @@ class SystemDetailsController extends AppController {
     public function upgrade() {
         $return = shell_exec("sudo apt-get update && apt-get upgrade snack -s");
         $this->set('return', $return);
+    }
+    
+    public function export() {
+        $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackExport.sh");
+        $today = date('Ymd');
+        $this->response->file(
+            "conf/snack-conf-".$today.".tar.gz", array('download' => true, 'name' => 'snack-conf-'.$today.'.tar.gz')
+        );
+        /*$this->redirect(
+            array('action' => 'index')
+        );*/
+    }
+
+    public function import() {
+        debug($_FILES);
+        if ($this->request->isPost()) {
+            if ($_FILES['data']['type']['importConf']['file'] == 'application/gzip') {
+                debug("test");
+                $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackImport.sh ".$_FILES['data']['tmp_name']['importConf']['file']);
+                debug($return);
+            }
+        }
     }
 }
 

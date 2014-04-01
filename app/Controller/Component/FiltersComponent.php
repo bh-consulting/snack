@@ -327,27 +327,24 @@ class FiltersComponent extends Component {
 
     public function addStringConstraint($options) {
         if (isset($options['input']) && !is_array($options['input'])) {
-            $data = &$this->controller->request
-                ->data[$this->modelName][$options['input']];
+            //$data = &$this->controller->request
+            //        ->data[$this->modelName][$options['input']];
+            $data = &$this->controller->request->query[$options['input']];
             $url = $this->controller->params['url'];
-
             // Set ahead data.
             if (isset($options['ahead'])) {
 
                 $aheadData = $this->controller->{$this->modelName}->find(
-                    'customList',
-                    array(
-                        'fields' => $options['ahead'],
-                        'limit' => 100
-                    )
+                        'customList', array(
+                    'fields' => $options['ahead'],
+                    'limit' => 100
+                        )
                 );
 
                 $this->controller->set($options['input'] . 'Data', $aheadData);
             }
-
             // Set default value.
-            if (isset($options['default'])
-                && !isset($url[$options['input']])
+            if (isset($options['default']) && !isset($url[$options['input']])
             ) {
                 $data = $options['default'];
             }
@@ -357,8 +354,9 @@ class FiltersComponent extends Component {
                 if (isset($options['value'])) {
                     $value = $options['value'];
                 } else if (isset($data)) {
-                    $value = implode((array)$data, '|');
+                    $value = implode((array) $data, '|');
                 }
+
 
                 if (isset($value)) {
                     if (isset($options['strict']) && $options['strict']) {
@@ -368,14 +366,11 @@ class FiltersComponent extends Component {
                     }
 
                     $this->addConstraint(
-                        $template,
-                        $options['fields'],
-                        $value
+                            $template, $options['fields'], $value
                     );
                 }
             }
         }
-
     }
 
     public function addGroupConstraint($groups = array()) {

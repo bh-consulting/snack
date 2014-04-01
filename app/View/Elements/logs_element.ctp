@@ -46,6 +46,11 @@ echo $this->element('filters_panel', array(
             'options' => array('id' => 'dateto'),
         ),
         array(
+            'name' => 'host',
+            'label' => __('Host'),
+            'options' => array('host' => 'host'),
+        ),
+        array(
             'name' => 'text',
             'label' => __('Message contains (accept regex)'),
             'options' => array('id' => 'logmessage'),

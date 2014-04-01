@@ -38,7 +38,7 @@ class ChecksComponent extends Component {
         // sorry for that...
         $findAllFunc = 'findAllBy' . ucfirst($this->displayName);
         return $this->checkClass->$findAllFunc(
-            $this->baseClass->field($this->displayName)
+                        $this->baseClass->field($this->displayName)
         );
     }
 
@@ -51,7 +51,7 @@ class ChecksComponent extends Component {
         // sorry for that...
         $findAllFunc = 'findAllBy' . ucfirst($this->displayName);
         return $this->replyClass->$findAllFunc(
-            $this->baseClass->field($this->displayName)
+                        $this->baseClass->field($this->displayName)
         );
     }
 
@@ -62,19 +62,19 @@ class ChecksComponent extends Component {
         $types = array(
             array('cisco', __('Cisco')),
             array('loginpass', __('Login / Password')),
-	    array('phone', __('Cisco Phones')),
+            array('phone', __('Cisco Phones')),
             array('mac', __('MAC')),
             array('cert', __('Certificate'))
         );
-	if($rad['is_phone'])
+        if ($rad['is_phone'])
             return $types[2][$nice];
-        if($rad['is_loginpass'])
+        if ($rad['is_loginpass'])
             return $types[1][$nice];
-        if($rad['is_cert'])
+        if ($rad['is_cert'])
             return $types[4][$nice];
-        if($rad['is_mac'])
+        if ($rad['is_mac'])
             return $types[3][$nice];
-        if($rad['is_cisco'])
+        if ($rad['is_cisco'])
             return $types[0][$nice];
         return "snack";
     }
@@ -85,7 +85,7 @@ class ChecksComponent extends Component {
     public function view($id = null) {
         $this->baseClass->id = $id;
         return array(
-            'base' => $this->baseClass->read(), 
+            'base' => $this->baseClass->read(),
             'checks' => $this->getChecks($id),
             'groups' => $this->getUserGroups($id)
         );
@@ -95,7 +95,7 @@ class ChecksComponent extends Component {
      * Create a new check (radcheck or radgroupcheck) 
      */
     public function createCheck($displayName, $attribute, $op, $value) {
-        if($value != "" && $attribute != ""){
+        if ($value != "" && $attribute != "") {
             $data = array(
                 $this->displayName => $displayName,
                 'attribute' => $attribute,
@@ -114,12 +114,12 @@ class ChecksComponent extends Component {
     /**
      * Create a new reply (radreply or radgroupreply) 
      */
-    public function createReply($displayName, $attribute, $op, $value){
-        if(!empty($value) && !empty($attribute)){
+    public function createReply($displayName, $attribute, $op, $value) {
+        if (!empty($value) && !empty($attribute)) {
             $reply = new $this->replyClass;
 
             // create additional replies if vlan id
-            if($attribute == 'Tunnel-Private-Group-Id'){
+            if ($attribute == 'Tunnel-Private-Group-Id') {
                 $replyToAdd = array(
                     $this->displayName => $displayName,
                     'attribute' => 'Tunnel-Type',
@@ -128,12 +128,9 @@ class ChecksComponent extends Component {
                 );
 
                 $reply->create();
-                if(!$reply->save($replyToAdd)){
+                if (!$reply->save($replyToAdd)) {
                     throw new ReplyAddException(
-                        $this->baseClassName,
-                        $this->baseClass->id,
-                        $displayName,
-                        'Tunnel-Type := VLAN'
+                    $this->baseClassName, $this->baseClass->id, $displayName, 'Tunnel-Type := VLAN'
                     );
                 }
 
@@ -144,12 +141,9 @@ class ChecksComponent extends Component {
                     'value' => 'IEEE-802',
                 );
                 $reply->create();
-                if(!$reply->save($replyToAdd)){
+                if (!$reply->save($replyToAdd)) {
                     throw new ReplyAddException(
-                        $this->baseClassName,
-                        $this->baseClass->id,
-                        $displayName,
-                        'Tunnel-Medeum-Type := IEEE-802'
+                    $this->baseClassName, $this->baseClass->id, $displayName, 'Tunnel-Medeum-Type := IEEE-802'
                     );
                 }
             }
@@ -162,12 +156,9 @@ class ChecksComponent extends Component {
             );
 
             $reply->create();
-            if(!$reply->save($data)){
+            if (!$reply->save($data)) {
                 throw new ReplyAddException(
-                    $this->baseClassName,
-                    $this->baseClass->id,
-                    $displayName,
-                    $attribute.$op.$value
+                $this->baseClassName, $this->baseClass->id, $displayName, $attribute . $op . $value
                 );
             }
         }
@@ -181,23 +172,22 @@ class ChecksComponent extends Component {
      */
     public function add($request, $checks) {
         pr("test");
-	if ($request->is('post')) { 
+        if ($request->is('post')) {
             // add common checks values (expiration date and simultaneous uses)
             $name = $request->data[$this->baseClassName][$this->displayName];
-            if(isset($request->data[$this->baseClassName]['expiration_date'])){
+            if (isset($request->data[$this->baseClassName]['expiration_date'])) {
                 $checks = array_merge($checks, array(
                     array(
                         $name,
                         'Expiration',
                         '==',
                         Utils::formatDate(
-                            $request->data[$this->baseClassName]['expiration_date'],
-                            'expiration'
+                                $request->data[$this->baseClassName]['expiration_date'], 'expiration'
                         )
                     ),
                 ));
             }
-            if(isset($request->data[$this->baseClassName]['simultaneous_use'])){
+            if (isset($request->data[$this->baseClassName]['simultaneous_use'])) {
                 $checks = array_merge($checks, array(
                     array(
                         $name,
@@ -207,15 +197,13 @@ class ChecksComponent extends Component {
                     )
                 ));
             }
-            /*if(isset($request->data[$this->baseClassName]['is_phone'])) {
-		
-	    }*/
+            /* if(isset($request->data[$this->baseClassName]['is_phone'])) {
+
+              } */
 
             $this->baseClass->create();
             if (!$this->baseClass->save($request->data)) {
-                if (isset($request->data[$this->baseClassName]['is_mac'])
-                    && isset($request->data[$this->baseClassName]['mac'])
-                    && $request->data[$this->baseClassName]['is_mac']
+                if (isset($request->data[$this->baseClassName]['is_mac']) && isset($request->data[$this->baseClassName]['mac']) && $request->data[$this->baseClassName]['is_mac']
                 ) {
                     $name = $request->data[$this->baseClassName]['mac'];
                 }
@@ -226,8 +214,7 @@ class ChecksComponent extends Component {
             // Add users or groups linked to this group or user
             if (isset($request->data[$this->baseClassName]['groups'])) {
                 $result = $this->addUsersOrGroups(
-                    $this->baseClass->id,
-                    $request->data[$this->baseClassName]['groups']
+                        $this->baseClass->id, $request->data[$this->baseClassName]['groups']
                 );
 
                 if (!is_null($result)) {
@@ -235,8 +222,7 @@ class ChecksComponent extends Component {
                 }
             } elseif (isset($request->data[$this->baseClassName]['users'])) {
                 $result = $this->addUsersOrGroups(
-                    $this->baseClass->id,
-                    $request->data[$this->baseClassName]['users']
+                        $this->baseClass->id, $request->data[$this->baseClassName]['users']
                 );
 
                 if (!is_null($result)) {
@@ -248,50 +234,53 @@ class ChecksComponent extends Component {
             foreach ($checks as $rc) {
                 if (!$this->createCheck($rc[0], $rc[1], $rc[2], $rc[3])) {
                     throw new CheckAddException(
-                        $this->baseClassName,
-                        $this->baseClass->id,
-                        $name,
-                        $rc[1].$rc[2].$rc[3]
+                    $this->baseClassName, $this->baseClass->id, $name, $rc[1] . $rc[2] . $rc[3]
                     );
                 }
             }
 
             // Add common replies values
             $replies = array();
-            if(isset($request->data[$this->baseClassName]['tunnel-private-group-id'])){
-                $replies[]= array(
+            if (isset($request->data[$this->baseClassName]['tunnel-private-group-id'])) {
+                $replies[] = array(
                     $name,
                     'Tunnel-Private-Group-Id',
                     ':=',
                     $request->data[$this->baseClassName]['tunnel-private-group-id']
                 );
             }
-            if(isset($request->data[$this->baseClassName]['session-timeout'])){
-                $checks[]= array(
+            if (isset($request->data[$this->baseClassName]['session-timeout'])) {
+                $checks[] = array(
                     $name,
                     'Session-Timeout',
                     ':=',
                     $request->data[$this->baseClassName]['session-timeout']
                 );
             }
-            if(isset($request->data[$this->baseClassName]['is_phone']) && $request->data[$this->baseClassName]['is_phone']){
-                $replies[]= array(
+            if (isset($request->data[$this->baseClassName]['is_phone']) && $request->data[$this->baseClassName]['is_phone']) {
+                $replies[] = array(
                     $name,
                     'Cisco-AVPair',
                     '=',
- 	                'device-traffic-class=voice'                   
+                    'device-traffic-class=voice'
                 );
             }
-            if(isset($request->data[$this->baseClassName]['is_cisco']) && $request->data[$this->baseClassName]['is_cisco']){
-                $replies[]= array(
+            if (isset($request->data[$this->baseClassName]['is_cisco']) && $request->data[$this->baseClassName]['is_cisco']) {
+                $replies[] = array(
                     $name,
                     'Service-Type',
                     '=',
- 	                'NAS-Prompt-User'                   
+                    'NAS-Prompt-User'
+                );
+                $replies[] = array(
+                    $name,
+                    'cisco-avpair',
+                    '=',
+                    'shell:priv-lvl=' . $request->data['Raduser']['privilege'],
                 );
             }
-            foreach($replies as $reply){
-                $this->createReply($reply[0], $reply[1],$reply[2], $reply[3]);
+            foreach ($replies as $reply) {
+                $this->createReply($reply[0], $reply[1], $reply[2], $reply[3]);
             }
         }
     }
@@ -315,13 +304,13 @@ class ChecksComponent extends Component {
                 $ClassToAdd->id = $aid;
                 $Radusergroup->create();
 
-                if($this->baseClassName == 'Raduser') {
+                if ($this->baseClassName == 'Raduser') {
                     $result = $Radusergroup->save(
-                        array(
-                            'username' => $this->baseClass->field('username'),
-                            'groupname' => $ClassToAdd->field('groupname'),
-                            'priority' => $priority,
-                        )
+                            array(
+                                'username' => $this->baseClass->field('username'),
+                                'groupname' => $ClassToAdd->field('groupname'),
+                                'priority' => $priority,
+                            )
                     );
 
                     if (!$result) {
@@ -329,18 +318,17 @@ class ChecksComponent extends Component {
                     }
                 } else if ($this->baseClassName == 'Radgroup') {
                     $result = $Radusergroup->save(
-                        array(
-                            'groupname' => $this->baseClass->field('groupname'),
-                            'username' => $ClassToAdd->field('username'),
-                            'priority' => $Radusergroup->find(
-                                'count',
-                                array(
+                            array(
+                                'groupname' => $this->baseClass->field('groupname'),
+                                'username' => $ClassToAdd->field('username'),
+                                'priority' => $Radusergroup->find(
+                                        'count', array(
                                     'conditions' => array(
                                         'username' => $ClassToAdd->field('username')
                                     )
-                                )
-                            ) + 1,
-                        )
+                                        )
+                                ) + 1,
+                            )
                     );
 
                     if (!$result) {
@@ -368,7 +356,7 @@ class ChecksComponent extends Component {
             $Radusergroup = new Radusergroup();
             if ($this->baseClassName == 'Raduser') {
                 $ClassToAdd = new Radgroup();
-            } else if($this->baseClassName == 'Radgroup') {
+            } else if ($this->baseClassName == 'Radgroup') {
                 $ClassToAdd = new Raduser();
             }
 
@@ -379,16 +367,16 @@ class ChecksComponent extends Component {
                     $result = $Radusergroup->deleteAll(array(
                         'Radusergroup.groupname' => $ClassToAdd->field('groupname'),
                         'Radusergroup.username' => $this->baseClass->field('username')
-                    ), false);
+                            ), false);
 
                     if (!$result) {
                         return $ClassToAdd->field('groupname');
                     }
-                } else if($this->baseClassName == 'Radgroup') {
+                } else if ($this->baseClassName == 'Radgroup') {
                     $result = $Radusergroup->deleteAll(array(
-                        'Radusergroup.username' => $ClassToAdd->field('username'), 
+                        'Radusergroup.username' => $ClassToAdd->field('username'),
                         'Radusergroup.groupname' => $this->baseClass->field('groupname')
-                    ), false);
+                            ), false);
 
                     if (!$result) {
                         return $ClassToAdd->field('username');
@@ -408,8 +396,8 @@ class ChecksComponent extends Component {
         $Radusergroup = new Radusergroup();
 
         $result = $Radusergroup->deleteAll(
-            array('Radusergroup.' . $this->displayName
-            => $this->baseClass->field($this->displayName))
+                array('Radusergroup.' . $this->displayName
+                    => $this->baseClass->field($this->displayName))
         );
 
         if (!$result) {
@@ -449,10 +437,7 @@ class ChecksComponent extends Component {
         foreach ($rads as $r) {
             if (!$this->checkClass->delete($r[$this->checkClassName]['id'])) {
                 throw new CheckRemoveException(
-                    $this->baseClassName,
-                    $id,
-                    $name,
-                    $r[$this->checkClassName]['id']
+                $this->baseClassName, $id, $name, $r[$this->checkClassName]['id']
                 );
             }
         }
@@ -462,10 +447,7 @@ class ChecksComponent extends Component {
         foreach ($rads as $r) {
             if (!$this->replyClass->delete($r[$this->replyClassName]['id'])) {
                 throw new ReplyRemoveException(
-                    $this->baseClassName,
-                    $id,
-                    $name,
-                    $r[$this->replyClassName]['id']
+                $this->baseClassName, $id, $name, $r[$this->replyClassName]['id']
                 );
             }
         }
@@ -481,12 +463,11 @@ class ChecksComponent extends Component {
     /**
      * Update the check fields of a user or a group
      */
-    public function updateRadcheckFields($id, $request, $additionalFields = array()){
+    public function updateRadcheckFields($id, $request, $additionalFields = array()) {
         // common fields
         $fields = array(
             'Expiration' => Utils::formatDate(
-                $request->data[$this->baseClassName]['expiration_date'],
-                'expiration'
+                    $request->data[$this->baseClassName]['expiration_date'], 'expiration'
             ),
             'Simultaneous-Use' => $request->data[$this->baseClassName]['simultaneous_use']
         );
@@ -494,52 +475,47 @@ class ChecksComponent extends Component {
         $fields = array_merge($fields, $additionalFields);
         $rads = $this->getChecks($id);
 
-        foreach($fields as $key=>$value){
+        foreach ($fields as $key => $value) {
             $found = false;
-            foreach($rads as &$r){
-                if($r[$this->checkClassName]['attribute'] == $key){
+            foreach ($rads as &$r) {
+                if ($r[$this->checkClassName]['attribute'] == $key) {
                     $found = true;
                     // value is set
-                    if(!empty($value)){
+                    if (!empty($value)) {
                         // value modified
-                        if($value != $r[$this->checkClassName]['value']){
+                        if ($value != $r[$this->checkClassName]['value']) {
                             $oldValue = $r[$this->checkClassName]['value'];
                             $r[$this->checkClassName]['value'] = $value;
 
                             // check if that was a cisco user that was deleted
                             // TODO: test!!
-                            if($key == 'NAS-Port-Type'
-                                && preg_match('/(Virtual|Async)/', $oldValue)
-                                && $value == 'Ethernet'
-                                && !isset($request->data[$this->baseClassName]['is_loginpass'])
-                            ){
+                            if ($key == 'NAS-Port-Type' && preg_match('/(Virtual|Async)/', $oldValue) && $value == 'Ethernet' && !isset($request->data[$this->baseClassName]['is_loginpass'])
+                            ) {
                                 $this->checkClass->deleteAll(array(
-
                                     $this->checkClassName . '.' . $this->displayName => $r[$this->checkClassName][$this->displayName],
                                     $this->checkClassName . '.attribute' => 'Cleartext-Password',
                                 ));
                             }
 
                             $this->checkClass->save($r);
-                        
                         }
                         break;
-                    // blank field => value deleted
+                        // blank field => value deleted
                     } else {
                         // delete radcheck if not a password field
-                        if($key != 'Cleartext-Password'){
+                        if ($key != 'Cleartext-Password') {
                             $this->checkClass->delete($r[$this->checkClassName]['id']);
                         }
                     }
                 }
             }
-            if(!$found && !empty($value)){
+            if (!$found && !empty($value)) {
                 // set operator depending on attribute value
                 switch ($key) {
                     case 'Calling-Station-Id':
                         $operator = '==';
                         break;
-                    
+
                     case 'NAS-Port-Type':
                         $operator = '~=';
                         break;
@@ -550,16 +526,10 @@ class ChecksComponent extends Component {
                 }
 
                 if (!$this->createCheck(
-                    $this->baseClass->field($this->displayName),
-                    $key,
-                    $operator,
-                    $value
-                )) {
+                                $this->baseClass->field($this->displayName), $key, $operator, $value
+                        )) {
                     throw new CheckAddException(
-                        $this->baseClassName,
-                        $this->baseClass->id,
-                        $this->baseClass->field($this->displayName),
-                        $key.$operator.$value
+                    $this->baseClassName, $this->baseClass->id, $this->baseClass->field($this->displayName), $key . $operator . $value
                     );
                 }
             }
@@ -569,7 +539,7 @@ class ChecksComponent extends Component {
     /**
      * Update the reply fields of a user or a group
      */
-    public function updateRadreplyFields($id, $request){
+    public function updateRadreplyFields($id, $request) {
         // common fields
         $fields = array(
             'Tunnel-Private-Group-Id' => $request->data[$this->baseClassName]['tunnel-private-group-id'],
@@ -577,25 +547,25 @@ class ChecksComponent extends Component {
         );
         $rads = $this->getReplies($id);
 
-        foreach($fields as $key=>$value){
+        foreach ($fields as $key => $value) {
             $found = false;
-            foreach($rads as &$r){
-                if($r[$this->replyClassName]['attribute'] == $key){
+            foreach ($rads as &$r) {
+                if ($r[$this->replyClassName]['attribute'] == $key) {
                     $found = true;
                     // value is set
-                    if(!empty($value)){
+                    if (!empty($value)) {
                         // new value
-                        if($value != $r[$this->replyClassName]['value']){
+                        if ($value != $r[$this->replyClassName]['value']) {
                             // update radreply
                             $r[$this->replyClassName]['value'] = $value;
                             $this->replyClass->save($r);
                         }
                         break;
-                    // blank value => attribute deleted
+                        // blank value => attribute deleted
                     } else {
                         // delete radreply
                         $this->replyClass->delete($r[$this->replyClassName]['id']);
-                        if($key == 'Tunnel-Private-Group-Id'){
+                        if ($key == 'Tunnel-Private-Group-Id') {
                             $this->replyClass->deleteAll(array(
                                 $this->replyClassName . '.' . $this->displayName => $r[$this->replyClassName][$this->displayName],
                                 $this->replyClassName . '.attribute' => array('Tunnel-Type', 'Tunnel-Medium-Type'),
@@ -605,12 +575,10 @@ class ChecksComponent extends Component {
                     }
                 }
             }
-            if(!$found){
+            if (!$found) {
                 $this->createReply(
-                    $this->baseClass->field($this->displayName),
-                    $key,
-                    ':=',//TODO: ceci n'est pas vrai pour tous les attributs (==, =~..)
-                    $value
+                        $this->baseClass->field($this->displayName), $key, ':=', //TODO: ceci n'est pas vrai pour tous les attributs (==, =~..)
+                        $value
                 );
             }
         }
@@ -619,16 +587,15 @@ class ChecksComponent extends Component {
     /**
      * Restore the check fields of a user or a group
      */
-    public function restoreCommonCheckFields($id, &$request, $cisco=false)
-    {
+    public function restoreCommonCheckFields($id, &$request, $cisco = false) {
         // restore values from radchecks
         $rads = $this->getChecks($id);
-        foreach($rads as $r){
-            if($r[$this->checkClassName]['attribute'] == 'NAS-Port-Type' && $cisco){
+        foreach ($rads as $r) {
+            if ($r[$this->checkClassName]['attribute'] == 'NAS-Port-Type' && $cisco) {
                 $request->data[$this->baseClassName]['nas-port-type'] = $r[$this->checkClassName]['value'];
-            } else if($r[$this->checkClassName]['attribute'] == 'Expiration'){
+            } else if ($r[$this->checkClassName]['attribute'] == 'Expiration') {
                 $request->data[$this->baseClassName]['expiration_date'] = $r[$this->checkClassName]['value'];
-            } else if($r[$this->checkClassName]['attribute'] == 'Simultaneous-Use'){
+            } else if ($r[$this->checkClassName]['attribute'] == 'Simultaneous-Use') {
                 $request->data[$this->baseClassName]['simultaneous_use'] = $r[$this->checkClassName]['value'];
             }
         }
@@ -637,14 +604,13 @@ class ChecksComponent extends Component {
     /**
      * Restore the reply fields of a user or a group
      */
-    public function restoreCommonReplyFields($id, &$request)
-    {
+    public function restoreCommonReplyFields($id, &$request) {
         // restore values from radreply
         $rads = $this->getReplies($id);
-        foreach($rads as $r){
-            if($r[$this->replyClassName]['attribute'] == 'Tunnel-Private-Group-Id'){
+        foreach ($rads as $r) {
+            if ($r[$this->replyClassName]['attribute'] == 'Tunnel-Private-Group-Id') {
                 $request->data[$this->baseClassName]['tunnel-private-group-id'] = $r[$this->replyClassName]['value'];
-            } else if($r[$this->replyClassName]['attribute'] == 'Session-Timeout'){
+            } else if ($r[$this->replyClassName]['attribute'] == 'Session-Timeout') {
                 $request->data[$this->baseClassName]['session-timeout'] = $r[$this->replyClassName]['value'];
             }
         }
@@ -656,16 +622,15 @@ class ChecksComponent extends Component {
      * @param  [type] $request request where to values
      */
     public function restoreCommonCiscoMacFields($id, &$request) {
-        if(isset($request->data[$this->baseClassName]['is_cisco'])
-            && $request->data[$this->baseClassName]['is_cisco']
-        ){
+        if (isset($request->data[$this->baseClassName]['is_cisco']) && $request->data[$this->baseClassName]['is_cisco']
+        ) {
             $request->data[$this->baseClassName]['cisco'] = 1;
             $request->data[$this->baseClassName]['was_cisco'] = 1;
         }
 
         $rads = $this->getChecks($id);
-        foreach($rads as $r){
-            switch($r[$this->checkClassName]['attribute']){
+        foreach ($rads as $r) {
+            switch ($r[$this->checkClassName]['attribute']) {
                 case 'Calling-Station-Id':
                     $request->data[$this->baseClassName]['calling-station-id'] = Utils::formatMac($r[$this->checkClassName]['value']);
                     break;
@@ -673,11 +638,11 @@ class ChecksComponent extends Component {
                 case 'NAS-Port-Type':
                     $nasPortType = $r[$this->checkClassName]['value'];
 
-                    if($nasPortType == 'Async|Virtual|Ethernet'){
+                    if ($nasPortType == 'Async|Virtual|Ethernet') {
                         $request->data[$this->baseClassName]['nas-port-type'] = 'both';
-                    } else if(preg_match('/.*Async.*/', $r[$this->checkClassName]['value'])){
+                    } else if (preg_match('/.*Async.*/', $r[$this->checkClassName]['value'])) {
                         $request->data[$this->baseClassName]['nas-port-type'] = 'Async';
-                    } else if(preg_match('/.*Virtual.*/', $r[$this->checkClassName]['value'])){
+                    } else if (preg_match('/.*Virtual.*/', $r[$this->checkClassName]['value'])) {
                         $request->data[$this->baseClassName]['nas-port-type'] = 'Virtual';
                     }
                     break;
