@@ -30,6 +30,9 @@ $columns = array(
     'comment' => array(
         'text' => __('Comment'),
     ),
+    'vlan' => array(
+        'text' => __('VLAN'),
+    ),
     'is_cert' => array(
         'text' => $this->Html->image('certificate.png', array('alt' => __('Certificate'), 'title' => __('Certificate'))),
         'fit' => true,
@@ -40,11 +43,11 @@ $columns = array(
     ),
     'is_phone' => array(
         'text' => $this->Html->image('phone.png', array('alt' => __('Phone'), 'title' => __('Phone'))),
-        'fit' => true,
+        //'fit' => true,
     ),
     'is_mac' => array(
         'text' => $this->Html->image('mac.png', array('alt' => __('MAC'), 'title' => __('MAC'))),
-        'fit' => true,
+        //'fit' => true,
     ),
     'is_cisco' => array(
         'text' => $this->Html->image('cisco.png', array('alt' => __('Cisco'), 'title' => __('Cisco'))),
@@ -370,6 +373,14 @@ if (!empty($radusers)) {
                         . '</span>';
                 } else {
                     echo h($user['Raduser'][$field]);
+                }
+                break;
+            case 'vlan':
+                if (h($user['Raduser']['group']) != '') {
+                    echo '<b><center><a data-toggle="tooltip" data-placement="top" title="'.h($user['Raduser']['group']).'">'.h($user['Raduser'][$field]).'</a></center></b>';
+                }
+                else {
+                    echo '<center>'.h($user['Raduser'][$field]).'</center>';
                 }
                 break;
             default:

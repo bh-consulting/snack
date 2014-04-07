@@ -143,7 +143,7 @@ class ChecksComponent extends Component {
                 $reply->create();
                 if (!$reply->save($replyToAdd)) {
                     throw new ReplyAddException(
-                    $this->baseClassName, $this->baseClass->id, $displayName, 'Tunnel-Medeum-Type := IEEE-802'
+                    $this->baseClassName, $this->baseClass->id, $displayName, 'Tunnel-Medium-Type := IEEE-802'
                     );
                 }
             }

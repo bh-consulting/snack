@@ -120,7 +120,7 @@ class BackupsController extends AppController {
                     )
                 ));
 
-        $this->Filters->addGroupConstraint('commit');
+        //$this->Filters->addGroupConstraint('commit');
 
         $backups = $this->Filters->paginate();
 
