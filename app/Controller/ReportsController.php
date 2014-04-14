@@ -112,22 +112,42 @@ class ReportsController extends AppController {
         $usersnbfailures=array();
         $users=array();
         $lasts=array();
+        $vendors=array();
         foreach($logs as $log) {
             $info=explode("[", $log['Logline']['msg']);
             $info=explode("/", $info[1]);
             if (array_key_exists($info[0], $usersnbfailures)) {
                 $usersnbfailures[$info[0]] = $usersnbfailures[$info[0]]+1;
-                $lasts[$info[0]] = $log['Logline']['datetime'];
             }
             else {
                 $usersnbfailures[$info[0]] = 1;
+                $lasts[$info[0]] = $log['Logline']['datetime'];
                 $username = $this->Logline->query('select * from raduser where username="'.$info[0].'"');
                 //$last = $this->Logline->query('select datetime from logs where msg like "Login incorrect: ['.$username.'%"');
                 //debug($last);
                 if (count($username) > 0) {
+                    $username[0]['raduser']['username'] = Utils::formatMAC(
+                                    $username[0]['raduser']['username']
+                    );
                     $users[]=$username[0]['raduser'];
+                    
                 } else {
-                    $users[]=array('id' => '-1', 'username' => $info[0]);
+                    $users[]=array('id' => '-1', 'username' =>  Utils::formatMAC($info[0]));
+                }
+                if (Utils::isMAC($info[0])) {
+                    $url = "http://api.macvendors.com/" . urlencode(Utils::formatMAC($info[0]));
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    $response = curl_exec($ch);
+                    if ($response) {
+                        $vendors[$info[0]] = $response;
+                    } else {
+                        $vendors[$info[0]] = "NA";
+                    }
+                }
+                else {
+                    $vendors[$info[0]] = "";
                 }
             }
             //echo $log['Logline']['datetime']." : ".$log['Logline']['msg']."<br>";
@@ -135,9 +155,22 @@ class ReportsController extends AppController {
         $this->set('failures', $usersnbfailures);
         $this->set('lasts', $lasts);
         $this->set('users', $users);
-   }
-   
-   public function send() {
+        $this->set('vendors', $vendors);
+        /*$mac_address = "FC:FB:FB:01:FA:21";
+
+        $url = "http://api.macvendors.com/" . urlencode($mac_address);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($ch);
+        if ($response) {
+            echo "Vendor: $response";
+        } else {
+            echo "Not Found";
+        }*/
+    }
+
+    public function send() {
         App::uses('CakeEmail', 'Network/Email');
         $Email = new CakeEmail();
         $Email->config(array('transport' => 'Smtp', 'host' => '10.254.50.1'));

@@ -24,6 +24,7 @@
     echo "<th>".__('User')."</th>";
     echo "<th>".__('Nb')."</th>";
     echo "<th>".__('Last')."</th>";
+    echo "<th>".__('Vendor')."</th>";
     $infos = explode(",", $this->element('formatUsersList', array(
             'users' => $users
         )));
@@ -33,6 +34,7 @@
         echo "<td>".$infos[$i]."</td>";
         echo "<td>".$value."</td>";
         echo "<td>".$lasts[$key]."</td>";
+        echo "<td>".$vendors[$key]."</td>";
         //echo " : ".$value." tentatives";
         $i++;
         echo "</tr>";
