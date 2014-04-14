@@ -140,9 +140,11 @@ class Utils {
      * @return string      cleaned mac
      */
     public static function cleanMAC($mac) {
+        
+        $mac = str_replace('.', '', $mac);
         $mac = str_replace(':', '', $mac);
         $mac = str_replace('-', '', $mac);
-
+        $mac = strtolower($mac);
         return $mac;
     }
 

@@ -250,11 +250,19 @@ class ChecksComponent extends Component {
                 );
             }
             if (isset($request->data[$this->baseClassName]['session-timeout'])) {
-                $checks[] = array(
+                $replies[] = array(
                     $name,
                     'Session-Timeout',
                     ':=',
                     $request->data[$this->baseClassName]['session-timeout']
+                );
+            }
+            if (isset($request->data[$this->baseClassName]['idle-timeout'])) {
+                $replies[] = array(
+                    $name,
+                    'Idle-Timeout',
+                    ':=',
+                    $request->data[$this->baseClassName]['idle-timeout']
                 );
             }
             if (isset($request->data[$this->baseClassName]['is_phone']) && $request->data[$this->baseClassName]['is_phone']) {
@@ -544,6 +552,7 @@ class ChecksComponent extends Component {
         $fields = array(
             'Tunnel-Private-Group-Id' => $request->data[$this->baseClassName]['tunnel-private-group-id'],
             'Session-Timeout' => $request->data[$this->baseClassName]['session-timeout'],
+            'Idle-Timeout' => $request->data[$this->baseClassName]['idle-timeout'],
         );
         $rads = $this->getReplies($id);
 
@@ -612,6 +621,8 @@ class ChecksComponent extends Component {
                 $request->data[$this->baseClassName]['tunnel-private-group-id'] = $r[$this->replyClassName]['value'];
             } else if ($r[$this->replyClassName]['attribute'] == 'Session-Timeout') {
                 $request->data[$this->baseClassName]['session-timeout'] = $r[$this->replyClassName]['value'];
+            } else if ($r[$this->replyClassName]['attribute'] == 'Idle-Timeout') {
+                $request->data[$this->baseClassName]['idle-timeout'] = $r[$this->replyClassName]['value'];
             }
         }
     }

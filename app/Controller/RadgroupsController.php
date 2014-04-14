@@ -403,6 +403,10 @@ class RadgroupsController extends AppController {
             'users',
             $Raduser->find('list', array('fields' => array('username')))
         );
+        $this->set(
+            'comments',
+            $Raduser->find('list', array('fields' => array('comment')))
+        );
     }
 
     public function edit($id = null){
@@ -436,6 +440,10 @@ class RadgroupsController extends AppController {
         $this->set(
             'users',
             $Raduser->find('list', array('fields' => array('username')))
+        );
+        $this->set(
+            'comments',
+            $Raduser->find('list', array('fields' => array('comment')))
         );
         $this->restoreUsers($this->Radgroup->id);
         $this->Checks->restoreCommonCheckFields($id, $this->request);

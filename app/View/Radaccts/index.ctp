@@ -69,7 +69,7 @@ echo $this->element('filters_panel', array(
             'name' => 'porttype',
             'label' => __('Port type'),
         ),
-	array(
+        array(
             'name' => 'active',
             'label' => __('Active'),
             'multiple' => 'checkbox',

@@ -210,6 +210,11 @@ echo $this->element('filters_panel', array(
             'type' => 'checkgroup',
         ),
         array(
+            'name' => 'datefrom',
+            'label' => __('Not connected since'),
+            'type' => 'datetimepicker',
+        ),
+        array(
             'name' => 'expired',
             'label' => __('Expiration'),
             'multiple' => 'checkbox',

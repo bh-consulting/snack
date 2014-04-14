@@ -1,7 +1,6 @@
 <?php
 
 $usersList = array();
-
 foreach($users AS $user) {
     if($user['id'] != -1) {
         $usersList[] = $this->Html->link(

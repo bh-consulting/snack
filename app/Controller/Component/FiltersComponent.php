@@ -131,7 +131,7 @@ class FiltersComponent extends Component {
             }
         }
     }
-
+   
     public function addSelectConstraint($options) {
         if (isset($options['input']) && !is_array($options['input'])) {
             $data =  &$this->controller->request

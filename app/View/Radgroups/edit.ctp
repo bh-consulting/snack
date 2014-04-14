@@ -13,7 +13,7 @@ echo $this->Form->create('Radgroup', array(
 
 $info = '<fieldset>';
 $info .= '<legend>' . __('Info') . '</legend>';
-$info .= $this->element('doubleListsSelector', array('leftTitle' => __('Users'), 'rightTitle' => __('Selected users'), 'contents' => $users, 'selectedContents' => $selectedUsers));
+$info .= $this->element('doubleListsSelector', array('leftTitle' => __('Users'), 'rightTitle' => __('Selected users'), 'contents' => $users, 'comments' => $comments, 'selectedContents' => $selectedUsers));
 $info .= $this->Form->input('users', array('type' => 'select', 'id' => 'select-right', 'label' => '', 'class' => 'hidden', 'multiple' => 'multiple'));
 $info .= '</fieldset>';
 

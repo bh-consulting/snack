@@ -27,6 +27,7 @@ class RadusersController extends AppController {
         'Session',
         'RequestHandler'
     );
+    public $uses = array('Radacct', 'Raduser');
 
     public function login() {
         if ($this->request->is('post')) {
@@ -111,6 +112,17 @@ class RadusersController extends AppController {
                 return "(username IN (SELECT username from radcheck "
                         . "where attribute='Expiration' "
                         . "and STR_TO_DATE(value, '%d %b %Y %T') < NOW()))";
+            } else {
+                return '(1=1)';
+            }
+        }
+    }
+    
+    public function getOldUsers($args = array()) {
+        if (!empty($args['input'])) {
+            $data = &$this->request->data['Raduser'][$args['from']];
+            if (isset($data) && $data != '') {
+                return "(username NOT IN (SELECT username from radacct where acctstarttime>'$data'))";
             } else {
                 return '(1=1)';
             }
@@ -231,6 +243,24 @@ class RadusersController extends AppController {
                 'getRegexExpiration',
                 array(
                     'input' => 'expired',
+                ),
+            )
+        ));
+        
+        $this->Filters->addComplexConstraint(array(
+            'select' => array(
+                'items' => array(
+                    'expired' => '<i class="icon-warning-sign icon-red"></i> '
+                    . __('Expired'),
+                ),
+                'input' => 'expired',
+                'title' => false,
+            ),
+            'callback' => array(
+                'getOldUsers',
+                array(
+                    'input' => 'old',
+                    'from' => 'datefrom',
                 ),
             )
         ));
@@ -465,7 +495,7 @@ class RadusersController extends AppController {
                         } else {
                             $results[] = __('ERROR: %s (%s) was not added', $fields[0], "Login/Pass");
                         }
-                        if ($fields[7] != "NULL") {
+                        if ($fields[7] != "NULL" && $fields[7] != "") {
                             $reply = new Radreply();
                             $reply->set('username', $fields[0]);
                             $reply->set('attribute', 'Tunnel-Type');
@@ -598,7 +628,7 @@ class RadusersController extends AppController {
                         } else {
                             $results[] = __('ERROR: %s (%s) was not added', $fields[0], "MAC");
                         }
-                        if ($fields[7] != "NULL") {
+                        if ($fields[7] != "NULL" && $fields[7] != "") {
                             $reply = new Radreply();
                             $reply->set('username', $fields[0]);
                             $reply->set('attribute', 'Tunnel-Type');
@@ -1317,7 +1347,8 @@ class RadusersController extends AppController {
                         __('User has been updated.'), 'flash_success');
 
                 Utils::userlog(__('edited user %s', $this->Raduser->id));
-                $this->redirect(array('action' => 'index'));
+                //$this->redirect(array('action' => 'index'));
+                $this->redirect($this->referer());
             }
         }
 
