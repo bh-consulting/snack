@@ -68,18 +68,18 @@ echo $this->Html->link(
 );
 ?>
 	</li>
-    <!--<li class="<?php echo $this->fetch('reporting_active'); ?>">
+    <li class="<?php echo $this->fetch('reports_active'); ?>">
 <?php
-/*echo $this->Html->link(
-    '<i class="glyphicon glyphicon-th-large"></i> ' . __('Reporting'),
+echo $this->Html->link(
+    '<i class="glyphicon glyphicon-th-large"></i> ' . __('Reports'),
     array(
-        'controller' => 'reporting',
+        'controller' => 'reports',
         'action' => 'index',
     ),
     array('escape' => false)
-);*/
+);
 ?>
-    </li>-->
+    </li>
 	<li class="<?php echo $this->fetch('dashboard_active'); ?>">
 <?php
 echo $this->Html->link(

@@ -24,12 +24,7 @@ if (!empty($contents)) {
 		<ul id="right" class="well connectedList sortList" subClass="label label-warning">
 		<?php
 		foreach( $selectedContents as $value )
-            if (isset($comments)) {
-                echo '<li id="' . array_search( $value, $contents ) . '" class="label">' . $value . ' ' .$comments[$key] . '</li>';
-            }
-            else {
                 echo '<li id="' . array_search( $value, $contents ) . '" class="label">' . $value . '</li>';
-            }
 		?>
 		</ul>
 	</div>
