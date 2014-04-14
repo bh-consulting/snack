@@ -70,6 +70,18 @@ radius server snack
     <pre>
 authentication port-control auto
     </pre>
+    <pre>
+        mab
+        switchport mode access
+        authentication host-mode multi-auth
+        authentication order mab
+        dot1x pae authenticator
+        authentication port-control auto
+        authentication violation replace
+        mab
+        authentication periodic
+        authentication timer inactivity server
+    </pre>
     Authentification mode :
     <pre>
 authentication host-mode [multi-auth | multi-domain | multi-host | single-host]
