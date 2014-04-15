@@ -1,4 +1,5 @@
 <?php
+
 Configure::load('parameters');
 
 class ParametersController extends AppController {
@@ -7,7 +8,6 @@ class ParametersController extends AppController {
 
     public function index() {
         $this->Parameter->read();
-
         foreach ($this->Parameter->data['Parameter'] as $key => $value) {
             $this->set($key, $value);
         }

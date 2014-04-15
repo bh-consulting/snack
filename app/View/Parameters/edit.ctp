@@ -55,5 +55,15 @@ echo $this->Form->input(
 );
 echo $this->Form->input('paginationCount', array('label' => __('Pagination count')));
 
+echo $this->Form->input('smtp_ip', array('label' => __('SMTP IP Address')));
+echo $this->Form->input('smtp_port', array('label' => __('SMTP Port')));
+echo $this->Form->input('smtp_login', array('label' => __('SMTP Login')));
+echo $this->Form->input('smtp_password', array('label' => __('SMTP Password'), 'type' => 'password'));
+
+echo $this->Form->input('proxy_ip', array('label' => __('Proxy IP Address')));
+echo $this->Form->input('proxy_port', array('label' => __('Proxy Port')));
+echo $this->Form->input('proxy_login', array('label' => __('Proxy Login')));
+echo $this->Form->input('proxy_password', array('label' => __('Proxy Password'), 'type' => 'password'));
+
 echo $this->Form->end(__('Update'));
 ?>

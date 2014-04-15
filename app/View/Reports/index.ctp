@@ -1,4 +1,4 @@
--<?php
+<?php
     $this->extend('/Common/radius_sidebar');
     $this->assign('radius_active', 'active');
     $this->assign('reports_active', 'active');
@@ -17,14 +17,15 @@
 <h2><? echo __('Failure connections'); ?></h2>
 
 <?php
-    
     $nb = count($failures);
-    echo "$nb tentatives de connexions<br>";
+    echo "<h4>$nb tentatives de connexions by users<br></h4>";
     echo "<table>";
     echo "<th>".__('User')."</th>";
     echo "<th>".__('Nb')."</th>";
     echo "<th>".__('Last')."</th>";
     echo "<th>".__('Vendor')."</th>";
+    echo "<th>".__('NAS')."</th>";
+    echo "<th>".__('Port')."</th>";
     $infos = explode(",", $this->element('formatUsersList', array(
             'users' => $users
         )));
@@ -35,6 +36,27 @@
         echo "<td>".$value."</td>";
         echo "<td>".$lasts[$key]."</td>";
         echo "<td>".$vendors[$key]."</td>";
+        echo "<td>".$nas[$key]."</td>";
+        echo "<td>".$port[$key]."</td>";
+        //echo " : ".$value." tentatives";
+        $i++;
+        echo "</tr>";
+    }
+    echo "</table>";
+    
+    
+    $nb = count($nasfailures);
+    echo "<h4>$nb tentatives de connexions by nas</h4>";
+    echo "<table>";
+    echo "<th>".__('NAS')."</th>";
+    echo "<th>".__('Nb')."</th>";
+    echo "<th>".__('Last')."</th>";
+    $i=0;
+    foreach ($nasfailures as $key => $value) {
+        echo "<tr>";
+        echo "<td>".$key."</td>";
+        echo "<td>".$value."</td>";
+        echo "<td>".$naslasts[$key]."</td>";
         //echo " : ".$value." tentatives";
         $i++;
         echo "</tr>";

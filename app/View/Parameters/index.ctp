@@ -92,3 +92,61 @@ echo empty($paginationCount) ? __('Not set.') : $paginationCount;
 ?>
     </dd>
 </dl>
+
+<h4><?php echo __('Email configuration:'); ?></h4>
+<dl class="well dl-horizontal">
+    <dt><?php echo __('SMTP Server'); ?></dt>
+    <dd>
+        <?php
+        echo empty($smtp_ip) ? __('Not set.') : $smtp_ip;
+        ?>
+    </dd>
+    <dt><?php echo __('Port'); ?></dt>
+    <dd>
+        <?php
+        echo empty($smtp_port) ? __('Not set.') : $smtp_port;
+        ?>
+    </dd>
+    <dt><?php echo __('Login'); ?></dt>
+    <dd>
+        <?php
+        echo empty($smtp_login) ? __('Not set.') : $smtp_login;
+        ?>
+    </dd>
+    <dt><?php echo __('Password'); ?></dt>
+    <dd>
+        <?php
+        echo empty($smtp_password) ? __('Not set.') : $smtp_password;
+        ?>
+    </dd>
+</dl>
+
+<h4><?php echo __('Proxy configuration:'); ?></h4>
+<dl class="well dl-horizontal">
+    <dt><?php echo __('Adresse IP'); ?></dt>
+    <dd>
+        <?php
+        echo empty($proxy_ip) ? __('Not set.') : $proxy_ip;
+        ?>
+    </dd>
+    <dt><?php echo __('Port'); ?></dt>
+    <dd>
+        <?php
+        echo empty($proxy_port) ? __('Not set.') : $proxy_port;
+        ?>
+    </dd>
+    <dt><?php echo __('Login'); ?></dt>
+    <dd>
+        <?php
+        echo empty($proxy_login) ? __('Not set.') : $proxy_login;
+        ?>
+    </dd>
+    <dt><?php echo __('Password'); ?></dt>
+    <dd>
+        <?php
+        echo empty($proxy_password) ? __('Not set.') : $proxy_password;
+        ?>
+    </dd>
+</dl>
+
+
