@@ -45,6 +45,11 @@ class RadusersController extends AppController {
                 );
             }
         }
+        if (Configure::read('Parameters.role')=="slave") {
+            $this->Session->setFlash(
+                    __('Warning this is a slave node : all changement will be not saved'), 'default', array(), 'auth'
+            );
+        }
     }
 
     public function logout() {

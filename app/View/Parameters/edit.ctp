@@ -6,21 +6,11 @@ $this->assign('param_active', 'active');
 echo '<h1>' . __('Edit server parameters') . '</h1>';
 
 echo $this->Form->create('Parameter', array('action' => 'edit'));
+?>
 
-echo $this->Form->input(
-    'configurationEmail',
-    array(
-        'label' => __('Configuration email'),
-        'class' => 'email',
-    )
-);
-echo $this->Form->input(
-    'errorEmail',
-    array(
-        'label' => __('Error email'),
-        'class' => 'email',
-    )
-);
+<h4><?php echo __('General information:'); ?></h4>
+<dl class="well dl-horizontal">
+<?php
 echo $this->Form->input(
     'ipAddress',
     array(
@@ -41,6 +31,13 @@ echo $this->Form->input(
         'class' => 'path',
     )
 );
+?>
+</dl>
+
+<h4><?php echo __('Certificates configuration:'); ?></h4>
+<dl class="well dl-horizontal">
+<?php
+
 echo $this->Form->input('countryName', array('label' => __('Country')));
 echo $this->Form->input(
     'stateOrProvinceName',
@@ -53,17 +50,67 @@ echo $this->Form->input(
     'organizationName',
     array('label' => __('Organization'))
 );
-echo $this->Form->input('paginationCount', array('label' => __('Pagination count')));
+?>
+</dl>
 
+<h4><?php echo __('Snack configuration:'); ?></h4>
+<dl class="well dl-horizontal">
+<?php    
+echo $this->Form->input('paginationCount', array('label' => __('Pagination count')));
+?>
+</dl>
+
+<h4><?php echo __('Email configuration:'); ?></h4>
+<dl class="well dl-horizontal">
+<?php 
 echo $this->Form->input('smtp_ip', array('label' => __('SMTP IP Address')));
 echo $this->Form->input('smtp_port', array('label' => __('SMTP Port')));
 echo $this->Form->input('smtp_login', array('label' => __('SMTP Login')));
 echo $this->Form->input('smtp_password', array('label' => __('SMTP Password'), 'type' => 'password'));
+echo $this->Form->input('smtp_email_from', array('label' => __('SMTP Email From'), 'class' => 'email'));
+echo $this->Form->input(
+    'configurationEmail',
+    array(
+        'label' => __('Configuration email'),
+        'class' => 'email',
+    )
+);
+echo $this->Form->input(
+    'errorEmail',
+    array(
+        'label' => __('Error email'),
+        'class' => 'email',
+    )
+);
+?>
+</dl>
 
+<h4><?php echo __('Proxy configuration:'); ?></h4>
+<dl class="well dl-horizontal">
+<?php 
 echo $this->Form->input('proxy_ip', array('label' => __('Proxy IP Address')));
 echo $this->Form->input('proxy_port', array('label' => __('Proxy Port')));
 echo $this->Form->input('proxy_login', array('label' => __('Proxy Login')));
 echo $this->Form->input('proxy_password', array('label' => __('Proxy Password'), 'type' => 'password'));
+?>
+</dl>
 
+<h4><?php echo __('Cluster configuration:'); ?></h4>
+<dl class="well dl-horizontal">
+<?php 
+echo $this->Form->input('role', array(
+    'class' => 'role',
+    'options' => array(
+        'master' => __('Master'),
+        'slave' => __('Slave'),
+    ),
+    //'disabled' => true,
+    'empty' => false,
+    'label' => __('Role'),
+));
+echo $this->Form->input('master_ip', array('label' => __('Master IP Address'), 'disabled' => true));
+?>
+</dl>
+<?php
 echo $this->Form->end(__('Update'));
 ?>

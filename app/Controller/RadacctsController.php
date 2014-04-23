@@ -93,6 +93,7 @@ class RadacctsController extends AppController {
                 'username',
                 'callingstationid',
                 'nasipaddress',
+                'nasportid',
             ),
             'input' => 'text',
             'ahead' => array('username','callingstationid', 'nasipaddress'),

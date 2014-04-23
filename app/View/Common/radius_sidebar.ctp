@@ -1,4 +1,4 @@
-<?
+<?php
 if(AuthComponent::user('role') != 'tech'){
 ?>
     <ul style="z-index:100;" class="nav list-group bs-sidenav affix mainmenu">

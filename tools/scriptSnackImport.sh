@@ -5,6 +5,7 @@ HOME_SNACK=/home/snack
 DATABASEFILE=$HOME_SNACK/interface/app/Config/database.php
 DB="radius"
 TEMP=/tmp
+LOG=/tmp/log-import
 
 usage()
 {
@@ -15,14 +16,14 @@ restore()
 {
     #Decompress/Decrypt
     if [ -z $key ]; then
-	tar zxvf $FILE -C $TEMP > /tmp/list
+	tar zxvf $FILE -C $TEMP > $LOG
     else
         dd if=$FILE | openssl des3 -d -k $key | tar xvzf - -C $TEMP
     fi
-    DIR=`more /tmp/list | tail -1 | cut -d"/" -f1`
+    DIR=`more $LOG | tail -1 | cut -d"/" -f1`
     LOGIN=`grep login $DATABASEFILE | head -n 1 | cut -d'>' -f2 | cut -d"'" -f2`
     PASS=`grep password $DATABASEFILE | head -n 1 | cut -d'>' -f2 | cut -d"'" -f2`
-    rsync --stats -avr --exclude="radius.sql" $TEMP/$DIR/snack /home
+    rsync --stats -avr --exclude="radius.sql" $TEMP/$DIR/snack /home >> $LOG
     mysql -u$LOGIN -p$PASS $DB < $TEMP/$DIR/radius.sql
     sed \
          -e "s/\('password' =>\) '.*'/\1 '${PASS}'/"\
@@ -53,5 +54,5 @@ if [ -z $FILE ]; then
     exit
 fi
 restore
-rm -rf $TEMP/list
-rm -rf $TEMP/$DIR
+
+#rm -rf $TEMP/$DIR

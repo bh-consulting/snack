@@ -200,6 +200,32 @@ var Boostrapify = {
 			transitionspeed: "500%",
 		    });
 		});
+        
+        // SELECT ROLE
+        $(".role").change(function() {
+            var value = $(this).val();
+            if (value == "master") {
+                $("#ParameterMasterIp" ).prop( "disabled", true );
+            }
+            if (value == "slave") {
+                $("#ParameterMasterIp" ).prop( "disabled", false );
+            }
+        });
+        //$.get("SystemDetails/halog/ha-2014-04-18_02-23.log", function(data) {
+        //$( "div.halogs" ).replaceWith( "<h2>New heading</h2>" );
+        $(".halog").click(function(event) {
+            //alert("Handler for .click() called.");
+            $.get("halog/"+this.id, function(data) {            
+                $("div.halogs").html(data);
+                //alert(data);
+            }).fail(function() {
+                alert( "error" );
+            })
+            .always(function() {
+                //alert( "finished" );
+            });
+        });
+        
 	}
 };
 

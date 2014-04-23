@@ -3,6 +3,9 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('session_active', 'active');
 
+$url1=$_SERVER['REQUEST_URI'];
+header("Refresh: 5; URL=$url1");
+
 $columns = array(
     'checkbox' => array(
         'id' => 'radacctid',
@@ -32,7 +35,11 @@ $columns = array(
     ),
     'nasipaddress' => array(
         'text' => __('NAS'),
-        'port' => 'nasportid',
+        //'port' => 'nasportid',
+    ),
+    'nasportid' => array(
+        'text' => __('Port'),
+        'fit' => true,
     ),
     'nasporttype' => array(
         'text' => __('Port type'),
@@ -193,11 +200,17 @@ if (!empty($radaccts)) {
                     'nas' => $devices[$acct['Radacct']['radacctid']]
                 ));
 
-                if (!empty($acct['Radacct'][$info['port']])) {
+                /*if (!empty($acct['Radacct'][$info['port']])) {
                     echo ':' . (strpos($acct['Radacct'][$info['port']], '500') !== false ?
                         $acct['Radacct'][$info['port']] - 50000 :
                         h($acct['Radacct'][$info['port']]));
-                }
+                }*/
+                break;
+            case 'nasportid':
+                echo $this->element('formatPortName', array(
+                    'port' => $acct['Radacct'][$field]
+                ));
+                //echo $acct['Radacct'][$field];
                 break;
             case 'username':
                 echo $this->element('formatUsersList', array(

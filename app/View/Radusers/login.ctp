@@ -21,6 +21,7 @@
                     'class' => 'form-control',
                     'id' => 'username_login',
                     'autocomplete' => 'off',
+                    'autofocus'
                     )
                     );
                     echo $this->Form->input(
@@ -41,10 +42,3 @@
         </div>
     </div>
 </div>
-<?php $this->start('script'); ?>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#username_field').focus();
-    });
-</script>
-<?php $this->end(); ?>

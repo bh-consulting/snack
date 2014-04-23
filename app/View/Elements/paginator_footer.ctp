@@ -1,4 +1,4 @@
-<?
+<?php
 $paginate = $this->Paginator->prev(
     '&larr; Previous',
     array('tag' => 'li', 'class' => 'previous', 'escape' => false),

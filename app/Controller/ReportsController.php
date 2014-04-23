@@ -17,6 +17,7 @@ class ReportsController extends AppController {
         $this->users_radius_connect_ok($yesterday);
         $this->get_failures_by_users();
         $this->get_failures_by_nas();
+        //$this->send();
     }
 
     public function users_snack_login($date) {
@@ -155,15 +156,6 @@ class ReportsController extends AppController {
         $this->set('naslasts', $lasts);
     }
     
-    public function send() {
-        App::uses('CakeEmail', 'Network/Email');
-        $Email = new CakeEmail();
-        $Email->config(array('transport' => 'Smtp', 'host' => '10.254.50.1'));
-        $Email->emailFormat('both');
-        $Email->from(array('snack@bh-consulting.net' => 'SNACK'));
-        $Email->to('groche@guigeek.org');
-        $Email->subject('SNACK - Report');
-        $Email->send('My message');
-    }
+
 
 }

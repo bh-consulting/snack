@@ -91,6 +91,12 @@ class Parameter extends AppModel {
             'default' => '',
             'length' => '255',
         ),
+        'smtp_email_from' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '',
+            'length' => '255',
+        ),
         'proxy_ip' => array(
             'type' => 'string',
             'null' => true,
@@ -110,6 +116,18 @@ class Parameter extends AppModel {
             'length' => '255',
         ),
         'proxy_password' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '',
+            'length' => '255',
+        ),
+        'role' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => 'master',
+            'length' => '255',
+        ),
+        'master_ip' => array(
             'type' => 'string',
             'null' => true,
             'default' => '',
@@ -168,6 +186,13 @@ class Parameter extends AppModel {
 			'rule' => 'numeric',
             'message' => 'The smtp port must be a number.'
         ),
+        'smtp_email_from' => array(
+            'email' => array(
+                'rule' => 'email',
+                'message' => 'Invalid email format.',
+                'required' => true
+            )
+        ),
         'proxy_ip' => array(
 			'ipFormat' => array(
 				'rule' => 'isIPFormat',
@@ -179,6 +204,13 @@ class Parameter extends AppModel {
 			'rule' => 'numeric',
             'message' => 'The smtp port must be a number.',
             'allowEmpty' => true,
+        ),
+        'master_ip' => array(
+            'ipFormat' => array(
+                'rule' => 'isIPFormat',
+                'message' => 'This is not an IP address format.',
+                'allowEmpty' => true,
+            ),
         ),
     );
 
