@@ -153,14 +153,14 @@ class SystemDetailsController extends AppController {
     public function export() {
         $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackExport.sh");
         //echo $return;
-        $this->response->file(
+        /*$this->response->file(
             //"conf/snack-conf_BHC_2014-04-17_15-33.tar.gz", array('download' => true, 'name' => 'snack-conf_BHC_2014-04-17_15-33.tar.gz')    
             "conf/$return", array('download' => true, 'name' => $return)
-        );
-        //echo $return;
-        /*$this->redirect(
-            array('action' => 'index')
         );*/
+        //echo $return;
+        $this->redirect(
+            array('action' => 'backup')
+        );
     }
 
     public function import() {
@@ -180,16 +180,16 @@ class SystemDetailsController extends AppController {
         $files = $dir->find('snack-conf_.*');
         sort($files);
         $files=array_reverse($files);
-        $totalPages = floor(count($files)/$pageSize);
-        //debug($files);
+        $totalPages = intval(floor(count($files)/$pageSize)+1);
+        //debug($totalPages);
         if (isset($this->passedArgs['page'])) {
             $page = $this->passedArgs['page'];
         }
         else {
             $page = 1;
         }
-        $index = $page * $pageSize;
-        $file_list = array();
+        $index = ($page-1) * $pageSize;
+        $listfiles = array();
         for ($i = 0; $i < $pageSize; $i ++) {
             if (isset($files[$index + $i])) {
                 $listfiles[] = array('name' => $files[$index + $i]);
@@ -263,14 +263,14 @@ class SystemDetailsController extends AppController {
         $files = $dir->find('ha-[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}\.log');
         sort($files);
         $files=array_reverse($files);
-        $totalPages = floor(count($files)/$pageSize);
+        $totalPages = intval(floor(count($files)/$pageSize)+1);
         if (isset($this->passedArgs['page'])) {
             $page = $this->passedArgs['page'];
         }
         else {
             $page = 1;
         }
-        $index = $page * $pageSize;
+        $index = ($page-1) * $pageSize;
         $file_list = array();
         for ($i = 0; $i < $pageSize; $i ++) {
             if (isset($files[$index + $i])) {

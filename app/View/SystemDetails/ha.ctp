@@ -25,7 +25,17 @@ $columns = array(
 <?php
 $nextpage=$page+1;
 $prevpage=$page-1;
-if ($page == 1) {
+if ($page == 1 && $totalPages == 1) {
+    $link=$this->Html->tag(
+            "li", $this->Html->link('&larr; Prev', array('page' => $prevpage), array('escape' => false)),  array('class' => 'previous disabled')
+    );
+    $link.=$this->Html->tag(
+            "li", $this->Html->link($page." / ".$totalPages, '#'), array('class' => 'previous'));
+    $link.=$this->Html->tag(
+            "li", $this->Html->link('Next &rarr;', array('page' => $nextpage), array('escape' => false)), array('class' => 'next disabled')
+    );
+}
+elseif ($page == 1) {
     $link=$this->Html->tag(
             "li", $this->Html->link('&larr; Prev', array('page' => $prevpage), array('escape' => false)),  array('class' => 'previous disabled')
     );
@@ -148,7 +158,7 @@ echo $this->Html->tag(
             <tr>
                 <td colspan="<?php echo count($columns); ?>" style="text-align: center">
                     <?php
-                    echo __('No backup found.');
+                    echo __('No HA log found.');
                     ?>
                 </td>
             </tr>
@@ -161,7 +171,17 @@ echo $this->Html->tag(
 <?php
 $nextpage=$page+1;
 $prevpage=$page-1;
-if ($page == 1) {
+if ($page == 1 && $totalPages == 1) {
+    $link=$this->Html->tag(
+            "li", $this->Html->link('&larr; Prev', array('page' => $prevpage), array('escape' => false)),  array('class' => 'previous disabled')
+    );
+    $link.=$this->Html->tag(
+            "li", $this->Html->link($page." / ".$totalPages, '#'), array('class' => 'previous'));
+    $link.=$this->Html->tag(
+            "li", $this->Html->link('Next &rarr;', array('page' => $nextpage), array('escape' => false)), array('class' => 'next disabled')
+    );
+}
+elseif ($page == 1) {
     $link=$this->Html->tag(
             "li", $this->Html->link('&larr; Prev', array('page' => $prevpage), array('escape' => false)),  array('class' => 'previous disabled')
     );
