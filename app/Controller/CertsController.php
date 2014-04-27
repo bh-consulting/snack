@@ -21,6 +21,8 @@ class CertsController extends AppController {
     public function get_cert($user) {
 	if($user == 'server') {
 	    $file = Utils::getServerCertPath();
+    } elseif($user == 'servercer') {
+        $file = Utils::getServerCertCerPath();
 	} else {
 	    $file = Utils::getUserCertsPath($user);
 	}
@@ -40,7 +42,7 @@ class CertsController extends AppController {
             $this->redirect(array('controller' => 'radusers', 'action' => 'index'));
         }
     }
-
+    
 }
 
 ?>

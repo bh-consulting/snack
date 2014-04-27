@@ -20,6 +20,14 @@ $attributes['Server certificate path'] = $this->Html->link(
     )
 );
 
+$attributes['Server certificate cer path'] = $this->Html->link(
+    $attributes['Server certificate cer path'],
+    array(
+    	'action' => 'get_cert/servercer',
+    	'controller' => 'certs',
+    )
+);
+
 echo $this->element(
 	'viewInfo',
 	array(

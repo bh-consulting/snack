@@ -31,6 +31,17 @@ $this->assign('systemdetails_general_active', 'active');
                         );
                         ?>
                     </dd>
+                    <dt><?php echo __('CA link CER'); ?></dt>
+                    <dd>
+                        <?php
+                        echo $this->Html->link(
+                                Utils::getServerCertCerPath(), array(
+                            'action' => 'get_cert/servercer',
+                            'controller' => 'certs',
+                                )
+                        );
+                        ?>
+                    </dd>
                     <dt><?php echo __('CA expiration'); ?></dt>
                     <dd><?php echo $ca_expiration; ?></dd>
                 </dl>

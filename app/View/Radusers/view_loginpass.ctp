@@ -1,4 +1,4 @@
-<? 
+<?php
 $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
@@ -12,6 +12,12 @@ if (isset($attributes['EAP-Type'])
             'action' => 'get_cert/server',
             'controller' => 'certs',
         )
+    );
+    $attributes['Server certificate cer path'] = $this->Html->link(
+            $attributes['Server certificate cer path'], array(
+        'action' => 'get_cert/servercer',
+        'controller' => 'certs',
+            )
     );
 } else if (array_search('Server certificate path', $showedAttr)) {
     unset($showedAttr[array_search('Server certificate path', $showedAttr)]);

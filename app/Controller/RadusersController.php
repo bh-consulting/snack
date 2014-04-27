@@ -798,6 +798,7 @@ class RadusersController extends AppController {
         $attributes['Role'] = $this->Raduser->roles[$views['base']['Raduser']['role']];
         $attributes['User certificate path'] = Utils::getUserCertsPath($username);
         $attributes['Server certificate path'] = Utils::getServerCertPath();
+        $attributes['Server certificate cer path'] = Utils::getServerCertCerPath();
         $attributes['Cisco'] = $views['base']['Raduser']['is_cisco'] ? __('Yes') : __('No');
 
         // Radchecks
@@ -831,6 +832,7 @@ class RadusersController extends AppController {
             'Comment',
             'User certificate path',
             'Server certificate path',
+            'Server certificate cer path',
             'Expiration',
             'Simultaneous-Use',
             'Groups',
@@ -862,6 +864,7 @@ class RadusersController extends AppController {
             'MAC address',
             'EAP-Type',
             'Server certificate path',
+            'Server certificate cer path',
             'Role',
         );
 
@@ -890,6 +893,7 @@ class RadusersController extends AppController {
             'MAC address',
             'EAP-Type',
             'Server certificate path',
+            'Server certificate cer path',
         );
 
         $raduser = $this->Raduser->findById($id);
@@ -1345,15 +1349,16 @@ class RadusersController extends AppController {
         $this->set('roles', $this->Raduser->roles);
     }
 
-    private function edit($success) {
+    private function edit($success) {      
         if ($this->request->is('post')) {
             if ($success) {
                 $this->Session->setFlash(
                         __('User has been updated.'), 'flash_success');
 
                 Utils::userlog(__('edited user %s', $this->Raduser->id));
-                //$this->redirect(array('action' => 'index'));
-                $this->redirect($this->referer());
+                //debug($this->url);
+                $this->redirect(array('action' => 'index'));
+                //$this->redirect($this->url);
             }
         }
 
@@ -1400,6 +1405,7 @@ class RadusersController extends AppController {
     }
 
     public function edit_loginpass($id = null) {
+        $this->url = $this->referer();
         $this->Raduser->id = $id;
         $success = false;
 
