@@ -3,7 +3,7 @@
 LOG=ha-`TZ='Europe/Paris' date "+%Y-%m-%d_%H-%M"`.log
 USER_HOME=/home/snack
 ROLE=`grep role $USER_HOME/interface/app/Config/parameters.php | cut -d"'" -f4`
-if [ $ROLE == 'slave' ]; then
+if [ "$ROLE" == 'slave' ]; then
     MASTER=`grep master_ip $USER_HOME/interface/app/Config/parameters.php | cut -d"'" -f4`
     IP=`grep ipAddress $USER_HOME/interface/app/Config/parameters.php | cut -d"'" -f4`   
     NAME=`ssh root@$MASTER $USER_HOME/interface/tools/scriptSnackExport.sh`
