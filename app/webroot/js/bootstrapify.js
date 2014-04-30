@@ -225,7 +225,18 @@ var Boostrapify = {
                 //alert( "finished" );
             });
         });
-        
+        $(".testslog").click(function(event) {
+            //alert("Handler for .click() called.");
+            $.get("testslog/"+this.id, function(data) {            
+                $("div.testslogs").html(data);
+                //alert(data);
+            }).fail(function() {
+                alert( "error" );
+            })
+            .always(function() {
+                //alert( "finished" );
+            });
+        });
 	}
 };
 

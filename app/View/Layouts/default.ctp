@@ -45,7 +45,7 @@ $cakeDescription = __('SNACK');
     echo $this->Html->css('sb-admin');
     echo $this->fetch('css');
 
-    echo $this->Html->script('snake');
+    //echo $this->Html->script('snake');
 ?>
     <style>
         body {
