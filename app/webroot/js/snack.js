@@ -11,6 +11,10 @@ function countItems() {
     button.text(button.text().replace(/[0-9]+/, n));
 }
 
+function loading() {
+    $("div.loading").html("<h2>Veuillez patienter ...</h2>");
+}
+
 $(window).resize(function() {
     if($(window).width() > 979) {
 	if($('.mainmenu').hasClass('menuphone'))
@@ -55,4 +59,3 @@ $(document).ready(function() {
 
     document.onkeydown = Tastendruck;
 });
-

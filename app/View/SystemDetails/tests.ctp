@@ -7,6 +7,10 @@ $columns = array(
         'text' => __('Name'),
         'fit' => true,
     ),
+    'comment' => array(
+        'text' => __('Comment'),
+        'fit' => true,
+    ),
     'results' => array(
         'text' => __('Result'),
         'fit' => true,
@@ -64,10 +68,17 @@ $columns = array(
                                 'id' => $key)
                             );
                             break;
+                        case 'comment':
+                            echo $result['comment'];
+                            break;
                         case 'results':
-                            if (preg_match('/Received Access-Accept packet/', $result, $matches)) {
+                            if (preg_match('/Received Access-Accept packet/', $result['res'], $matches)) {
                                 echo '<i class="glyphicon glyphicon-ok glyphicon-white"></i> ';
-                            } elseif (preg_match('/Received Access-Reject packet/', $result, $matches)) {
+                            } elseif (preg_match('/Received Access-Reject packet/', $result['res'], $matches)) {
+                                echo '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ';
+                            } elseif (preg_match('/SUCCESS/', $result['res'], $matches)) {
+                                echo '<i class="glyphicon glyphicon-ok glyphicon-white"></i> ';
+                            } elseif (preg_match('/FAILURE/', $result['res'], $matches)) {
                                 echo '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ';
                             }
                             else {
@@ -88,7 +99,7 @@ $columns = array(
             <tr>
                 <td colspan="<?php echo count($columns); ?>" style="text-align: center">
             <?php
-            echo __('No HA log found.');
+            echo __('No Test found.');
             ?>
                 </td>
             </tr>

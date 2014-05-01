@@ -4,7 +4,7 @@ App::uses('Folder', 'Utility');
 class SystemDetailsController extends AppController {
     
     public $name = 'SystemDetails';
-    public $helpers = array('Html', 'Form');
+    public $helpers = array('Html', 'Form', 'Js');
     public $components = array(
         'Process',
     );
@@ -257,6 +257,8 @@ class SystemDetailsController extends AppController {
     }
     
     public function ha() {
+        //echo '<script type="text/javascript" src="/js/snack.js">updateProgress();</script>';
+        //echo '<script>alert("toto");</script>';
         $dir = new Folder(APP.'tmp/ha');
         $results = array();
         $pageSize =  Configure::read('Parameters.paginationCount');
@@ -306,64 +308,30 @@ class SystemDetailsController extends AppController {
     }
     
     public function tests() {
+        
         $results=array();
         $nas = $this->Raduser->query('select nasname,secret from nas where nasname="127.0.0.1";');
         foreach ($nas as $n) {
             $nasname=$n['nas']['nasname'];
             $secret=$n['nas']['secret'];
         }
-        $usernames = $this->Raduser->query('select username from raduser;');
+        $usernames = $this->Raduser->query('select username,comment from raduser;');
         foreach ($usernames as $username) {
-            $radchecks = $this->Radcheck->query('select * from radcheck where username="' . $username['raduser']['username'] . '";');
-            $tls = 0;
-            $nasporttype = "";
-            foreach ($radchecks as $radcheck) {
-                //debug($radcheck);
-                /*if ($radcheck['radcheck']['attribute'] == "EAP-Type") {
-                    if ($radcheck['radcheck']['value'] == "EAP-TLS") {
-                        $tls = 1;
-                    }
-                }*/
-                if ($radcheck['radcheck']['attribute'] == "Cleartext-Password") {
-                    $password = $radcheck['radcheck']['value'];
-                }
-                if ($radcheck['radcheck']['attribute'] == "NAS-Port-Type") {
-                    $nasporttype = $radcheck['radcheck']['value'];
-                }
-            }
-            //if ($tls == 0) {
-                //debug($username['raduser']['username']);
-                //debug($password);
-                
-                $nasports=explode("|", $nasporttype);
-                //debug($nasports);
-                if (count($nasports) > 0) {
-                    $nasporttype=$nasports[0];
-                    $request='( echo "User-Name = \"'.$username['raduser']['username'].'\""; echo "Cleartext-Password = \"'.$password.'\"";  echo "NAS-Port-Type= \"'.$nasporttype.'\""; echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"'.$username['raduser']['username'].'\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x '.$n['nas']['nasname'].' auth '.$n['nas']['secret'];
-                }
-                else {
-                    $request='( echo "User-Name = \"'.$username['raduser']['username'].'\""; echo "Cleartext-Password = \"'.$password.'\"";  echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"'.$username['raduser']['username'].'\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x '.$n['nas']['nasname'].' auth '.$n['nas']['secret'];
-                }
-                $return = shell_exec($request);
-                
-                $results[$username['raduser']['username']] = $return;
-            //}
-            
+            $this->tests_users($username['raduser']['username'], $nasname, $secret, &$results, $username['raduser']['comment']);
         }
         $this->set('results', $results);
     }
     
-    public function testslog($username) {
-        $nasporttype = "";
-        $nas = $this->Raduser->query('select nasname,secret from nas where nasname="127.0.0.1";');
-        foreach ($nas as $n) {
-            $nasname=$n['nas']['nasname'];
-            $secret=$n['nas']['secret'];
-        }
+    public function tests_users($username, $nasname, $nassecret, $results, $comment="") {
         $radchecks = $this->Radcheck->query('select * from radcheck where username="' . $username . '";');
+        $tls = 0;
+        $ttls = 0;
+        $nasporttype = "";
         foreach ($radchecks as $radcheck) {
-            //debug($radcheck);
             if ($radcheck['radcheck']['attribute'] == "EAP-Type") {
+                if ($radcheck['radcheck']['value'] == "EAP-TTLS") {
+                    $ttls = 1;
+                }
                 if ($radcheck['radcheck']['value'] == "EAP-TLS") {
                     $tls = 1;
                 }
@@ -375,15 +343,67 @@ class SystemDetailsController extends AppController {
                 $nasporttype = $radcheck['radcheck']['value'];
             }
         }
-        $nasports=explode("|", $nasporttype);
-        if (count($nasports) > 0) {
-            $nasporttype=$nasports[0];
-            $request='( echo "User-Name = \"'.$username.'\""; echo "Cleartext-Password = \"'.$password.'\"";  echo "NAS-Port-Type= \"'.$nasporttype.'\""; echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"'.$username.'\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x '.$n['nas']['nasname'].' auth '.$n['nas']['secret'];
+        if ($tls == 0 && $ttls == 0) {
+            $nasports = explode("|", $nasporttype);
+            //debug($nasports);
+            if (count($nasports) > 0) {
+                $nasporttype = $nasports[0];
+                $request = '( echo "User-Name = \"' . $username . '\""; echo "Cleartext-Password = \"' . $password . '\"";  echo "NAS-Port-Type= \"' . $nasporttype . '\""; echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"' . $username . '\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x ' . $nasname . ' auth ' . $nassecret;
+            } else {
+                $request = '( echo "User-Name = \"' . $username . '\""; echo "Cleartext-Password = \"' . $password . '\"";  echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"' . $username . '\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x ' . $nasname . ' auth ' . $nassecret;
+            }
+            $return = shell_exec($request);
+            $this->set('log', $return);
+            $results[$username]['res'] = $return;
+        } elseif ($ttls == 1) {
+            $file = new File(APP . 'tmp/eap-ttls.conf', true, 0644);
+            $file->write("network={\n");
+            $file->write("\teap=TTLS\n");
+            $file->write("\teapol_flags=0\n");
+            $file->write("\tkey_mgmt=IEEE8021X\n");
+            $file->write("\tidentity=\"" . $username . "\"\n");
+            $file->write("\tpassword=\"" . $password . "\"\n");
+            $file->write("\tphase2=\"auth=MSCHAPv2\"\n");
+            $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
+            $file->write("}");
+            $request = "/home/snack/interface/tools/eapol_test -c /home/snack/interface/app/tmp/eap-ttls.conf -a127.0.0.1 -p1812 -sloopsecret";
+            $return = shell_exec($request);
+            $this->set('log', $return);
+            $lines = explode("\n", $return);
+            $results[$username]['res'] = $lines[count($lines) - 2];
+        } elseif ($tls == 1) {
+            $file = new File(APP . 'tmp/eap-tls.conf', true, 0644);
+            $file->write("network={\n");
+            $file->write("\teap=TLS\n");
+            $file->write("\teapol_flags=0\n");
+            $file->write("\tkey_mgmt=IEEE8021X\n");
+            $file->write("\tidentity=\"" . $username . "\"\n");
+            $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
+            $file->write("\tclient_cert=\"" . Utils::getUserCertsPemPath($username) . "\"\n");
+            $file->write("\tprivate_key=\"" . Utils::getUserKeyPemPath($username) . "\"\n");
+            $file->write("}");
+            $request = "/home/snack/interface/tools/eapol_test -c /home/snack/interface/app/tmp/eap-tls.conf -a127.0.0.1 -p1812 -sloopsecret";
+            $return = shell_exec($request);
+            $this->set('log', $return);
+            $lines = explode("\n", $return);
+            $results[$username]['res'] = $lines[count($lines) - 2];
         } else {
-            $request='( echo "User-Name = \"'.$username.'\""; echo "Cleartext-Password = \"'.$password.'\"";  echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"'.$username.'\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x '.$n['nas']['nasname'].' auth '.$n['nas']['secret'];
+            $results[$username]['res'] = "NA";
         }
-        $return = shell_exec($request);
-        $this->set('log', $return);
+        $results[$username]['comment'] = $comment;
+    }
+
+    public function testslog($username) {
+        $results=array();
+        $tls = 0;
+        $ttls = 0;
+        $nasporttype = "";
+        $nas = $this->Raduser->query('select nasname,secret from nas where nasname="127.0.0.1";');
+        foreach ($nas as $n) {
+            $nasname=$n['nas']['nasname'];
+            $secret=$n['nas']['secret'];
+        }
+        $this->tests_users($username, $nasname, $secret, &$results);
         $this->layout = 'ajax';
     }
 }

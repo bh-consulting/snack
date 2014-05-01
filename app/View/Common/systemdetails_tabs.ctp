@@ -53,6 +53,9 @@ echo '</div>';
 
 <h1><?php echo __('Dashboard'); ?></h1>
 
+<div class="loading">
+</div>
+
 <div class="tabbable">
     <ul class="nav nav-tabs">
             <li class="<?php echo $this->fetch('systemdetails_general_active'); ?>">
@@ -85,7 +88,8 @@ echo '</div>';
             echo "<li class=".$this->fetch('systemdetails_tests_active').">";
                 echo $this->Html->link(
                     __('Tests'),
-                    array('controller' => 'SystemDetails', 'action' => 'tests')
+                    array('controller' => 'SystemDetails', 'action' => 'tests'),
+                    array('onclick'=>'loading()')
                 );            
             echo "</li>";
             ?>

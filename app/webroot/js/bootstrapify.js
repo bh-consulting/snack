@@ -237,7 +237,7 @@ var Boostrapify = {
                 //alert( "finished" );
             });
         });
-	}
+	} 
 };
 
 // styling starts when document loads

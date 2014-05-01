@@ -246,6 +246,16 @@ class Utils {
         return Configure::read('Parameters.certsPath') . '/users/'
                 . $username . '.p12';
     }
+    
+    public static function getUserCertsPemPath($username) {
+        return Configure::read('Parameters.certsPath') . '/users/'
+                . $username . '_cert.pem';
+    }
+    
+    public static function getUserKeyPemPath($username) {
+        return Configure::read('Parameters.certsPath') . '/users/'
+                . $username . '_key.pem';
+    }
 
     public static function getISOCode($httpAcceptLanguage) {
         $langs = array(
