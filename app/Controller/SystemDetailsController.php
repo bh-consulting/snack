@@ -317,12 +317,12 @@ class SystemDetailsController extends AppController {
         }
         $usernames = $this->Raduser->query('select username,comment from raduser;');
         foreach ($usernames as $username) {
-            $this->tests_users($username['raduser']['username'], $nasname, $secret, &$results, $username['raduser']['comment']);
+            $this->tests_users($username['raduser']['username'], $nasname, $secret, $results, $username['raduser']['comment']);
         }
         $this->set('results', $results);
     }
     
-    public function tests_users($username, $nasname, $nassecret, $results, $comment="") {
+    public function tests_users($username, $nasname, $nassecret, &$results, $comment="") {
         $radchecks = $this->Radcheck->query('select * from radcheck where username="' . $username . '";');
         $tls = 0;
         $ttls = 0;
@@ -403,7 +403,7 @@ class SystemDetailsController extends AppController {
             $nasname=$n['nas']['nasname'];
             $secret=$n['nas']['secret'];
         }
-        $this->tests_users($username, $nasname, $secret, &$results);
+        $this->tests_users($username, $nasname, $secret, $results);
         $this->layout = 'ajax';
     }
 }
