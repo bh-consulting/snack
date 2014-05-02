@@ -9,6 +9,7 @@ class SystemDetailsController extends AppController {
         'Process',
     );
     public $uses = array('Radcheck', 'Raduser', 'SystemDetail', 'nas');
+    private $eapol;
     
     public function isAuthorized($user) {
         
@@ -308,7 +309,13 @@ class SystemDetailsController extends AppController {
     }
     
     public function tests() {
-        
+        $return = shell_exec("getconf LONG_BIT");
+        if ($return == "64\n") {
+            $this->eapol="eapol_test_64";
+        }
+        elseif ($return == "32\n") {
+            $this->eapol="eapol_test_x86";
+        }
         $results=array();
         $nas = $this->Raduser->query('select nasname,secret from nas where nasname="127.0.0.1";');
         foreach ($nas as $n) {
@@ -366,7 +373,7 @@ class SystemDetailsController extends AppController {
             $file->write("\tphase2=\"auth=MSCHAPv2\"\n");
             $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
             $file->write("}");
-            $request = "/home/snack/interface/tools/eapol_test -c /home/snack/interface/app/tmp/eap-ttls.conf -a127.0.0.1 -p1812 -sloopsecret";
+            $request = "/home/snack/interface/tools/".$this->eapol." -c /home/snack/interface/app/tmp/eap-ttls.conf -a127.0.0.1 -p1812 -sloopsecret";
             $return = shell_exec($request);
             $this->set('log', $return);
             $lines = explode("\n", $return);
@@ -382,7 +389,7 @@ class SystemDetailsController extends AppController {
             $file->write("\tclient_cert=\"" . Utils::getUserCertsPemPath($username) . "\"\n");
             $file->write("\tprivate_key=\"" . Utils::getUserKeyPemPath($username) . "\"\n");
             $file->write("}");
-            $request = "/home/snack/interface/tools/eapol_test -c /home/snack/interface/app/tmp/eap-tls.conf -a127.0.0.1 -p1812 -sloopsecret";
+            $request = "/home/snack/interface/tools/".$this->eapol." -c /home/snack/interface/app/tmp/eap-tls.conf -a127.0.0.1 -p1812 -sloopsecret";
             $return = shell_exec($request);
             $this->set('log', $return);
             $lines = explode("\n", $return);
