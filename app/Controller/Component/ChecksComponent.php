@@ -497,7 +497,7 @@ class ChecksComponent extends Component {
 
                             // check if that was a cisco user that was deleted
                             // TODO: test!!
-                            if ($key == 'NAS-Port-Type' && preg_match('/(Virtual|Async)/', $oldValue) && $value == 'Ethernet' && !isset($request->data[$this->baseClassName]['is_loginpass'])
+                            if ($key == 'NAS-Port-Type' && preg_match('/(Virtual|Async)/', $oldValue) && $value == 'Ethernet|Wireless-802.11' && !isset($request->data[$this->baseClassName]['is_loginpass'])
                             ) {
                                 $this->checkClass->deleteAll(array(
                                     $this->checkClassName . '.' . $this->displayName => $r[$this->checkClassName][$this->displayName],
@@ -649,7 +649,7 @@ class ChecksComponent extends Component {
                 case 'NAS-Port-Type':
                     $nasPortType = $r[$this->checkClassName]['value'];
 
-                    if ($nasPortType == 'Async|Virtual|Ethernet') {
+                    if ($nasPortType == 'Async|Virtual|Ethernet|Wireless-802.11') {
                         $request->data[$this->baseClassName]['nas-port-type'] = 'both';
                     } else if (preg_match('/.*Async.*/', $r[$this->checkClassName]['value'])) {
                         $request->data[$this->baseClassName]['nas-port-type'] = 'Async';

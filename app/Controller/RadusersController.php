@@ -474,7 +474,7 @@ class RadusersController extends AppController {
                         $check->set('username', $fields[0]);
                         $check->set('attribute', 'NAS-Port-Type');
                         $check->set('op', '=~');
-                        $check->set('value', 'Ethernet');
+                        $check->set('value', 'Ethernet|Wireless-802.11');
                         if ($check->save()) {
                             $results[] = __('%s (%s) was added', $fields[0], "Login/Pass");
                         } else {
@@ -551,7 +551,7 @@ class RadusersController extends AppController {
                         $check->set('username', $fields[0]);
                         $check->set('attribute', 'NAS-Port-Type');
                         $check->set('op', '=~');
-                        $check->set('value', 'Ethernet');
+                        $check->set('value', 'Ethernet|Wireless-802.11');
                         if ($check->save()) {
                             $results[] = __('%s (%s) was added', $fields[0], "Phone");
                         } else {
@@ -607,7 +607,7 @@ class RadusersController extends AppController {
                         $check->set('username', $fields[0]);
                         $check->set('attribute', 'NAS-Port-Type');
                         $check->set('op', '=~');
-                        $check->set('value', 'Ethernet');
+                        $check->set('value', 'Ethernet|Wireless-802.11');
                         if ($check->save()) {
                             $results[] = __('%s (%s) was added', $fields[0], "MAC");
                         } else {
@@ -1010,9 +1010,9 @@ class RadusersController extends AppController {
             $nasPortType = $this->request->data['Raduser']['nas-port-type'];
 
             if ($nasPortType == 'both') {
-                $nasPortTypeRegexp = 'Async|Virtual|Ethernet';
+                $nasPortTypeRegexp = 'Async|Virtual|Ethernet|Wireless-802.11';
             } else {
-                $nasPortTypeRegexp = $nasPortType . '|Ethernet';
+                $nasPortTypeRegexp = $nasPortType . '|Ethernet|Wireless-802.11';
             }
 
             $checks[$nasPortTypeIndex] = array(
@@ -1031,7 +1031,7 @@ class RadusersController extends AppController {
                 );
             }
         } else {
-            $checks[$nasPortTypeIndex] = array($username, 'NAS-Port-Type', '=~', 'Ethernet');
+            $checks[$nasPortTypeIndex] = array($username, 'NAS-Port-Type', '=~', 'Ethernet|Wireless-802.11');
             $this->request->data['Raduser']['is_cisco'] = 0;
         }
 
