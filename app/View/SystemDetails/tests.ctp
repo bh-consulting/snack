@@ -64,7 +64,7 @@ $columns = array(
                     switch ($field) {
                         case 'name':
                             echo $this->Html->link(
-                                    $key, '#', array('class' => 'button testslog',
+                                    $key, '#testslogs', array('class' => 'button testslog',
                                 'id' => $key)
                             );
                             break;
@@ -72,6 +72,7 @@ $columns = array(
                             echo $result['comment'];
                             break;
                         case 'results':
+                            //debug($result['res']);
                             if (preg_match('/Received Access-Accept packet/', $result['res'], $matches)) {
                                 echo '<i class="glyphicon glyphicon-ok glyphicon-white"></i> ';
                             } elseif (preg_match('/Received Access-Reject packet/', $result['res'], $matches)) {
@@ -111,4 +112,4 @@ $columns = array(
 <?php
 unset($results);
 ?>
-<div class="testslogs"></div>
+<div class="testslogs" id="testslogs"></div>

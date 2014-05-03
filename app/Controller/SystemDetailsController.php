@@ -334,6 +334,7 @@ class SystemDetailsController extends AppController {
         $tls = 0;
         $ttls = 0;
         $nasporttype = "";
+        $return = "";
         foreach ($radchecks as $radcheck) {
             if ($radcheck['radcheck']['attribute'] == "EAP-Type") {
                 if ($radcheck['radcheck']['value'] == "EAP-TTLS") {
@@ -352,7 +353,6 @@ class SystemDetailsController extends AppController {
         }
         if ($tls == 0 && $ttls == 0) {
             $nasports = explode("|", $nasporttype);
-            //debug($nasports);
             if (count($nasports) > 0) {
                 $nasporttype = $nasports[0];
                 $request = '( echo "User-Name = \"' . $username . '\""; echo "Cleartext-Password = \"' . $password . '\"";  echo "NAS-Port-Type= \"' . $nasporttype . '\""; echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"' . $username . '\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x ' . $nasname . ' auth ' . $nassecret;
@@ -360,8 +360,6 @@ class SystemDetailsController extends AppController {
                 $request = '( echo "User-Name = \"' . $username . '\""; echo "Cleartext-Password = \"' . $password . '\"";  echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"' . $username . '\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x ' . $nasname . ' auth ' . $nassecret;
             }
             $return = shell_exec($request);
-            $this->set('log', $return);
-            $results[$username]['res'] = $return;
         } elseif ($ttls == 1) {
             $file = new File(APP . 'tmp/eap-ttls.conf', true, 0644);
             $file->write("network={\n");
@@ -375,9 +373,6 @@ class SystemDetailsController extends AppController {
             $file->write("}");
             $request = "/home/snack/interface/tools/".$this->eapol." -c /home/snack/interface/app/tmp/eap-ttls.conf -a127.0.0.1 -p1812 -sloopsecret";
             $return = shell_exec($request);
-            $this->set('log', $return);
-            $lines = explode("\n", $return);
-            $results[$username]['res'] = $lines[count($lines) - 2];
         } elseif ($tls == 1) {
             $file = new File(APP . 'tmp/eap-tls.conf', true, 0644);
             $file->write("network={\n");
@@ -391,16 +386,22 @@ class SystemDetailsController extends AppController {
             $file->write("}");
             $request = "/home/snack/interface/tools/".$this->eapol." -c /home/snack/interface/app/tmp/eap-tls.conf -a127.0.0.1 -p1812 -sloopsecret";
             $return = shell_exec($request);
-            $this->set('log', $return);
-            $lines = explode("\n", $return);
-            $results[$username]['res'] = $lines[count($lines) - 2];
         } else {
             $results[$username]['res'] = "NA";
+            $return = "";
         }
+        $results[$username]['res'] = $return;
         $results[$username]['comment'] = $comment;
     }
 
     public function testslog($username) {
+        $return = shell_exec("getconf LONG_BIT");
+        if ($return == "64\n") {
+            $this->eapol="eapol_test_64";
+        }
+        elseif ($return == "32\n") {
+            $this->eapol="eapol_test_x86";
+        }
         $results=array();
         $tls = 0;
         $ttls = 0;
@@ -410,7 +411,9 @@ class SystemDetailsController extends AppController {
             $nasname=$n['nas']['nasname'];
             $secret=$n['nas']['secret'];
         }
-        $this->tests_users($username, $nasname, $secret, $results);
+        $this->tests_users($username, $nasname, $secret, $results, "");
+        //debug($results[$username]['res']);
+        $this->set('log', $results[$username]['res']);
         $this->layout = 'ajax';
     }
 }
