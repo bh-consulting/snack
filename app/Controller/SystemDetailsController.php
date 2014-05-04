@@ -225,10 +225,11 @@ class SystemDetailsController extends AppController {
         $subject = "SNACK - ".$matches[1]." - CONFIG";
         $Email->subject($subject);
         $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackExport.sh");
-        $today = date('Ymd');
+        $infos = explode("\n", $return);
+        $name = $infos[0];
         $Email->attachments(array(
-            'snack-conf-'.$today.'.tar.gz' => array(
-                'file' => 'conf/snack-conf-'.$today.'.tar.gz',
+            $name => array(
+                'file' => 'conf/'.$name,
                 'mimetype' => 'application/gzip',
                 'contentId' => '123456789'
             )
