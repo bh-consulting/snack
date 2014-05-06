@@ -75,60 +75,68 @@ class ReportsController extends AppController {
         //debug($logs);
         $usersnbfailures = array();
         $users = array();
-        $lasts = array();
-        $vendors = array();
-        $port = array();
-        $nas = array();
+        $logins = array();
+        $usernames = array();
         foreach ($logs as $log) {
-            $info = explode("[", $log['Logline']['msg']);
-            $info = explode("/", $info[1]);
-            $info2 = explode(" ", $info[1]);
-            //debug($info2);
-            if (array_key_exists($info[0], $usersnbfailures)) {
-                $usersnbfailures[$info[0]] = $usersnbfailures[$info[0]] + 1;
-            } else {
-                $usersnbfailures[$info[0]] = 1;
-                $lasts[$info[0]] = $log['Logline']['datetime'];
-                $username = $this->Logline->query('select * from raduser where username="' . $info[0] . '"');
-                $port[$info[0]] = $info2[5];
-                $nas[$info[0]] = $info2[3];
-                //$last = $this->Logline->query('select datetime from logs where msg like "Login incorrect: ['.$username.'%"');
-                //debug($last);
-                if (count($username) > 0) {
-                    $username[0]['raduser']['username'] = Utils::formatMAC(
-                                    $username[0]['raduser']['username']
-                    );
-                    $users[] = $username[0]['raduser'];
+            if (preg_match('/^Login incorrect\s*\(*(.*)\)*: \[(.*)\/.*\] \(from client (.*) port (\d+) /', $log['Logline']['msg'], $matches)) {
+                $login = $matches[2];
+                $info = $matches[1];
+                
+                $nasstr = $matches[3];
+                $portstr = $matches[4];
+                if (array_key_exists($login, $usersnbfailures)) {
+                    $usersnbfailures[$login] = $usersnbfailures[$login] + 1;
                 } else {
-                    $users[] = array('id' => '-1', 'username' => Utils::formatMAC($info[0]));
-                }
-                if (Utils::isMAC($info[0])) {
-                    $url = "http://api.macvendors.com/" . urlencode(Utils::formatMAC($info[0]));
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_TIMEOUT, 4);
-                    curl_setopt($ch, CURLOPT_PROXYPORT, Configure::read('Parameters.proxy_port'));
-                    curl_setopt($ch, CURLOPT_PROXY, Configure::read('Parameters.proxy_ip'));
-                    curl_setopt($ch, CURLOPT_PROXYUSERPWD, Configure::read('Parameters.proxy_login').":".Configure::read('Parameters.proxy_password'));
-                    curl_setopt($ch, CURLOPT_URL, $url);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    $response = curl_exec($ch);
-                    if ($response) {
-                        $vendors[$info[0]] = $response;
+                    $usersnbfailures[$login] = 1;
+                    $lasts[$login] = $log['Logline']['datetime'];
+                    //debug($info);
+                    //debug($log['Logline']['datetime']);
+                    $username = $this->Logline->query('select * from raduser where username="' . $login . '"');
+                    $port[$login] = $portstr;
+                    $nas[$login] = $nasstr;
+                    $users[$login]['last'] = $log['Logline']['datetime'];
+                    $users[$login]['info'] = $info;
+                    $users[$login]['port'] = $portstr;
+                    $users[$login]['nas'] = $nasstr;
+                    $logins[] = $login;
+                    
+                    //$last = $this->Logline->query('select datetime from logs where msg like "Login incorrect: ['.$username.'%"');
+                    //debug($last);
+                    if (count($username) > 0) {
+                        $username[0]['raduser']['username'] = Utils::formatMAC(
+                                        $username[0]['raduser']['username']
+                        );
+                        //$users['login'] = $username[0]['raduser'];
+                        $usernames[] = $username[0]['raduser'];
                     } else {
-                        $vendors[$info[0]] = "NA";
+                        $usernames[] = array('id' => '-1', 'username' => Utils::formatMAC($login));
                     }
-                } else {
-                    $vendors[$info[0]] = "";
+                    if (Utils::isMAC($login)) {
+                        $url = "http://api.macvendors.com/" . urlencode(Utils::formatMAC($login));
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+                        curl_setopt($ch, CURLOPT_PROXYPORT, Configure::read('Parameters.proxy_port'));
+                        curl_setopt($ch, CURLOPT_PROXY, Configure::read('Parameters.proxy_ip'));
+                        curl_setopt($ch, CURLOPT_PROXYUSERPWD, Configure::read('Parameters.proxy_login') . ":" . Configure::read('Parameters.proxy_password'));
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        $response = curl_exec($ch);
+                        if ($response) {
+                            $users[$login]['vendor'] = $response;
+                        } else {
+                            $users[$login]['vendor'] = "NA";
+                        }
+                    } else {
+                        $users[$login]['vendor'] = "";
+                    }
                 }
             }
             //echo $log['Logline']['datetime']." : ".$log['Logline']['msg']."<br>";
         }
         $this->set('failures', $usersnbfailures);
-        $this->set('lasts', $lasts);
         $this->set('users', $users);
-        $this->set('vendors', $vendors);
-        $this->set('port', $port);
-        $this->set('nas', $nas);
+        $this->set('logins', $logins);
+        $this->set('usernames', $usernames);
     }
 
     public function get_failures_by_nas() {
@@ -139,18 +147,23 @@ class ReportsController extends AppController {
         $lasts=array();
         
         foreach($logs as $log) {
-            $info=explode("[", $log['Logline']['msg']);
-            $info=explode("/", $info[1]);
-            $info2=explode(" ", $info[1]);
-            //debug($info2);
-            if (array_key_exists($info2[3], $nasnbfailures)) {
-                $nasnbfailures[$info2[3]] = $nasnbfailures[$info2[3]]+1;
-            }
-            else {
-                $nasnbfailures[$info2[3]] = 1;
-                $lasts[$info2[3]] = $log['Logline']['datetime'];
-            }
-            //echo $log['Logline']['datetime']." : ".$log['Logline']['msg']."<br>";
+            if (preg_match('/^Login incorrect\s*\(*(.*)\)*: \[(.*)\/.*\] \(from client (.*) port (\d+) /', $log['Logline']['msg'], $matches)) {
+                //echo "ok ".$matches[1]." ".$matches[2]." ".$matches[3]." ".$matches[4]."\n";
+                $login = $matches[2];
+                $info = $matches[1];
+                $nas = $matches[3];
+            
+                $info = explode("[", $log['Logline']['msg']);
+                $info = explode("/", $info[1]);
+                $info2 = explode(" ", $info[1]);
+                //debug($info2);
+                if (array_key_exists($nas, $nasnbfailures)) {
+                    $nasnbfailures[$nas] = $nasnbfailures[$nas] + 1;
+                } else {
+                    $nasnbfailures[$nas] = 1;
+                    $lasts[$nas] = $log['Logline']['datetime'];
+                }
+            }//echo $log['Logline']['datetime']." : ".$log['Logline']['msg']."<br>";
         }
         $this->set('nasfailures', $nasnbfailures);
         $this->set('naslasts', $lasts);

@@ -5,7 +5,7 @@
                 <h3 class="panel-title"><?php echo __('Please Sign In'); ?></h3>
             </div>
             <div class="panel-body">
-
+                <?php echo $this->Session->flash('role'); ?>        
                 <?php echo $this->Session->flash('auth'); ?>
                 <?php echo $this->Form->create('Raduser'); ?>
 

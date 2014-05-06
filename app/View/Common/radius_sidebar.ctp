@@ -76,7 +76,10 @@ echo $this->Html->link(
         'controller' => 'reports',
         'action' => 'index',
     ),
-    array('escape' => false)
+    array(
+        'onclick'=>'loading_from_sidebar()',
+        'escape' => false,
+    )
 );
 ?>
     </li>

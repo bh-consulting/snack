@@ -18,7 +18,7 @@
 
 <?php
     $nb = count($failures);
-    echo "<h4>$nb tentatives de connexions by users<br></h4>";
+    echo "<h4>$nb failures of connections order by users<br></h4>";
     echo "<table>";
     echo "<th>".__('User')."</th>";
     echo "<th>".__('Nb')."</th>";
@@ -26,18 +26,21 @@
     echo "<th>".__('Vendor')."</th>";
     echo "<th>".__('NAS')."</th>";
     echo "<th>".__('Port')."</th>";
+    echo "<th>".__('Why ?')."</th>";
+    //debug($users);
     $infos = explode(",", $this->element('formatUsersList', array(
-            'users' => $users
+            'users' => $usernames
         )));
     $i=0;
     foreach ($failures as $key => $value) {
         echo "<tr>";
         echo "<td>".$infos[$i]."</td>";
         echo "<td>".$value."</td>";
-        echo "<td>".$lasts[$key]."</td>";
-        echo "<td>".$vendors[$key]."</td>";
-        echo "<td>".$nas[$key]."</td>";
-        echo "<td>".$port[$key]."</td>";
+        echo "<td>".$users[$logins[$i]]['last']."</td>";
+        echo "<td>".$users[$logins[$i]]['vendor']."</td>";
+        echo "<td>".$users[$logins[$i]]['nas']."</td>";
+        echo "<td>".$users[$logins[$i]]['port']."</td>";
+        echo "<td>".$users[$logins[$i]]['info']."</td>";
         //echo " : ".$value." tentatives";
         $i++;
         echo "</tr>";
@@ -46,7 +49,7 @@
     
     
     $nb = count($nasfailures);
-    echo "<h4>$nb tentatives de connexions by nas</h4>";
+    echo "<h4>$nb failures of connections order by nas</h4>";
     echo "<table>";
     echo "<th>".__('NAS')."</th>";
     echo "<th>".__('Nb')."</th>";

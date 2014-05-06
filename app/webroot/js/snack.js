@@ -15,6 +15,10 @@ function loading() {
     $("div.loading").html("<h2>Veuillez patienter ...</h2>");
 }
 
+function loading_from_sidebar() {
+    $("div.loading_from_sidebar").html('<div class="col-md-4"></div><div class="col-md-6"><h2>Veuillez patienter ...</h2></div>');
+}
+
 $(window).resize(function() {
     if($(window).width() > 979) {
 	if($('.mainmenu').hasClass('menuphone'))

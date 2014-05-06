@@ -122,8 +122,19 @@ $cakeDescription = __('SNACK');
         </div>
     </div>
 </div>
-
-
+<?php
+if (Configure::read('Parameters.role')=="slave") {
+    echo '<div class="alert alert-danger">';
+    echo '<br>';
+    echo '<br><center><h2>';
+    echo __('Warning this is a SLAVE node : all changement will be not saved');
+    echo '</h2></center>';
+    echo '</div>';
+}
+?>
+</div>
+<div class="loading_from_sidebar">
+</div>
 <div class="container">
     <div class="row bhbody">
 
