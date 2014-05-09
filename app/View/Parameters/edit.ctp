@@ -108,7 +108,8 @@ echo $this->Form->input('role', array(
     'empty' => false,
     'label' => __('Role'),
 ));
-echo $this->Form->input('master_ip', array('label' => __('Master IP Address'), 'disabled' => true));
+echo $this->Form->input('master_ip', array('label' => __('Master IP Address'), 'readonly' => true));
+echo $this->Form->input('slave_ip_to_monitor', array('label' => __('Slave IP to monitor')));
 ?>
 </dl>
 <?php

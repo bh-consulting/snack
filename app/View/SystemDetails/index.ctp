@@ -16,6 +16,10 @@ $this->assign('systemdetails_general_active', 'active');
                 <dl class="dl-horizontal">
                     <dt><?php echo __('Name'); ?></dt>
                     <dd><?php echo $name; ?></dd>
+                    <dt><?php echo __('Release'); ?></dt>
+                    <dd><?php echo $release; ?></dd>
+                    <dt><?php echo __('Version'); ?></dt>
+                    <dd><?php echo $version; ?></dd>
                     <dt><?php echo __('Date'); ?></dt>
                     <dd><?php echo $curdate; ?></dd>
                     <dt><?php echo __('Hostname'); ?></dt>

@@ -17,7 +17,7 @@ class ParametersController extends AppController {
         if ($this->request->is('post')) {
             Utils::cleanPath($this->request->data['Parameter']['scriptsPath']);
             Utils::cleanPath($this->request->data['Parameter']['certsPath']);
-
+            
             $this->Parameter->set($this->request->data);
 
             if ($this->Parameter->save()) {

@@ -6,10 +6,9 @@ class SystemDetailsController extends AppController {
     public $name = 'SystemDetails';
     public $helpers = array('Html', 'Form', 'Js');
     public $components = array(
-        'Process',
+        'Process'
     );
     public $uses = array('Radcheck', 'Raduser', 'SystemDetail', 'nas');
-    private $eapol;
     
     public function isAuthorized($user) {
         
@@ -23,24 +22,15 @@ class SystemDetailsController extends AppController {
     }
 
     public function index() {
-        $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));
-        foreach ( $values as $val ) {
-            if( preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
-                continue;
-            }
-        }
-        $this->set('name', $matches[1]);
-        
-        $values = preg_grep("/.*Not After : (.*)/", file(Utils::getServerCertPath()));
-        foreach ( $values as $val ) {
-            if( preg_match('/\Not After : (.*)/', $val, $matches)) {
-                continue;
-            }
-        }
-        $this->set('ca_expiration', $matches[1]);
+        $this->set('name', $this->SystemDetail->getName());
+
+        $this->set('ca_expiration', $this->SystemDetail->getCAValidity());
         
         $this->set('hostname', $this->SystemDetail->getHostname());
 
+        $this->set('release', $this->SystemDetail->getRelease());
+        $this->set('version', $this->SystemDetail->getVersion($this->SystemDetail->getRelease()));
+        
         $uptimes = $this->SystemDetail->getUptimes();
         $this->set('uptime', $uptimes[0]);
         $this->set('idletime', $uptimes[1]);
@@ -212,10 +202,15 @@ class SystemDetailsController extends AppController {
                              'username' => Configure::read('Parameters.smtp_login'),
                              'password' => Configure::read('Parameters.smtp_password')));
         $Email->emailFormat('both');
-        $Email->from(array('snack@bh-consulting.net' => 'SNACK'));
-        //$Email->to('groche@guigeek.org');
         $Email->from(array(Configure::read('Parameters.smtp_email_from') => 'SNACK'));
-        $Email->to(Configure::read('Parameters.configurationEmail'));
+        $emails = explode(';', Configure::read('Parameters.configurationEmail'));
+        $listemails = array();
+        foreach ( $emails as $email) {
+            if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $listemails[] = $email;
+            }
+        }
+        $Email->to($listemails);
         $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));
         foreach ( $values as $val ) {
             if( preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
@@ -276,8 +271,10 @@ class SystemDetailsController extends AppController {
         }
         $index = ($page-1) * $pageSize;
         $file_list = array();
-        for ($i = 0; $i < $pageSize; $i ++) {
+        for ($i = 0; $i < $pageSize; $i ++) {            
             if (isset($files[$index + $i])) {
+                $rsync = -1;
+                $mysql = -1;
                 $file = new File(APP.'tmp/ha/'.$files[$index + $i], false, 0644);
                 $tmp=$file->read(false, 'rb', false);
                 if (preg_match('/RSYNC RES :([0-9]+)/', $tmp, $matches)) {
@@ -288,7 +285,7 @@ class SystemDetailsController extends AppController {
                 }
                 if (preg_match('/IP:([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/', $tmp, $matches)) {
                     $ip = $matches[1];
-                }
+                }                
                 if ($rsync == 0 && $mysql == 0) {
                     $file_list[] = array('name' => $files[$index + $i], 'results' => 0, 'slave' => $ip);
                 } else {
@@ -309,14 +306,7 @@ class SystemDetailsController extends AppController {
         $this->layout = 'ajax';
     }
     
-    public function tests() {
-        $return = shell_exec("getconf LONG_BIT");
-        if ($return == "64\n") {
-            $this->eapol="eapol_test_64";
-        }
-        elseif ($return == "32\n") {
-            $this->eapol="eapol_test_x86";
-        }
+    public function tests() {        
         $results=array();
         $nas = $this->Raduser->query('select nasname,secret from nas where nasname="127.0.0.1";');
         foreach ($nas as $n) {
@@ -325,74 +315,9 @@ class SystemDetailsController extends AppController {
         }
         $usernames = $this->Raduser->query('select username,comment from raduser;');
         foreach ($usernames as $username) {
-            $this->tests_users($username['raduser']['username'], $nasname, $secret, $results, $username['raduser']['comment']);
+            $this->SystemDetail->tests_users($username['raduser']['username'], $nasname, $secret, $results, $username['raduser']['comment']);
         }
         $this->set('results', $results);
-    }
-    
-    public function tests_users($username, $nasname, $nassecret, &$results, $comment="") {
-        $radchecks = $this->Radcheck->query('select * from radcheck where username="' . $username . '";');
-        $tls = 0;
-        $ttls = 0;
-        $nasporttype = "";
-        $return = "";
-        foreach ($radchecks as $radcheck) {
-            if ($radcheck['radcheck']['attribute'] == "EAP-Type") {
-                if ($radcheck['radcheck']['value'] == "EAP-TTLS") {
-                    $ttls = 1;
-                }
-                if ($radcheck['radcheck']['value'] == "EAP-TLS") {
-                    $tls = 1;
-                }
-            }
-            if ($radcheck['radcheck']['attribute'] == "Cleartext-Password") {
-                $password = $radcheck['radcheck']['value'];
-            }
-            if ($radcheck['radcheck']['attribute'] == "NAS-Port-Type") {
-                $nasporttype = $radcheck['radcheck']['value'];
-            }
-        }
-        if ($tls == 0 && $ttls == 0) {
-            $nasports = explode("|", $nasporttype);
-            if (count($nasports) > 0) {
-                $nasporttype = $nasports[0];
-                $request = '( echo "User-Name = \"' . $username . '\""; echo "Cleartext-Password = \"' . $password . '\"";  echo "NAS-Port-Type= \"' . $nasporttype . '\""; echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"' . $username . '\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x ' . $nasname . ' auth ' . $nassecret;
-            } else {
-                $request = '( echo "User-Name = \"' . $username . '\""; echo "Cleartext-Password = \"' . $password . '\"";  echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"' . $username . '\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x ' . $nasname . ' auth ' . $nassecret;
-            }
-            $return = shell_exec($request);
-        } elseif ($ttls == 1) {
-            $file = new File(APP . 'tmp/eap-ttls.conf', true, 0644);
-            $file->write("network={\n");
-            $file->write("\teap=TTLS\n");
-            $file->write("\teapol_flags=0\n");
-            $file->write("\tkey_mgmt=IEEE8021X\n");
-            $file->write("\tidentity=\"" . $username . "\"\n");
-            $file->write("\tpassword=\"" . $password . "\"\n");
-            $file->write("\tphase2=\"auth=MSCHAPv2\"\n");
-            $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
-            $file->write("}");
-            $request = "/home/snack/interface/tools/".$this->eapol." -c /home/snack/interface/app/tmp/eap-ttls.conf -a127.0.0.1 -p1812 -sloopsecret";
-            $return = shell_exec($request);
-        } elseif ($tls == 1) {
-            $file = new File(APP . 'tmp/eap-tls.conf', true, 0644);
-            $file->write("network={\n");
-            $file->write("\teap=TLS\n");
-            $file->write("\teapol_flags=0\n");
-            $file->write("\tkey_mgmt=IEEE8021X\n");
-            $file->write("\tidentity=\"" . $username . "\"\n");
-            $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
-            $file->write("\tclient_cert=\"" . Utils::getUserCertsPemPath($username) . "\"\n");
-            $file->write("\tprivate_key=\"" . Utils::getUserKeyPemPath($username) . "\"\n");
-            $file->write("}");
-            $request = "/home/snack/interface/tools/".$this->eapol." -c /home/snack/interface/app/tmp/eap-tls.conf -a127.0.0.1 -p1812 -sloopsecret";
-            $return = shell_exec($request);
-        } else {
-            $results[$username]['res'] = "NA";
-            $return = "";
-        }
-        $results[$username]['res'] = $return;
-        $results[$username]['comment'] = $comment;
     }
 
     public function testslog($username) {
@@ -412,7 +337,7 @@ class SystemDetailsController extends AppController {
             $nasname=$n['nas']['nasname'];
             $secret=$n['nas']['secret'];
         }
-        $this->tests_users($username, $nasname, $secret, $results, "");
+        $this->SystemDetail->tests_users($username, $nasname, $secret, $results, "");
         //debug($results[$username]['res']);
         $this->set('log', $results[$username]['res']);
         $this->layout = 'ajax';

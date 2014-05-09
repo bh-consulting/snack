@@ -1,5 +1,4 @@
 <?php
-
 class SystemDetail extends AppModel {
 	/* Gets the uptime of a service or -1 if the service is down. */
 	function checkService( $service ) {
@@ -118,6 +117,132 @@ class SystemDetail extends AppModel {
         $load = $rs[$interval];
         return round(($load * 100) / $coreCount, 2);
     }
+    
+    /* Get release  */
+    function getRelease() {
+        $file = new File('/etc/debian_version', false);
+        if ($file->exists()) {
+            return "debian";
+        }
+        $file = new File('/etc/lsb-release', false);
+        if ($file->exists()) {
+            return "ubuntu";
+        }
+    }
+    
+    /* Get version  */
+    function getVersion($release) {
+        if ($release == "ubuntu") {
+            $file = new File('/etc/lsb-release', false);
+            $tmp=$file->read(false, 'rb', false);
+            if(preg_match('/DISTRIB_RELEASE=(.*)\s/', $tmp, $matches)) {
+                return $matches[1];
+            }
+        }
+        if ($release == "debian") {
+            $file = new File('/etc/debian_version', false);
+            $tmp=$file->read(false, 'rb', false);
+            if(preg_match('/(.*)/', $tmp, $matches)) {
+                return $matches[1];
+            }
+        }
+    }
+    
+    /* Get name */
+    function getName() {
+        $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));
+        foreach ( $values as $val ) {
+            if( preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
+                continue;
+            }
+        }
+        return $matches[1];
+    }
+    
+    /* Get CA validity */
+    function getCAValidity() {
+        $values = preg_grep("/.*Not After : (.*)/", file(Utils::getServerCertPath()));
+        foreach ( $values as $val ) {
+            if( preg_match('/\Not After : (.*)/', $val, $matches)) {
+                continue;
+            }
+        }
+        return $matches[1];
+    }
+    
+    /* Test users */
+    function tests_users($username, $nasname, $nassecret, &$results, $comment = "") {        
+        $return = shell_exec("getconf LONG_BIT");
+        if ($return == "64\n") {
+            $this->eapol = "eapol_test_64";
+        } elseif ($return == "32\n") {
+            $this->eapol = "eapol_test_x86";
+        }
+        $this->Radcheck = ClassRegistry::init('Radcheck');
+        $radchecks = $this->Radcheck->query('select * from radcheck where username="' . $username . '";');
+        $tls = 0;
+        $ttls = 0;
+        $nasporttype = "";
+        $return = "";
+        foreach ($radchecks as $radcheck) {
+            if ($radcheck['radcheck']['attribute'] == "EAP-Type") {
+                if ($radcheck['radcheck']['value'] == "EAP-TTLS") {
+                    $ttls = 1;
+                }
+                if ($radcheck['radcheck']['value'] == "EAP-TLS") {
+                    $tls = 1;
+                }
+            }
+            if ($radcheck['radcheck']['attribute'] == "Cleartext-Password") {
+                $password = $radcheck['radcheck']['value'];
+            }
+            if ($radcheck['radcheck']['attribute'] == "NAS-Port-Type") {
+                $nasporttype = $radcheck['radcheck']['value'];
+            }
+        }
+        if ($tls == 0 && $ttls == 0) {
+            $nasports = explode("|", $nasporttype);
+            if (count($nasports) > 0) {
+                $nasporttype = $nasports[0];
+                $request = '( echo "User-Name = \"' . $username . '\""; echo "Cleartext-Password = \"' . $password . '\"";  echo "NAS-Port-Type= \"' . $nasporttype . '\""; echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"' . $username . '\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x ' . $nasname . ' auth ' . $nassecret;
+            } else {
+                $request = '( echo "User-Name = \"' . $username . '\""; echo "Cleartext-Password = \"' . $password . '\"";  echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"' . $username . '\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x ' . $nasname . ' auth ' . $nassecret;
+            }
+            $return = shell_exec($request);
+        } elseif ($ttls == 1) {
+            $file = new File(APP . 'tmp/eap-ttls.conf', true, 0644);
+            $file->write("network={\n");
+            $file->write("\teap=TTLS\n");
+            $file->write("\teapol_flags=0\n");
+            $file->write("\tkey_mgmt=IEEE8021X\n");
+            $file->write("\tidentity=\"" . $username . "\"\n");
+            $file->write("\tpassword=\"" . $password . "\"\n");
+            $file->write("\tphase2=\"auth=MSCHAPv2\"\n");
+            $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
+            $file->write("}");
+            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap-ttls.conf -a".$nasname." -p1812 -s".$nassecret;
+            $return = shell_exec($request);
+        } elseif ($tls == 1) {
+            $file = new File(APP . 'tmp/eap-tls.conf', true, 0644);
+            $file->write("network={\n");
+            $file->write("\teap=TLS\n");
+            $file->write("\teapol_flags=0\n");
+            $file->write("\tkey_mgmt=IEEE8021X\n");
+            $file->write("\tidentity=\"" . $username . "\"\n");
+            $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
+            $file->write("\tclient_cert=\"" . Utils::getUserCertsPemPath($username) . "\"\n");
+            $file->write("\tprivate_key=\"" . Utils::getUserKeyPemPath($username) . "\"\n");
+            $file->write("}");
+            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap-tls.conf -a".$nasname." -p1812 -s".$nassecret;
+            $return = shell_exec($request);
+        } else {
+            $results[$username]['res'] = "NA";
+            $return = "";
+        }
+        $results[$username]['res'] = $return;
+        $results[$username]['comment'] = $comment;
+    }
+
 }
 
 ?>

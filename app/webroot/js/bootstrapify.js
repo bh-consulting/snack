@@ -205,10 +205,14 @@ var Boostrapify = {
         $(".role").change(function() {
             var value = $(this).val();
             if (value == "master") {
-                $("#ParameterMasterIp" ).prop( "disabled", true );
+                $("#ParameterMasterIp" ).prop( "readonly", true );
+                $("#ParameterMasterIp" ).val("");
+                $("#ParameterSlaveIpToMonitor" ).prop( "readonly", false );
             }
             if (value == "slave") {
-                $("#ParameterMasterIp" ).prop( "disabled", false );
+                $("#ParameterMasterIp" ).prop( "readonly", false );
+                $("#ParameterSlaveIpToMonitor" ).prop( "readonly", true );
+                $("#ParameterSlaveIpToMonitor" ).val("");
             }
         });
         //$.get("SystemDetails/halog/ha-2014-04-18_02-23.log", function(data) {

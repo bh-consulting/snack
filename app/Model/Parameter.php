@@ -133,16 +133,22 @@ class Parameter extends AppModel {
             'default' => '',
             'length' => '255',
         ),
+        'slave_ip_to_monitor' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '',
+            'length' => '255',
+        ),
     );
 
     public $validate = array(
-        'configurationEmail' => array(
+        /*'configurationEmail' => array(
             'email' => array(
                 'rule' => 'email',
                 'message' => 'Invalid email format.',
                 'required' => true
             )
-        ),
+        ),*/
         'errorEmail' => array(
             'email' => array(
                 'rule' => 'email',

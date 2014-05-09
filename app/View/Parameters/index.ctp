@@ -165,6 +165,12 @@ echo empty($role) ? __('Not set.') : $role;
         echo empty($master_ip) ? __('Not set.') : $master_ip;
         ?>
     </dd>
+    <dt><?php echo __('Slave IP to monitor'); ?></dt>
+    <dd>
+        <?php
+        echo empty($slave_ip_to_monitor) ? __('Not set.') : $slave_ip_to_monitor;
+        ?>
+    </dd>
 </dl>
 
 
