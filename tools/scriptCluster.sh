@@ -18,7 +18,7 @@ if [ "$ROLE" == 'slave' ]; then
         -e "s/\('role' => '\)master/\1$ROLE/" \
         -i $USER_HOME/interface/app/Config/parameters.php
     sed \
-        -e "s/\('master_ip' => '\)[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/\1$MASTER/" \
+        -e "s/\('master_ip' => '\)[0-9]*\.*[0-9]*\.*[0-9]*\.*[0-9]*/\1$MASTER/" \
         -i $USER_HOME/interface/app/Config/parameters.php
     mv /tmp/log-import /tmp/$LOG
     echo "IP:$IP" >> /tmp/$LOG
