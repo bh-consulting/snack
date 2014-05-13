@@ -60,10 +60,10 @@ var Boostrapify = {
 		$('input[type="submit"]').addClass('btn btn-primary');
 		
 		// Special inputs
-		$('input.email').wrap('<div class="input-append"/>');
-		$('input.email').after('<span class="add-on">@</span>');
-		$('input.path').wrap('<div class="input-append"/>');
-		$('input.path').after('<span class="add-on">../</span>');
+		$('input.email').wrap('<div class="input-group"/>');
+		$('input.email').after('<span class="input-group-addon">@</span>');
+		$('input.path').wrap('<div class="input-group"/>');
+		$('input.path').after('<span class="input-group-addon">../</span>');
 
 		// FORM ERROR MESSAGES
 		$('div.error-message').replaceWith(function() {

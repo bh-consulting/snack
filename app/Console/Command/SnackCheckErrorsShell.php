@@ -9,15 +9,17 @@ class SnackCheckErrorsShell extends AppShell {
     private $errors=0;
     
     public function main() {
-        $this->str .= "<h2>SNACK Report</h2>";
-        $this->getInfos();
-        $this->checkServices();
-        $this->checkBackup();
-        $this->checkHA();
-        $this->testUsers();
-        $this->sendMail($this->str);
-        //echo $this->str;
-        //echo $this->errors;
+        if (Configure::read('Parameters.role') == "master") {
+            $this->str .= "<h2>SNACK Report</h2>";
+            $this->getInfos();
+            $this->checkServices();
+            $this->checkBackup();
+            $this->checkHA();
+            //$this->testUsers();
+            $this->sendMail($this->str);
+            //echo $this->str;
+            //echo $this->errors;
+        }
     }
     
     public function getInfos() {
@@ -97,8 +99,11 @@ class SnackCheckErrorsShell extends AppShell {
         //echo $datetime1->format('Y-m-d H:i:s');
         foreach ($nas as $n) {
             $nasname=$n['nas']['nasname'];
-            //$return = shell_exec("/usr/bin/snmpset -t 5 -c private -v 2c ".$nasname." ".$oid_writeNet.".".$ip_address." s ".$nasname);
-            //echo "RETURN : ".$return;
+            $return = shell_exec("export NAS_IP_ADDRESS=".$nasname." ;
+                                  export USER_NAME=AUTO ;
+                                  export ACCT_STATUS_TYPE=Write ;
+                                   /home/snack/scripts/backup_create.sh");
+            echo "RETURN : ".$return;
             $backup = $this->Backup->query("select * from backups where nas='".$nasname."' order by id desc limit 1;");
             $this->str .= $nasname." ";
             if (count($backup) > 0) {                

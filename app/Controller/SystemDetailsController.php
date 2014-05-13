@@ -135,7 +135,7 @@ class SystemDetailsController extends AppController {
     }
     
     public function upgrade() {
-        $cmd = "sudo apt-get upgrade snack -y --force-yes";
+        $cmd = "sudo apt-get install snack -y --force-yes";
         $this->Process->run($cmd,APP.'tmp/logs/upgrade.log');
         
         $this->set('return', $return);

@@ -1,12 +1,9 @@
 <?php
-$this->extend('/Common/radius_sidebar'); 
-$this->assign('radius_active', 'active');
-$this->assign('help_active', 'active');
+$this->extend('/Common/help_tabs');
+$this->assign('help_nasconfig_active', 'active');
 Configure::load('parameters');
 $ipAddress=Configure::read('Parameters.ipAddress');
 ?>
-
-<h1><?php echo __('Help'); ?></h1>
 
 <h4><?php echo __('General information:');?></h4>
 <dl class="well dl-horizontal">
