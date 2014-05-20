@@ -1,14 +1,9 @@
 <?php
 $this->extend('/Common/help_tabs');
-$this->assign('help_windows_active', 'active');
+$this->assign('help_windowsxp_active', 'active');
 ?>
-<h2><?php echo __('User/Password without certificat');?></h2>
-
-
-
-
 <h2><?php echo __('User/Password with Certificate Server');?></h2>
-<div id="rootcertificate">
+
 <h4><?php echo __('Installation of root certificat');?></h4>
 <?php 
 echo __("Pour installer le certificat racine, ouvrer Démarrer puis cliquez sur 'Exécuter' et lancez 'certmgr.msc");
@@ -38,8 +33,9 @@ echo "<br><br>";
 echo __("Authorisez cet import ('oui').
 Puis validez et quittez toutes les fenêtres ouvertes.");
 ?>
-</div>
-<br>
+
+<br><br>
+
 <h4><?php echo __('Configuration');?></h4>
 <?php
 echo __("Allez dans le panneau des connexions.");
@@ -71,32 +67,4 @@ echo "<br><br>";
 echo $this->Html->image('help/windows/credentials.PNG', array('alt' => 'credentials'));
 echo "<br><br>";
 echo __("Après avoir validé, la connexion est établie.");
-?>
-
-<h2><?php echo __('User/Password by Certificates');?></h2>
-<?php
-echo __("Si ce n'est pas fait, commencez par installer le certificat racine (cf. ");
-echo $this->Html->link("ICI)", '#rootcertificate');
-?>
-<h4><?php echo __('Installation of client certificat');?></h4>
-<?php 
-echo __("Pour installer le certificat client au format p12, il vous suffit de double-cliquer dessus. Le même assistant que celui utilisé pour l'installation du certificat racine apparait.\\
-Cliquez sur suivant lors du premier panneau. Cliquez sur suivant sur le panneau suivant (Le chemin du fichier est déjà bon).<br>
-Sur le panneau suivant, un mot de passe vous est demandé. Laissez le champs vide et cliquez sur suivant");
-echo "<br><br>";
-echo $this->Html->image('help/windows/importClient.PNG', array('alt' => 'importClient'));
-echo "<br><br>";
-echo __("Cliquez ensuite sur suivant une nouvelle fois. La selection automatique du magasin est en effet adaptée pour ce cas.");
-echo "<br><br>";
-echo $this->Html->image('help/windows/importClient.PNG', array('alt' => 'importClient2'));
-echo "<br><br>";
-echo __("Cliquez enfin sur Terminer");
-echo "<br><br>";
-?>
-<?php
-/*
-    echo $this->Html->image('help/windows/connections.PNG', array('alt' => 'Connections'));
-    
-    echo $this->Html->image('help/windows/credentials.PNG', array('alt' => 'Credentials'));
-*/
 ?>

@@ -6,15 +6,15 @@ $this->assign('users_active', 'active');
 if (isset($attributes['EAP-Type'])
     && $attributes['EAP-Type'] == 'EAP-TTLS'
 ) {
-    $attributes['Server certificate path'] = $this->Html->link(
-        __($attributes['Server certificate path']),
-        array(
-            'action' => 'get_cert/server',
-            'controller' => 'certs',
-        )
+    $servercertificatepem = $this->Html->link(
+            "cacert.pem", array(
+        'action' => 'get_cert/server',
+        'controller' => 'certs',
+            )
     );
-    $attributes['Server certificate cer path'] = $this->Html->link(
-            $attributes['Server certificate cer path'], array(
+
+    $servercerficatecer = $this->Html->link(
+            "cacert.cer", array(
         'action' => 'get_cert/servercer',
         'controller' => 'certs',
             )
@@ -35,4 +35,17 @@ echo $this->element(
 		'showedAttr' => $showedAttr,
 	)
 );
+if (isset($attributes['EAP-Type']) && $attributes['EAP-Type'] == 'EAP-TTLS') {
+    echo '<dl class="well dl-horizontal">
+    <dt>For Windows : </dt>
+    <dd>';
+    echo $servercertificatepem;
+    echo '</dd>
+</dl>
+<dl class="well dl-horizontal">
+    <dt>For Android / Linux: </dt>
+    <dd>';
+    echo $servercerficatecer;
+    echo '</dd></dl>';
+}
 ?>

@@ -18,15 +18,38 @@ class CertsController extends AppController {
      * @param  string $user user
      * @return response file to download
      */
-    public function get_cert($user) {
-	if($user == 'server') {
+    public function get_cert($type) {
+	if($type == 'server') {
 	    $file = Utils::getServerCertPath();
-    } elseif($user == 'servercer') {
+    } elseif($type == 'servercer') {
         $file = Utils::getServerCertCerPath();
-	} else {
-	    $file = Utils::getUserCertsPath($user);
 	}
-
+        try {
+            $this->response->file($file);
+            return $this->response;
+        } catch(NotFoundException $e){
+            $this->Session->setFlash(
+                __('The certificate file %s does not exist.', $file),
+                'flash_error'
+            );
+            Utils::userlog(
+                __('error while downloading cert %s', $file),
+                'error'
+            );
+            $this->redirect(array('controller' => 'radusers', 'action' => 'index'));
+        }
+    }
+    
+    public function get_cert_user($user, $type) {
+        if ($type == "p12") {
+            $file = Utils::getUserCertsPath($user);
+        }
+        if ($type == "pem") {
+            $file = Utils::getUserCertsPemPath($user);
+        }
+        if ($type == "key") {
+            $file = Utils::getUserKeyPemPath($user);
+        }
         try {
             $this->response->file($file);
             return $this->response;

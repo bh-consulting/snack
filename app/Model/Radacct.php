@@ -12,7 +12,8 @@ class Radacct extends AppModel {
         $this->types = array(
             'Async' => __('Console'),
             'Virtual' => __('Telnet/SSH'),
-            'Ethernet' => __('802.1X'),
+            'Ethernet' => __('Ethernet'),
+            'Wireless-802.11' => __('Wireless'),
         );
 
         parent::__construct($id, $table, $ds);

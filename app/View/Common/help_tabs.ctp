@@ -16,13 +16,39 @@ $this->assign('help_active', 'active');
                 );
                 ?>
             </li>
-            <li class="<?php echo $this->fetch('help_windows_active'); ?>">
-                <?php
-                echo $this->Html->link(
-                    __('Windows'),
-                    array('controller' => 'help', 'action' => 'windows')
-                );
-                ?>
+            <li class="dropdown <?php echo $this->fetch('help_windowsxp_active'); ?>">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Windows XP <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="#">
+                            <?php
+                            echo $this->Html->link(
+                                    __('User/Password'), array('controller' => 'help', 'action' => 'windows_xp_eap')
+                            );
+                            ?>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <?php
+                            echo $this->Html->link(
+                                    __('User/Password with Certificate Server'), array('controller' => 'help', 'action' => 'windows_xp_eapttls')
+                            );
+                            ?>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <?php 
+                            echo $this->Html->link(
+                                    __('Certificates'), array('controller' => 'help', 'action' => 'windows_xp_eaptls')
+                            );
+                            ?>
+                        </a>
+                    </li>                   
+                </ul>
             </li>
 	    <!-- <li class="<?php echo $this->fetch('help_android_active'); ?>">
                 <?php

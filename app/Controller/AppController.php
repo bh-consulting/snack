@@ -104,8 +104,8 @@ class AppController extends Controller {
         // Set common class for sort icons, used in all indexes to display
         // sorted tables of elements.
         $this->set('sortIcons', array(
-            'asc' => 'icon-chevron-down',
-            'desc' => 'icon-chevron-up',
+            'asc' => 'glyphicon glyphicon-chevron-down',
+            'desc' => 'glyphicon glyphicon-chevron-up',
         ));
 
         if (!isset($this->disableBackupsCheck[$this->name])

@@ -4,24 +4,40 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
 
-$attributes['User certificate path'] = $this->Html->link(
-    $attributes['User certificate path'], 
+$usercertificatep12 = $this->Html->link(
+    $attributes['Username'].".p12", 
     array(
-    	'action' => 'get_cert/' . $attributes['Username'],
+    	'action' => 'get_cert_user/' . $attributes['Username'] . '/p12',
     	'controller' => 'certs',
     )
 );
 
-$attributes['Server certificate path'] = $this->Html->link(
-    $attributes['Server certificate path'],
+$usercertificatepem = $this->Html->link(
+    $attributes['Username'].".pem", 
+    array(
+    	'action' => 'get_cert_user/' . $attributes['Username'] . '/pem',
+    	'controller' => 'certs',
+    )
+);
+
+$usercertificatekey = $this->Html->link(
+    $attributes['Username'].".key", 
+    array(
+    	'action' => 'get_cert_user/' . $attributes['Username'] . '/key',
+    	'controller' => 'certs',
+    )
+);
+
+$servercertificatepem = $this->Html->link(
+    "cacert.pem",
     array(
     	'action' => 'get_cert/server',
     	'controller' => 'certs',
     )
 );
 
-$attributes['Server certificate cer path'] = $this->Html->link(
-    $attributes['Server certificate cer path'],
+$servercerficatecer = $this->Html->link(
+    "cacert.cer",
     array(
     	'action' => 'get_cert/servercer',
     	'controller' => 'certs',
@@ -41,3 +57,18 @@ echo $this->element(
 	)
 );
 ?>
+<dl class="well dl-horizontal">
+    <dt>For Windows : </dt>
+    <dd><?php echo $servercertificatepem; ?></dd>
+    <dt></dt>
+    <dd><?php echo $usercertificatep12; ?></dd>
+</dl>
+
+<dl class="well dl-horizontal">
+    <dt>For Android / Linux: </dt>
+    <dd><?php echo $servercerficatecer; ?></dd>
+    <dt></dt>
+    <dd><?php echo $usercertificatepem; ?></dd>
+    <dt></dt>
+    <dd><?php echo $usercertificatekey; ?></dd>
+</dl> 

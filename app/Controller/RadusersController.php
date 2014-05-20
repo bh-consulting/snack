@@ -796,9 +796,6 @@ class RadusersController extends AppController {
         }
         $attributes['Comment'] = $views['base']['Raduser']['comment'];
         $attributes['Role'] = $this->Raduser->roles[$views['base']['Raduser']['role']];
-        $attributes['User certificate path'] = Utils::getUserCertsPath($username);
-        $attributes['Server certificate path'] = Utils::getServerCertPath();
-        $attributes['Server certificate cer path'] = Utils::getServerCertCerPath();
         $attributes['Cisco'] = $views['base']['Raduser']['is_cisco'] ? __('Yes') : __('No');
 
         // Radchecks
@@ -863,8 +860,6 @@ class RadusersController extends AppController {
             'Cisco',
             'MAC address',
             'EAP-Type',
-            'Server certificate path',
-            'Server certificate cer path',
             'Role',
         );
 
