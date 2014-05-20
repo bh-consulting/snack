@@ -30,7 +30,7 @@ class SystemDetailsController extends AppController {
 
         $this->set('release', $this->SystemDetail->getRelease());
         $this->set('version', $this->SystemDetail->getVersion($this->SystemDetail->getRelease()));
-        
+        $this->set('versionsnack', $this->SystemDetail->getVersionSnack());
         $uptimes = $this->SystemDetail->getUptimes();
         $this->set('uptime', $uptimes[0]);
         $this->set('idletime', $uptimes[1]);
@@ -135,7 +135,7 @@ class SystemDetailsController extends AppController {
     }
     
     public function upgrade() {
-        $cmd = "sudo apt-get install snack -y --force-yes";
+        $cmd = "sudo /usr/bin/apt-get install snack -y --force-yes";
         $this->Process->run($cmd,APP.'tmp/logs/upgrade.log');
         
         $this->set('return', $return);

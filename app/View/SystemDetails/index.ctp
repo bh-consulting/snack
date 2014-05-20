@@ -20,6 +20,8 @@ $this->assign('systemdetails_general_active', 'active');
                     <dd><?php echo $release; ?></dd>
                     <dt><?php echo __('Version'); ?></dt>
                     <dd><?php echo $version; ?></dd>
+                    <dt><?php echo __('Version of SNACK'); ?></dt>
+                    <dd><?php echo $versionsnack; ?></dd>
                     <dt><?php echo __('Date'); ?></dt>
                     <dd><?php echo $curdate; ?></dd>
                     <dt><?php echo __('Hostname'); ?></dt>

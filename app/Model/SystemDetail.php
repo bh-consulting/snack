@@ -148,6 +148,16 @@ class SystemDetail extends AppModel {
         }
     }
     
+    /* Get Version of SNACK */
+    function getVersionSnack() {
+        $file = new File(APP . 'VERSION.txt', false);
+        $tmp = "";
+        if ($file->exists()) {
+            $tmp = $file->read(false, 'rb', false);
+            return $tmp;
+        }        
+    }
+
     /* Get name */
     function getName() {
         $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));

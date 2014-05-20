@@ -27,6 +27,7 @@ class SnackCheckErrorsShell extends AppShell {
         $this->str .= "Name : ".$this->SystemDetail->getName()."<br>";
         $this->str .= "Release : ".$this->SystemDetail->getRelease()."<br>";
         $this->str .= "Version : ".$this->SystemDetail->getVersion($this->SystemDetail->getRelease())."<br>";
+        $this->str .= "Version of Snack : ".$this->SystemDetail->getVersionSnack()."<br>";
         $this->str .= "IP Address : ".Configure::read('Parameters.ipAddress')."<br>";
         $this->str .= "CA Validity : ".$this->SystemDetail->getCAValidity()."<br>";
     }
