@@ -15,7 +15,7 @@
         $url[] = $params[2];
     }
 
-    if (count($this->params['url']) > 2) {
+    if (count($this->params['url']) > 3) {
 		echo ' - ';
         echo $this->Html->link(
             __('No filters'),

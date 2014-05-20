@@ -372,6 +372,35 @@ class FiltersComponent extends Component {
             }
         }
     }
+    
+    public function addHostContraint($options) {
+        $data = &$this->controller->request->query[$options['input']];
+        $url = $this->controller->params['url'];
+        if (isset($options['default']) && !isset($url[$options['input']])) {
+            $data = $options['default'];
+            debug($data);
+        }
+        if (!empty($options['fields'])) {
+            if (isset($options['value'])) {
+                $value = $options['value'];
+            } else if (isset($data)) {
+                $value = implode((array) $data, '|');
+            }
+
+
+            if (isset($value)) {
+                if (isset($options['strict']) && $options['strict']) {
+                    $template = "%field REGEXP '^(%value)\$'";
+                } else {
+                    $template = "%field REGEXP '%value'";
+                }
+
+                $this->addConstraint(
+                        $template, $options['fields'], $value
+                );
+            }
+        }
+    }
 
     public function addGroupConstraint($groups = array()) {
         if (!empty($groups)) {

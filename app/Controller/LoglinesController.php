@@ -63,6 +63,11 @@ class LoglinesController extends AppController {
             'fields' => 'msg',
             'input' => 'text',
         ));
+        
+        $this->Filters->addHostContraint(array(
+            'fields' => 'host',
+            'input' => 'host',
+        ));
 
         $logs = $this->Filters->paginate();
 

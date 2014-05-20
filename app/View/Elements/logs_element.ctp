@@ -1,5 +1,4 @@
 <?php
-
 $columns = array(
     'id' => array(
         'text' => __('Line'),
@@ -14,7 +13,7 @@ $columns = array(
         'fit' => true,
     ),
     'host' => array(
-	'text' => __('Host'),
+        'text' => __('Host'),
         'fit' => true,
     ),
     'msg' => array(
@@ -144,8 +143,7 @@ if (!empty($loglines)) {
             <td colspan="<?php echo count($columns); ?>" style="text-align: center">
 <?php
     echo __('No logs found').' (';
-
-    if(count($this->params['url']) > 0)
+    if(count($this->params['url']) > 3)
         echo $this->Html->link(__('retry with no filters'), '.');
     else
         echo __('no filters');
