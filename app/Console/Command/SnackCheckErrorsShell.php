@@ -194,11 +194,17 @@ class SnackCheckErrorsShell extends AppShell {
     public function sendMail($body) {
         App::uses('CakeEmail', 'Network/Email');
         $Email = new CakeEmail();
-        $Email->config(array('transport' => 'Smtp',
-                             'port' => Configure::read('Parameters.smtp_port'),
-                             'host' => Configure::read('Parameters.smtp_ip'),
-                             'username' => Configure::read('Parameters.smtp_login'),
-                             'password' => Configure::read('Parameters.smtp_password')));
+        if (Configure::read('Parameters.smtp_login') != '') {
+            $Email->config(array('transport' => 'Smtp',
+                                 'port' => Configure::read('Parameters.smtp_port'),
+                                 'host' => Configure::read('Parameters.smtp_ip'),
+                                 'username' => Configure::read('Parameters.smtp_login'),
+                                 'password' => Configure::read('Parameters.smtp_password')));
+        } else {
+            $Email->config(array('transport' => 'Smtp',
+                                 'port' => Configure::read('Parameters.smtp_port'),
+                                 'host' => Configure::read('Parameters.smtp_ip')));
+        }
         $Email->emailFormat('both');
         $Email->from(array(Configure::read('Parameters.smtp_email_from') => 'SNACK'));
         $emails = explode(';', Configure::read('Parameters.configurationEmail'));
