@@ -196,45 +196,51 @@ class SystemDetailsController extends AppController {
     public function send_backup() {
         App::uses('CakeEmail', 'Network/Email');
         $Email = new CakeEmail();
-        $Email->config(array('transport' => 'Smtp',
-                             'port' => Configure::read('Parameters.smtp_port'),
-                             'host' => Configure::read('Parameters.smtp_ip'),
-                             'username' => Configure::read('Parameters.smtp_login'),
-                             'password' => Configure::read('Parameters.smtp_password')));
+        if (Configure::read('Parameters.smtp_login') != '') {
+            $Email->config(array('transport' => 'Smtp',
+                'port' => Configure::read('Parameters.smtp_port'),
+                'host' => Configure::read('Parameters.smtp_ip'),
+                'username' => Configure::read('Parameters.smtp_login'),
+                'password' => Configure::read('Parameters.smtp_password')));
+        } else {
+            $Email->config(array('transport' => 'Smtp',
+                'port' => Configure::read('Parameters.smtp_port'),
+                'host' => Configure::read('Parameters.smtp_ip')));
+        }
         $Email->emailFormat('both');
         $Email->from(array(Configure::read('Parameters.smtp_email_from') => 'SNACK'));
         $emails = explode(';', Configure::read('Parameters.configurationEmail'));
         $listemails = array();
-        foreach ( $emails as $email) {
-            if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        foreach ($emails as $email) {
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $listemails[] = $email;
             }
         }
         $Email->to($listemails);
         $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));
-        foreach ( $values as $val ) {
-            if( preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
+        foreach ($values as $val) {
+            if (preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
                 continue;
             }
         }
-        $subject = "SNACK - ".$matches[1]." - CONFIG";
+        $subject = "SNACK - " . $matches[1] . " - CONFIG";
         $Email->subject($subject);
         $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackExport.sh");
         $infos = explode("\n", $return);
         $name = $infos[0];
         $Email->attachments(array(
             $name => array(
-                'file' => 'conf/'.$name,
+                'file' => 'conf/' . $name,
                 'mimetype' => 'application/gzip',
                 'contentId' => '123456789'
             )
         ));
         $Email->send('Configuration');
         $this->redirect(
-            array('action' => 'index')
+                array('action' => 'index')
         );
     }
-    
+
     public function delete_backup($name) {
         $file = new File(WWW_ROOT . "conf/" . $name);
         if ($file->delete()) {

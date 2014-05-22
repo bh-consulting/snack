@@ -4,7 +4,9 @@ class RadacctsController extends AppController {
     public $helpers = array('Html', 'Form');
     public $paginate = array(
         'limit' => 10,
-        'order' => array('acctstarttime' => 'desc')
+        'order' => array('acctstarttime' => 'desc'),
+        'conditions' => array('Radacct.acctauthentic =' => 'RADIUS'),
+        
     );
     public $components = array(
         'Filters',
@@ -107,7 +109,7 @@ class RadacctsController extends AppController {
             'title' => __('Select a port type...'),
         ));
 	
-	$this->Filters->addComplexConstraint(array(
+        $this->Filters->addComplexConstraint(array(
             'select' => array(
                 'items' => array(
                     'active' => __(' '),
@@ -122,7 +124,7 @@ class RadacctsController extends AppController {
                 ),
             )
         ));
-
+        
         $sessions = $this->Filters->paginate();
 
         $users = array();

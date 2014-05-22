@@ -3,7 +3,7 @@ App::uses('Utils', 'Lib');
 
 class SnackCheckErrorsShell extends AppShell {
     public $name = 'SystemDetails';
-    public $uses = array('SystemDetail', 'Raduser', 'Nas', 'Backup');
+    public $uses = array('SystemDetail', 'Raduser', 'Nas', 'Backup', 'Radacct');
     
     private $str="";
     private $errors=0;
@@ -16,6 +16,7 @@ class SnackCheckErrorsShell extends AppShell {
             $this->checkBackup();
             $this->checkHA();
             //$this->testUsers();
+            $this->cleanDBSessions();
             $this->sendMail($this->str);
             //echo $this->str;
             //echo $this->errors;
@@ -100,11 +101,11 @@ class SnackCheckErrorsShell extends AppShell {
         //echo $datetime1->format('Y-m-d H:i:s');
         foreach ($nas as $n) {
             $nasname=$n['nas']['nasname'];
-            $return = shell_exec("export NAS_IP_ADDRESS=".$nasname." ;
+            /*$return = shell_exec("export NAS_IP_ADDRESS=".$nasname." ;
                                   export USER_NAME=AUTO ;
                                   export ACCT_STATUS_TYPE=Write ;
-                                   /home/snack/scripts/backup_create.sh");
-            echo "RETURN : ".$return;
+                                   /home/snack/scripts/backup_create.sh");*/
+            //echo "RETURN : ".$return;
             $backup = $this->Backup->query("select * from backups where nas='".$nasname."' order by id desc limit 1;");
             $this->str .= $nasname." ";
             if (count($backup) > 0) {                
@@ -186,6 +187,10 @@ class SnackCheckErrorsShell extends AppShell {
         }
     }
     
+    public function cleanDBSessions() {
+        $this->Radacct->query('delete from radacct where acctauthentic!="RADIUS"');
+    }
+    
     public function sendMail($body) {
         App::uses('CakeEmail', 'Network/Email');
         $Email = new CakeEmail();
@@ -223,7 +228,7 @@ class SnackCheckErrorsShell extends AppShell {
         $name = $infos[0];
         $Email->attachments(array(
             $name => array(
-                'file' => 'conf/'.$name,
+                'file' => 'conf/' . $name,
                 'mimetype' => 'application/gzip',
                 'contentId' => '123456789'
             )

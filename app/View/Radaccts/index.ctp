@@ -4,7 +4,7 @@ $this->assign('radius_active', 'active');
 $this->assign('session_active', 'active');
 
 $url1=$_SERVER['REQUEST_URI'];
-header("Refresh: 5; URL=$url1");
+header("Refresh: 15; URL=$url1");
 
 $columns = array(
     'checkbox' => array(

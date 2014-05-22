@@ -18,7 +18,7 @@
  */
 
 App::uses('Shell', 'Console');
-
+Configure::load('parameters');
 /**
  * Application Shell
  *
@@ -28,5 +28,5 @@ App::uses('Shell', 'Console');
  * @package       app.Console.Command
  */
 class AppShell extends Shell {
-
+    
 }
