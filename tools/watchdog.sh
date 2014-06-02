@@ -73,7 +73,31 @@ function check-apache {
     fi
 }
 
+function check-disk-used {
+    output=""
+    output2=""
+    output=`df -h | grep /home | head -1  | awk -F " " '{ print $5 }' | cut -d'%' -f1`
+    output2=`df -h | grep / | head -1  | awk -F " " '{ print $5 }' | cut -d'%' -f1`
+    re='^[0-9]+$'
+    if [[ $output =~ $re ]] ; then
+        if [ $output -ge 90 ]; then
+            echo "From: $MAILFROM" > $MAIL
+            echo "To: $EMAIL" >> $MAIL
+            echo "Subject: [$SNACKNAME][ERR] SNACK Space Disk /home CRITICAL" >> $MAIL
+            sendmail $EMAIL < $MAIL
+        fi
+    fi
+    if [[ $output2 =~ $re ]] ; then
+        if [ $output2 -ge 90 ]; then
+            echo "From: $MAILFROM" > $MAIL
+            echo "To: $EMAIL" >> $MAIL
+            echo "Subject: [$SNACKNAME][ERR] SNACK Space Disk / CRITICAL" >> $MAIL
+            sendmail $EMAIL < $MAIL
+        fi
+    fi
+}
 
 check-freeradius
 check-mysql
 check-apache
+check-disk-used 
