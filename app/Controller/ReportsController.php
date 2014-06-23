@@ -28,23 +28,23 @@ class ReportsController extends AppController {
         $str_today = $today->format('Y-m-d') . "\n";
         $str_tomorrow = $tomorroy->format('Y-m-d') . "\n";
         //echo $str_today." ".$str_tomorrow;
-        $logs = $this->Logline->find('all', array(
-            'limit' => 12000,
-            'contain' => array('Logline' => array(
-                    "Logline.msg like" => "%logged in%",
-                )),
-        ));
+        $constraints=array('facility' => 'local4', 'string' => 'logged in', 'pageSize' => '100000');
+        $page=1;
+        $logs = $this->Logline->find($page, $constraints);
+        
         //debug($logs);
         //$conditions = array("Logline.msg like" => "%logged in%");
         //$logs = $this->Logline->find('all', array('order' => array('Logline.id DESC'), 'recursive' => 0, 'limit' => 2000, 'conditions' => $conditions));
         $snack_users = array();
-        $logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 10000 ) Logline where msg like "%logged in%" and datetime>"' . $str_today . '" and datetime<"' . $str_tomorrow . '"');
+        //$logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 10000 ) Logline where msg like "%logged in%" and datetime>"' . $str_today . '" and datetime<"' . $str_tomorrow . '"');
 
         //echo "$nb connected users on $str_today<br>";
         //debug($logs);
         foreach ($logs as $log) {
+            $date = new DateTime($log['Logline']['datetime']);
+            $strdate = $date->format('Y-m-d H:i:s');
             //echo $log['Logline']['datetime']." : ".$log['Logline']['msg']."<br>";
-            $snack_users[$log['Logline']['datetime']] = $log['Logline']['msg'];
+            $snack_users[$strdate] = $log['Logline']['msg'];
         }
         $this->set('snack_users', $snack_users);
     }
@@ -70,8 +70,10 @@ class ReportsController extends AppController {
     }
 
     public function get_failures_by_users() {
-        $logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 100000 ) Logline where msg like "%Login incorrect%"');
-
+        //$logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 100000 ) Logline where msg like "%Login incorrect%"');
+        $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
+        $page=1;
+        $logs = $this->Logline->find($page, $constraints);
         //debug($logs);
         $usersnbfailures = array();
         $users = array();
@@ -94,7 +96,8 @@ class ReportsController extends AppController {
                     $username = $this->Logline->query('select * from raduser where username="' . $login . '"');
                     $port[$login] = $portstr;
                     $nas[$login] = $nasstr;
-                    $users[$login]['last'] = $log['Logline']['datetime'];
+                    $date = new DateTime($log['Logline']['datetime']);
+                    $users[$login]['last'] = $date->format('Y-m-d H:i:s');
                     $users[$login]['info'] = $info;
                     $users[$login]['port'] = $portstr;
                     $users[$login]['nas'] = $nasstr;
@@ -140,8 +143,10 @@ class ReportsController extends AppController {
     }
 
     public function get_failures_by_nas() {
-        $logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 100000 ) Logline where msg like "%Login incorrect%"');
-        
+        //$logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 100000 ) Logline where msg like "%Login incorrect%"');
+        $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
+        $page=1;
+        $logs = $this->Logline->find($page, $constraints);
         //debug($logs);
         $nasnbfailures=array();
         $lasts=array();

@@ -1,9 +1,7 @@
 <?php
+//echo $this->element('paginator_logs');
+
 $columns = array(
-    'id' => array(
-        'text' => __('Line'),
-        'fit' => true,
-    ),
     'datetime' => array(
         'text' => __('Date'),
         'fit' => true,
@@ -22,9 +20,10 @@ $columns = array(
 );
 ?>
 
+<br>
 <?php
 echo $this->element('filters_panel', array(
-    'controller' => 'loglines/' . $controller,
+    'controller' => 'loglines/' . $controller.'/file:'.$file,
     'inputs' => array(
         array(
             'name' => 'level',
@@ -57,8 +56,9 @@ echo $this->element('filters_panel', array(
         ))
     )
 );
-?>
+echo "Results found : ".$nbResults;
 
+?>
 <table class="table loglinks">
     <thead>
         <tr>
@@ -71,21 +71,7 @@ foreach ($columns as $field => $info) {
     }
 
     $sort = '';
-
-    if (preg_match("#$field$#", $this->Paginator->sortKey())) {
-        $sort = '<i class="'
-            .  $sortIcons[$this->Paginator->sortDir()]
-            . '"></i>';
-    }
-
-    echo $this->Paginator->sort(
-        $field,
-        $info['text'] . ' '. $sort,
-        array(
-            'escape' => false,
-            'url' => array('page' => 1),
-        )
-    );
+    echo $info['text'];
 }
 ?>
         </tr>
@@ -106,8 +92,10 @@ if (!empty($loglines)) {
 
             switch ($field) {
             case 'datetime':
+                $date = new DateTime($logline['Logline'][$field]);
                 echo $this->Html->link(
-                    $logline['Logline'][$field],
+                    $date->format('Y-m-d H:i:s')    
+                    ,
                     '#',
                     array(
                         'onclick' => 'logsSearchFromDate($(this))',
@@ -159,6 +147,7 @@ if (!empty($loglines)) {
 </table>
 <div>
 <?php
+echo 'Page generated in '.$total_time.' seconds.<br><br>';
 if(AuthComponent::user('role') == 'root'){
 
     echo $this->Html->link(
@@ -187,7 +176,7 @@ if(AuthComponent::user('role') == 'root'){
 ?>
 </div>
 <?php
-echo $this->element('paginator_footer');
+echo $this->element('paginator_logs');
 
 $this->start('script');
 echo $this->Html->script('loglines');

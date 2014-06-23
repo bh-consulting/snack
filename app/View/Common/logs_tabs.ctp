@@ -5,14 +5,35 @@ $this->assign('logs_active', 'active');
 ?>
 
 <h1><? echo __('Logs'); ?></h1>
-
+<?php
+$dir = new Folder('/home/snack/logs');
+$files = $dir->find('snacklog.*');
+sort($files);
+echo $this->Form->create('Loglines', array('action' => 'chooselogfile'));
+echo $this->Form->input('chooselogfile', array(
+    'options' => $files,
+    //'disabled' => true,
+    'empty' => false,
+    'selected' => array_search($file, $files),
+    'label' => __('Log file'),
+    ));
+$options = array(
+    'label' => __('Update'),
+    'div' => array(
+        'class' => 'form-group',
+    ),
+    'before' => '<div class="col-sm-offset-4 col-sm-4">',
+    'after' => '</div>'
+);
+echo $this->Form->end($options);
+?>
 <div class="tabbable">
     <ul class="nav nav-tabs">
             <li class="<?php echo $this->fetch('radiuslogs_active'); ?>">
                 <?php
                 echo $this->Html->link(
                     __('Radius'),
-                    array('controller' => 'loglines', 'action' => 'index')
+                    array('controller' => 'loglines', 'action' => 'index', 'file' => $file)
                 );
                 ?>
             </li>
@@ -20,15 +41,21 @@ $this->assign('logs_active', 'active');
                 <?php
                 echo $this->Html->link(
                     __('SNACK'),
-                    array('controller' => 'loglines', 'action' => 'snack_logs')
+                    array('controller' => 'loglines', 'action' => 'snack_logs', 'file' => $file)
                 );
                 ?>
             </li>
-	     <li class="<?php echo $this->fetch('naslogs_active'); ?>">
+            <li class="<?php echo $this->fetch('naslogs_active'); ?>">
                 <?php
                 echo $this->Html->link(
-                    __('NAS'),
-                    array('controller' => 'loglines', 'action' => 'nas_logs')
+                        __('NAS'), array('controller' => 'loglines', 'action' => 'nas_logs', 'file' => $file)
+                );
+                ?>
+            </li>
+            <li class="<?php echo $this->fetch('voicelogs_active'); ?>">
+                <?php
+                echo $this->Html->link(
+                        __('Voice'), array('controller' => 'loglines', 'action' => 'voice_logs', 'file' => $file)
                 );
                 ?>
             </li>

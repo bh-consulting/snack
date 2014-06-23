@@ -1,7 +1,8 @@
 <?php
 
 App::uses('Sanitize', 'Utility');
-
+App::uses('File', 'Utility');
+App::uses('Folder', 'Utility');
 class LoglinesController extends AppController {
     public $helpers = array('Html', 'Form');
     public $paginate = array('maxLimit' => 2000, 'limit' => 10, 'order' => array('id' => 'desc'));
@@ -17,70 +18,126 @@ class LoglinesController extends AppController {
 
         return parent::isAuthorized($user);
     }
-
+    
+    public function init() {
+        //debug(Configure::read('Parameters.logsCount'));
+        if (isset($this->passedArgs['file'])) {
+            $file = $this->passedArgs['file'];
+        }
+        else {
+            $dir = new Folder('/home/snack/logs');
+            $files = $dir->find('snacklog.*');
+            sort($files);
+            $file = $files[0];
+        }
+        if (isset($this->passedArgs['page'])) {
+            $page = $this->passedArgs['page'];
+        }
+        else {
+            $page = 1;
+        }
+        return array('file' => $file, 'page' => $page);
+    }
+    
+    public function start_time() {
+        $time = microtime();
+        $time = explode(' ', $time);
+        $time = $time[1] + $time[0];
+        $start = $time;
+        return $start;
+    }
+    
+    public function stop_time($start) {
+        $time = microtime();
+        $time = explode(' ', $time);
+        $time = $time[1] + $time[0];
+        $finish = $time;
+        $total_time = round(($finish - $start), 4);
+        return $total_time;
+    }
+    
     public function index() {
-        $this->Filters->addStringConstraint(array(
-            'fields' => 'facility',
-            'input' => 'facility',
-            'default' => 'local2'
-        ));
-        $this->defaultValues();
+        $start = $this->start_time();
+        
+        $arr = $this->init();
+        $constraints=array('facility' => 'local2');
+        $this->defaultValues($arr['file'], $arr['page'], $constraints);
+        
+        $total_time = $this->stop_time($start);
+        $this->set('total_time', $total_time);
     }
 
     public function snack_logs() {
-        $this->Filters->addStringConstraint(array(
-            'fields' => 'facility',
-            'input' => 'facility',
-            'default' => 'local4',
-        ));
-        $this->defaultValues();
+        $start = $this->start_time();
+        
+        $arr = $this->init();
+        $constraints=array('facility' => 'local4');
+        $this->defaultValues($arr['file'], $arr['page'], $constraints);
+        
+        $total_time = $this->stop_time($start);
+        $this->set('total_time', $total_time);
     }
     
     public function nas_logs() {
-        $this->Filters->addStringConstraint(array(
-            'fields' => 'facility',
-            'input' => 'facility',
-            'default' => 'local7',
-        ));
-        $this->defaultValues();
+        $start = $this->start_time();
+
+        $arr = $this->init();
+        $constraints=array('facility' => 'local7');
+        $this->defaultValues($arr['file'], $arr['page'], $constraints);
+        
+        $total_time = $this->stop_time($start);
+        $this->set('total_time', $total_time);
+    }
+    
+    public function voice_logs() {
+        $start = $this->start_time();
+        
+        $arr = $this->init();
+        $pageSize =  Configure::read('Parameters.paginationCount')*2;
+        $constraints=array('facility' => 'local7', 'type' => 'voip', 'pageSize' => $pageSize);
+        $this->defaultValues($arr['file'], $arr['page'], $constraints);
+        
+        $total_time = $this->stop_time($start);
+        $this->set('total_time', $total_time);
     }
 
-    private function defaultValues(){
-        $this->Filters->addSliderConstraint(array(
-            'fields' => 'level',
-            'input' => 'level',
-            'default' => 'info',
-            'items' => $this->Logline->levels,
-        ));
-
-        $this->Filters->addDatesConstraint(array(
-            'fields' => 'datetime',
-            'from' => 'datefrom',
-            'to' => 'dateto',
-        ));
-
-        $this->Filters->addStringConstraint(array(
-            'fields' => 'msg',
-            'input' => 'text',
-        ));
-        
-        $this->Filters->addHostContraint(array(
-            'fields' => 'host',
-            'input' => 'host',
-        ));
-
-        $logs = $this->Filters->paginate();
-
-        foreach ($logs as &$log) {
-            if (isset($log['Logline']['datetime'])) {
-                $log['Logline']['datetime'] = Utils::formatDate(
-                    $log['Logline']['datetime'],
-                    'display'
-                );
+    private function defaultValues($file, $page, $constraints){
+        $pageSize =  Configure::read('Parameters.paginationCount');
+        if (isset($this->params['url']['host'])) {
+            if ($this->params['url']['host'] != '') {
+                $constraints['host'] = $this->params['url']['host'];
             }
         }
-
-        $this->set('loglines', $logs);
+        if (isset($this->params['url']['text'])) {
+            if ($this->params['url']['text'] != '') {
+                $constraints['string'] = $this->params['url']['text'];
+            }
+        }
+        if (isset($this->params['url']['datefrom'])) {
+            if ($this->params['url']['datefrom'] != '') {
+                $date = new DateTime($this->params['url']['datefrom']);
+                $constraints['datefrom'] = $date->format('Y-m-d').'T'.$date->format('H:i:s');
+            }
+        }
+        if (isset($this->params['url']['dateto'])) {
+            if ($this->params['url']['dateto'] != '') {
+                $date = new DateTime($this->params['url']['dateto']);
+                $constraints['dateto'] = $date->format('Y-m-d').'T'.$date->format('H:i:s');
+            }
+        }
+        //debug($constraints);
+        $loglines = $this->Logline->find($file, $page, $constraints);
+        //debug($loglines);
+        $this->set('page', $page);
+        //if (Configure::read('Parameters.logsCount')) {
+            $count = $this->Logline->getLineCount($file, $constraints);
+            $totalPages = floor($count/$pageSize)+1;
+            //debug($this->Logline->getLineCount($file, $constraints));
+            $this->set('nbResults', $count);
+            $this->set('totalPages', $totalPages);
+        //}
+        $this->set('file', $file);
+        $this->set('loglines', $loglines);
     }
 
     public function deleteAll($program) {
@@ -106,5 +163,22 @@ class LoglinesController extends AppController {
 
         $this->redirect(array('action' => 'index'));
     }
+    
+    public function chooselogfile() {
+        if ($this->request->is('post')) {
+            if (!empty($this->request->data)) {
+                $dir = new Folder('/home/snack/logs');
+                $files = $dir->find('snacklog.*');
+                sort($files);
+                $file=$files[$this->request->data['Loglines']['chooselogfile']];
+                //$this->redirect(array('action' => 'index'));
+                $this->redirect(array(
+                    'action' => 'index',
+                    'file' => $file,
+                ));
+                //debug($files[$this->request->data['Loglines']['chooselogfile']]);
+            }
+        }
+	}
 }
 ?>
