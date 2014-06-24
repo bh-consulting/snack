@@ -23,4 +23,5 @@ if [ "$ROLE" == 'slave' ]; then
     mv /tmp/log-import /tmp/$LOG
     echo "IP:$IP" >> /tmp/$LOG
     scp /tmp/$LOG root@$MASTER:$USER_HOME/interface/app/tmp/ha
+    rm /tmp/$LOG
 fi

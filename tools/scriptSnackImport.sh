@@ -57,4 +57,4 @@ if [ -z $FILE ]; then
 fi
 restore
 
-#rm -rf $TEMP/$DIR
+rm -rf $TEMP/$DIR
