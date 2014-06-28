@@ -271,20 +271,20 @@ class ParametersController extends AppController {
         //$return = shell_exec("wbinfo -p");
         
         $tmp = "";
-        
-        if (checkdnsrr($this->Parameter->data['Parameter']['addomain'], "A")) {
-            $return = shell_exec("wbinfo -t");
-            if (preg_match("/^checking the trust secret for domain(.*) via RPC calls (.*)/", $return, $matches)) {
-                if ($matches[2] == "succeeded") {
-                    $this->set('adstatus', "Joined domain " . $matches[1]);
+        if (isset($this->Parameter->data['Parameter']['addomain']) && $this->Parameter->data['Parameter']['addomain'] != '') {
+            if (checkdnsrr($this->Parameter->data['Parameter']['addomain'], "A")) {
+                $return = shell_exec("wbinfo -t");
+                if (preg_match("/^checking the trust secret for domain(.*) via RPC calls (.*)/", $return, $matches)) {
+                    if ($matches[2] == "succeeded") {
+                        $this->set('adstatus', "Joined domain " . $matches[1]);
+                    }
+                } else {
+                    $this->set('adstatus', $return);
                 }
             } else {
-                $this->set('adstatus', $return);
+                $this->set('adstatus', "SERVER UNREACHABLE");
             }
-        } else {
-            $this->set('adstatus', "SERVER UNREACHABLE");
         }
-
         /*$file = new File('/etc/samba/joinresult', false, 0644);
         if ($file->exists()) {
             $tmp = $file->read(false, 'rb', false);
