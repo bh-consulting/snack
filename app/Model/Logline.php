@@ -41,7 +41,7 @@ class Logline extends AppModel {
 		)
 	);
     
-    public function find($page, $options=array(), $file="snacklog") {
+    public function findLogs($page, $options=array(), $file="snacklog") {
         $arr = array();
         $pageSize =  Configure::read('Parameters.paginationCount');
         $loglines = array();

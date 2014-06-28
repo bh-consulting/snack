@@ -125,7 +125,7 @@ class LoglinesController extends AppController {
             }
         }
         //debug($constraints);
-        $arr = $this->Logline->find($page, $constraints, $file);
+        $arr = $this->Logline->findLogs($page, $constraints, $file);
         //debug($loglines);
         $count = $arr['count'];
         $loglines = $arr['loglines'];
