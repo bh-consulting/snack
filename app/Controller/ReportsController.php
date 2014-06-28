@@ -30,8 +30,8 @@ class ReportsController extends AppController {
         //echo $str_today." ".$str_tomorrow;
         $constraints=array('facility' => 'local4', 'string' => 'logged in', 'pageSize' => '100000');
         $page=1;
-        $logs = $this->Logline->find($page, $constraints);
-        
+        $arr = $this->Logline->find($page, $constraints);
+        $logs = $arr['loglines'];
         //debug($logs);
         //$conditions = array("Logline.msg like" => "%logged in%");
         //$logs = $this->Logline->find('all', array('order' => array('Logline.id DESC'), 'recursive' => 0, 'limit' => 2000, 'conditions' => $conditions));
@@ -73,8 +73,8 @@ class ReportsController extends AppController {
         //$logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 100000 ) Logline where msg like "%Login incorrect%"');
         $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
         $page=1;
-        $logs = $this->Logline->find($page, $constraints);
-        //debug($logs);
+        $arr = $this->Logline->find($page, $constraints);
+        $logs = $arr['loglines'];
         $usersnbfailures = array();
         $users = array();
         $logins = array();
@@ -146,8 +146,8 @@ class ReportsController extends AppController {
         //$logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 100000 ) Logline where msg like "%Login incorrect%"');
         $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
         $page=1;
-        $logs = $this->Logline->find($page, $constraints);
-        //debug($logs);
+        $arr = $this->Logline->find($page, $constraints);
+        $logs = $arr['loglines'];
         $nasnbfailures=array();
         $lasts=array();
         

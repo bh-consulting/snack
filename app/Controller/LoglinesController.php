@@ -20,7 +20,6 @@ class LoglinesController extends AppController {
     }
     
     public function init() {
-        //debug(Configure::read('Parameters.logsCount'));
         if (isset($this->passedArgs['file'])) {
             $file = $this->passedArgs['file'];
         }
@@ -126,16 +125,16 @@ class LoglinesController extends AppController {
             }
         }
         //debug($constraints);
-        $loglines = $this->Logline->find($file, $page, $constraints);
+        $arr = $this->Logline->find($page, $constraints, $file);
         //debug($loglines);
+        $count = $arr['count'];
+        $loglines = $arr['loglines'];
         $this->set('page', $page);
-        //if (Configure::read('Parameters.logsCount')) {
-            $count = $this->Logline->getLineCount($file, $constraints);
-            $totalPages = floor($count/$pageSize)+1;
-            //debug($this->Logline->getLineCount($file, $constraints));
-            $this->set('nbResults', $count);
-            $this->set('totalPages', $totalPages);
-        //}
+        //$count = $this->Logline->getLineCount($file, $constraints);
+        
+        $totalPages = floor($count/$pageSize)+1;
+        $this->set('nbResults', $count);
+        $this->set('totalPages', $totalPages);
         $this->set('file', $file);
         $this->set('loglines', $loglines);
     }
@@ -171,12 +170,10 @@ class LoglinesController extends AppController {
                 $files = $dir->find('snacklog.*');
                 sort($files);
                 $file=$files[$this->request->data['Loglines']['chooselogfile']];
-                //$this->redirect(array('action' => 'index'));
                 $this->redirect(array(
                     'action' => 'index',
                     'file' => $file,
                 ));
-                //debug($files[$this->request->data['Loglines']['chooselogfile']]);
             }
         }
 	}

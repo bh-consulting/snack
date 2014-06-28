@@ -1,7 +1,7 @@
 <?php
 App::uses('Utils', 'Lib');
 
-class SnackCheckErrorsShell extends AppShell {
+class SnackSendReportsShell extends AppShell {
     public $name = 'SystemDetails';
     public $uses = array('SystemDetail', 'Raduser', 'Nas', 'Backup', 'Radacct');
     
