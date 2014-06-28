@@ -1,0 +1,11 @@
+#!/usr/bin/expect
+
+set ip [lindex $argv 0]
+set group [lindex $argv 1]
+set username [lindex $argv 2]
+set password [lindex $argv 3]
+
+spawn net rpc group MEMBERS $group -S $ip -U $username
+expect "Enter $username's password:"
+send "$password\n"
+interact

@@ -192,3 +192,11 @@ CakeLog::config('syslog', array(
  */
 require APP . 'Error' . DS . 'MyExceptions.php';
 
+/**
+ * Load administration parameters like :
+ * - Certificates options
+ * - Pagination configuration
+ * - Contact emails
+ * - Server IP
+ */
+Configure::load('parameters');

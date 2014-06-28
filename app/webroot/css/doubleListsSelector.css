@@ -4,7 +4,7 @@
 
 .list-container {
 	padding: 0 10px 10px 0;
-	width: 300px;
+	width: 400px;
 	min-height: 150px;
 }
 
@@ -18,7 +18,7 @@
 	display: block;
 	list-style-type:none;
 	min-height: 22px;
-	height: 150px;
+	height: 450px;
 	overflow: auto;
 	padding: 5px;
 	margin: 0;
@@ -27,6 +27,12 @@
 .connectedList li, .connectedList li:empty {
 	display: block;
 	margin: 2px;
-	height: 14px;
+	height: 24px;
 	vertical-align: bottom;
+}
+
+.label2 {
+    font-size: 110%;
+    text-align: left;
+    font-weight: normal;
 }

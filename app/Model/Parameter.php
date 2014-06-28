@@ -1,7 +1,7 @@
 <?php
 
 App::uses('Utils', 'Lib');
-Configure::load('parameters');
+// Configure::load('parameters');
 
 class Parameter extends AppModel {
     public $useTable = false;
@@ -139,6 +139,24 @@ class Parameter extends AppModel {
             'default' => '',
             'length' => '255',
         ),
+        'addomain' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '',
+            'length' => '255',
+        ),
+        'adip' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '',
+            'length' => '255',
+        ),
+        'adgroupsync' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '',
+            'length' => '255',
+        ),
     );
 
     public $validate = array(
@@ -218,6 +236,12 @@ class Parameter extends AppModel {
                 'allowEmpty' => true,
             ),
         ),
+        'addomain' => array(
+            
+        ),
+        'adip' => array(
+            
+        ),
     );
 
     public function read($fields = null, $id = null) {
@@ -230,8 +254,7 @@ class Parameter extends AppModel {
         return $this->data;
     }
 
-    public function set($one, $two = null){
-
+    public function set($one, $two = null){        
         if (is_array($one) && isset($one['Parameter'])) {
             foreach ($one['Parameter'] as $key => $value) {
                 $this->set($key, $value);
@@ -251,7 +274,7 @@ class Parameter extends AppModel {
             return Configure::dump(
                 'parameters.php',
                 'default',
-                array('Parameters')
+                array('Parameters', 'debug')
             );
         } else {
             return false;

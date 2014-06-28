@@ -67,7 +67,7 @@ echo $this->Form->input('smtp_ip', array('label' => __('SMTP IP Address')));
 echo $this->Form->input('smtp_port', array('label' => __('SMTP Port')));
 echo $this->Form->input('smtp_login', array('label' => __('SMTP Login')));
 echo $this->Form->input('smtp_password', array('label' => __('SMTP Password'), 'type' => 'password'));
-echo $this->Form->input('smtp_email_from', array('label' => __('SMTP Email From'), 'class' => 'email'));
+echo $this->Form->input('smtp_email_from', array('label' => __('SMTP Email From'), 'class' => 'email', 'empty' => true));
 echo $this->Form->input(
     'configurationEmail',
     array(
@@ -91,7 +91,7 @@ echo $this->Form->input(
 echo $this->Form->input('proxy_ip', array('label' => __('Proxy IP Address')));
 echo $this->Form->input('proxy_port', array('label' => __('Proxy Port')));
 echo $this->Form->input('proxy_login', array('label' => __('Proxy Login')));
-echo $this->Form->input('proxy_password', array('label' => __('Proxy Password'), 'type' => 'password'));
+echo $this->Form->input('proxy_password', array('label' => __('Proxy Password'), 'type' => 'password', 'empty' => true));
 ?>
 </dl>
 
@@ -112,6 +112,17 @@ echo $this->Form->input('master_ip', array('label' => __('Master IP Address'), '
 echo $this->Form->input('slave_ip_to_monitor', array('label' => __('Slave IP to monitor')));
 ?>
 </dl>
+
+
+
 <?php
-echo $this->Form->end(__('Update'));
+$options = array(
+    'label' => __('Update'),
+    'div' => array(
+        'class' => 'form-group',
+    ),
+    'before' => '<div class="col-sm-offset-4 col-sm-4">',
+    'after' => '</div>'
+);
+echo $this->Form->end($options);
 ?>

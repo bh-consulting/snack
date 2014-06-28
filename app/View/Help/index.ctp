@@ -1,7 +1,6 @@
 <?php
 $this->extend('/Common/help_tabs');
 $this->assign('help_nasconfig_active', 'active');
-Configure::load('parameters');
 $ipAddress=Configure::read('Parameters.ipAddress');
 ?>
 

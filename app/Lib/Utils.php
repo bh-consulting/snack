@@ -1,6 +1,5 @@
 <?php
 
-Configure::load('parameters');
 
 class Utils {
 

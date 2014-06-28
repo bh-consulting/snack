@@ -25,15 +25,6 @@ App::uses('Utils', 'Lib');
 App::import('Model', 'Nas');
 
 /**
- * Load administration parameters like :
- * - Certificates options
- * - Pagination configuration
- * - Contact emails
- * - Server IP
- */
-Configure::load('parameters');
-
-/**
  * Application Controller
  *
  * Add your application-wide methods in the class below, your controllers
