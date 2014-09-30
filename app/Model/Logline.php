@@ -54,6 +54,9 @@ class Logline extends AppModel {
         if (isset($options['facility'])) {
             $cmd .= "--facility " . $options['facility'] . " ";
         }
+        if (isset($options['priority'])) {
+            $cmd .= "--priority " . $options['priority'] . " ";
+        }
         if (isset($options['string'])) {
             if ($options['string'] != '') {
                 $cmd .= "--string '" . $options['string'] . "' ";

@@ -102,6 +102,17 @@ class LoglinesController extends AppController {
 
     private function defaultValues($file, $page, $constraints){
         $pageSize =  Configure::read('Parameters.paginationCount');
+        $this->Filters->addSliderConstraint(array(
+            'fields' => 'level', 
+            'input' => 'level',
+            'default' => 'info',
+            'items' => $this->Logline->levels,
+        ));
+        if (isset($this->params['url']['level'])) {
+            if ($this->params['url']['level'] != '') {
+                $constraints['priority'] = $this->params['url']['level'];
+            }
+        }
         if (isset($this->params['url']['host'])) {
             if ($this->params['url']['host'] != '') {
                 $constraints['host'] = $this->params['url']['host'];
@@ -124,7 +135,6 @@ class LoglinesController extends AppController {
                 $constraints['dateto'] = $date->format('Y-m-d').'T'.$date->format('H:i:s');
             }
         }
-        //debug($constraints);
         $arr = $this->Logline->findLogs($page, $constraints, $file);
         //debug($loglines);
         $count = $arr['count'];
