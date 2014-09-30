@@ -193,17 +193,26 @@ class SnackSendReportsShell extends AppShell {
     
     public function sendMail($body) {
         App::uses('CakeEmail', 'Network/Email');
+        $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));
+        foreach ( $values as $val ) {
+            if( preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
+                continue;
+            }
+        }
+        $domain = $matches[1];
         $Email = new CakeEmail();
         if (Configure::read('Parameters.smtp_login') != '') {
             $Email->config(array('transport' => 'Smtp',
                                  'port' => Configure::read('Parameters.smtp_port'),
                                  'host' => Configure::read('Parameters.smtp_ip'),
                                  'username' => Configure::read('Parameters.smtp_login'),
-                                 'password' => Configure::read('Parameters.smtp_password')));
+                                 'password' => Configure::read('Parameters.smtp_password'),
+                                 'client' => 'snack'.$domain));
         } else {
             $Email->config(array('transport' => 'Smtp',
                                  'port' => Configure::read('Parameters.smtp_port'),
-                                 'host' => Configure::read('Parameters.smtp_ip')));
+                                 'host' => Configure::read('Parameters.smtp_ip'),
+                                 'client' => 'snack'.$domain));
         }
         $Email->emailFormat('both');
         $Email->from(array(Configure::read('Parameters.smtp_email_from') => 'SNACK'));
@@ -216,17 +225,12 @@ class SnackSendReportsShell extends AppShell {
         }
         $Email->to($listemails);
         //$Email->to('groche@guigeek.org');
-        $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));
-        foreach ( $values as $val ) {
-            if( preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
-                continue;
-            }
-        }
+        
         if ($this->errors > 0) {
-            $subject = "[".$matches[1]."][WARN] SNACK - Reports";
+            $subject = "[".$domain."][WARN] SNACK - Reports";
         }
         else {
-            $subject = "[".$matches[1]."][INFO] SNACK - Reports";
+            $subject = "[".$domain."][INFO] SNACK - Reports";
         }
         $Email->subject($subject);
         /*$return = shell_exec("sudo /home/snack/interface/tools/scriptSnackExport.sh");
