@@ -21,6 +21,7 @@ $certs .= $this->Form->input(
     'cert_gen',
     array('type' => 'checkbox', 'label' => __('Generate a new certificate'))
 );
+$certs .= $this->Form->input('password');
 $certs .= $this->Form->input(
     'country',
     array('default' => Configure::read('Parameters.countryName'))

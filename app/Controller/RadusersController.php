@@ -1597,7 +1597,7 @@ class RadusersController extends AppController {
                 // If user asks for a new certificate
                 if ($this->request->data['Raduser']['cert_gen'] == 1) {
                     $this->renewCertificate(
-                            $id, $this->Raduser->field('username')
+                            $id, $this->Raduser->field('username'), $password = $this->request->data['Raduser']['password']
                     );
                 }
 
@@ -1753,20 +1753,21 @@ class RadusersController extends AppController {
                     . '"' . Configure::read('Parameters.certsPath') . '" '
                     . '"' . $username . '" '
                     . '"' . $password . '" '
-                    . '"' . Configure::read('Parameters.countryName') . '" '
-                    . '"' . Configure::read('Parameters.stateOrProvinceName') . '" '
-                    . '"' . Configure::read('Parameters.localityName') . '" '
-                    . '"' . Configure::read('Parameters.organizationName') . '" ';
+                    . '"' . $params[0] . '" '
+                    . '"' . $params[1] . '" '
+                    . '"' . $params[2] . '" '
+                    . '"' . $params[3] . '" ';
         } else {
             $command = Configure::read('Parameters.scriptsPath')
                     . '/createCertificate '
                     . '"' . Configure::read('Parameters.certsPath') . '" '
                     . '"' . $username . '" '
                     . '"' . $password . '" '
-                    . '"' . $params[0] . '" '
-                    . '"' . $params[1] . '" '
-                    . '"' . $params[2] . '" '
-                    . '"' . $params[3] . '" ';
+                    . '"' . Configure::read('Parameters.countryName') . '" '
+                    . '"' . Configure::read('Parameters.stateOrProvinceName') . '" '
+                    . '"' . Configure::read('Parameters.localityName') . '" '
+                    . '"' . Configure::read('Parameters.organizationName') . '" ';
+            
         }
 
         // Create new certificate
@@ -1830,9 +1831,9 @@ class RadusersController extends AppController {
      * @return 0 if certificate was generated, error code otherwise.
      */
 
-    public function renewCertificate($userID, $username) {
+    public function renewCertificate($userID, $username, $password) {
         $this->removeCertificate($userID, $username);
-        $this->createCertificate($userID, $username);
+        $this->createCertificate($userID, $username, $password);
     }
 
 }
