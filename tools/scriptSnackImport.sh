@@ -23,13 +23,19 @@ restore()
     DIR=`more $LOG | tail -1 | cut -d"/" -f1`
     LOGIN=`grep login $DATABASEFILE | head -n 1 | cut -d'>' -f2 | cut -d"'" -f2`
     PASS=`grep password $DATABASEFILE | head -n 1 | cut -d'>' -f2 | cut -d"'" -f2`
-    rsync --stats -avr --exclude="radius.sql" $TEMP/$DIR/snack /home >> $LOG
-    echo "RSYNC RES :$?" >> $LOG 
-    mysql -u$LOGIN -p$PASS $DB < $TEMP/$DIR/radius.sql
-    echo "MYSQL RES :$?" >> $LOG 
-    sed \
-         -e "s/\('password' =>\) '.*'/\1 '${PASS}'/"\
-         -i $HOME_SNACK/interface/app/Config/database.php 
+    VER1=$(cat /home/snack/interface/app/VERSION.txt)
+    VER2=$(cat $TEMP/$DIR/VERSION.txt)
+    if [ "$VER1" == "$VER2" ]; then
+        rsync --stats -avr --exclude="radius.sql" $TEMP/$DIR/snack /home >> $LOG
+        echo "RSYNC RES :$?" >> $LOG 
+        mysql -u$LOGIN -p$PASS $DB < $TEMP/$DIR/radius.sql
+        echo "MYSQL RES :$?" >> $LOG 
+        sed \
+             -e "s/\('password' =>\) '.*'/\1 '${PASS}'/"\
+             -i $HOME_SNACK/interface/app/Config/database.php
+    else
+        echo "VERSIONS MISMATCH" >> $LOG
+    fi
 }
 
 options=$(getopt -o hd: -l help,decrypt: -- "$@")

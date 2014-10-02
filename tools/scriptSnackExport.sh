@@ -17,6 +17,7 @@ backup()
 {
     mkdir /tmp/$NAME
     echo "" > $LOG
+    cp $HOME_SNACK/interface/app/VERSION.txt /tmp/$NAME
     rsync -avr --include="snack/" --include="snack/backups.git/" --include="snack/backups.git/**"  --include="snack/cert/" --include="snack/cert/**" --include="snack/interface/" --include="snack/interface/app/" --include="snack/interface/app/Config/" --include="snack/interface/app/Config/*"  --exclude="*" $HOME_SNACK /tmp/$NAME >> $LOG 2>> $LOG
     if [ $? != 0 ]; then
         RES=1

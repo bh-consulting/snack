@@ -174,13 +174,17 @@ class SystemDetailsController extends AppController {
                     //echo $tmp;
                     $res_rsync = -1;
                     $res_mysql = -1;
+                    $res_versions = 0;
+                    if(preg_match('/VERSIONS MISMATCH/', $tmp, $matches)) {
+                        $res_versions = 1;
+                    }
                     if(preg_match('/RSYNC RES :(.*)/', $tmp, $matches)) {
                         $res_rsync = intval($matches[1]);
                     }
                     if(preg_match('/MYSQL RES :(.*)/', $tmp, $matches)) {
                         $res_mysql = intval($matches[1]);
                     }
-                    if ($res_mysql == 0 && $res_rsync == 0) {
+                    if ($res_mysql == 0 && $res_rsync == 0 && $res_versions == 0) {
                         $this->Session->setFlash(
                             __('Import succeded.'),
                             'flash_success'
