@@ -169,7 +169,7 @@ if (!empty($loglines)) {
                                 }
                                 break;
                             case 'datetime':
-                                if (preg_match('/ConnectTime ([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
+                                if (preg_match('/ConnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
                                     $datetime1 = new DateTime($matches[1]);
                                     if (preg_match('/UTC (.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
                                         $datetime2 = new DateTime($matches[1]);

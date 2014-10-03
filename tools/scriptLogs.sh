@@ -45,15 +45,15 @@ display() {
     regex="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+[0-9]{2}:[0-9]{2}\s+$host"
     if [[ "$var" == "H0 D0 S0 V0" ]]; then
         count=`grep -E "\[$facility\.$priority\]" $file | wc -l`
-        echo $count
+        echo "$count"
         last=$((count-($page-1)*$number))
         if (("$last"<="$number")); then
             first=1
         else 
             first=$((last-number))
         fi
-        #echo $first" "$last
-        grep -E "\[$facility\.$priority\]" $file | sed -n "$first,$count p" | sort -r
+        echo $first" "$last
+        grep -E "\[$facility\.$priority\]" $file | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H0 D0 S1 V0" ]]; then
         count=`grep -E "\[$facility\.$priority\]" $file | grep -E "$string" | wc -l`
@@ -145,7 +145,7 @@ display() {
         else 
             first=$((last-number))
         fi
-        grep -E "\[$facility\.$priority\]" $file | grep -E "VOIP" | sed -n "$first,$count p" | sort -r
+        grep -E "\[$facility\.$priority\]" $file | grep -E "VOIP" | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H0 D0 S1 V1" ]]; then
         count=`grep -E "\[$facility\.$priority\]" $file | grep -E "VOIP" | grep -E "c[gd]n:[0-9]*$string" | wc -l`

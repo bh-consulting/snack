@@ -95,7 +95,7 @@ class LoglinesController extends AppController {
         $pageSize =  Configure::read('Parameters.paginationCount')*2;
         $constraints=array('facility' => 'local7', 'type' => 'voip', 'pageSize' => $pageSize);
         $this->defaultValues($arr['file'], $arr['page'], $constraints);
-        
+        $this->set('file', $arr['file']);
         $total_time = $this->stop_time($start);
         $this->set('total_time', $total_time);
     }
