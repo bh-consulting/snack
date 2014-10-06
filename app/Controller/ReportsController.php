@@ -13,13 +13,22 @@ class ReportsController extends AppController {
         $today=date('Y-m-d');
         $yesterday  = date('Y-m-d',strtotime("-1 days"));
         $this->set('str_date', $yesterday);
-        $this->users_snack_login($yesterday);
+        $this->get_errors_from_nas();
+        //$this->users_snack_login($yesterday);
         $this->users_radius_connect_ok($yesterday);
         $this->get_failures_by_users();
         $this->get_failures_by_nas();
         //$this->send();
     }
 
+    public function get_errors_from_nas() {
+        $res = $this->Logline->get_errors_from_NAS();
+        $err = $res['err'];
+        $lasts = $res['lasts'];
+        $this->set('err', $err);
+        $this->set('lasts', $lasts);
+    }
+    
     public function users_snack_login($date) {
         $today = new DateTime($date);
         $tomorroy = new DateTime($date);
@@ -71,7 +80,7 @@ class ReportsController extends AppController {
 
     public function get_failures_by_users() {
         //$logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 100000 ) Logline where msg like "%Login incorrect%"');
-        $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
+        /*$constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
         $page=1;
         $arr = $this->Logline->findLogs($page, $constraints);
         $logs = $arr['loglines'];
@@ -135,11 +144,12 @@ class ReportsController extends AppController {
                 }
             }
             //echo $log['Logline']['datetime']." : ".$log['Logline']['msg']."<br>";
-        }
-        $this->set('failures', $usersnbfailures);
-        $this->set('users', $users);
-        $this->set('logins', $logins);
-        $this->set('usernames', $usernames);
+        }*/
+        $res = $this->Logline->get_failures();
+        $this->set('failures', $res['usersnbfailures']);
+        $this->set('users', $res['users']);
+        $this->set('logins', $res['logins']);
+        $this->set('usernames', $res['usernames']);
     }
 
     public function get_failures_by_nas() {

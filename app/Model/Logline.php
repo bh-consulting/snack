@@ -103,8 +103,123 @@ class Logline extends AppModel {
         }
         $arr['loglines'] = $loglines;
         return $arr;
-    } 
-
+    }
+    
+    public function get_failures() {
+        $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
+        $page=1;
+        $arr = $this->findLogs($page, $constraints);
+        $logs = $arr['loglines'];
+        $usersnbfailures = array();
+        $users = array();
+        $logins = array();
+        $usernames = array();
+        foreach ($logs as $log) {
+            if (preg_match('/^Login incorrect\s*\(*(.*)\)*: \[(.*)\/.*\] \(from client (.*) port (\d+) /', $log['Logline']['msg'], $matches)) {
+                $login = $matches[2];
+                $info = $matches[1];
+                
+                $nasstr = $matches[3];
+                $portstr = $matches[4];
+                if (array_key_exists($login, $usersnbfailures)) {
+                    $usersnbfailures[$login] = $usersnbfailures[$login] + 1;
+                } else {
+                    $usersnbfailures[$login] = 1;
+                    $lasts[$login] = $log['Logline']['datetime'];
+                    //debug($info);
+                    //debug($log['Logline']['datetime']);
+                    $username = $this->query('select * from raduser where username="' . $login . '"');
+                    $port[$login] = $portstr;
+                    $nas[$login] = $nasstr;
+                    $date = new DateTime($log['Logline']['datetime']);
+                    $users[$login]['last'] = $date->format('Y-m-d H:i:s');
+                    $users[$login]['info'] = $info;
+                    $users[$login]['port'] = $portstr;
+                    $users[$login]['nas'] = $nasstr;
+                    $logins[] = $login;
+                    
+                    //$last = $this->Logline->query('select datetime from logs where msg like "Login incorrect: ['.$username.'%"');
+                    //debug($last);
+                    if (count($username) > 0) {
+                        $username[0]['raduser']['username'] = Utils::formatMAC(
+                                        $username[0]['raduser']['username']
+                        );
+                        //$users['login'] = $username[0]['raduser'];
+                        $usernames[] = $username[0]['raduser'];
+                    } else {
+                        $usernames[] = array('id' => '-1', 'username' => Utils::formatMAC($login));
+                    }
+                    if (Utils::isMAC($login)) {
+                        $url = "http://api.macvendors.com/" . urlencode(Utils::formatMAC($login));
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_TIMEOUT, 4);
+                        curl_setopt($ch, CURLOPT_PROXYPORT, Configure::read('Parameters.proxy_port'));
+                        curl_setopt($ch, CURLOPT_PROXY, Configure::read('Parameters.proxy_ip'));
+                        curl_setopt($ch, CURLOPT_PROXYUSERPWD, Configure::read('Parameters.proxy_login') . ":" . Configure::read('Parameters.proxy_password'));
+                        curl_setopt($ch, CURLOPT_URL, $url);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        $response = curl_exec($ch);
+                        if ($response) {
+                            $users[$login]['vendor'] = $response;
+                        } else {
+                            $users[$login]['vendor'] = "NA";
+                        }
+                    } else {
+                        $users[$login]['vendor'] = "";
+                    }
+                }
+            }
+            //echo $log['Logline']['datetime']." : ".$log['Logline']['msg']."<br>";
+        }
+        $res = array();
+        $res['usersnbfailures'] = $usersnbfailures;
+        $res['users'] = $users;
+        $res['usernames'] = $usernames;
+        $res['logins'] = $logins;
+        return $res;
+    }
+    
+    public function get_errors_from_NAS() {
+        $constraints = array('priority' => 'err', 'pageSize' => '100000');
+        $page = 1;
+        $arr = $this->findLogs($page, $constraints);
+        $logs = $arr['loglines'];
+        $err = array();
+        $lasts = array();
+        foreach ($logs as $log) {
+            //echo $log['Logline']['msg'];
+            if(preg_match('/\d{2}:\d{2}:\d{2}\.\d{3}:\s+(%.+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
+                $errtype = $matches[1];
+                $msg = $matches[2];
+                $host = $log['Logline']['host'];
+                if (array_key_exists($host, $err)) {
+                    if (array_key_exists($errtype, $err[$host])) {
+                        if (array_key_exists($msg, $err[$host][$errtype])) {
+                            //$err[$host][$errtype] = $err[$host][$errtype] + 1;
+                            $err[$host][$errtype][$msg] = $err[$host][$errtype][$msg] + 1;
+                        }
+                        else {
+                            $err[$host][$errtype][$msg] = 1;
+                            $date = new DateTime($log['Logline']['datetime']);
+                            $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
+                        }
+                    }
+                    else {
+                        $err[$host][$errtype] = array();
+                        //$lasts[$host][$msg] = $log['Logline']['datetime'];
+                    }
+                } else {
+                    $err[$host] = array();
+                    //$lasts[$host] = array();
+                    
+                }
+            }
+        }
+        $res = array();
+        $res['err'] = $err;
+        $res['lasts'] = $lasts;
+        return $res;
+    }
 }
 
 ?>

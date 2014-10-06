@@ -3,7 +3,7 @@ App::uses('Utils', 'Lib');
 
 class SnackSendReportsShell extends AppShell {
     public $name = 'SystemDetails';
-    public $uses = array('SystemDetail', 'Raduser', 'Nas', 'Backup', 'Radacct');
+    public $uses = array('SystemDetail', 'Raduser', 'Nas', 'Backup', 'Radacct', 'Logline');
     
     private $str="";
     private $errors=0;
@@ -17,6 +17,8 @@ class SnackSendReportsShell extends AppShell {
             $this->checkHA();
             //$this->testUsers();
             $this->cleanDBSessions();
+            $this->get_failures_by_users();
+            $this->get_Err_from_logs();
             $this->sendMail($this->str);
             //echo $this->str;
             //echo $this->errors;
@@ -152,6 +154,10 @@ class SnackSendReportsShell extends AppShell {
                 }
                 $fileha = new File(APP.'tmp/ha/'.$file, false, 0644);
                 $tmp=$fileha->read(false, 'rb', false);
+                $res_versions = 0;
+                if (preg_match('/VERSIONS MISMATCH/', $tmp, $matches)) {
+                    $res_versions = 1;
+                }
                 if (preg_match('/RSYNC RES :([0-9]+)/', $tmp, $matches)) {
                     $rsync = $matches[1];
                 }
@@ -162,7 +168,7 @@ class SnackSendReportsShell extends AppShell {
                     $ip = $matches[1];
                 }
                 if ($ip == $slave) {
-                    if ($rsync == 0 && $mysql == 0) {
+                    if ($rsync == 0 && $mysql == 0 && $res_versions == 0 ) {
                         $diff = $datetime2->diff($datetime1);
                         $years = $diff->format('%y');
                         $months = $diff->format('%m');
@@ -187,6 +193,48 @@ class SnackSendReportsShell extends AppShell {
         }
     }
     
+    public function get_Err_from_logs() {
+        
+    }
+    
+    public function get_failures_by_users() {
+        $res = $this->Logline->get_failures();
+        $usersnbfailures = $res['usersnbfailures'];
+        $users = $res['users'];
+        $usernames = $res['usernames'];
+        $logins =$res['logins'];
+        $nb = count($usersnbfailures);
+        $this->str .= "<h3>$nb failures of connections order by users<br></h3>";
+        $this->str .=  "<table>";
+        $this->str .=  "<th>" . __('User') . "</th>";
+        $this->str .=  "<th>" . __('Nb') . "</th>";
+        $this->str .=  "<th>" . __('Last') . "</th>";
+        $this->str .=  "<th>" . __('Vendor') . "</th>";
+        $this->str .=  "<th>" . __('NAS') . "</th>";
+        $this->str .=  "<th>" . __('Port') . "</th>";
+        $this->str .=  "<th>" . __('Why ?') . "</th>";
+        //debug($users);
+        /*$infos = explode(",", $this->element('formatUsersList', array(
+                    'users' => $usernames
+        )));*/
+        $i = 0;
+        
+        foreach ($usersnbfailures as $key => $value) {
+            $this->str .=  "<tr>";
+            $this->str .=  "<td>" . $usernames[$i]['username'] . "</td>";
+            $this->str .=  "<td>" . $value . "</td>";
+            $this->str .=  "<td>" . $users[$logins[$i]]['last'] . "</td>";
+            $this->str .=  "<td>" . $users[$logins[$i]]['vendor'] . "</td>";
+            $this->str .=  "<td>" . $users[$logins[$i]]['nas'] . "</td>";
+            $this->str .=  "<td>" . $users[$logins[$i]]['port'] . "</td>";
+            $this->str .=  "<td>" . $users[$logins[$i]]['info'] . "</td>";
+            //echo " : ".$value." tentatives";
+            $i++;
+            $this->str .=  "</tr>";
+        }
+        $this->str .=  "</table>";
+    }
+
     public function cleanDBSessions() {
         $this->Radacct->query('delete from radacct where acctauthentic!="RADIUS"');
     }
@@ -201,6 +249,7 @@ class SnackSendReportsShell extends AppShell {
         }
         $domain = $matches[1];
         $Email = new CakeEmail();
+        $Email->template('default');
         if (Configure::read('Parameters.smtp_login') != '') {
             $Email->config(array('transport' => 'Smtp',
                                  'port' => Configure::read('Parameters.smtp_port'),
@@ -233,20 +282,7 @@ class SnackSendReportsShell extends AppShell {
             $subject = "[".$domain."][INFO] SNACK - Reports";
         }
         $Email->subject($subject);
-        /*$return = shell_exec("sudo /home/snack/interface/tools/scriptSnackExport.sh");
-        $infos = explode("\n", $return);
-        $name = $infos[0];
-        $Email->attachments(array(
-            $name => array(
-                'file' => 'conf/' . $name,
-                'mimetype' => 'application/gzip',
-                'contentId' => '123456789'
-            )
-        ));*/
         $Email->send($body);
-        /*$this->redirect(
-            array('action' => 'index')
-        );*/
     }
 
 }

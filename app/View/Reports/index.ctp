@@ -7,11 +7,30 @@
 <h1><? echo __('Reports'); ?></h1>
 
 <br>
+<h2><? echo __('Errors from NAS'); ?></h2>
+<?php
+    echo "<table>";
+    echo "<th>".__('Host')."</th>";
+    echo "<th>".__('Type')."</th>";
+    echo "<th>".__('Msg')."</th>";
+    echo "<th>".__('Nb')."</th>";
+    echo "<th>".__('Last')."</th>";
+    foreach ($err as $host => $value) {
+        foreach ($value as $errtype => $value2) {
+            echo "<tr><td>".$host."</td><td>".$errtype."</td><td></td><td></td></tr>";
+            foreach ($value2 as $msg => $nb) {
+                echo "<tr><td></td><td></td><td>".$msg."</td><td>".$nb."</td><td>".$lasts[$host][$errtype][$msg]."</td></tr>";
+            }
+        }
+    }
+    echo "</table>";
+?>
+
 <h2><? echo __('Users connected on SNACK'); ?></h2>
 <?php
-    foreach ($snack_users as $key => $value) {
+   /* foreach ($snack_users as $key => $value) {
         echo $key." : ".$value."<br>";
-    }
+    }*/
 ?>
 
 <h2><? echo __('Failure connections'); ?></h2>
