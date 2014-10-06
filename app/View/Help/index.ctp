@@ -56,6 +56,7 @@ snmp-server enable traps snmp coldstart
 snmp-server enable traps config
 snmp-server host <?php echo $ipAddress;?> version 2c private
 snmp-server trap-source Vlan 1
+radius-server vsa send cisco-nas-port
 radius server snack
     address ipv4 <?php echo $ipAddress;?> auth-port 1812 acct-port 1813 
     key 0 sharedkey
@@ -99,4 +100,7 @@ Configure the violation mode. The keywords have these meanings:
     •replace-Removes the current session and authenticates with the new host. 
     </pre>
 </dl>
-
+<h4><?php echo __('Force authentication to re-up the server after failure');?></h4>
+<pre>
+test aaa group RadiusServers username password legacy
+</pre>
