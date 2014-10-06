@@ -144,7 +144,7 @@ if (Configure::read('Parameters.role')=="slave") {
     <hr/>
     <footer>
         <p>
-	    <a href="http://bh-consulting.net" class="copyright"><?php echo $this->Html->image('BHConsulting.png', array('class' => 'logobh', 'alt' => 'B.H. Consulting')) ?></a>
+	    <?php echo $this->Html->image('logo.png', array('height' => '65px', 'class' => 'logo', 'alt' => 'SNACK')) ?>
 	    <p>
 		<strong id="snackcopy">SNACK 
             <?php
