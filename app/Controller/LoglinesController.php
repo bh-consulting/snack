@@ -174,12 +174,17 @@ class LoglinesController extends AppController {
     }
     
     public function chooselogfile() {
+        $home="/home/snack/logs";
         if ($this->request->is('post')) {
             if (!empty($this->request->data)) {
                 $dir = new Folder('/home/snack/logs');
                 $files = $dir->find('snacklog.*');
                 sort($files);
                 $file=$files[$this->request->data['Loglines']['chooselogfile']];
+                if (preg_match('/(.*)\.tar\.bz2/', $file, $matches)) {
+                    system("cd ".$home." && tar jxvf ".$file);
+                    $file = $matches[1];
+                }
                 $this->redirect(array(
                     'action' => 'index',
                     'file' => $file,
