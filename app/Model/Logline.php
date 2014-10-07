@@ -55,7 +55,24 @@ class Logline extends AppModel {
             $cmd .= "--facility " . $options['facility'] . " ";
         }
         if (isset($options['priority'])) {
-            $cmd .= "--priority " . $options['priority'] . " ";
+            if ($options['priority'] == "debug") {
+                $cmd .= "--priority debug,notice,warn,err,crit,emerg ";
+            }
+            if ($options['priority'] == "notice") {
+                $cmd .= "--priority notice,warn,err,crit,emerg ";
+            }
+            if ($options['priority'] == "warn") {
+                $cmd .= "--priority warn,err,crit,emerg ";
+            }
+            if ($options['priority'] == "err") {
+                $cmd .= "--priority err,crit,emerg ";
+            }
+            if ($options['priority'] == "emerg") {
+                $cmd .= "--priority emerg ";
+            }
+        }
+        else {
+            $cmd .= "--priority info,notice,warn,err,crit,emerg ";
         }
         if (isset($options['string'])) {
             if ($options['string'] != '') {

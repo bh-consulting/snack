@@ -44,7 +44,7 @@ display() {
     #echo $var
     regex="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+[0-9]{2}:[0-9]{2}\s+$host"
     if [[ "$var" == "H0 D0 S0 V0" ]]; then
-        count=`grep -E "\[$facility\.$priority\]" $file | wc -l`
+        count=`grep -E "$regprio" $file | wc -l`
         echo "$count"
         last=$((count-($page-1)*$number))
         if (("$last"<="$number")); then
@@ -53,10 +53,10 @@ display() {
             first=$((last-number))
         fi
         echo $first" "$last
-        grep -E "\[$facility\.$priority\]" $file | sed -n "$first,$last p" | sort -r
+        grep -E "$regprio" $file | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H0 D0 S1 V0" ]]; then
-        count=`grep -E "\[$facility\.$priority\]" $file | grep -E "$string" | wc -l`
+        count=`grep -E "$regprio" $file | grep -E "$string" | wc -l`
         last=$((count-($page-1)*$number))
         if (("$last"<="$number")); then
             first=1
@@ -68,10 +68,10 @@ display() {
         else
             echo $count
         fi
-        grep -E "\[$facility\.$priority\]" $file | grep -E "$string" | sed -n "$first,$last p" | sort -r
+        grep -E "$regprio" $file | grep -E "$string" | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H0 D1 S0 V0" ]]; then
-        count=`grep -E "\[$facility\.$priority\]" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
+        count=`grep -E "$regprio" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
         echo $count
         last=$((count-($page-1)*$number))
         if (("$last"<="$number")); then
@@ -79,10 +79,10 @@ display() {
         else 
             first=$((last-number))
         fi
-        grep -E "\[$facility\.$priority\]" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | sed -n "$first,$last p" | sort -r
+        grep -E "$regprio" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H1 D0 S0 V0" ]]; then
-        count=`grep -E "\[$facility\.$priority\]" $file | grep -E "$host" | wc -l`
+        count=`grep -E "$regprio" $file | grep -E "$host" | wc -l`
         echo $count
         last=$((count-($page-1)*$number))
         if (("$last"<="$number")); then
@@ -90,10 +90,10 @@ display() {
         else 
             first=$((last-number))
         fi
-        grep -E "\[$facility\.$priority\]" $file | grep -E "$host" | sed -n "$first,$last p" | sort -r
+        grep -E "$regprio" $file | grep -E "$host" | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H0 D1 S1 V0" ]]; then
-        count=`grep -E "\[$facility\.$priority\]" $file | grep -E "$string" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
+        count=`grep -E "$regprio" $file | grep -E "$string" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
         echo $count
         last=$((count-($page-1)*$number))
         if (("$last"<="$number")); then
@@ -101,10 +101,10 @@ display() {
         else 
             first=$((last-number))
         fi
-        grep -E "\[$facility\.$priority\]" $file | grep -E "$string" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | sed -n "$first,$last p" | sort -r
+        grep -E "$regprio" $file | grep -E "$string" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H1 D0 S1 V0" ]]; then
-        count=`grep -E "\[$facility\.$priority\]" $file | grep -E "$string" | grep -E "$host" | wc -l`
+        count=`grep -E "$regprio" $file | grep -E "$string" | grep -E "$host" | wc -l`
         echo $count
         last=$((count-($page-1)*$number))
         if (("$last"<="$number")); then
@@ -112,10 +112,10 @@ display() {
         else 
             first=$((last-number))
         fi
-        grep -E "\[$facility\.$priority\]" $file | grep -E "$string" | grep -E "$host" | sed -n "$first,$last p" | sort -r
+        grep -E "$regprio" $file | grep -E "$string" | grep -E "$host" | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H1 D1 S0 V0" ]]; then
-        count=`grep -E "\[$facility\.$priority\]" $file | grep -E "$host" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
+        count=`grep -E "$regprio" $file | grep -E "$host" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
         echo $count
         last=$((count-($page-1)*$number))
         if (("$last"<="$number")); then
@@ -123,10 +123,10 @@ display() {
         else 
             first=$((last-number))
         fi
-        grep -E "\[$facility\.$priority\]" $file | grep -E "$host" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | sed -n "$first,$last p" | sort -r
+        grep -E "$regprio" $file | grep -E "$host" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H1 D1 S1 V0" ]]; then
-        count=`grep -E "\[$facility\.$priority\]" $file | grep -E "$host" | grep -E "$string" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
+        count=`grep -E "$regprio" $file | grep -E "$host" | grep -E "$string" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
         echo $count
         last=$((count-($page-1)*$number))
         if (("$last"<="$number")); then
@@ -134,10 +134,10 @@ display() {
         else 
             first=$((last-number))
         fi
-        grep -E "\[$facility\.$priority\]" $file | grep -E "$host" | grep -E "$string" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | sed -n "$first,$last p" | sort -r
+        grep -E "$regprio" $file | grep -E "$host" | grep -E "$string" | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H0 D0 S0 V1" ]]; then
-        count=`grep -E "\[$facility\.$priority\]" $file | grep -E "VOIP" | wc -l`
+        count=`grep -E "$regprio" $file | grep -E "VOIP" | wc -l`
         echo $((count/2))
         last=$((count-($page-1)*$number))
         if (("$last"<="$number")); then
@@ -145,12 +145,12 @@ display() {
         else 
             first=$((last-number))
         fi
-        grep -E "\[$facility\.$priority\]" $file | grep -E "VOIP" | sed -n "$first,$last p" | sort -r
+        grep -E "$regprio" $file | grep -E "VOIP" | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H0 D0 S1 V1" ]]; then
-        count=`grep -E "\[$facility\.$priority\]" $file | grep -E "VOIP" | grep -E "c[gd]n:[0-9]*$string" | wc -l`
+        count=`grep -E "$regprio" $file | grep -E "VOIP" | grep -E "c[gd]n:[0-9]*$string" | wc -l`
         echo $((count/2))
-        res=`grep -E "\[$facility\.$priority\]" $file | grep -E "VOIP" | grep -E "c[gd]n:[0-9]*$string" | sort -r `
+        res=`grep -E "$regprio" $file | grep -E "VOIP" | grep -E "c[gd]n:[0-9]*$string" | sort -r `
         IFS_BAK=$IFS
         IFS=$'\n'
         for f in $res; do
@@ -195,7 +195,21 @@ do
     esac
 done
 
-
+function regpriofac() 
+{
+    echo $priority | tr ',' '\n' | while read prio; do
+        echo -n "\[$facility\.$prio\]|"
+    done
+}
+regp=$(regpriofac)
+regex='\\\[(.*)\\\.\.\s\.\.\\\]'
+if [[ $regp =~ $regex ]]; then
+    facility="${BASH_REMATCH[1]}"
+    regprio="\[$facility\..*\]"
+else
+    regprio=${regp%?}
+fi
+#echo $regprio
 check_variables
 display 
 
