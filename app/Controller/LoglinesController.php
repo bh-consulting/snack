@@ -111,6 +111,7 @@ class LoglinesController extends AppController {
         if (isset($this->params['url']['level'])) {
             if ($this->params['url']['level'] != '') {
                 $constraints['priority'] = $this->params['url']['level'];
+                $this->set('priority', $constraints['priority']);
             }
         }
         if (isset($this->params['url']['host'])) {

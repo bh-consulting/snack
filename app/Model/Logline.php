@@ -95,7 +95,7 @@ class Logline extends AppModel {
             }
         }
         $return = shell_exec($cmd);
-        //debug($cmd);
+        debug($cmd);
         //debug($return);
         $infos = explode("\n", $return);
         $arr['count'] = $infos[0];
