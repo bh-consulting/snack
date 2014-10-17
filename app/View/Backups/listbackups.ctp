@@ -1,6 +1,6 @@
 <?php 
 $this->extend('/Common/backups_tabs');
-$this->assign('backupsconnections_active', 'active');
+$this->assign('backupsbackups_active', 'active');
 
 $columns = array(
     'id' => array(
@@ -67,13 +67,6 @@ echo $this->element('filters_panel', array(
         array(
             'name' => 'writemem',
             'label' => __('Synchronization'),
-            'multiple' => 'checkbox',
-            'type' => 'checkgroup',
-            'escape' => false,
-        ),
-        array(
-            'name' => 'lastchange',
-            'label' => __('Last changes'),
             'multiple' => 'checkbox',
             'type' => 'checkgroup',
             'escape' => false,

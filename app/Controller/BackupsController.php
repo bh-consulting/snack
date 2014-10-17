@@ -117,6 +117,99 @@ class BackupsController extends AppController {
                             'input' => 'writemem',
                             'nas' => $nas,
                         ),
+                    ),
+                ));
+        
+        $this->Filters->addComplexConstraint(array(
+            'select' => array(
+                'items' => array(
+                    'active' => __(' '),
+                ),
+                'input' => 'lastchange',
+                'title' => false,
+            ),
+            'callback' => array(
+                'getBackupsLastChange',
+                array(
+                    'input' => 'lastchange',
+                ),
+            )
+        ));
+        
+        //$this->Filters->addGroupConstraint('commit');
+
+        $backups = $this->Filters->paginate();
+
+        $users = array();
+
+        foreach($backups as &$backup) {
+            $users[$backup['Backup']['id']] =
+                $this->Users->extendUsers($backup['Backup']['users']);
+
+            if (isset($backup['Backup']['datetime'])) {
+                $backup['Backup']['datetime'] = Utils::formatDate(
+                    $backup['Backup']['datetime'],
+                    'display'
+                );
+            }
+        }
+
+        $this->set('users', $users);
+        $this->set('unwrittenids', $this->getUnwrittenBackups($nas));
+        $this->set('backups', $backups);
+    }
+    
+    public function listbackups($id = null) {
+        $this->loadModel('Nas');
+        $nas = $this->Nas->findById($id);
+
+        $this->set('nasID', $nas['Nas']['id']);
+        $this->set('nasIP', $nas['Nas']['nasname']);
+        $this->set('nasShortname', $nas['Nas']['shortname']);
+
+        $this->Filters->addDatesConstraint(array(
+            'field' => 'datetime', 
+            'from' => 'datefrom',
+            'to' => 'dateto',
+        ));
+
+        $this->Filters->addStringConstraint(array(
+            'fields' => 'users', 
+            'input' => 'author', 
+            'ahead' => array('users'),
+        ));
+
+        $this->Filters->addStringConstraint(array(
+            'fields' => 'nas', 
+            'input' => 'nas', 
+            'value'  => $nas['Nas']['nasname'],
+            'strict' => true,
+        ));
+
+        $this->Filters->addSelectConstraint(array(
+            'fields' => array('action'),
+            'items' => $this->Backup->actions,
+            'input' => 'action',
+            'title' => false,
+        ));
+
+        $this->Filters->addComplexConstraint(array(
+            'select' => array(
+                'items' => array(
+                    'notchanged' => '<i class="icon-ok-sign icon-green"></i> '
+                    . __('Synchronized'),
+                        'changed' => ' <i class="icon-exclamation-sign icon-red"></i> '
+                        . __('Not synchronized'),
+                        ),
+                        'input' => 'writemem',
+                        'title' => false,
+                    ),
+                    'callback' => array(
+                        'getRegexSynchronisation',
+                        array(
+                            'input' => 'writemem',
+                            'nas' => $nas,
+                        ),
                     )
                 ));
 
@@ -603,7 +696,7 @@ class BackupsController extends AppController {
             );
         } else {
             $this->Session->setFlash(__(
-                    'Unable de restore commit %s on NAS %s.',
+                    'Unable to restore commit %s on NAS %s.',
                     $backup['Backup']['commit'],
                     $nasname
                 ),
@@ -618,6 +711,17 @@ class BackupsController extends AppController {
                     $nasId,
                 )
             );
+        }
+    }
+    
+    public function getBackupsLastChange($args = array()) {
+        if (!empty($args['input'])) {
+	    $data = &$this->request->data['Backup'][$args['input']];
+            if (isset($data[0]) && $data[0] == 'active') {
+                return "(id IN (select id from backups group by(commit)))";
+            } else {
+                return '(1=1)';
+            }
         }
     }
 }
