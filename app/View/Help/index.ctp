@@ -9,6 +9,14 @@ $ipAddress=Configure::read('Parameters.ipAddress');
     <dt><?php echo __('IOS < 15.x'); ?></dt>
     <pre>
 
+ip ssh pubkey-chain
+username snack
+key-string 
+<?php
+echo $sshrsa;
+?>
+exit
+!
 aaa group server radius RadiusServers
 server <?php echo $ipAddress;?> auth-port 1812 acct-port 1813
 !
@@ -35,6 +43,14 @@ radius-server host <?php echo $ipAddress;?> auth-port 1812 acct-port 1813 key 0 
     <dt><?php echo __('IOS > 15.x'); ?></dt>
     <pre>
 
+ip ssh pubkey-chain
+username snack
+key-string 
+<?php
+echo $sshrsa;
+?>
+exit
+!
 aaa group server radius RadiusServers
     server snack
     ip radius source-interface Vlan1
@@ -48,6 +64,7 @@ aaa accounting exec default start-stop group RadiusServers
 aaa accounting system default start-stop group RadiusServers
 !
 dot1x system-auth-control
+authentication mac-move permit
 !
 logging <?php echo $ipAddress;?> 
 logging source-interface Vlan 1
