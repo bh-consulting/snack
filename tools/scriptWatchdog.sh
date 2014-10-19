@@ -15,7 +15,7 @@ function check-freeradius {
     else
         echo "" > /tmp/watchdog-freeradius
         ADMINPASS=`mysql -uradius -p${PASSWORD} radius -NBe "SELECT value from radcheck where username='admin'"`
-        res=$(( echo "User-Name = \"admin\"";   echo "Cleartext-Password = \"$ADMIdNPASS\"";   echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"admin\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x 127.0.0.1 auth loopsecret | tail -1)
+        res=$(( echo "User-Name = \"admin\"";   echo "Cleartext-Password = \"$ADMINPASS\"";   echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"admin\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x 127.0.0.1 auth loopsecret | tail -1)
         if [[ "$res" =~ 'EAP-Code = Failure' ]]; then
             echo "From: $MAILFROM" > $MAIL
             echo "To: $EMAIL" >> $MAIL
