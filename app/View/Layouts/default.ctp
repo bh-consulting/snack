@@ -102,6 +102,7 @@ $cakeDescription = __('SNACK');
                 <?php
                 $file = APP . 'tmp/notifications.txt';
                 $nbnotif = count(file($file))-1;
+                if($this->Session->read('Auth.User')){
                 echo '<li>' .
                         $this->Html->link(
                             __('Notifications&nbsp;') .
@@ -114,7 +115,7 @@ $cakeDescription = __('SNACK');
                         ) .
                         '</li>';
                 
-                if($this->Session->read('Auth.User')){
+                
                     echo '<li>' .
                         $this->Html->link(
                             __('Logout from %s', $this->Session->read('Auth.User.username')) .
