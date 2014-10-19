@@ -93,6 +93,14 @@ echo '</div>';
                 );            
             echo "</li>";
             ?>
+            <?php
+            echo "<li class=".$this->fetch('systemdetails_notifications_active').">";
+                echo $this->Html->link(
+                    __('Notifications'),
+                    array('controller' => 'SystemDetails', 'action' => 'notifications')
+                );            
+            echo "</li>";
+            ?>
     </ul>
     <div class="tab-content">
         <?php echo $this->fetch('content'); ?>

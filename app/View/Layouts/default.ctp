@@ -99,9 +99,21 @@ $cakeDescription = __('SNACK');
                 ?>
                 </ul>
                 <ul class="nav navbar-nav pull-right">
-
                 <?php
-
+                $file = APP . 'tmp/notifications.txt';
+                $nbnotif = count(file($file))-1;
+                echo '<li>' .
+                        $this->Html->link(
+                            __('Notifications&nbsp;') .
+                            ' <span class="badge pull-right">'.$nbnotif.'</span>',
+                            array(
+                                'controller' => 'systemDetails',
+                                'action' => 'notifications'
+                            ),
+                            array('escape' => false)
+                        ) .
+                        '</li>';
+                
                 if($this->Session->read('Auth.User')){
                     echo '<li>' .
                         $this->Html->link(

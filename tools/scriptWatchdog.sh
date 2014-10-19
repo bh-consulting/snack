@@ -4,18 +4,24 @@ EMAIL=`grep configurationEmail /home/snack/interface/app/Config/parameters.php |
 MAILFROM=`grep smtp_email_from /home/snack/interface/app/Config/parameters.php | cut -d"'" -f4`
 PASSWORD=`grep password /home/snack/interface/app/Config/database.php | tac | tail -1 | cut -d"'" -f4`
 MAIL=/tmp/mail
+NOTIF=/home/snack/interface/app/tmp/notifications.txt
+echo "" > $NOTIF
+chmod 660 $NOTIF
+chown root:snack $NOTIF
 
 function check-freeradius {
     if [ -f /tmp/watchdog-freeradius ]; then
-        echo "MySQL en cours de redémarrage";
+        echo "Freeradius en cours de redémarrage";
     else
         echo "" > /tmp/watchdog-freeradius
         ADMINPASS=`mysql -uradius -p${PASSWORD} radius -NBe "SELECT value from radcheck where username='admin'"`
-        radtest -t mschap admin $ADMINPASS 127.0.0.1:1812 0 loopsecret > /dev/null
-        if [ $? -ne 0 ]; then
+        res=$(( echo "User-Name = \"admin\"";   echo "Cleartext-Password = \"$ADMIdNPASS\"";   echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"admin\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x 127.0.0.1 auth loopsecret | tail -1)
+        if [[ "$res" =~ 'EAP-Code = Failure' ]]; then
             echo "From: $MAILFROM" > $MAIL
             echo "To: $EMAIL" >> $MAIL
-            echo "Subject: [$SNACKNAME][ERR] SNACK Freeradius restart" >> $MAIL 
+            echo "Subject: [$SNACKNAME][ERR] SNACK Freeradius restart" >> $MAIL
+            datenow=$(date "+%Y-%m-%d %H:%m")
+            echo "[$datenow] [ERR] SNACK Freeradius restart" >> $NOTIF
             service freeradius stop
             service freeradius start
             sendmail $EMAIL < $MAIL
@@ -84,6 +90,8 @@ function check-disk-used {
             echo "From: $MAILFROM" > $MAIL
             echo "To: $EMAIL" >> $MAIL
             echo "Subject: [$SNACKNAME][ERR] SNACK Space Disk /home CRITICAL" >> $MAIL
+            datenow=$(date "+%Y-%m-%d %H:%m")
+            echo "[$datenow] [ERR] SNACK Space Disk /home CRITICAL" >> $NOTIF
             sendmail $EMAIL < $MAIL
         fi
     fi
@@ -92,6 +100,8 @@ function check-disk-used {
             echo "From: $MAILFROM" > $MAIL
             echo "To: $EMAIL" >> $MAIL
             echo "Subject: [$SNACKNAME][ERR] SNACK Space Disk / CRITICAL" >> $MAIL
+            datenow=$(date "+%Y-%m-%d %H:%m")
+            echo "[$datenow] [ERR] SNACK Space Disk / CRITICAL" >> $NOTIF
             sendmail $EMAIL < $MAIL
         fi
     fi

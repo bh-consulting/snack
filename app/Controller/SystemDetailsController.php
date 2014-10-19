@@ -391,6 +391,13 @@ class SystemDetailsController extends AppController {
         $this->set('log', $results[$username]['res']);
         $this->layout = 'ajax';
     }
+    
+    public function notifications() {
+        $results=array();
+        $this->SystemDetail->checkProblem($results);
+        //debug($results);
+        $this->set('results', $results);
+    }
 }
 
 ?>

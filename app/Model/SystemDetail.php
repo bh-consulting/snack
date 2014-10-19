@@ -252,6 +252,21 @@ class SystemDetail extends AppModel {
         $results[$username]['res'] = $return;
         $results[$username]['comment'] = $comment;
     }
+    
+    public function checkProblem(&$results) {
+        $file = new File(APP . 'tmp/notifications.txt', false, 0644);
+        $tmp = $file->read(false, 'rb', false);
+        $lines = explode("\n", $tmp);
+        $arr = array();
+        foreach ($lines as $line) {
+            if (preg_match('/\[(.*)\]\s+\[(.*)\]\s+SNACK\s+(.*)/', $line, $matches)) {
+                $arr['date'] = $matches[1];
+                $arr['type'] = $matches[2];
+                $arr['msg'] = $matches[3];
+                $results[] = $arr;
+            }
+        }   
+    }
 
 }
 

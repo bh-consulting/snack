@@ -6,20 +6,26 @@ class SnackSendReportsShell extends AppShell {
     public $uses = array('SystemDetail', 'Raduser', 'Nas', 'Backup', 'Radacct', 'Logline');
     
     private $str="";
+    private $file;
     private $errors=0;
     
     public function main() {
         if (Configure::read('Parameters.role') == "master") {
+            $this->file = new File(APP.'tmp/notifications.txt', true, 0644);
+            $date = new DateTime('23:00');
             $this->str .= "<h2>SNACK Report</h2>";
             $this->getInfos();
             $this->checkServices();
             $this->checkBackup();
             $this->checkHA();
             //$this->testUsers();
-            $this->cleanDBSessions();
-            $this->get_failures_by_users();
-            $this->get_Err_from_logs();
-            $this->sendMail($this->str);
+            if ($date->format('H:i') == date('H:i')) {
+                $this->cleanDBSessions();
+                $this->get_failures_by_users();
+                $this->get_Err_from_logs();
+                $this->sendMail($this->str);
+            }
+            
             //echo $this->str;
             //echo $this->errors;
         }
@@ -143,6 +149,7 @@ class SnackSendReportsShell extends AppShell {
         $files = $dir->find('ha-[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}\.log');
         sort($files);
         $files=array_reverse($files);
+        $found = false;
         $slaves=explode(';', Configure::read('Parameters.slave_ip_to_monitor'));
         foreach($slaves as $slave) {
             $this->str .= "<h4>Slave IP Address : ".$slave."</h4>";
@@ -168,16 +175,18 @@ class SnackSendReportsShell extends AppShell {
                     $ip = $matches[1];
                 }
                 if ($ip == $slave) {
+                    $found = true;
                     if ($rsync == 0 && $mysql == 0 && $res_versions == 0 ) {
                         $diff = $datetime2->diff($datetime1);
                         $years = $diff->format('%y');
                         $months = $diff->format('%m');
                         $days = $diff->format('%d');
-                        if ($years > 0 or $months > 0 or $days > 0) {
+                        if ($years > 0 or $months > 0 or $days > 1) {
                             $this->errors++;
                             $this->str .= '<span style="color:#FF0000">';
                             $this->str .= "ERROR : No replication since ".$datetime2->format('Y-m-d H:i:s')."<br>";
                             $this->str .= '</span>';
+                            $this->file->append("[] [ERR] SNACK No replication since ".$datetime2->format('Y-m-d H:i:s'));
                         }
                         else {
                             $this->str .= "Last replication OK : ".$datetime2->format('Y-m-d H:i:s')."<br>";
@@ -187,8 +196,15 @@ class SnackSendReportsShell extends AppShell {
                         $this->str .= '<span style="color:#FF0000">';
                         $this->str .= "WARNING : Replication failed :  ".$datetime2->format('Y-m-d H:i:s')."<br>";
                         $this->str .= '</span>';
+                        $this->file->append("[".$datetime2->format('Y-m-d H:i:s')."] [WARN] SNACK Last replication failed ");
                     }
                 }
+            }
+            if ($found == false) {
+                $this->str .= '<span style="color:#FF0000">';
+                $this->str .= "ERR : No replication for " . $slave . "<br>";
+                $this->str .= '</span>';
+                $this->file->append("[] [ERR] SNACK No replication for ".$slave);
             }
         }
     }
