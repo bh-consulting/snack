@@ -111,3 +111,5 @@ check-freeradius
 check-mysql
 check-apache
 check-disk-used 
+
+sudo -u www-data  /home/snack/interface/app/Console/cake SnackSendReports
