@@ -196,22 +196,26 @@ class LoglinesController extends AppController {
     
     public function logelementradius($type) {
         $start = $this->start_time();
-
+        
         $arr = $this->init();
-        if ($type == "index") { 
+        if (isset($type)) {
+            if ($type == "index") { 
+                $constraints=array('facility' => 'local2');
+            }
+            if ($type == "snack_logs") { 
+                $constraints=array('facility' => 'local4');
+            }
+            if ($type == "nas_logs") { 
+                $constraints=array('facility' => 'local7');
+            }
+            if ($type == "voice_logs") { 
+                $pageSize =  Configure::read('Parameters.paginationCount')*2;
+                $constraints=array('facility' => 'local7', 'type' => 'voip', 'pageSize' => $pageSize);
+            }
+        }
+        else {
             $constraints=array('facility' => 'local2');
         }
-        if ($type == "snack_logs") { 
-            $constraints=array('facility' => 'local4');
-        }
-        if ($type == "nas_logs") { 
-            $constraints=array('facility' => 'local7');
-        }
-        if ($type == "voice_logs") { 
-            $pageSize =  Configure::read('Parameters.paginationCount')*2;
-            $constraints=array('facility' => 'local7', 'type' => 'voip', 'pageSize' => $pageSize);
-        }
-        
         $this->defaultValues($arr['file'], $arr['page'], $constraints);
         
         $total_time = $this->stop_time($start);
