@@ -55,7 +55,7 @@ $checks .= '</fieldset>';
 
 $replies = '<fieldset>';
 $replies .= '<legend>' . __('Replies') . '</legend>';
-$replies .= $this->element('reply_common_fields');
+$replies .= $this->element('reply_common_fields_phone');
 $replies .= '</fieldset>';
 
 //$role = $this->element('snack_role_input');
