@@ -1,11 +1,4 @@
 <?php
-$this->extend('/Common/radius_sidebar');
-$this->assign('radius_active', 'active');
-$this->assign('session_active', 'active');
-
-//$url1=$_SERVER['REQUEST_URI'];
-//header("Refresh: 15; URL=$url1");
-
 $columns = array(
     'checkbox' => array(
         'id' => 'radacctid',
@@ -50,58 +43,8 @@ $columns = array(
         'fit' => true,
     ),
 );
-
-if(AuthComponent::user('role') != 'root'){
-    unset($columns['delete']);
-}
 ?>
 
-<h1><?php echo __('Sessions'); ?></h1>
-
-<?php
-echo $this->element('filters_panel', array(
-    'controller' => 'radaccts/index',
-    'inputs' => array(
-        array(
-            'name' => 'datefrom',
-            'label' => __('From'),
-            'type' => 'datetimepicker',
-        ),
-        array(
-            'name' => 'dateto',
-            'label' => __('To'),
-            'type' => 'datetimepicker',
-        ),
-        array(
-            'name' => 'porttype',
-            'label' => __('Port type'),
-        ),
-        array(
-            'name' => 'active',
-            'label' => __('Active'),
-            'multiple' => 'checkbox',
-            'type' => 'checkgroup',
-            'escape' => false,
-        ),
-        array(
-            'name' => 'text',
-            'label' => __('Contains (accept regex)'),
-            'autoComplete' => true,
-        ))
-    )
-);
-
-if(AuthComponent::user('role') == 'root'){
-    echo $this->element(
-        'delete_links',
-        array('action' => 'form', 'model' => 'Radacct')
-    );
-}
-
-echo $this->element('MultipleAction', array('action' => 'start'));
-?>
-
-<div id="livesessions">
 <table class="table">
     <thead>
     <tr>
@@ -287,23 +230,3 @@ if (!empty($radaccts)) {
 ?>
     </tbody>
 </table>
-</div>
-
-<?php
-if(AuthComponent::user('role') == 'root'){
-    echo $this->element(
-        'MultipleAction',
-        array(
-            'action' => 'end',
-            'options' => array('delete'),
-        )
-    );
-}
-echo $this->element('paginator_footer');
-unset($acct);
-
-$this->start('script');
-echo $this->Html->script('radaccts');
-$this->end();
-
-?>

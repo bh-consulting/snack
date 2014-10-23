@@ -246,6 +246,11 @@ class RadacctsController extends AppController {
         }
 
     }
+    
+    public function get_sessions_ajax() {
+        $this->index();
+        $this->layout = false;
+    }
 }
 
 ?>
