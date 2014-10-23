@@ -1,6 +1,8 @@
 <?php
 //echo $this->element('paginator_logs');
 
+echo "Results found : ".$nbResults;
+
 $columns = array(
     'datetime' => array(
         'text' => __('Date'),
@@ -18,49 +20,6 @@ $columns = array(
         'text' => __('Message'),
     ),
 );
-?>
-
-<br>
-<?php
-echo $this->element('filters_panel', array(
-    'controller' => 'loglines/' . $controller.'/file:'.$file,
-    'inputs' => array(
-        array(
-            'name' => 'level',
-            'label' => __('Severity from'),
-            'type' => 'slidermax',
-            'options' => array('id' => 'severity'),
-        ),
-        array(
-            'name' => 'datefrom',
-            'label' => __('From'),
-            'type' => 'datetimepicker',
-            'options' => array('id' => 'datefrom'),
-        ),
-        array(
-            'name' => 'dateto',
-            'label' => __('To'),
-            'type' => 'datetimepicker',
-            'options' => array('id' => 'dateto'),
-        ),
-        array(
-            'name' => 'host',
-            'label' => __('Host'),
-            'options' => array('host' => 'host'),
-        ),
-        array(
-            'name' => 'text',
-            'label' => __('Message contains (accept regex)'),
-            'options' => array('id' => 'logmessage'),
-            'autoComplete' => true,
-        ))
-    )
-);
-?>
-
-<div id="livelogs">
-<?php
-echo "Results found : ".$nbResults;
 ?>
 <table class="table loglinks">
     <thead>
@@ -148,44 +107,6 @@ if (!empty($loglines)) {
 ?>
     </tbody>
 </table>
-
 <?php
 echo 'Page generated in '.$total_time.' seconds.<br><br>';
-?>
-</div>    
-<div>   
-<?php
-if(AuthComponent::user('role') == 'root'){
-
-    echo $this->Html->link(
-	'<i class="glyphicon glyphicon-remove glyphicon glyphicon-white"></i> ' . __('Delete all'),
-	"#confirmdelall",
-	array(
-	    'escape' => false,
-	    'data-toggle' => 'modal',
-	    'class' => 'btn btn-primary'
-	)
-    );
-
-    echo $this->element('modalDelete', array(
-	'id'   => 'delall',
-	'link' => $this->Form->postLink(
-		'<i class="glyphicon glyphicon-remove glyphicon glyphicon-white"></i> ' . __('Delete all logs from %s', strtoupper($program)),
-		array('action' => 'deleteAll', $program),
-		array(
-		    'escape' => false,
-		    'class' => 'btn btn-primary btn-danger'
-		)
-	    )
-    ));
-
-}
-?>
-</div>
-<?php
-echo $this->element('paginator_logs');
-
-$this->start('script');
-echo $this->Html->script('loglines');
-$this->end();
 ?>

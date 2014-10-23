@@ -1,7 +1,4 @@
 <?php
-$this->extend('/Common/logs_tabs');
-$this->assign('voicelogs_active', 'active');
-
 if (Configure::read('debug') == 2) {
     $columns = array(
         /*'id' => array(
@@ -58,46 +55,7 @@ else {
         ),
     );
 }
-?>
 
-<?php
-echo $this->element('filters_panel', array(
-    'controller' => 'loglines/voice_logs',
-    'inputs' => array(
-        array(
-            'name' => 'level',
-            'label' => __('Severity from'),
-            'type' => 'slidermax',
-            'options' => array('id' => 'severity'),
-        ),
-        array(
-            'name' => 'datefrom',
-            'label' => __('From'),
-            'type' => 'datetimepicker',
-            'options' => array('id' => 'datefrom'),
-        ),
-        array(
-            'name' => 'dateto',
-            'label' => __('To'),
-            'type' => 'datetimepicker',
-            'options' => array('id' => 'dateto'),
-        ),
-        array(
-            'name' => 'host',
-            'label' => __('Host'),
-            'options' => array('host' => 'host'),
-        ),
-        array(
-            'name' => 'text',
-            'label' => __('Message contains (accept regex)'),
-            'options' => array('id' => 'logmessage'),
-            'autoComplete' => true,
-        ))
-    )
-);
-?>
-<div id="voicelivelogs">
-<?php
 echo "Results found : ".$nbResults;
 ?>
 
@@ -317,11 +275,6 @@ if (!empty($loglines)) {
 ?>
     </tbody>
 </table>
-</div>
 <?php
-echo $this->element('paginator_logs');
-
-$this->start('script');
-echo $this->Html->script('loglines');
-$this->end();
+echo 'Page generated in '.$total_time.' seconds.<br><br>';
 ?>
