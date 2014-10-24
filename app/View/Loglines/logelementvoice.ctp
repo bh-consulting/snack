@@ -142,7 +142,12 @@ if (!empty($loglines)) {
                                         echo $datetime2->format('Y-m-d');
                                         echo " ";
                                         echo $datetime1->format('H:i:s');
-                                    }
+                                    } elseif (preg_match('/cet (.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
+                                        $datetime2 = new DateTime($matches[1]);
+                                        echo $datetime2->format('Y-m-d');
+                                        echo " ";
+                                        echo $datetime1->format('H:i:s');
+                                    }      
                                 }
                                 break;
                             case 'duration':
@@ -213,6 +218,11 @@ if (!empty($loglines)) {
                                         echo " ";
                                         echo $datetime1->format('H:i:s');
                                     } elseif (preg_match('/CET (.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
+                                        $datetime2 = new DateTime($matches[1]);
+                                        echo $datetime2->format('Y-m-d');
+                                        echo " ";
+                                        echo $datetime1->format('H:i:s');
+                                    } elseif (preg_match('/cet (.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
                                         $datetime2 = new DateTime($matches[1]);
                                         echo $datetime2->format('Y-m-d');
                                         echo " ";

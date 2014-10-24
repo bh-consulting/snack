@@ -174,12 +174,19 @@ if (!empty($loglines)) {
                             case 'datetime':
                                 if (preg_match('/ConnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
                                     $datetime1 = new DateTime($matches[1]);
+                                    //debug($datetime1);
                                     if (preg_match('/UTC (.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
+                                        
                                         $datetime2 = new DateTime($matches[1]);
                                         echo $datetime2->format('Y-m-d');
                                         echo " ";
                                         echo $datetime1->format('H:i:s');
                                     } elseif (preg_match('/CET (.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
+                                        $datetime2 = new DateTime($matches[1]);
+                                        echo $datetime2->format('Y-m-d');
+                                        echo " ";
+                                        echo $datetime1->format('H:i:s');
+                                    } elseif (preg_match('/cet (.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
                                         $datetime2 = new DateTime($matches[1]);
                                         echo $datetime2->format('Y-m-d');
                                         echo " ";
@@ -255,6 +262,11 @@ if (!empty($loglines)) {
                                         echo " ";
                                         echo $datetime1->format('H:i:s');
                                     } elseif (preg_match('/CET (.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
+                                        $datetime2 = new DateTime($matches[1]);
+                                        echo $datetime2->format('Y-m-d');
+                                        echo " ";
+                                        echo $datetime1->format('H:i:s');
+                                    } elseif (preg_match('/cet (.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
                                         $datetime2 = new DateTime($matches[1]);
                                         echo $datetime2->format('Y-m-d');
                                         echo " ";
