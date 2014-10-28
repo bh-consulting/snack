@@ -94,6 +94,8 @@ chown snmp:snack $BACKUP_TRAPS_SCRIPT
 chmod 0550 $BACKUP_TRAPS_SCRIPT
 } >> $OUT 2>>$LOG
 
-
+{
+chown -R root:root /etc/sudoers.d
+}
 
 
