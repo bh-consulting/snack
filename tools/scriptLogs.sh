@@ -1,6 +1,4 @@
 #!/bin/bash
-LOG=/home/snack/logs/snack.log
-TMP=/tmp/snacklog
 var=""
 
 usage() {
@@ -71,7 +69,7 @@ display() {
         grep -E "$regprio" $file | grep -E "$string" | sed -n "$first,$last p" | sort -r
     fi
     if [[ "$var" == "H0 D1 S0 V0" ]]; then
-        count=`grep -E "$regprio" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
+        count=$(grep -E "$regprio" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l)
         echo $count
         last=$((count-($page-1)*$number))
         if (("$last"<="$number")); then
@@ -208,10 +206,9 @@ do
         *)              usage $0 && exit 0;;
     esac
 done
-
 function regpriofac() 
 {
-    echo $priority | tr ',' '\n' | while read prio; do
+    echo "$priority" | tr ',' '\n' | while read prio; do
         echo -n "\[$facility\.$prio\]|"
     done
 }
@@ -226,4 +223,4 @@ fi
 #echo $regprio
 check_variables
 display 
-
+echo $file
