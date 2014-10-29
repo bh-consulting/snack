@@ -141,9 +141,9 @@ if (!empty($loglines)) {
                                 }
                                 break;
                             case 'duration':
-                                if (preg_match('/ConnectTime ([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
+                                if (preg_match('/ConnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
                                     $datetime1 = new DateTime($matches[1]);
-                                    if (preg_match('/DisconnectTime ([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
+                                    if (preg_match('/DisconnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
                                         $datetime2 = new DateTime($matches[1]);
                                         $interval = $datetime2->diff($datetime1);
                                         echo $interval->format('%H:%I:%S');
