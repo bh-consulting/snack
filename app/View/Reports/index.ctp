@@ -1,15 +1,12 @@
 <?php
-    $this->extend('/Common/radius_sidebar');
-    $this->assign('radius_active', 'active');
-    $this->assign('reports_active', 'active');
+$this->extend('/Common/reports_tabs');
+$this->assign('radiusreports_active', 'active');
 ?>
-
-<h1><? echo __('Reports'); ?></h1>
 
 <br>
 <h2><? echo __('Errors from NAS'); ?></h2>
 <?php
-    echo "<table>";
+    echo "<table class='table table-striped table-condensed'>";
     echo "<th>".__('Host')."</th>";
     echo "<th>".__('Type')."</th>";
     echo "<th>".__('Msg')."</th>";
@@ -38,7 +35,7 @@
 <?php
     $nb = count($failures);
     echo "<h4>$nb failures of connections order by users<br></h4>";
-    echo "<table>";
+    echo "<table class='table table-striped table-condensed'>";
     echo "<th>".__('User')."</th>";
     echo "<th>".__('Nb')."</th>";
     echo "<th>".__('Last')."</th>";
@@ -69,7 +66,7 @@
     
     $nb = count($nasfailures);
     echo "<h4>$nb failures of connections order by nas</h4>";
-    echo "<table>";
+    echo "<table class='table table-striped table-condensed'>";
     echo "<th>".__('NAS')."</th>";
     echo "<th>".__('Nb')."</th>";
     echo "<th>".__('Last')."</th>";

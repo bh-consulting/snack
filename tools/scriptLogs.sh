@@ -25,6 +25,8 @@ check_variables() {
         var="$var D0"
     else
         var="$var D1"
+        datefrom=$(echo $dates |cut -d'/' -f1)
+        dateto=$(echo $dates |cut -d'/' -f2)
     fi
     if [[ -z "$string" ]]; then
         var="$var S0"
@@ -149,13 +151,16 @@ display() {
             grep -E "VOIPAAA" $file | grep -B1 -E "DisconnectCause\s[0123]{1}[^0]" | sed -n "$first,$last p" | sort -r
         else
             count=`grep -E "VOIP" $file | wc -l`
-            echo $((count/2))
-            last=$((count-($page-1)*$number))
+            echo $count
+            echo $page
+            #echo $((count/2))
+            last=$(($count-($page-1)*$number))
             if (("$last"<="$number")); then
                 first=1
             else 
                 first=$((last-number))
             fi
+            echo "$first $last"
             grep -E "VOIP" $file | sed -n "$first,$last p" | sort -r
         fi
     fi
@@ -173,6 +178,20 @@ display() {
         IFS=$IFS_BAK
         IFS_BAK=
     fi
+    if [[ "$var" == "H0 D1 S0 V1" ]]; then
+        count=`grep -E "VOIP" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
+        echo $((count/2))
+        res=`grep -E "VOIP" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | sort -r `
+        IFS_BAK=$IFS
+        IFS=$'\n'
+        for f in $res; do
+            line=$f
+            var="H0 D0 S1 V0"
+            display_voip
+        done
+        IFS=$IFS_BAK
+        IFS_BAK=
+    fi
 # /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\+[0-9]{2}:[0-9]{2})\s+([^\s]+)\s+([^\s]+):\s+\[(local[0-9]+)\.(debug|info|notice|warn|err|crit|alert|emerg)\]\s+(.*)/
 #./scriptLogs.sh -n 50 --page 1 --facility local2 | awk '$0 >= "2014-06-20T12:00" && $0 <= "2014-06-20T14:00"'
 }
@@ -180,8 +199,10 @@ display() {
 # Init variables
 facility=".*"
 priority=".*"
-
+number=-1
+page=1
 options=$(getopt -o hp:n:f: -l between-dates:,voip,host:,page:,priority:,string:,file:,facility: -- "$@")
+
 if [ $? -ne 0 ]; then
     usage $(basename $0)
     exit 1
@@ -200,10 +221,10 @@ do
         --facility)     facility=$2; shift 2;;
         --string)       string=$2; shift 2;;
         --voip)         VOIP=1; shift 2;;
-        --between-dates) DATE=1; datefrom=$2; dateto=$4; shift 2;;
+        --between-dates) DATE=1; dates=$2;shift 2;;
         --)             shift; break ;;
         -*)             echo "$0: error - unrecognized option $1" 1>&2; exit 1;;
-        *)              usage $0 && exit 0;;
+        *)              echo "$1" && usage $0 && exit 0;;
     esac
 done
 function regpriofac() 
@@ -220,7 +241,11 @@ if [[ $regp =~ $regex ]]; then
 else
     regprio=${regp%?}
 fi
-#echo $regprio
+
+if [ "$number" == "-1" ]; then
+    number=$(grep -E "$regprio" $file | wc -l)
+fi
+
 check_variables
+echo $var
 display 
-echo $file

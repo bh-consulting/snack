@@ -43,6 +43,7 @@ $cakeDescription = __('SNACK');
     //echo $this->Html->css('jquery.terminal.css');
     echo $this->Html->css('bootstrap-toggle-buttons');
     echo $this->Html->css('sb-admin');
+    echo $this->Html->css('phpGraph_style');
     echo $this->fetch('css');
 
     //echo $this->Html->script('snake');

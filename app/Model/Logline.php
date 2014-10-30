@@ -41,7 +41,7 @@ class Logline extends AppModel {
 		)
 	);
     
-    public function findLogs($page, $options=array(), $file="snacklog") {
+    public function findLogs($page=-1, $options=array(), $file="snacklog") {
         $arr = array();
         $pageSize =  Configure::read('Parameters.paginationCount');
         $loglines = array();
@@ -86,7 +86,7 @@ class Logline extends AppModel {
         }
         if (isset($options['datefrom']) && isset($options['dateto'])) {
             if ($options['datefrom'] != '' && $options['dateto'] != '') {
-                $cmd .= "--between-dates " . $options['datefrom'] . " " . $options['dateto'];
+                $cmd .= "--between-dates " . $options['datefrom'] . "/" . $options['dateto'] . " ";
             }
         }
         if (isset($options['type'])) {
@@ -236,6 +236,102 @@ class Logline extends AppModel {
         $res['err'] = $err;
         $res['lasts'] = $lasts;
         return $res;
+    }
+    
+    public function voiceNbCalls($constraints) {
+        $file="snacklog";
+        $pageSize=-1;
+        $age=40;
+        $results=array();
+        /* Stats sur 5 jours*/
+        $nb=15;
+        $today = date("Y-m-d");
+        //$today="2014-10-22";
+        $date = new DateTime($today);
+        $dir = new Folder('/home/snack/logs');
+        $files = $dir->find('snacklog.*');
+        sort($files);
+        $index=count($files)-1;
+        /*foreach ($files as $file) {
+            echo $file;
+        }*/
+        for ($i=0;$i<$nb;$i++) {
+            //echo $file." ".$strdate."<br>";
+            $strdate=$date->format('Y-m-d');
+            $startdate = $strdate."T00:00:00";
+            $stopdate = $strdate."T23:59:59";
+            //echo $strdate;
+            $cmd = "grep %VOIPAAA-5-VOIP_FEAT_HISTORY " . $this->path . $file;
+            $cmd .= " | awk -v datefrom=\"".$startdate."\" '$0 >= datefrom' | awk -v dateto=\"".$stopdate."\" '$0 <= dateto' | sort -u -t, -k7,7";
+            $strdate2=$date->format('d M');
+            if(isset($constraints['directorynumber'])) {
+                $cmd_calling = $cmd . " |grep -E \"cgn:[0-9]*" . $constraints['directorynumber'] . ",\" |wc -l";
+                //debug($cmd_calling);
+                $cmd_called = $cmd . " |grep -E \"cdn:[0-9]*" . $constraints['directorynumber'] . ",\" |wc -l";
+                //debug($cmd_called);
+                $return = shell_exec($cmd_calling);
+                $infos = explode("\n", $return);
+                $results['1'][$strdate2] = $infos[0];
+                $return = shell_exec($cmd_called);
+                $infos = explode("\n", $return);
+                $results['2'][$strdate2] = $infos[0];
+            }
+            else {
+                ///debug("test");
+                $cmd .= " |wc -l";
+                $return = shell_exec($cmd);
+                //debug($return);
+                $infos = explode("\n", $return);
+                $results['0'][$strdate2]=$infos[0];
+            }
+
+            /* Next day */
+            $nbDay=date('N', strtotime($strdate));
+            if ($nbDay == 1) {
+                $file=$files[$index];
+            }
+            $date->modify('-1 day');
+        }
+        //debug($results);
+        return $results;
+    }
+    
+    public function voiceTopCalled ($file) {
+        //$file="snacklog";
+        $return = shell_exec("grep %VOIPAAA-5-VOIP_FEAT_HISTORY ".$this->path . $file." | sort -u -t, -k7,7 | awk -F',' '{print $4}' | sort | uniq -c | sort -rn | head");
+        $infos = explode("\n", $return);
+        foreach ($infos as $line) {
+            if ($line != '') {
+                if (preg_match('/^\s*(\d+)\s+cdn:(\d+)/', $line, $matches)) {
+                    //$res['times'] = intval($matches[1]);
+                    //$res['dest'] = strval($matches[2]);
+                    $results[strval($matches[2])] = intval($matches[1]);
+                    //$results[] = $res;
+                }
+            }
+        }
+        //debug($results);
+        return $results;
+    }
+    
+    public function voiceTopCalling ($file) {
+        //$file="snacklog";
+        $cmd = "grep %VOIPAAA-5-VOIP_FEAT_HISTORY ".$this->path . $file." | sort -u -t, -k7,7 | awk -F',' '{print $3}' | sort | uniq -c | sort -rn | head";
+        //debug($cmd);
+        $return = shell_exec($cmd);
+        $infos = explode("\n", $return);
+        foreach ($infos as $line) {
+            if ($line != '') {
+                if (preg_match('/^\s*(\d+)\s+cgn:(\d+)/', $line, $matches)) {
+                    //$res['times'] = intval($matches[1]);
+                    //$res['dest'] = strval($matches[2]);
+                    $results[strval($matches[2])] = intval($matches[1]);
+                    //$results[] = $res;
+                }
+            }
+        }
+        //debug($results);
+        return $results;
     }
 }
 

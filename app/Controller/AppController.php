@@ -22,6 +22,7 @@
 
 App::uses('Controller', 'Controller');
 App::uses('Utils', 'Lib');
+App::uses('phpGraph', 'Lib');
 App::import('Model', 'Nas');
 
 /**
