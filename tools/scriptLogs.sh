@@ -63,7 +63,7 @@ display() {
         else 
             first=$((last-number))
         fi
-        if [[ $string == "VOIP" ]]; then
+        if [[ $string == "VOIPAAA" ]]; then
             echo $((count/2))
         else
             echo $count
@@ -150,7 +150,7 @@ display() {
             #echo "$first $last"
             grep -E "VOIPAAA" $file | grep -B1 -E "DisconnectCause\s[0123]{1}[^0]" | sed -n "$first,$last p" | sort -r
         else
-            count=`grep -E "VOIP" $file | wc -l`
+            count=`grep -E "VOIPAAA" $file | wc -l`
             echo $count
             #echo $((count/2))
             last=$(($count-($page-1)*$number))
@@ -160,13 +160,13 @@ display() {
                 first=$((last-number))
             fi
             #echo "$first $last"
-            grep -E "VOIP" $file | sed -n "$first,$last p" | sort -r
+            grep -E "VOIPAAA" $file | sed -n "$first,$last p" | sort -r
         fi
     fi
     if [[ "$var" == "H0 D0 S1 V1" ]]; then
-        count=`grep -E "VOIP" $file | grep -E "c[gd]n:[0-9]*$string" | wc -l`
+        count=`grep -E "VOIPAAA" $file | grep -E "c[gd]n:[0-9]*$string" | wc -l`
         echo $((count/2))
-        res=`grep -E "VOIP" $file | grep -E "c[gd]n:[0-9]*$string" | sort -r `
+        res=`grep -E "VOIPAAA" $file | grep -E "c[gd]n:[0-9]*$string" | sort -r `
         IFS_BAK=$IFS
         IFS=$'\n'
         for f in $res; do
@@ -178,9 +178,9 @@ display() {
         IFS_BAK=
     fi
     if [[ "$var" == "H0 D1 S0 V1" ]]; then
-        count=`grep -E "VOIP" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
+        count=`grep -E "VOIPAAA" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | wc -l`
         echo $((count/2))
-        res=`grep -E "VOIP" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | sort -r `
+        res=`grep -E "VOIPAAA" $file | awk -v datefrom="$datefrom" '$0 >= datefrom' | awk -v dateto="$dateto" '$0 <= dateto' | sort -r `
         IFS_BAK=$IFS
         IFS=$'\n'
         for f in $res; do

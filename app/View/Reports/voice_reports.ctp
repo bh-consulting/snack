@@ -31,7 +31,7 @@ echo $this->Form->end($options);
 ?>
 <div class="container">
 <?php
-debug($nbappelsstats);
+//debug($nbappelsstats);
 $G = new phpGraph();
 
 echo $G->draw($nbappelsstats,array(
