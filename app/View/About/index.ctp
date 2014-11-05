@@ -5,8 +5,23 @@ $this->assign('about_active', 'active');
 
 <?php echo $this->Session->flash(); ?>
 <?php echo $this->fetch('content'); ?>
-<h2>Secure Network Access Control for Kids</h2><br />
-<strong><?php echo __('Authors:') ?><br /></strong> 
+
+
+<p>
+
+<?php echo $this->Html->image('logo.png', array('height' => '160px', 'class' => 'logo', 'alt' => 'SNACK')) ?>
+<h2>Secure Network Access Control for Kids</h2><br />    
+<strong id="snackcopy">version
+<?php
+$file = new File(APP . 'VERSION.txt', false);
+$tmp = "";
+if ($file->exists()) {
+$tmp = $file->read(false, 'rb', false);
+echo $tmp;
+}
+?>
+<br /><br /><br /><br /><br />    
+<strong><u><?php echo __('Authors:') ?></u><br /></strong> 
 Nicolas BOUGET<br />
 <a href="http://julien.guepin.fr">Julien GUÉPIN</a><br />
 Marc PINHÈDE<br />
