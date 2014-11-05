@@ -29,18 +29,23 @@ $options = array(
 echo $this->Form->end($options);
 
 ?>
-
+<div class="container">
 <?php
-//debug($nbappelsstats);
+debug($nbappelsstats);
 $G = new phpGraph();
 
 echo $G->draw($nbappelsstats,array(
             //'steps' => 50,
+            'height'=>300,
+            'width'=>700,
             'filled'=>true,
             'tooltips'=>true,
             'diskLegends' => true,
             'diskLegendsType' => 'label',
             'type' => array(
+                '0'=>'bar',
+                '1'=>'bar',
+                '2'=>'bar',
                 '4'=>'pie',
             ),
             'stroke' => array(
@@ -61,6 +66,7 @@ echo $G->draw($nbappelsstats,array(
         )
     );
 ?>
+</div>
 <!-- Top called/callings -->
 <h1><?php echo __('Top called and calling'); ?></h1>
 <?php

@@ -45,7 +45,7 @@ $columns = array(
 );
 ?>
 
-<table class="table">
+<table class="table table-hover table-bordered">
     <thead>
     <tr>
 <?php

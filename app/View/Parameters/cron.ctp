@@ -16,7 +16,6 @@ $infos = explode("\n", $listcron);
 //debug($infos);
 foreach ($infos as $ligne) {
     if (preg_match("/^(#*)(\*\/\d+|\d+|\*)\s+(\*\/\d+|\d+|\*)\s+(\*\/\d+|\d+|\*)\s+(\*\/\d+|\d+|\*)\s+(\*\/\d+|\d+|\*)\s+(www-data|root)\s+(.*)$/", $ligne, $matches)) {
-        //debug($ligne);
         $i=1;
         $disabled = $matches[$i];
         $i++;
@@ -65,9 +64,17 @@ foreach ($infos as $ligne) {
             $name = "Cluster Replication";
             $scriptname = "scriptCluster";
         }
-         if ($script == "/home/snack/interface/tools/scriptWatchdog.sh") {
+        if ($script == "/home/snack/interface/tools/scriptWatchdog.sh") {
             $name = "Watchdog";
             $scriptname = "scriptWatchdog";
+        }
+        if ($script == "/home/snack/interface/tools/scriptLogsRotate.sh") {
+            $name = "Log Rotate";
+            $scriptname = "scriptLogsRotate";
+        }
+        if ($script == "/home/snack/interface/app/Console/cake SnackSendReports") {
+            $name = "Send Reports";
+            $scriptname = "SnackSendReports";
         }
         if (AuthComponent::user('role') === 'admin' && $user['Raduser']['type'] === 'snack'
         ) {

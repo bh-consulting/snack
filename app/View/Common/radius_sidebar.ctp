@@ -1,11 +1,14 @@
 <?php
 if(AuthComponent::user('role') != 'tech'){
 ?>
-    <ul style="z-index:100;" class="nav list-group bs-sidenav affix mainmenu">
-	<li class="<?php echo $this->fetch('users_active'); ?>">
+<div class="container-fluid">
+      <div class="row" id="sidebar">
+        <div class="col-sm-1 sidebar">
+          <ul class="nav nav-sidebar">           
+         <li class="<?php echo $this->fetch('users_active'); ?>">
 <?php
 echo $this->Html->link(
-    '<i class="glyphicon glyphicon-user"></i> ' . __('Users'),
+    '<i class="fa fa-user fa-2x" title="' . __('Users') . '"></i>',
     array(
         'controller' => 'radusers',
         'action' => 'index',
@@ -17,7 +20,7 @@ echo $this->Html->link(
 	<li class="<?php echo $this->fetch('groups_active'); ?>">
 <?php
 echo $this->Html->link(
-    '<i class="glyphicon glyphicon-list"></i> ' . __('Groups'),
+    '<i class="fa fa-group fa-2x" title="' . __('Groups') . '"></i>',
     array(
         'controller' => 'radgroups',
         'action' => 'index',
@@ -28,14 +31,8 @@ echo $this->Html->link(
 	</li>
 	<li class="<?php echo $this->fetch('nas_active'); ?>">
 <?php
-
-if($nasunwritten)
-    $iconnas = '<i class="glyphicon glyphicon-hdd glyphicon-red" title="' . __('There is at least one NAS not synchronized with the starting configuration.') . '"></i>';
-else
-    $iconnas = '<i class="glyphicon glyphicon-hdd glyphicon-green" title="' . __('All NAS seem synchronized with the starting configuration.') . '"></i>';
-
 echo $this->Html->link(
-    $iconnas . ' ' . __('NAS'),
+    '<i class="fa fa-hdd-o fa-2x" title="' . __('NAS') . '"></i>',
     array(
         'controller' => 'nas',
         'action' => 'index',
@@ -47,7 +44,7 @@ echo $this->Html->link(
 	<li class="<?php echo $this->fetch('session_active'); ?>">
 <?php
 echo $this->Html->link(
-    '<i class="glyphicon glyphicon-ok"></i> ' . __('Sessions'),
+    '<i class="fa fa-key fa-2x" title="' . __('Sessions') . '"></i>',
     array(
         'controller' => 'radaccts',
         'action' => 'index',
@@ -59,7 +56,7 @@ echo $this->Html->link(
 	<li class="<?php echo $this->fetch('logs_active'); ?>">
 <?php
 echo $this->Html->link(
-    '<i class="glyphicon glyphicon-list-alt"></i> ' . __('Logs'),
+    '<i class="fa fa-list fa-2x" title="' . __('Logs') . '"></i>',
     array(
         'controller' => 'loglines',
         'action' => 'index',
@@ -71,13 +68,13 @@ echo $this->Html->link(
     <li class="<?php echo $this->fetch('reports_active'); ?>">
 <?php
 echo $this->Html->link(
-    '<i class="glyphicon glyphicon-th-large"></i> ' . __('Reports'),
+    '<i class="fa fa-bar-chart fa-2x" title="' . __('Reports') . '"></i>',
     array(
         'controller' => 'reports',
         'action' => 'index',
     ),
     array(
-        'onclick'=>'loading_from_sidebar()',
+        'onclick'=>'loading()',
         'escape' => false,
     )
 );
@@ -86,7 +83,7 @@ echo $this->Html->link(
 	<li class="<?php echo $this->fetch('dashboard_active'); ?>">
 <?php
 echo $this->Html->link(
-    '<i class="glyphicon glyphicon-dashboard"></i> ' . __('Server dashboard'),
+    '<i class="fa fa-dashboard fa-2x" title="' . __('Dashboard') . '"></i>',
     array(
         'controller' => 'systemDetails',
         'action' => 'index',
@@ -99,7 +96,7 @@ echo $this->Html->link(
 	<li class="<?php echo $this->fetch('param_active'); ?>">
 <?php
 echo $this->Html->link(
-    '<i class="glyphicon glyphicon-wrench"></i> ' . __('Server parameters'),
+    '<i class="fa fa-wrench fa-2x" title="' . __('Params') . '"></i>',
     array(
         'controller' => 'parameters',
         'action' => 'index',
@@ -112,7 +109,7 @@ echo $this->Html->link(
     <li class="<?php echo $this->fetch('help_active'); ?>">
 <?php
 echo $this->Html->link(
-    '<i class="glyphicon glyphicon-question-sign"></i> ' . __('Help'),
+    '<i class="fa fa-question-circle fa-2x" title="' . __('Help') . '"></i>',
     array(
         'controller' => 'help',
         'action' => 'index',
@@ -122,7 +119,9 @@ echo $this->Html->link(
 ?>
     </li>
     </ul>
-<div id="content" class="content">
+        </div>
+<!--<div id="content" class="col-sm-9 col-sm-offset-1 col-md-10 col-md-offset-1 main content">-->
+<div id="content" class="main content">
     <?php } ?>
 <?php echo $this->Session->flash(); ?>
 <?php echo $this->fetch('content'); ?>

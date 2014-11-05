@@ -10,7 +10,7 @@ display_voip() {
     if [[ $line =~ $regex ]]; then
         fcid="${BASH_REMATCH[1]}"
         string=$fcid
-        echo $string
+        #echo $string
         display
     fi
 }
@@ -147,12 +147,11 @@ display() {
             else 
                 first=$((last-number))
             fi
-            echo "$first $last"
+            #echo "$first $last"
             grep -E "VOIPAAA" $file | grep -B1 -E "DisconnectCause\s[0123]{1}[^0]" | sed -n "$first,$last p" | sort -r
         else
             count=`grep -E "VOIP" $file | wc -l`
             echo $count
-            echo $page
             #echo $((count/2))
             last=$(($count-($page-1)*$number))
             if (("$last"<="$number")); then
@@ -160,7 +159,7 @@ display() {
             else 
                 first=$((last-number))
             fi
-            echo "$first $last"
+            #echo "$first $last"
             grep -E "VOIP" $file | sed -n "$first,$last p" | sort -r
         fi
     fi
@@ -247,5 +246,4 @@ if [ "$number" == "-1" ]; then
 fi
 
 check_variables
-echo $var
 display 

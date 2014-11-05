@@ -41,6 +41,7 @@ $cakeDescription = __('SNACK');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
     echo $this->Html->css('flags.css');
     //echo $this->Html->css('jquery.terminal.css');
+    echo $this->Html->css('font-awesome.min');
     echo $this->Html->css('bootstrap-toggle-buttons');
     echo $this->Html->css('sb-admin');
     echo $this->Html->css('phpGraph_style');
@@ -61,8 +62,8 @@ $cakeDescription = __('SNACK');
 </head>
 <body>
     
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">    
-    <div class="container">    
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">    
+        <!--<div class="container">    -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -70,10 +71,13 @@ $cakeDescription = __('SNACK');
                 <span class="glyphicon glyphicon-bar"></span>
                 <span class="glyphicon glyphicon-bar"></span>
             </button>
+            <?php
+            echo $this->Html->image('logo.png', array('height' => '45px', 'class' => 'logo', 'alt' => 'SNACK'));
+            ?>
             <a class="navbar-brand" href=""><?php echo $cakeDescription ?></a>
         </div>
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
                     <?php
                     echo '<li class="' . $this->fetch('radius_active') . '">' .
                         $this->Html->link(
@@ -84,7 +88,16 @@ $cakeDescription = __('SNACK');
                             ),
                             array()
                         ) . '</li>';
-
+                    
+                    echo '<li class="' . $this->fetch('about_active') . '">' .
+                        $this->Html->link(
+                            __('About'),
+                            array(
+                                'controller' => 'about',
+                                'action' => 'index',
+                            ),
+                            array()
+                        ) . '</li>';
                     /*if(AuthComponent::user('role') == 'root'){
                         echo '<li class="' . $this->fetch('term_active') . '">' .
                             $this->Html->link(
@@ -98,15 +111,25 @@ $cakeDescription = __('SNACK');
                             '</li>';
                     }*/
                 ?>
-                </ul>
-                <ul class="nav navbar-nav pull-right">
+            </ul>
+            <ul class="nav navbar-nav pull-right">
                 <?php
+                echo '<li>' .
+                        $this->Html->link(
+                            '<div class="loading"></div>',
+                            array(
+                                'controller' => 'systemDetails',
+                                'action' => 'notifications'
+                            ),
+                            array('escape' => false)
+                        ) .
+                        '</li>';
                 $file = APP . 'tmp/notifications.txt';
                 $nbnotif = count(file($file))-1;
                 if($this->Session->read('Auth.User')){
                 echo '<li>' .
                         $this->Html->link(
-                            __('Notifications&nbsp;') .
+                            '<i class="fa fa-bell-o "></i>'.
                             ' <span class="badge pull-right">'.$nbnotif.'</span>',
                             array(
                                 'controller' => 'systemDetails',
@@ -131,11 +154,11 @@ $cakeDescription = __('SNACK');
                 }
 
                 ?>
-                </ul>
-            </div>
+            </ul>
         </div>
+        <!--</div>-->
+
     </div>
-</div>
 <?php
 if (Configure::read('Parameters.role')=="slave") {
     echo '<div class="alert alert-danger">';
@@ -146,41 +169,16 @@ if (Configure::read('Parameters.role')=="slave") {
     echo '</div>';
 }
 ?>
-</div>
 <div class="loading_from_sidebar">
+    
 </div>
-<div class="container">
+<!--<div class="container">-->
     <div class="row bhbody">
 
     <? echo $this->fetch('content'); ?>
 
-    </div>
     <hr/>
-    <footer>
-        <p>
-	    <?php echo $this->Html->image('logo.png', array('height' => '65px', 'class' => 'logo', 'alt' => 'SNACK')) ?>
-	    <p>
-		<strong id="snackcopy">SNACK 
-            <?php
-            $file = new File(APP . 'VERSION.txt', false);
-            $tmp = "";
-            if ($file->exists()) {
-                $tmp = $file->read(false, 'rb', false);
-                echo $tmp;
-            }
-            ?>
-        </strong> &mdash; <em>Secure Network Access Control for Kids</em><br />
-		<strong><?php echo __('Authors:') ?></strong> Nicolas BOUGET, <a href="http://julien.guepin.fr">Julien GUÉPIN</a>, Marc PINHÈDE, <a href="http://julien.vaubourg.com">Julien VAUBOURG</a>, <a href="http://blog.guigeek.org">Guillaume ROCHE</a>.<br />
-		<em>Copyright <a href="http://www.gnu.org/licenses/">GPL v3</a> &copy; 2013 <a href="http://www.bh-consulting.net">b.h. consulting</a></em>
-	    </p>
-            <!-- Flag sprites downloaded from http://flag-sprites.com/ (CC by-sa) -->
-            <span class="flags">
-                <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-fr', 'alt' => __('French'))), array('controller' => 'app', 'action' => 'changeLang', 'fra'), array('escape' => false)); ?>
-                <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-us', 'alt' => __('English'))), array('controller' => 'app', 'action' => 'changeLang', 'eng'), array('escape' => false)); ?>
-            </span>
-        </p>
-    </footer>
-</div>
+    
 <?php
 //echo $this->element('sql_dump');
 echo $this->Html->script('jquery.min');

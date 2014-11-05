@@ -21,7 +21,7 @@ $columns = array(
     ),
 );
 ?>
-<table class="table loglinks">
+<table class="table loglinks table-hover table-bordered">
     <thead>
         <tr>
 <?php

@@ -59,6 +59,13 @@ if(AuthComponent::user('role') != 'root'){
 <h1><?php echo __('Sessions'); ?></h1>
 
 <?php
+
+echo $this->Form->create();
+echo '<div class="col-sm-12"><b>Disable refresh </b>';
+echo '<input type="checkbox" name="data[Radacct][cisco]" class="" value="1" id="RadacctAjax" />';
+echo '</div><br>';
+echo $this->Form->end();
+
 echo $this->element('filters_panel', array(
     'controller' => 'radaccts/index',
     'inputs' => array(
@@ -102,7 +109,7 @@ echo $this->element('MultipleAction', array('action' => 'start'));
 ?>
 
 <div id="livesessions">
-<table class="table">
+<table class="table table-hover table-bordered">
     <thead>
     <tr>
 <?php

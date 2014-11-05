@@ -26,6 +26,12 @@ $options = array(
     'after' => '</div>'
 );
 echo $this->Form->end($options);
+
+echo $this->Form->create();
+echo '<div class="col-sm-12"><b>Disable refresh </b>';
+echo '<input type="checkbox" name="data[Radacct][cisco]" class="" value="1" id="LoglineAjax" />';
+echo '</div><br>';
+echo $this->Form->end();
 ?>
 <div class="tabbable">
     <ul class="nav nav-tabs">
