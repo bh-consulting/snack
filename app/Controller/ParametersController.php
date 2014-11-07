@@ -40,10 +40,11 @@ class ParametersController extends AppController {
         foreach ($this->Parameter->data['Parameter'] as $key => $value) {
             $this->set($key, $value);
         }
-        echo checkdnsrr($this->Parameter->data['Parameter']['addomain'], "A");
+        //debug(checkdnsrr($this->Parameter->data['Parameter']['addomain'], "A"));
         if (checkdnsrr($this->Parameter->data['Parameter']['addomain'], "A")) {
         //if(preg_match("/^Ping to winbindd succeeded.*/", $return, $matches)) {
-            $return = shell_exec("wbinfo -t");       
+            $return = shell_exec("sudo /usr/bin/perl /home/snack/interface/tools/scriptConfigAD.pl status");
+            //debug($return);
             if(preg_match("/^checking the trust secret for domain(.*) via RPC calls (.*)/", $return, $matches)) {
                 if ($matches[2] == "succeeded") {
                     $this->set('adstatus', "Joined domain ".$matches[1]);
@@ -195,7 +196,7 @@ class ParametersController extends AppController {
     }
     
     public function edit_ad_group() {
-        $return = shell_exec("wbinfo -g");
+        $return = shell_exec("sudo /usr/bin/perl /home/snack/interface/tools/scriptConfigAD.pl listgroups");
         $infos = explode("\n", $return);
         $adgroups = array();
         foreach ($infos as $info) {
@@ -267,13 +268,12 @@ class ParametersController extends AppController {
         } else {
             $this->request->data = $this->Parameter->read();
         }
-        
         //$return = shell_exec("wbinfo -p");
         
         $tmp = "";
         if (isset($this->Parameter->data['Parameter']['addomain']) && $this->Parameter->data['Parameter']['addomain'] != '') {
             if (checkdnsrr($this->Parameter->data['Parameter']['addomain'], "A")) {
-                $return = shell_exec("wbinfo -t");
+                $return = shell_exec("sudo /usr/bin/perl /home/snack/interface/tools/scriptConfigAD.pl status");
                 if (preg_match("/^checking the trust secret for domain(.*) via RPC calls (.*)/", $return, $matches)) {
                     if ($matches[2] == "succeeded") {
                         $this->set('adstatus', "Joined domain " . $matches[1]);
@@ -285,42 +285,6 @@ class ParametersController extends AppController {
                 $this->set('adstatus', "SERVER UNREACHABLE");
             }
         }
-        /*$file = new File('/etc/samba/joinresult', false, 0644);
-        if ($file->exists()) {
-            $tmp = $file->read(false, 'rb', false);
-            if (preg_match("/^'(.*)' to realm '(.*)'/", $tmp, $matches)) {
-                $this->set('adstatus', "Joined domain " . $matches[2]);
-                
-            }
-        }*/
-
-        
-        
-        //debug($adgroups);
-        /*$tmp = "";
-        if ($file->exists()) {
-            $tmp = $file->read(false, 'rb', false);
-            if (preg_match("/^'(.*)' to realm '(.*)'/", $tmp, $matches)) {
-                $this->set('adstatus', "Joined domain " . $matches[2]);
-                $return = shell_exec("wbinfo -g");
-                $infos = explode("\n", $return);
-                $adgroups = array();
-                foreach ($infos as $info) {
-                    $group = explode('\\', $info);
-                    if (isset($group[1])) {
-                        if ($group[1] != '') {
-                            $adgroups[] = $group[1];
-                        }
-                    }
-                    else {
-                        $adgroups[] = $info;
-                    }
-                }
-                $this->set('adgroups', $adgroups);
-            } else {
-                $this->set('adstatus', $tmp);
-            }
-        }   */ 
     }
     
     public function cron() {

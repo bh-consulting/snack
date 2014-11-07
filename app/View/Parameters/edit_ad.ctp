@@ -34,6 +34,7 @@ echo $this->Form->create('Parameter', array('action' => 'edit_ad'));
     echo $this->Form->input(
             'adminpassword', array(
         'label' => __('Admin Password'),
+        'type' => 'password',
             )
     );
 ?>

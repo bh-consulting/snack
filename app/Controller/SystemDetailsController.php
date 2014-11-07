@@ -356,20 +356,40 @@ class SystemDetailsController extends AppController {
     }
     
     public function tests() {        
-        $results=array();
+        $this->test_users;
+    }
+    
+    public function test_users($type=false, $username="", $password="") {
         $nas = $this->Raduser->query('select nasname,secret from nas where nasname="127.0.0.1";');
         foreach ($nas as $n) {
             $nasname=$n['nas']['nasname'];
             $secret=$n['nas']['secret'];
         }
-        $usernames = $this->Raduser->query('select username,comment from raduser;');
-        foreach ($usernames as $username) {
-            $this->SystemDetail->tests_users($username['raduser']['username'], $nasname, $secret, $results, $username['raduser']['comment']);
+        if (!$type) {
+            $results=array();
+            $usernames = $this->Raduser->query('select * from raduser where is_windowsad=0;');
+            foreach ($usernames as $username) {
+                $this->SystemDetail->tests_users($username['raduser']['username'], $nasname, $secret, $results, $username['raduser']['comment']);
+            }
+            $this->set('results', $results);
+            $this->set('usernames', $usernames);
         }
-        $this->set('results', $results);
+        else {
+            $results=array();
+            $usernames = $this->Raduser->query('select * from raduser where username="'.$username.'";');
+            foreach ($usernames as $username) {
+                $this->SystemDetail->tests_usersAD($username['raduser']['username'], $password, $nasname, $secret, $results, $username['raduser']['comment']);
+            }
+            /*For debug
+             * ntlm_auth --request-nt-key --domain=BH-CONSULTING --username=Administrator --password=xxx
+             */
+            $this->set('results', $results);
+            $this->set('usernames', $usernames);
+            $this->set('password', $password);
+        }
     }
-
-    public function testslog($username) {
+    
+    public function testslog($username, $password="") {
         $return = shell_exec("getconf LONG_BIT");
         if ($return == "64\n") {
             $this->eapol="eapol_test_64";
@@ -386,7 +406,16 @@ class SystemDetailsController extends AppController {
             $nasname=$n['nas']['nasname'];
             $secret=$n['nas']['secret'];
         }
-        $this->SystemDetail->tests_users($username, $nasname, $secret, $results, "");
+        $usernames = $this->Raduser->query('select * from raduser where username="'.$username.'";');
+        foreach ($usernames as $user) {
+            if ($user['raduser']['is_windowsad'] == 1) {
+                $this->SystemDetail->tests_usersAD($username, $password, $nasname, $secret, $results, $user['raduser']['comment']);
+            }
+            else {
+                $this->SystemDetail->tests_users($username, $nasname, $secret, $results, "");
+            }
+        }
+        
         //debug($results[$username]['res']);
         $this->set('log', $results[$username]['res']);
         $this->layout = 'ajax';

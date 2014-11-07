@@ -253,6 +253,30 @@ class SystemDetail extends AppModel {
         $results[$username]['comment'] = $comment;
     }
     
+    /* Test AD users */
+    function tests_usersAD($username, $password, $nasname, $nassecret, &$results, $comment = "") {        
+        $return = shell_exec("getconf LONG_BIT");
+        if ($return == "64\n") {
+            $this->eapol = "eapol_test_64";
+        } elseif ($return == "32\n") {
+            $this->eapol = "eapol_test_x86";
+        }
+        $file = new File(APP . 'tmp/eap-ad.conf', true, 0644);
+        $file->write("network={\n");
+        $file->write("\teap=TTLS\n");
+        $file->write("\teapol_flags=0\n");
+        $file->write("\tkey_mgmt=IEEE8021X\n");
+        $file->write("\tidentity=\"" . $username . "\"\n");
+        $file->write("\tpassword=\"" . $password . "\"\n");
+        $file->write("\tphase2=\"auth=MSCHAPv2\"\n");
+        $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
+        $file->write("}");
+        $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap-ad.conf -a".$nasname." -p1812 -s".$nassecret;
+        $return = shell_exec($request);
+        $results[$username]['res'] = $return;
+        $results[$username]['comment'] = $comment;
+    }
+        
     public function checkProblem(&$results) {
         $file = new File(APP . 'tmp/notifications.txt', false, 0644);
         $tmp = $file->read(false, 'rb', false);

@@ -211,13 +211,14 @@ class RadusersController extends AppController {
         ));
 
         $this->Filters->addBooleanConstraint(array(
-            'fields' => array('is_loginpass', 'is_phone', 'is_mac', 'is_cisco', 'is_cert'),
+            'fields' => array('is_loginpass', 'is_windowsad', 'is_phone', 'is_mac', 'is_cisco', 'is_cert'),
             'input' => 'authtype',
             'items' => array(
                 'is_cisco' => __('Cisco'),
                 'is_mac' => __('MAC'),
                 'is_phone' => __('Phone'),
                 'is_loginpass' => __('Login/Pwd'),
+                'is_windowsad' => __('Login/Pwd with ActiveDirectory'),
                 'is_phone' => __('Phone'),
                 'is_cert' => __('Certificate'),
             ),

@@ -33,12 +33,20 @@ $columns = array(
     'vlan' => array(
         'text' => __('VLAN'),
     ),
-    'is_cert' => array(
+    'type' => array(
+        'text' => __('Type'),
+        'fit' => true,
+    ),
+    /*'is_cert' => array(
         'text' => $this->Html->image('certificate.png', array('alt' => __('Certificate'), 'title' => __('Certificate'))),
         'fit' => true,
     ),
     'is_loginpass' => array(
         'text' => $this->Html->image('user_password.png', array('alt' => __('Login/Pwd'), 'title' => __('Login/Pwd'))),
+        'fit' => true,
+    ),
+    'is_windowsad' => array(
+        'text' => $this->Html->image('windows.png', array('alt' => __('Login/Pwd by ActiveDirectory'), 'title' => __('Login/Pwd by ActiveDirectory'))),
         'fit' => true,
     ),
     'is_phone' => array(
@@ -52,7 +60,7 @@ $columns = array(
     'is_cisco' => array(
         'text' => $this->Html->image('cisco.png', array('alt' => __('Cisco'), 'title' => __('Cisco'))),
         'fit' => true,
-    ),
+    ),*/
    'action' => array(
         'id' => 'id',
         'text' => __('Action'),
@@ -355,15 +363,35 @@ if (!empty($radusers)) {
                 );
 
                 break;
-            case (preg_match("#is_(cert|loginpass|phone|mac|cisco)#i", $field)
+            /*case (preg_match("#is_(cert|loginpass|windowsad|phone|mac|cisco)#i", $field)
                 ? $field : !$field):
                 echo $user['Raduser'][$field] ? '<i class="glyphicon glyphicon-ok"></i>' : '';
-                break;
+                break;*/
             case 'role':
                 if (isset($roles[$user['Raduser'][$field]])) {
                     echo __($roles[$user['Raduser'][$field]]);
                 } else {
                     echo __($user['Raduser'][$field]);
+                }
+                break;
+            case 'type':
+                if ($user['Raduser']['is_windowsad']) {
+                    echo $this->Html->image('windows.png', array('alt' => __('Login/Pwd by ActiveDirectory'), 'title' => __('Login/Pwd by ActiveDirectory')));
+                }
+                if ($user['Raduser']['is_phone']) {
+                    echo $this->Html->image('phone.png', array('alt' => __('Phone'), 'title' => __('Phone')));
+                }
+                if ($user['Raduser']['is_loginpass']) {
+                    echo $this->Html->image('user_password.png', array('alt' => __('Login/Pwd by ActiveDirectory'), 'title' => __('Login/Pwd by ActiveDirectory')));
+                }
+                if ($user['Raduser']['is_cert']) {
+                    echo $this->Html->image('certificate.png', array('alt' => __('Certificate'), 'title' => __('Certificate')));
+                }
+                if ($user['Raduser']['is_mac']) {
+                    echo $this->Html->image('mac.png', array('alt' => __('MAC'), 'title' => __('MAC')));
+                }
+                if ($user['Raduser']['is_cisco']) {
+                    echo $this->Html->image('cisco.png', array('alt' => __('Cisco'), 'title' => __('Cisco')));
                 }
                 break;
             case 'username':

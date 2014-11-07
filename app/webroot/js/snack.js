@@ -64,6 +64,72 @@ $(document).ready(function() {
     document.onkeydown = Tastendruck;
 });
 
+function testlocalusers(){
+    if(document.getElementById("localusers") !== null) {
+        //alert( "error" );
+        $.get("test_users", function(data) {
+                loading_from_sidebar();
+                $("#localusers").html(data);
+            }).fail(function() {
+                alert( "error" );
+            })
+            .always(function() {
+                //alert( "finished" );
+            });
+        /*$.ajax({
+            url: newURL,
+            cache: false,
+            success: function(html){
+              $("#livelogs").html(html);
+            }
+        })*/
+    }
+}
+
+function testadusers(){
+    if(document.getElementById("adusers") !== null) {
+        //alert( "error" );
+        var url="test_users/ad/"+document.getElementById('SystemDetailsUsername').value+"/"+document.getElementById('SystemDetailsPassword').value;
+        $.get(url, function(data) {
+                loading_from_sidebar();
+                $("#adusers").html(data);
+            }).fail(function() {
+                alert( "error" );
+            })
+            .always(function() {
+                //alert( "finished" );
+            });
+    }
+}
+
+function testslogs(id) {   
+    var url="testslog/"+id;
+    //alert(url);
+    $.get(url, function(data) {            
+        $("div.testslogs").html(data);
+        //alert(data);
+    }).fail(function() {
+        alert( "error" );
+    })
+    .always(function() {
+        //alert( "finished" );
+    });
+}
+
+function testslogsAD(id, pwd) {   
+    var url="testslog/"+id+"/"+pwd;
+    //alert(url);
+    $.get(url, function(data) {            
+        $("div.testslogs").html(data);
+        //alert(data);
+    }).fail(function() {
+        alert( "error" );
+    })
+    .always(function() {
+        //alert( "finished" );
+    });
+}
+
 function refreshCode(){   
     if(document.getElementById("livelogs") !== null) {
         if (document.getElementById("LoglineAjax").checked == false) {
