@@ -96,6 +96,7 @@ chmod 0550 $BACKUP_TRAPS_SCRIPT
 
 {
 chown -R root:root /etc/sudoers.d
+usermod -a -G winbindd_priv freerad
 }
 
 
