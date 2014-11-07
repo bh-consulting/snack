@@ -14,6 +14,8 @@ $admin_password = $ARGV[4];
 ($domainpredot, $ext) = split /\./, $domain;
 
 if ($ARGV[0] eq 'config') {
+    $cmd = "net rpc getsid -S ".$domain;
+    system($cmd);
     open(SMBCONF, "> /etc/samba/smb.conf");
     print SMBCONF "[global]\n";
     print SMBCONF " workgroup = $domainpredot\n";
