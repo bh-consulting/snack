@@ -32,19 +32,14 @@ $cakeDescription = __('SNACK');
     echo $this->Html->meta('glyphicon glyphicon');
     echo $this->fetch('meta');
 
-    echo $this->Html->css('bootstrap.min');
-    echo $this->Html->css('mybootstrap');
-    echo $this->Html->css('bootstrap-datetimepicker.min');
-    echo $this->Html->css('doubleListsSelector');
+    echo $this->Html->css('bootstrap');
     echo $this->Html->css('snack');
-    echo $this->Html->css('jquery-ui-bootstrap/jquery-ui-1.9.2.custom');
+    /*echo $this->Html->css('jquery-ui-bootstrap/jquery-ui-1.9.2.custom');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
     echo $this->Html->css('flags.css');
-    //echo $this->Html->css('jquery.terminal.css');
+    echo $this->Html->css('jquery.terminal.css');*/
     echo $this->Html->css('font-awesome.min');
-    echo $this->Html->css('bootstrap-toggle-buttons');
-    echo $this->Html->css('sb-admin');
-    echo $this->Html->css('phpGraph_style');
+
     echo $this->fetch('css');
 
     //echo $this->Html->script('snake');
@@ -52,6 +47,8 @@ $cakeDescription = __('SNACK');
     <style>
         body {
             padding-top: 60px;
+            padding-left: 20px;
+            padding-right: 20px;
 	}
     </style>
 
@@ -181,7 +178,7 @@ if (Configure::read('Parameters.role')=="slave") {
     
 </div>
 <!--<div class="container">-->
-    <div class="row bhbody">
+    <div class=" bhbody">
 
     <? echo $this->fetch('content'); ?>
 
@@ -189,7 +186,7 @@ if (Configure::read('Parameters.role')=="slave") {
     
 <?php
 //echo $this->element('sql_dump');
-echo $this->Html->script('jquery.min');
+/*echo $this->Html->script('jquery.min');
 echo $this->Html->script('jquery-ui.min');
 echo $this->Html->script('bootstrap.min');
 echo $this->Html->script('bootstrapify');
@@ -201,7 +198,7 @@ echo $this->Html->script('backups');
 echo $this->Html->script('checkboxRangeSelection');
 echo $this->Html->script('jquery.bootstrap.wizard');
 echo $this->Html->script('snack');
-echo $this->fetch('script');
+echo $this->fetch('script');*/
 ?>
 </body>
 </html>
