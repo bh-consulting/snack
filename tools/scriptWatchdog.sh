@@ -111,5 +111,5 @@ check-freeradius
 check-mysql
 check-apache
 check-disk-used 
-
+/home/snack/interface/tools/scriptProvAD.sh >> $NOTIF
 sudo -u www-data  /home/snack/interface/app/Console/cake SnackSendReports

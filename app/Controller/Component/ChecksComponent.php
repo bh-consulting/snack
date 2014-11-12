@@ -64,7 +64,8 @@ class ChecksComponent extends Component {
             array('loginpass', __('Login / Password')),
             array('phone', __('Cisco Phones')),
             array('mac', __('MAC')),
-            array('cert', __('Certificate'))
+            array('cert', __('Certificate')),
+            array('windowsad', __('Login/Pwd with ActiveDirectory'))
         );
         if ($rad['is_phone'])
             return $types[2][$nice];
@@ -402,16 +403,13 @@ class ChecksComponent extends Component {
     public function deleteAllUsersOrGroups($id) {
         $this->baseClass->id = $id;
         $Radusergroup = new Radusergroup();
-
         $result = $Radusergroup->deleteAll(
-                array('Radusergroup.' . $this->displayName
-                    => $this->baseClass->field($this->displayName))
+            array('Radusergroup.' . $this->displayName
+                => $this->baseClass->field($this->displayName)), false
         );
-
         if (!$result) {
             return false;
         }
-
         return true;
     }
 
@@ -439,7 +437,6 @@ class ChecksComponent extends Component {
         // Entity info
         $this->baseClass->id = $id;
         $name = $this->baseClass->field($this->displayName);
-
         // Delete matching radchecks
         $rads = $this->getChecks($id);
         foreach ($rads as $r) {
