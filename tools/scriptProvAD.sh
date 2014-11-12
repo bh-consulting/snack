@@ -1,17 +1,21 @@
 #!/bin/bash
 
 USER_HOME=/home/snack
-
+NOTIF=/home/snack/interface/app/tmp/notifications.txt
 DATABASEFILE=$USER_HOME/interface/app/Config/database.php
 PASS=`grep password $DATABASEFILE | head -n 1 | cut -d'>' -f2 | cut -d"'" -f2`
-
+datenow=$(date "+%Y-%m-%d %H:%m")
 ADIP=`grep adip /home/snack/interface/app/Config/parameters.php | cut -d"'" -f4`
 ADMINUSERNAME=`grep adminusername /home/snack/interface/app/Config/parameters.php | cut -d"'" -f4`
 ADMINPASSWORD=`grep adminpassword /home/snack/interface/app/Config/parameters.php | cut -d"'" -f4`
 ADGROUPSYNC=`grep adgroupsync /home/snack/interface/app/Config/parameters.php | cut -d"'" -f4`
-
-RESGRP=$(wbinfo --group-info=$ADGROUPSYNC)
-if [ "$?" != "0" ]; then
+if [ "$ADGROUPSYNC" != "" ]; then
+    RESGRP=$(wbinfo --group-info=$ADGROUPSYNC)
+    if [ "$?" != "0" ]; then
+        echo "[$datenow] [ERR] SNACK Provioning ADs"
+        exit
+    fi
+else
     exit
 fi
 RES=$(echo $RESGRP | cut -d":" -f4)
@@ -24,7 +28,7 @@ do
     #    name=`echo -n ${BASH_REMATCH[1]} | tr -d '\r'`
     users=`mysql -uradius -p${PASS} radius -N -B -e "select username from raduser where username='$user' and is_windowsad=1;" | awk -F " " '{ print $1 }'`
     if [[ $users == "" ]]; then
-        echo "insert $user"
+        #echo "insert $user"
         mysql -uradius -p${PASS} radius -N -B -e "insert into raduser(username, role, comment, is_windowsad) values ('$user','user','', 1);"
     fi
 done
@@ -42,8 +46,8 @@ do
         fi
     done
     if [[ $found == 0 ]]; then
-        echo "$user not found"
-        echo "delete $user"
+        #echo "$user not found"
+        #echo "delete $user"
         # Delete User
         mysql -uradius -p${PASS} radius -N -B -e "delete from raduser where username='$user';"
         mysql -uradius -p${PASS} radius -N -B -e "delete from radcheck where username='$user';"
