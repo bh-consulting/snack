@@ -10,7 +10,11 @@ ADMINUSERNAME=`grep adminusername /home/snack/interface/app/Config/parameters.ph
 ADMINPASSWORD=`grep adminpassword /home/snack/interface/app/Config/parameters.php | cut -d"'" -f4`
 ADGROUPSYNC=`grep adgroupsync /home/snack/interface/app/Config/parameters.php | cut -d"'" -f4`
 
-RES=`wbinfo --group-info=$ADGROUPSYNC | cut -d":" -f4`
+RESGRP=$(wbinfo --group-info=$ADGROUPSYNC)
+if [ "$?" != "0" ]; then
+    exit
+fi
+RES=$(echo $RESGRP | cut -d":" -f4)
 arr=$(echo $RES | tr "," "\n")
 
 for user in $arr
