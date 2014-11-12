@@ -70,6 +70,13 @@ class SystemDetailsController extends AppController {
             ($mysqlUptime == -1) ? __("Disabled") : __("Enabled for ")
             . $mysqlUptime
         );
+        
+        $nagiosUptime = $this->SystemDetail->checkService("nagios3");
+        $this->set(
+            'nagiosstate',
+            ($nagiosUptime == -1) ? __("Disabled") : __("Enabled for ")
+            . $nagiosUptime
+        );
         $file = new File(APP.'tmp/updates', false, 0644);
         $tmp="";
         if ($file->exists()) {
@@ -93,8 +100,10 @@ class SystemDetailsController extends AppController {
             case 'freeradius':
                 $result = Utils::shell('sudo /usr/sbin/service freeradius restart');
                 break;
+            case 'nagios':
+                $result = Utils::shell('sudo /usr/sbin/service nagios3 restart');
+                break;
             }
-
             if (isset($result['code']) && $result['code'] == 0) {
                 $this->Session->setFlash(
                     __('Server %s has been restarted.', $server),

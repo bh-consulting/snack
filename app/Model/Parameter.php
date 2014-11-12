@@ -157,6 +157,18 @@ class Parameter extends AppModel {
             'default' => '',
             'length' => '255',
         ),
+        'nagios_ip' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '127.0.0.1',
+            'length' => '255',
+        ),
+        'nagios_password' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '',
+            'length' => '255',
+        )
     );
 
     public $validate = array(

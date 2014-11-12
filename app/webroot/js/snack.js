@@ -68,7 +68,7 @@ function testlocalusers(){
     if(document.getElementById("localusers") !== null) {
         //alert( "error" );
         $.get("test_users", function(data) {
-                loading_from_sidebar();
+                loading();
                 $("#localusers").html(data);
             }).fail(function() {
                 alert( "error" );
@@ -91,7 +91,7 @@ function testadusers(){
         //alert( "error" );
         var url="test_users/ad/"+document.getElementById('SystemDetailsUsername').value+"/"+document.getElementById('SystemDetailsPassword').value;
         $.get(url, function(data) {
-                loading_from_sidebar();
+                loading();
                 $("#adusers").html(data);
             }).fail(function() {
                 alert( "error" );

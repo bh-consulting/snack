@@ -323,6 +323,41 @@ class ParametersController extends AppController {
             }
         }
     }
+    
+    public function nagios() {
+        $this->Parameter->read();
+        foreach ($this->Parameter->data['Parameter'] as $key => $value) {
+            $this->set($key, $value);
+        }
+        
+    }
+    
+    public function edit_nagios() {
+        $params = $this->Parameter->read();
+        if ($this->request->is('post')) {
+            if ($this->request->data['Parameter']['nagios_password'] == '') {
+                $this->request->data['Parameter']['nagios_password'] = $params['Parameter']['nagios_password'];
+            }
+            $this->Parameter->set($this->request->data);
+            if ($this->Parameter->save()) {
+                $this->Session->setFlash(
+                    __('Parameters have been updated.'),
+                    'flash_success'
+                );
+                Utils::userlog(__('Parameters have been updated.'));
+                
+                $this->redirect(array('action' => 'nagios'));
+            } else {
+                $this->Session->setFlash(
+                    __('Unable to update parameters.'),
+                    'flash_error'
+                );
+                Utils::userlog(__('Unable to update parameters.'), 'error');
+            }
+        } else {
+            $this->request->data = $this->Parameter->read();
+        }
+    }
 }
 
 ?>
