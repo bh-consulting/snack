@@ -2,7 +2,7 @@
 #Author Guillaume Roche <groche@guigeek.org>
 #
 
-WEEKN=`date +%W`
+WEEKN=`date +%Y-%W`
 HOMESNACK=/home/snack
 
 mv $HOMESNACK/logs/snacklog $HOMESNACK/logs/snacklog-$WEEKN
