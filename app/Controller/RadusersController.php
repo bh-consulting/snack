@@ -1112,8 +1112,11 @@ class RadusersController extends AppController {
         $success = false;
         if ($this->request->is('post')) {
             try {
-                $username = $this->request->data['Raduser']['username'];
-
+                if ($this->request->data['Raduser']['is_mac'] == 1) {
+                    $username = Utils::cleanMAC($this->request->data['Raduser']['username']);
+                } else {
+                    $username = $this->request->data['Raduser']['username'];
+                }
                 $this->request->data['Raduser']['is_phone'] = 1;
 
                 if (isset($this->request->data['Raduser']['ttls']) && $this->request->data['Raduser']['ttls'] == 1) {

@@ -230,6 +230,17 @@ var Boostrapify = {
             });
         });
         
+        // MAC ADDRESS ADD CISCO PHONE
+        $("#RaduserIsMac").change(function() {
+            if($(this).is(":checked")) {
+                $("#RaduserPasswd").prop( "readonly", true );
+                $("#RaduserConfirmPassword").prop( "readonly", true );
+            } else {
+                $("#RaduserPasswd").prop( "readonly", false );
+                $("#RaduserConfirmPassword").prop( "readonly", false );
+            }
+        });
+        
 	} 
 };
 

@@ -3,7 +3,7 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
 
-echo '<h1>' . __('Add a Cisco Phone with login / password') . '</h1>';
+echo '<h1>' . __('Add a Cisco Phone') . '</h1>';
 
 echo $this->Form->create('Raduser', array('novalidate' => true));
 
@@ -11,12 +11,20 @@ $checks = '<fieldset>';
 $checks .= '<legend>' . __('Checks') . '</legend>';
 
 $checks .= $this->Form->input('username');
+$checks.= $this->Form->input(
+    'is_mac',
+    array(
+        'type' => 'checkbox',
+        'label' => __('MAC Address'),
+	'class' => 'switchbtn'
+    )
+);
 $checks .= $this->Form->input(
     'passwd',
     array('type' => 'password', 'label' => __('Password'))
 );
 $checks .= $this->Form->input('confirm_password', array('type' => 'password'));
-$checks.= $this->Form->input(
+/*$checks.= $this->Form->input(
     'ttls',
     array(
         'type' => 'checkbox',
@@ -27,7 +35,7 @@ $checks.= $this->Form->input(
 $checks .= $this->Form->input(
     'calling-station-id',
     array('label' => __('MAC address'))
-);
+);*/
 $checks .= $this->element('check_common_fields');
 
 $checks .= $this->element(
