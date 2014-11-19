@@ -73,6 +73,15 @@
 
     <div class="col-md-12">
     <h3>
+    <a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h3>
+    <p>Pour installer:</p>
+    <pre>
+    wget https://github.com/bh-consulting/snack-install/archive/master.zip
+    make stable
+    make install 
+    </pre>
+    
+    <h3>
     <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Auteurs and Contributeurs</h3>
     <p>Julien Guépin (<a href="https://github.com/chmod0" class="user-mention">@chmod0</a>), Julien Vaubourg (<a href="https://github.com/jvaubourg" class="user-mention">@jvaubourg</a>), Marc Pinhède, Nicolas Bouget (<a href="https://github.com/agentnico" class="user-mention">@agentnico</a>), Guillaume Roche (<a href="https://github.com/guigeek208" class="user-mention">@guigeek208</a>)</p>
 
