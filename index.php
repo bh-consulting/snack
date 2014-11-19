@@ -21,6 +21,7 @@
         <nav>
           <ul class="nav nav-pills pull-right">
             <li role="presentation" class="active"><a href="#">About</a></li>
+            <li role="documentation"><a href="documentation.php">Documentation</a></li>
             <li role="presentation"><a href="gallerie.php">Captures d'écrans</a></li>
           </ul>
         </nav>
