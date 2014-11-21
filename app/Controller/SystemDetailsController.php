@@ -164,57 +164,62 @@ class SystemDetailsController extends AppController {
     }
 
     public function import() {
-        //debug($_FILES);
+        debug($_FILES);
         if ($this->request->isPost()) {
             $path = $_FILES['data']['name']['importConf']['file'];
             $i = strripos($path, ".");
             $j = strripos(substr($path, 0, $i), ".");
             $ext = substr($path, $j);
             if (strcmp($ext, ".tar.gz") == 0) {
-                debug("test");
-                //$cmd = "sudo /home/snack/interface/tools/scriptSnackImport.sh ".APP."webroot/conf/".$path;
-                //exec($cmd , $ouput, $err);
-                $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackImport.sh ".APP."webroot/conf/".$path);
-                debug($return);
-                $file = new File('/tmp/log-import', false, 0644);
-                $tmp="";
-                if ($file->exists()) {
-                    $tmp=$file->read(false, 'rb', false);
-                    //echo $tmp;
-                    $res_rsync = -1;
-                    $res_mysql = -1;
-                    $res_versions = 0;
-                    if(preg_match('/VERSIONS MISMATCH/', $tmp, $matches)) {
-                        $res_versions = 1;
-                    }
-                    if(preg_match('/RSYNC RES :(.*)/', $tmp, $matches)) {
-                        $res_rsync = intval($matches[1]);
-                    }
-                    if(preg_match('/MYSQL RES :(.*)/', $tmp, $matches)) {
-                        $res_mysql = intval($matches[1]);
-                    }
-                    if ($res_mysql == 0 && $res_rsync == 0 && $res_versions == 0) {
-                        $this->Session->setFlash(
-                            __('Import succeded.'),
-                            'flash_success'
+                $uploadfile = APP."/tmp/".$_FILES['data']['name']['importConf']['file'];
+                if (move_uploaded_file($_FILES['data']['tmp_name']['importConf']['file'], $uploadfile)) {
+                    //debug("test");
+                    //$cmd = "sudo /home/snack/interface/tools/scriptSnackImport.sh ".APP."webroot/conf/".$path;
+                    //exec($cmd , $ouput, $err);
+                    $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackImport.sh ".$uploadfile);
+                    debug($return);
+                    $file = new File('/tmp/log-import', false, 0644);
+                    $tmp="";
+                    if ($file->exists()) {
+                        $tmp=$file->read(false, 'rb', false);
+                        //echo $tmp;
+                        $res_rsync = -1;
+                        $res_mysql = -1;
+                        $res_versions = 0;
+                        if(preg_match('/VERSIONS MISMATCH/', $tmp, $matches)) {
+                            $res_versions = 1;
+                        }
+                        if(preg_match('/RSYNC RES :(.*)/', $tmp, $matches)) {
+                            $res_rsync = intval($matches[1]);
+                        }
+                        if(preg_match('/MYSQL RES :(.*)/', $tmp, $matches)) {
+                            $res_mysql = intval($matches[1]);
+                        }
+                        if ($res_mysql == 0 && $res_rsync == 0 && $res_versions == 0) {
+                            $this->Session->setFlash(
+                                __('Import succeded.'),
+                                'flash_success'
+                            );
+                        }
+                        else {
+                            $this->Session->setFlash(
+                                __('Import failed.'),
+                                'flash_error'
+                            );
+                        }
+                        $this->redirect(
+                            array('action' => 'index')
                         );
                     }
-                    else {
-                        $this->Session->setFlash(
-                            __('Import failed.'),
-                            'flash_error'
-                        );
-                    }
-                    $this->redirect(
-                        array('action' => 'index')
-                    );
+                    $file = new File($uploadfile);
+                    $file->delete();
                 }
             }
         }
     }
     
     public function backup() {
-        $dir = new Folder(APP.'webroot/conf');
+        $dir = new Folder(APP.'/conf');
         $pageSize =  Configure::read('Parameters.paginationCount');
         $files = $dir->find('snack-conf_.*');
         sort($files);
@@ -239,6 +244,13 @@ class SystemDetailsController extends AppController {
         $this->set('listfiles', $listfiles);
         $this->set('page', $page);
         $this->set('totalPages', $totalPages);
+    }
+    
+    public function download_backup($name) {
+        $this->response->file(APP."/conf/".$name);
+        // Return response object to prevent controller from trying to render
+        // a view
+        return $this->response;
     }
     
     public function send_backup() {
@@ -290,7 +302,8 @@ class SystemDetailsController extends AppController {
     }
 
     public function delete_backup($name) {
-        $file = new File(WWW_ROOT . "conf/" . $name);
+        $path = APP . "conf/" . $name;
+        $file = new File($path);
         if ($file->delete()) {
             
             $this->Session->setFlash(

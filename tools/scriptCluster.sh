@@ -7,8 +7,8 @@ if [ "$ROLE" == 'slave' ]; then
     MASTER=`grep master_ip $USER_HOME/interface/app/Config/parameters.php | cut -d"'" -f4`
     IP=`grep ipAddress $USER_HOME/interface/app/Config/parameters.php | cut -d"'" -f4`   
     NAME=`ssh root@$MASTER $USER_HOME/interface/tools/scriptSnackExport.sh`
-    scp root@$MASTER:/home/snack/interface/app/webroot/conf/$NAME /tmp
-    ssh root@$MASTER rm /home/snack/interface/app/webroot/conf/$NAME
+    scp root@$MASTER:/home/snack/interface/app/conf/$NAME /tmp
+    ssh root@$MASTER rm /home/snack/interface/app/conf/$NAME
     sudo /home/snack/interface/tools/scriptSnackImport.sh /tmp/$NAME
     rm -f /tmp/$NAME
     #rm -f /tmp/log

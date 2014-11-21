@@ -69,7 +69,7 @@ if [ $RES != 0 ]; then
     rm -rf /tmp/$NAME.*
     exit 1
 fi
-mv /tmp/$NAME.* $HOME_SNACK/interface/app/webroot/conf
+mv /tmp/$NAME.* $HOME_SNACK/interface/app/conf
 rm -rf /tmp/$NAME.*
 echo $NAME.tar.gz
 exit 0

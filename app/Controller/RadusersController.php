@@ -964,9 +964,6 @@ class RadusersController extends AppController {
                             __('New user added.'), 'flash_success'
                     );
                 }
-                if (isset($this->request->data['Raduser']['role']) && $this->request->data['Raduser']['role'] == "root") {
-                    shell_exec("htpasswd -b ".APP."/Config/.htpasswd ".$this->request->data['Raduser']['username']." ".$this->request->data['Raduser']['passwd']);
-                }    
                 Utils::userlog(__('added user %s', $this->Raduser->id));
                 $this->redirect(array('action' => 'index'));
             }

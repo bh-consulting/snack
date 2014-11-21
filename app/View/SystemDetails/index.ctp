@@ -63,11 +63,11 @@ $this->assign('systemdetails_general_active', 'active');
             <div class="panel-body">
                 <dl class="dl-horizontal">
                     <p>Nombre de mises à jour : <?php echo $nbupgraded;?></p>
-                    <p><?php  echo $this->Html->link(
+                    <!--<p><?php/*  echo $this->Html->link(
                         '<i class="glyphicon glyphicon-refresh glyphicon-white"></i> ' . __('Upgrade'), array('controller' => 'systemDetails', 'action' => 'upgrade'), array('class' => 'btn btn-success btn-large', 'escape' => false)
-                    );
+                    );*/
                     ?>
-                    </p>
+                    </p>-->
                 </dl>
             </div>
         </div>
@@ -178,7 +178,7 @@ $this->assign('systemdetails_general_active', 'active');
                                 'action' => 'restart',
                                 'freeradius'
                                     ), array(
-                                'class' => 'btn btn-mini btn-danger',
+                                'class' => 'btn btn-xs btn-danger',
                                 'style' => 'margin-left:30px',
                                 'escape' => false
                                     )
@@ -196,7 +196,7 @@ $this->assign('systemdetails_general_active', 'active');
                                 'action' => 'restart',
                                 'mysql',
                                     ), array(
-                                'class' => 'btn btn-mini btn-danger',
+                                'class' => 'btn btn-xs btn-danger',
                                 'style' => 'margin-left:30px',
                                 'escape' => false
                                     )
@@ -214,7 +214,7 @@ $this->assign('systemdetails_general_active', 'active');
                                 'action' => 'restart',
                                 'nagios',
                                     ), array(
-                                'class' => 'btn btn-mini btn-danger',
+                                'class' => 'btn btn-xs btn-danger',
                                 'style' => 'margin-left:30px',
                                 'escape' => false
                                     )

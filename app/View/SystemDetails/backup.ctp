@@ -115,7 +115,7 @@ echo $this->Html->tag(
                     switch ($field) {
                         case 'name':
                             echo $this->Html->link(
-                                    $file[$field], '/conf/' . h($file[$field]), array('class' => 'button', 'target' => '_blank')
+                                    $file[$field], array('action' => 'download_backup', $file[$field])
                             );
                             break;
                         case 'delete':
