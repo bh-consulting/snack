@@ -183,6 +183,11 @@ div.menutopphone {
     min-height: 70px;
 }
 
+.muninbody {
+    min-height: 70px;
+    padding-top: 40px;
+}
+
 .modal-header {
     text-align: left;
 }

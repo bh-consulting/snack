@@ -34,10 +34,10 @@ $cakeDescription = __('SNACK');
 
     echo $this->Html->css('bootstrap');
     echo $this->Html->css('snack');
-    /*echo $this->Html->css('jquery-ui-bootstrap/jquery-ui-1.9.2.custom');
+    echo $this->Html->css('jquery-ui-bootstrap/jquery-ui-1.9.2.custom');
     echo $this->Html->css('jquery-ui-bootstrap/jquery.ui.1.9.2.ie');
     echo $this->Html->css('flags.css');
-    echo $this->Html->css('jquery.terminal.css');*/
+   /* echo $this->Html->css('jquery.terminal.css');*/
     echo $this->Html->css('font-awesome.min');
 
     echo $this->fetch('css');
@@ -187,12 +187,13 @@ if (Configure::read('Parameters.role')=="slave") {
     
 </div>
 <!--<div class="container">-->
-    <div class=" bhbody">
+    <br/>
+    <div class="muninbody">
 
     <? echo $this->fetch('content'); ?>
 
     <hr/>
-    
+ 
 <?php
 //echo $this->element('sql_dump');
 /*echo $this->Html->script('jquery.min');

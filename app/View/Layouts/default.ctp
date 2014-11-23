@@ -97,6 +97,15 @@ $cakeDescription = __('SNACK');
                             ),
                             array()
                         ) . '</li>';
+                    echo '<li class="' . $this->fetch('munin_active') . '">' .
+                        $this->Html->link(
+                            __('Munin'),
+                            array(
+                                'controller' => 'munin',
+                                'action' => 'index',
+                            ),
+                            array()
+                        ) . '</li>';
                     echo '<li class="' . $this->fetch('about_active') . '">' .
                         $this->Html->link(
                             __('About'),
@@ -188,7 +197,7 @@ if (Configure::read('Parameters.role')=="slave") {
     <hr/>
     
 <?php
-//echo $this->element('sql_dump');
+echo $this->element('sql_dump');
 echo $this->Html->script('jquery.min');
 echo $this->Html->script('jquery-ui.min');
 echo $this->Html->script('bootstrap.min');

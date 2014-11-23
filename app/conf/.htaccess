@@ -1,4 +1,0 @@
-AuthName "SNACK - Backup - Only SNACK Admins authorized"
-AuthType Basic
-AuthUserFile "/home/snack/interface/app/Config/.htpasswd"
-Require valid-user
