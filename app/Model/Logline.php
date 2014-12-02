@@ -251,13 +251,11 @@ class Logline extends AppModel {
         $dir = new Folder('/home/snack/logs');
         $files = $dir->find('snacklog.*');
         sort($files);
+        //debug($files);
         $index=count($files)-1;
-        /*foreach ($files as $file) {
-            echo $file;
-        }*/
         for ($i=0;$i<$nb;$i++) {
-            //echo $file." ".$strdate."<br>";
             $strdate=$date->format('Y-m-d');
+            //debug($file." ".$strdate);
             $startdate = $strdate."T00:00:00";
             $stopdate = $strdate."T23:59:59";
             //echo $strdate;
@@ -289,6 +287,7 @@ class Logline extends AppModel {
             $nbDay=date('N', strtotime($strdate));
             if ($nbDay == 1) {
                 $file=$files[$index];
+                $index--;
             }
             $date->modify('-1 day');
         }

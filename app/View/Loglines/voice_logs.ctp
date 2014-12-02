@@ -174,7 +174,7 @@ if (!empty($loglines)) {
                             case 'datetime':
                                 if (preg_match('/ConnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
                                     $datetime1 = new DateTime($matches[1]);
-                                    if (preg_match('/(CET|UTP|cet|utp|est|cest)\+*\d*\s+(.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
+                                    if (preg_match('/(CET|UTP|UTC|cet|utp|est|cest)\+*\d*\s+(.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
                                         $datetime2 = new DateTime($matches[2]);
                                         echo $datetime2->format('Y-m-d');
                                         echo " ";
@@ -244,7 +244,7 @@ if (!empty($loglines)) {
                             case 'datetime':
                                 if (preg_match('/ConnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
                                     $datetime1 = new DateTime($matches[1]);
-                                    if (preg_match('/(CET|UTP|cet|utp|est|cest)\+*\d*\s+(.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
+                                    if (preg_match('/(CET|UTP|UTC|cet|utp|est|cest)\+*\d*\s+(.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
                                         $datetime2 = new DateTime($matches[2]);
                                         echo $datetime2->format('Y-m-d');
                                         echo " ";
