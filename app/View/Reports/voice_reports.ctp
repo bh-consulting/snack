@@ -3,6 +3,18 @@ $this->extend('/Common/reports_tabs');
 $this->assign('voicereports_active', 'active');
 ?>
 <br>
+<?php
+echo $this->Html->link(
+    '<i class="fa fa-file-pdf-o fa-2x" title="' . __('Export to pdf') . '"></i>',
+    array(
+        'controller' => 'reports',
+        'action' => 'voice_reports_pdf',
+    ),
+    array('escape' => false)
+);
+?>
+
+<br>
 
 
 <br>
@@ -31,41 +43,9 @@ echo $this->Form->end($options);
 ?>
 <div class="container">
 <?php
-//debug($nbappelsstats);
-$G = new phpGraph();
-
-echo $G->draw($nbappelsstats,array(
-            //'steps' => 50,
-            'height'=>300,
-            'width'=>700,
-            'filled'=>true,
-            'tooltips'=>true,
-            'diskLegends' => true,
-            'diskLegendsType' => 'label',
-            'type' => array(
-                '0'=>'bar',
-                '1'=>'bar',
-                '2'=>'bar',
-                '4'=>'pie',
-            ),
-            'stroke' => array(
-                '0'=>'red',
-                '1'=>'blue',
-                '2'=>'green'
-            ),
-            'legends' => array(
-                '0'=>'Total',
-                '1'=>'Calling',
-                '2'=>'Called',
-            ),
-            'tooltipLegend' => array(
-                'calling'=>'Sample of legend : ',
-                'called'=>'Sample of legend : ',
-            ),
-            'title' => 'Calls',
-        )
-    );
+echo $graph;
 ?>
+    
 </div>
 <!-- Top called/callings -->
 <h1><?php echo __('Top called and calling'); ?></h1>

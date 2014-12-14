@@ -1,0 +1,130 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xml:lang="fr" xmlns:xlink="http://www.w3/org/1999/xlink" class="graph" width="800" height="520" viewBox="0 0 800 530">
+	<rect x="50" y="50" width="700" height="300" class="graph-stroke" fill="#ffffff" fill-opacity="1"/>
+	<title class="graph-tooltip">Calls</title>
+	<text x="400" y="40" text-anchor="middle" class="graph-title">Calls</text>
+	<g class="graph-grid">
+		<path d="M 50 350 H 750"/>
+
+		<path d="M 100 50 V 350"/>
+		<path d="M 150 50 V 350"/>
+		<path d="M 200 50 V 350"/>
+		<path d="M 250 50 V 350"/>
+		<path d="M 300 50 V 350"/>
+		<path d="M 350 50 V 350"/>
+		<path d="M 400 50 V 350"/>
+		<path d="M 450 50 V 350"/>
+		<path d="M 500 50 V 350"/>
+		<path d="M 550 50 V 350"/>
+		<path d="M 600 50 V 350"/>
+		<path d="M 650 50 V 350"/>
+		<path d="M 700 50 V 350"/>
+		<path d="M 750 50 V 350"/>
+	</g>
+	<g class="graph-x">
+		<text x="50" y="370" text-anchor="middle">14 Dec</text>
+		<text x="100" y="370" text-anchor="middle">13 Dec</text>
+		<text x="150" y="370" text-anchor="middle">12 Dec</text>
+		<text x="200" y="370" text-anchor="middle">11 Dec</text>
+		<text x="250" y="370" text-anchor="middle">10 Dec</text>
+		<text x="300" y="370" text-anchor="middle">09 Dec</text>
+		<text x="350" y="370" text-anchor="middle">08 Dec</text>
+		<text x="400" y="370" text-anchor="middle">07 Dec</text>
+		<text x="450" y="370" text-anchor="middle">06 Dec</text>
+		<text x="500" y="370" text-anchor="middle">05 Dec</text>
+		<text x="550" y="370" text-anchor="middle">04 Dec</text>
+		<text x="600" y="370" text-anchor="middle">03 Dec</text>
+		<text x="650" y="370" text-anchor="middle">02 Dec</text>
+		<text x="700" y="370" text-anchor="middle">01 Dec</text>
+		<text x="750" y="370" text-anchor="middle">30 Nov</text>
+	</g>
+	<g class="graph-y">
+		<text x="40" y="350" text-anchor="end" baseline-shift="-1ex" dominant-baseline="middle" >0</text>	</g>
+
+	<rect x="50" y="50" width="25" height="300" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="75" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="125" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="175" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="225" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="275" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="325" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="375" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="425" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="475" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="525" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="575" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="625" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="675" y="350" width="50" height="1" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="725" y="350" width="25" height="300" class="graph-bar" fill="red" fill-opacity="0.5"/>
+	<rect x="50" y="50" width="25" height="300" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="75" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="125" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="175" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="225" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="275" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="325" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="375" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="425" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="475" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="525" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="575" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="625" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="675" y="350" width="50" height="1" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<rect x="725" y="350" width="25" height="300" class="graph-bar" stroke="red" fill="#fff" fill-opacity="0"/>
+	<g class="graph-point">
+		<g class="graph-active">
+			<circle cx="50" cy="50" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="100" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="150" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="200" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="250" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="300" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="350" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="400" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="450" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="500" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="550" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="600" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="650" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="700" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+		<g class="graph-active">
+			<circle cx="750" cy="350" r="3" stroke="red" class="graph-point-active"/><title class="graph-tooltip">0</title>
+		</g>
+	</g>
+
+	<g class="graph-legends">
+		<rect x="50" y="380" width="10" height="10" fill="red" class="graph-legend-stroke"/>
+		<text x="70" y="390" text-anchor="start" class="graph-legend">Total</text>
+		<rect x="50" y="400" width="10" height="10" fill="blue" class="graph-legend-stroke"/>
+		<text x="70" y="410" text-anchor="start" class="graph-legend">Calling</text>
+		<rect x="50" y="420" width="10" height="10" fill="green" class="graph-legend-stroke"/>
+		<text x="70" y="430" text-anchor="start" class="graph-legend">Called</text>
+	</g>
+</svg>

@@ -56,13 +56,13 @@ class Logline extends AppModel {
         }
         if (isset($options['priority'])) {
             if ($options['priority'] == "debug") {
-                $cmd .= "--priority debug,notice,warn,err,crit,emerg ";
+                $cmd .= "--priority debug,notice,warning,err,crit,emerg ";
             }
             if ($options['priority'] == "notice") {
-                $cmd .= "--priority notice,warn,err,crit,emerg ";
+                $cmd .= "--priority notice,warning,err,crit,emerg ";
             }
-            if ($options['priority'] == "warn") {
-                $cmd .= "--priority warn,err,crit,emerg ";
+            if ($options['priority'] == "warning") {
+                $cmd .= "--priority warning,err,crit,emerg ";
             }
             if ($options['priority'] == "err") {
                 $cmd .= "--priority err,crit,emerg ";
@@ -72,7 +72,7 @@ class Logline extends AppModel {
             }
         }
         else {
-            $cmd .= "--priority info,notice,warn,err,crit,emerg ";
+            $cmd .= "--priority info,notice,warning,err,crit,emerg ";
         }
         if (isset($options['string'])) {
             if ($options['string'] != '') {
@@ -103,7 +103,7 @@ class Logline extends AppModel {
         foreach ($infos as $line) {
             if ($line != '') {
                 //debug($line);
-                if(preg_match('/(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2})\s+([^\s]+)\s+([^\s]+):\s+\[(local\d+)\.(debug|info|notice|warn|err|crit|alert|emerg)\]\s+(.*)/', $line, $matches)) {
+                if(preg_match('/(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2})\s+([^\s]+)\s+([^\s]+):\s+\[(local\d+)\.(debug|info|notice|warning|err|crit|alert|emerg)\]\s+(.*)/', $line, $matches)) {
                     $date = $matches[1];
                     $host = $matches[2];
                     $program = $matches[3];
@@ -201,8 +201,53 @@ class Logline extends AppModel {
         $page = 1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];
+        //debug($logs);
         $err = array();
         $lasts = array();
+        foreach ($logs as $log) {
+            //echo $log['Logline']['msg'];
+            if(preg_match('/\d{2}:\d{2}:\d{2}[\.\d{3}]*:\s+(%.+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
+                $errtype = $matches[1];
+                $msg = $matches[2];
+                //echo $msg;
+                $host = $log['Logline']['host'];
+                if (array_key_exists($host, $err)) {
+                    if (array_key_exists($errtype, $err[$host])) {
+                        if (array_key_exists($msg, $err[$host][$errtype])) {
+                            //$err[$host][$errtype] = $err[$host][$errtype] + 1;
+                            $err[$host][$errtype][$msg] = $err[$host][$errtype][$msg] + 1;
+                        }
+                        else {
+                            $err[$host][$errtype][$msg] = 1;
+                            $date = new DateTime($log['Logline']['datetime']);
+                            $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
+                        }
+                    }
+                    else {
+                        $err[$host][$errtype] = array();
+                        //$lasts[$host][$msg] = $log['Logline']['datetime'];
+                    }
+                } else {
+                    $err[$host] = array();
+                    //$lasts[$host] = array();
+                    
+                }
+            }
+        }
+        $res = array();
+        $res['err'] = $err;
+        $res['lasts'] = $lasts;
+        return $res;
+    }
+    
+    public function get_warnings_from_NAS() {
+        $constraints = array('priority' => 'warning', 'pageSize' => '100000');
+        $page = 1;
+        $arr = $this->findLogs($page, $constraints);
+        $logs = $arr['loglines'];
+        $err = array();
+        $lasts = array();
+        //debug($logs);
         foreach ($logs as $log) {
             //echo $log['Logline']['msg'];
             if(preg_match('/\d{2}:\d{2}:\d{2}\.\d{3}:\s+(%.+):\s+(.*)/', $log['Logline']['msg'], $matches)) {

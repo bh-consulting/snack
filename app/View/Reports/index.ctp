@@ -14,9 +14,32 @@ $this->assign('radiusreports_active', 'active');
     echo "<th>".__('Last')."</th>";
     foreach ($err as $host => $value) {
         foreach ($value as $errtype => $value2) {
-            echo "<tr><td>".$host."</td><td>".$errtype."</td><td></td><td></td></tr>";
-            foreach ($value2 as $msg => $nb) {
-                echo "<tr><td></td><td></td><td>".$msg."</td><td>".$nb."</td><td>".$lasts[$host][$errtype][$msg]."</td></tr>";
+            if ($errtype != "%LINK-3-UPDOWN") {
+                echo "<tr><td>".$host."</td><td>".$errtype."</td><td></td><td></td></tr>";
+                foreach ($value2 as $msg => $nb) {
+                    echo "<tr><td></td><td></td><td>".$msg."</td><td>".$nb."</td><td>".$lasts[$host][$errtype][$msg]."</td></tr>";
+                }
+            }
+        }
+    }
+    echo "</table>";
+?>
+
+<h2><? echo __('Warnings from NAS'); ?></h2>
+<?php
+    echo "<table class='table table-striped table-condensed'>";
+    echo "<th>".__('Host')."</th>";
+    echo "<th>".__('Type')."</th>";
+    echo "<th>".__('Msg')."</th>";
+    echo "<th>".__('Nb')."</th>";
+    echo "<th>".__('Last')."</th>";
+    foreach ($warn as $host => $value) {
+        foreach ($value as $errtype => $value2) {
+            if ($errtype != "%LINK-3-UPDOWN") {
+                echo "<tr><td>".$host."</td><td>".$errtype."</td><td></td><td></td></tr>";
+                foreach ($value2 as $msg => $nb) {
+                    echo "<tr><td></td><td></td><td>".$msg."</td><td>".$nb."</td><td>".$warnlasts[$host][$errtype][$msg]."</td></tr>";
+                }
             }
         }
     }
