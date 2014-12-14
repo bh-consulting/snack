@@ -200,3 +200,4 @@ require APP . 'Error' . DS . 'MyExceptions.php';
  * - Server IP
  */
 Configure::load('parameters');
+CakePlugin::load('Mpdf');
