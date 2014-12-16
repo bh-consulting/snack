@@ -206,31 +206,36 @@ class Logline extends AppModel {
         $lasts = array();
         foreach ($logs as $log) {
             //echo $log['Logline']['msg'];
-            if(preg_match('/\d{2}:\d{2}:\d{2}[\.\d{3}]*:\s+(%.+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
-                $errtype = $matches[1];
-                $msg = $matches[2];
-                //echo $msg;
-                $host = $log['Logline']['host'];
-                if (array_key_exists($host, $err)) {
-                    if (array_key_exists($errtype, $err[$host])) {
-                        if (array_key_exists($msg, $err[$host][$errtype])) {
-                            //$err[$host][$errtype] = $err[$host][$errtype] + 1;
-                            $err[$host][$errtype][$msg] = $err[$host][$errtype][$msg] + 1;
+            if($log['Logline']['level']=="err") {
+                if(preg_match('/\d{2}:\d{2}:\d{2}\.\d{3}:\s+(%[^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
+                    $errtype = $matches[1];
+                    $msg = $matches[2];
+                    //echo $msg;
+                    $host = $log['Logline']['host'];
+                    if (array_key_exists($host, $err)) {
+                        if (array_key_exists($errtype, $err[$host])) {
+                            if (array_key_exists($msg, $err[$host][$errtype])) {
+                                //$err[$host][$errtype] = $err[$host][$errtype] + 1;
+                                $err[$host][$errtype][$msg] = $err[$host][$errtype][$msg] + 1;
+                            }
+                            else {
+                                $err[$host][$errtype][$msg] = 1;
+                                $date = new DateTime($log['Logline']['datetime']);
+                                $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
+                            }
                         }
                         else {
+                            $err[$host][$errtype] = array();
                             $err[$host][$errtype][$msg] = 1;
                             $date = new DateTime($log['Logline']['datetime']);
                             $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
                         }
+                    } else {
+                        $err[$host] = array();
+                        $err[$host][$errtype][$msg] = 1;
+                        $date = new DateTime($log['Logline']['datetime']);
+                        $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
                     }
-                    else {
-                        $err[$host][$errtype] = array();
-                        //$lasts[$host][$msg] = $log['Logline']['datetime'];
-                    }
-                } else {
-                    $err[$host] = array();
-                    //$lasts[$host] = array();
-                    
                 }
             }
         }
@@ -250,30 +255,35 @@ class Logline extends AppModel {
         //debug($logs);
         foreach ($logs as $log) {
             //echo $log['Logline']['msg'];
-            if(preg_match('/\d{2}:\d{2}:\d{2}\.\d{3}:\s+(%.+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
-                $errtype = $matches[1];
-                $msg = $matches[2];
-                $host = $log['Logline']['host'];
-                if (array_key_exists($host, $err)) {
-                    if (array_key_exists($errtype, $err[$host])) {
-                        if (array_key_exists($msg, $err[$host][$errtype])) {
-                            //$err[$host][$errtype] = $err[$host][$errtype] + 1;
-                            $err[$host][$errtype][$msg] = $err[$host][$errtype][$msg] + 1;
+            if($log['Logline']['level']=="warning") {
+                if(preg_match('/\d{2}:\d{2}:\d{2}\.\d{3}:\s+(%.+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
+                    $errtype = $matches[1];
+                    $msg = $matches[2];
+                    $host = $log['Logline']['host'];
+                    if (array_key_exists($host, $err)) {
+                        if (array_key_exists($errtype, $err[$host])) {
+                            if (array_key_exists($msg, $err[$host][$errtype])) {
+                                //$err[$host][$errtype] = $err[$host][$errtype] + 1;
+                                $err[$host][$errtype][$msg] = $err[$host][$errtype][$msg] + 1;
+                            }
+                            else {
+                                $err[$host][$errtype][$msg] = 1;
+                                $date = new DateTime($log['Logline']['datetime']);
+                                $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
+                            }
                         }
                         else {
+                            $err[$host][$errtype] = array();
                             $err[$host][$errtype][$msg] = 1;
                             $date = new DateTime($log['Logline']['datetime']);
                             $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
                         }
+                    } else {
+                        $err[$host] = array();
+                        $err[$host][$errtype][$msg] = 1;
+                        $date = new DateTime($log['Logline']['datetime']);
+                        $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
                     }
-                    else {
-                        $err[$host][$errtype] = array();
-                        //$lasts[$host][$msg] = $log['Logline']['datetime'];
-                    }
-                } else {
-                    $err[$host] = array();
-                    //$lasts[$host] = array();
-                    
                 }
             }
         }
@@ -294,7 +304,7 @@ class Logline extends AppModel {
         //$today="2014-10-22";
         $date = new DateTime($today);
         $dir = new Folder('/home/snack/logs');
-        $files = $dir->find('snacklog.*');
+        $files = $dir->find('snacklog-\d{4}-.*');
         sort($files);
         //debug($files);
         $index=count($files)-1;
@@ -331,8 +341,10 @@ class Logline extends AppModel {
             /* Next day */
             $nbDay=date('N', strtotime($strdate));
             if ($nbDay == 1) {
-                $file=$files[$index];
-                $index--;
+                if ($index>=0 && $index<count($files)) {
+                    $file=$files[$index];
+                    $index--;
+                }
             }
             $date->modify('-1 day');
         }
