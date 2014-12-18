@@ -24,6 +24,18 @@ $columns = array(
     'description' => array(
         'text' => __('Description'),
     ),
+    'version' => array(
+        'text' => __('Version'),
+    ),
+    'image' => array(
+        'text' => __('Image'),
+    ),
+    'serialnumber' => array(
+        'text' => __('Serial number'),
+    ),
+    'model' => array(
+        'text' => __('Model'),
+    ),
     'action' => array(
         'text' => __('Action'),
         'fit' => true,
