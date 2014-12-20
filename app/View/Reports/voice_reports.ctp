@@ -4,14 +4,26 @@ $this->assign('voicereports_active', 'active');
 ?>
 <br>
 <?php
-echo $this->Html->link(
-    '<i class="fa fa-file-pdf-o fa-2x" title="' . __('Export to pdf') . '"></i>',
-    array(
-        'controller' => 'reports',
-        'action' => 'voice_reports_pdf',
-    ),
-    array('escape' => false)
-);
+if (isset($directorynumber)) {
+    echo $this->Html->link(
+        '<i class="fa fa-file-pdf-o fa-2x" title="' . __('Export to pdf') . '"></i>',
+        array(
+            'controller' => 'reports',
+            'action' => 'voice_reports_pdf',
+            $directorynumber,
+        ),
+        array('escape' => false)
+    );
+} else {
+    echo $this->Html->link(
+        '<i class="fa fa-file-pdf-o fa-2x" title="' . __('Export to pdf') . '"></i>',
+        array(
+            'controller' => 'reports',
+            'action' => 'voice_reports_pdf',
+        ),
+        array('escape' => false)
+    );
+}
 ?>
 
 <br>

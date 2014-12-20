@@ -214,23 +214,16 @@ class ReportsController extends AppController {
         $this->set('naslasts', $lasts);
     }
     
-    public function voice_reports_pdf() {
+    public function voice_reports_pdf($directorynumber="") {
         $file="snacklog";
         $dir = new Folder('/home/snack/logs');
         $files = $dir->find('snacklog.*');
         sort($files);
         $constraints=array();
         //debug($this->request->data);
-        if (isset($this->request->data)) {
-            if (isset($this->request->data['Reports']['directorynumber'])) {
-                if ($this->request->data['Reports']['directorynumber'] != '') {
-                    $constraints['directorynumber'] = $this->request->data['Reports']['directorynumber'];
-                    $this->set('directorynumber', $constraints['directorynumber']);
-                }
-            }
-            if (isset($this->request->data['Reports']['logfile'])) {
-                $file=$files[$this->request->data['Reports']['logfile']];
-            }
+        if ($directorynumber != "") {
+            $constraints['directorynumber'] = $directorynumber;
+            $this->set('directorynumber', $constraints['directorynumber']);
         }
         $arr = $this->Logline->voiceNbCalls($constraints);
         $this->set('nbappelsstats', $arr);
@@ -283,6 +276,7 @@ class ReportsController extends AppController {
     }
     
     public function voice_reports() {
+        debug($this->request->data);
         $file="snacklog";
         $dir = new Folder('/home/snack/logs');
         $files = $dir->find('snacklog.*');
