@@ -277,8 +277,8 @@ class SystemDetail extends AppModel {
         $results[$username]['comment'] = $comment;
     }
         
-    public function checkProblem(&$results) {
-        $file = new File(APP . 'tmp/notifications.txt', false, 0644);
+    public function checkProblem(&$results, $file="notifications.txt") {
+        $file = new File(APP . 'tmp/'.$file, false, 0644);
         $tmp = $file->read(false, 'rb', false);
         $lines = explode("\n", $tmp);
         $arr = array();

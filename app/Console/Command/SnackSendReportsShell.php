@@ -6,10 +6,21 @@ class SnackSendReportsShell extends AppShell {
     public $uses = array('SystemDetail', 'Raduser', 'Nas', 'Backup', 'Radacct', 'Logline');
     
     private $str="";
+    private $strPB="";
     private $file;
+    private $domain="";
     private $errors=0;
     
     public function main() {
+        $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));
+        foreach ( $values as $val ) {
+            if( preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
+                continue;
+            }
+        }
+        $this->domain = $matches[1];
+        $this->domain = "guigeek.org";
+
         if (Configure::read('Parameters.role') == "master") {
             $this->file = new File(APP.'tmp/notifications.txt', true, 0644);
             $date = new DateTime('23:00');
@@ -18,14 +29,25 @@ class SnackSendReportsShell extends AppShell {
             $this->checkServices();
             $this->checkBackup();
             $this->checkHA();
+
+            /* check Problems*/
+            $this->strPB .= "<h2>SNACK Problems</h2>";
+            $this->checkProblem();
+
             //$this->testUsers();
             if ($date->format('H:i') == date('H:i')) {
                 $this->cleanDBSessions();
                 $this->get_failures_by_users();
                 $this->get_Err_from_logs();
-                $this->sendMail($this->str);
+                if ($this->errors > 0) {
+                    $subject = "[".$this->domain."][ERR] SNACK - Reports";
+                }
+                else {
+                    $subject = "[".$this->domain."][INFO] SNACK - Reports";
+                }
+
+                $this->sendMail($subject, $this->str);
             }
-            
             //echo $this->str;
             //echo $this->errors;
         }
@@ -114,27 +136,29 @@ class SnackSendReportsShell extends AppShell {
                                   export ACCT_STATUS_TYPE=Write ;
                                    /home/snack/scripts/backup_create.sh");*/
             //echo "RETURN : ".$return;
-            $backup = $this->Backup->query("select * from backups where nas='".$nasname."' order by id desc limit 1;");
-            $this->str .= $nasname." ";
-            if (count($backup) > 0) {                
-                $datetime2 = new DateTime($backup[0]['backups']['datetime']);
-                $diff=$datetime2->diff($datetime1);
-                $years=$diff->format('%y');
-                $months=$diff->format('%m');
-                $days=$diff->format('%d');
-                if ($years > 0 or $months > 0) {
-                    $this->str .= '<span style="color:#FF0000">';
-                    $this->str .= "WARNING : No backup  since ".$backup[0]['backups']['datetime']."<br>";
-                    $this->str .= '</span>';
+            if ($nasname != "127.0.0.1") {
+                $backup = $this->Backup->query("select * from backups where nas='".$nasname."' order by id desc limit 1;");
+                $this->str .= $nasname." ";
+                if (count($backup) > 0) {
+                    $datetime2 = new DateTime($backup[0]['backups']['datetime']);
+                    $diff=$datetime2->diff($datetime1);
+                    $years=$diff->format('%y');
+                    $months=$diff->format('%m');
+                    $days=$diff->format('%d');
+                    if ($years > 0 or $months > 0) {
+                        $this->str .= '<span style="color:#FF0000">';
+                        $this->str .= "WARNING : No backup  since ".$backup[0]['backups']['datetime']."<br>";
+                        $this->str .= '</span>';
+                    }
+                    else {
+                        $this->str .= 'Last backup : <span style="color:#00FF00">OK</span> : '.$backup[0]['backups']['datetime'].'<br>';
+                    }
                 }
                 else {
-                    $this->str .= 'Last backup : <span style="color:#00FF00">OK</span> : '.$backup[0]['backups']['datetime'].'<br>';                   
+                    $this->str .= '<span style="color:#FF0000">';
+                    $this->str .= "No backup <br>";
+                    $this->str .= '</span>';
                 }
-            }
-            else {
-                $this->str .= '<span style="color:#FF0000">';
-                $this->str .= "No backup <br>";
-                $this->str .= '</span>';
             }
         }
          /*   export NAS_IP_ADDRESS; export USER_NAME=admin; export ACCT_STATUS_TYPE=Auto; ~snack/scripts/backup_create.sh*/
@@ -152,59 +176,63 @@ class SnackSendReportsShell extends AppShell {
         $found = false;
         $slaves=explode(';', Configure::read('Parameters.slave_ip_to_monitor'));
         foreach($slaves as $slave) {
-            $this->str .= "<h4>Slave IP Address : ".$slave."</h4>";
-            foreach ($files as $file) {
-                $rsync = -1;
-                $mysql = -1;
-                if (preg_match('/ha-([0-9]{4}-[0-9]{2}-[0-9]{2})_([0-9]{2})-([0-9]{2})\.log/', $file, $matches)) {
-                    $datetime2 = new DateTime($matches[1]." ".$matches[2].":".$matches[3]);
-                }
-                $fileha = new File(APP.'tmp/ha/'.$file, false, 0644);
-                $tmp=$fileha->read(false, 'rb', false);
-                $res_versions = 0;
-                if (preg_match('/VERSIONS MISMATCH/', $tmp, $matches)) {
-                    $res_versions = 1;
-                }
-                if (preg_match('/RSYNC RES :([0-9]+)/', $tmp, $matches)) {
-                    $rsync = $matches[1];
-                }
-                if (preg_match('/MYSQL RES :([0-9]+)/', $tmp, $matches)) {
-                    $mysql = $matches[1];
-                }
-                if (preg_match('/IP:([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/', $tmp, $matches)) {
-                    $ip = $matches[1];
-                }
-                if ($ip == $slave) {
-                    $found = true;
-                    if ($rsync == 0 && $mysql == 0 && $res_versions == 0 ) {
-                        $diff = $datetime2->diff($datetime1);
-                        $years = $diff->format('%y');
-                        $months = $diff->format('%m');
-                        $days = $diff->format('%d');
-                        if ($years > 0 or $months > 0 or $days > 1) {
-                            $this->errors++;
+            if ($slave != "") {
+                $this->str .= "<h4>Slave IP Address : ".$slave."</h4>";
+                foreach ($files as $file) {
+                    $rsync = -1;
+                    $mysql = -1;
+                    if (preg_match('/ha-([0-9]{4}-[0-9]{2}-[0-9]{2})_([0-9]{2})-([0-9]{2})\.log/', $file, $matches)) {
+                        $datetime2 = new DateTime($matches[1]." ".$matches[2].":".$matches[3]);
+                    }
+                    $fileha = new File(APP.'tmp/ha/'.$file, false, 0644);
+                    $tmp=$fileha->read(false, 'rb', false);
+                    $res_versions = 0;
+                    if (preg_match('/VERSIONS MISMATCH/', $tmp, $matches)) {
+                        $res_versions = 1;
+                    }
+                    if (preg_match('/RSYNC RES :([0-9]+)/', $tmp, $matches)) {
+                        $rsync = $matches[1];
+                    }
+                    if (preg_match('/MYSQL RES :([0-9]+)/', $tmp, $matches)) {
+                        $mysql = $matches[1];
+                    }
+                    if (preg_match('/IP:([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/', $tmp, $matches)) {
+                        $ip = $matches[1];
+                    }
+                    if ($ip == $slave) {
+                        $found = true;
+                        if ($rsync == 0 && $mysql == 0 && $res_versions == 0 ) {
+                            $diff = $datetime2->diff($datetime1);
+                            $years = $diff->format('%y');
+                            $months = $diff->format('%m');
+                            $days = $diff->format('%d');
+                            if ($years > 0 or $months > 0 or $days > 1) {
+                                $this->errors++;
+                                $this->str .= '<span style="color:#FF0000">';
+                                $this->str .= "ERROR : No replication since ".$datetime2->format('Y-m-d H:i:s')."<br>";
+                                $this->str .= '</span>';
+                                $this->file->append("[] [ERR] SNACK No replication since ".$datetime2->format('Y-m-d H:i:s'));
+                            }
+                            else {
+                                $this->str .= "Last replication OK : ".$datetime2->format('Y-m-d H:i:s')."<br>";
+                            }
+                            break;
+                        } else {
                             $this->str .= '<span style="color:#FF0000">';
-                            $this->str .= "ERROR : No replication since ".$datetime2->format('Y-m-d H:i:s')."<br>";
+                            $this->str .= "WARNING : Replication failed :  ".$datetime2->format('Y-m-d H:i:s')."<br>";
                             $this->str .= '</span>';
-                            $this->file->append("[] [ERR] SNACK No replication since ".$datetime2->format('Y-m-d H:i:s'));
+                            $this->file->append("[".$datetime2->format('Y-m-d H:i:s')."] [WARN] SNACK Last replication failed ");
                         }
-                        else {
-                            $this->str .= "Last replication OK : ".$datetime2->format('Y-m-d H:i:s')."<br>";
-                        }
-                        break;
-                    } else {
-                        $this->str .= '<span style="color:#FF0000">';
-                        $this->str .= "WARNING : Replication failed :  ".$datetime2->format('Y-m-d H:i:s')."<br>";
-                        $this->str .= '</span>';
-                        $this->file->append("[".$datetime2->format('Y-m-d H:i:s')."] [WARN] SNACK Last replication failed ");
                     }
                 }
             }
             if ($found == false) {
-                $this->str .= '<span style="color:#FF0000">';
-                $this->str .= "ERR : No replication for " . $slave . "<br>";
-                $this->str .= '</span>';
-                $this->file->append("[] [ERR] SNACK No replication for ".$slave);
+                if ($slave != "") {
+                    $this->str .= '<span style="color:#FF0000">';
+                    $this->str .= "ERR : No replication for " . $slave . "<br>";
+                    $this->str .= '</span>';
+                    $this->file->append("[] [ERR] SNACK No replication for ".$slave);
+                }
             }
         }
     }
@@ -254,17 +282,71 @@ class SnackSendReportsShell extends AppShell {
     public function cleanDBSessions() {
         $this->Radacct->query('delete from radacct where acctauthentic!="RADIUS"');
     }
-    
-    public function sendMail($body) {
-        App::uses('CakeEmail', 'Network/Email');
-        $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));
-        foreach ( $values as $val ) {
-            if( preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
-                continue;
+
+    public function checkProblem() {
+        $results=array();
+        $resultsprec=array();
+        $this->SystemDetail->checkProblem($resultsprec,"notifications-prec.txt");
+        $this->SystemDetail->checkProblem($results);
+        $this->errors = $this->errors + count($results);
+        $olderrfound=array();
+        $newerrfound=array();
+        $fixfound=array();
+        $found=false;
+        foreach ($results as $res) {
+            foreach ($resultsprec as $resprec) {
+                if ($resprec['msg']==$res['msg'] && $resprec['type'] == $res['type']) {
+                    $found=true;
+                    $olderrfound[] = $resprec['date']." ".$resprec['type']." ".$resprec['msg'];
+                }
+            }
+            if ($found==false) {
+                $newerrfound[] = $res['date']." ".$res['type']." ".$res['msg'];
             }
         }
-        $domain = $matches[1];
+        $found=false;
+        foreach ($resultsprec as $resprec) {
+            foreach ($results as $res) {
+                if ($resprec['msg']==$res['msg'] && $resprec['type'] == $res['type']) {
+                    $found=true;
+                }
+            }
+            if ($found==false) {
+                $fixfound[] = $resprec['date']." ".$resprec['type']." ".$resprec['msg'];
+            }
+        }
+
+        if (count($newerrfound)>0 || count($fixfound)>0) {
+            if (count($fixfound)>0) {
+                $subject = "[".$this->domain."][FIX] SNACK - Infos";
+                $this->strPB .= "<h3>Fix Errors</h3>\n";
+                foreach ($fixfound as $fix) {
+                    $this->strPB .= $fix."\n";
+                }
+            }
+            echo "\n";
+            if (count($newerrfound)>0) {
+                $subject = "[".$this->domain."][ERR] SNACK - Infos";
+                $this->strPB .= "<h3>New Errors</h3>\n";
+                foreach ($newerrfound as $err) {
+                    $this->strPB .= $err."\n";
+                }
+            }
+            echo "\n";
+            if (count($olderrfound)>0) {
+                $this->strPB .= "<h3>Old Errors</h3>\n";
+                foreach ($olderrfound as $err) {
+                    $this->strPB .= $err."\n";
+                }
+            }
+            $this->sendMail($subject, $this->strPB);
+        }
+    }
+
+    public function sendMail($subject, $body) {
+        App::uses('CakeEmail', 'Network/Email');
         $Email = new CakeEmail();
+        $Email->subject($subject);
         $Email->template('default');
         if (Configure::read('Parameters.smtp_login') != '') {
             $Email->config(array('transport' => 'Smtp',
@@ -272,12 +354,12 @@ class SnackSendReportsShell extends AppShell {
                                  'host' => Configure::read('Parameters.smtp_ip'),
                                  'username' => Configure::read('Parameters.smtp_login'),
                                  'password' => Configure::read('Parameters.smtp_password'),
-                                 'client' => 'snack'.$domain));
+                                 'client' => 'snack'.$this->domain));
         } else {
             $Email->config(array('transport' => 'Smtp',
                                  'port' => Configure::read('Parameters.smtp_port'),
                                  'host' => Configure::read('Parameters.smtp_ip'),
-                                 'client' => 'snack'.$domain));
+                                 'client' => 'snack'.$this->domain));
         }
         $Email->emailFormat('both');
         $Email->from(array(Configure::read('Parameters.smtp_email_from') => 'SNACK'));
@@ -291,13 +373,7 @@ class SnackSendReportsShell extends AppShell {
         $Email->to($listemails);
         //$Email->to('groche@guigeek.org');
         
-        if ($this->errors > 0) {
-            $subject = "[".$domain."][WARN] SNACK - Reports";
-        }
-        else {
-            $subject = "[".$domain."][INFO] SNACK - Reports";
-        }
-        $Email->subject($subject);
+
         $Email->send($body);
     }
 
