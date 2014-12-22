@@ -255,6 +255,65 @@ class NasController extends AppController {
             Utils::userlog(__('error while deleting NAS %s', $id), 'error');
         }
     }
+
+    public function exporttocsv() {
+        $nass = $this->Nas->find('all');
+        foreach ($nass as $nas) {
+            $nasData[] = array($nas['Nas']['nasname'], $nas['Nas']['shortname'], $nas['Nas']['description'], $nas['Nas']['version'], $nas['Nas']['image'], $nas['Nas']['serialnumber'], $nas['Nas']['model'] );
+        }
+        $this->layout = false;
+        $this->set('nasData', $nasData);
+        $this->set('filename', 'nas_' . date('d-m-Y'));
+    }
+
+    public function import() {
+        if ($this->request->isPost()) {
+            $handle = fopen($_FILES['data']['tmp_name']['importCsv']['file'], "r");
+            $results = array();
+            $listnas = array();
+            $col = array();
+            while (($fields = fgetcsv($handle)) != false) {
+                $i=0;
+                $nas = array();
+                foreach($fields as $field) {
+                    $fieldlower = strtolower($field);
+                    switch($fieldlower) {
+                        case "nasname":
+                        case "shortname":
+                        case "description":
+                        case "version":
+                        case "image":
+                        case "serialnumber":
+                        case "model":
+                        case "secret":
+                            $col[$i] = $fieldlower;
+                            break;
+                        default:
+                            if ($field != "") {
+                                $nas['Nas'][$col[$i]]=$field;
+                            }
+                            break;
+                    }
+                    $i++;
+                }
+                if (count($nas) > 0) {
+                    $listnas[]=$nas;
+                }
+            }
+            foreach ($listnas as $nas) {
+                $this->Nas->create();
+                if ($this->Nas->save($nas)) {
+                    $results[$nas['Nas']['shortname']] = 1;
+                    Utils::userlog(__('added NAS %s', $this->Nas->id));
+                } else {
+                    $results[$nas['Nas']['shortname']] = 0;
+                    Utils::userlog(__('error while adding NAS'), 'error');
+                }
+            }
+            $this->set('results', $results);
+        }
+    }
 }
+
 
 ?>

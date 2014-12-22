@@ -64,6 +64,56 @@ if(AuthComponent::user('role') == 'root'){
     );
 }
 
+$dropdownCsvButtonItems = array(
+    $this->Html->link(
+        '<i class="glyphicon glyphicon-download"></i> ' . __('Export'),
+        array('action' => 'exporttocsv'),
+        array('escape' => false)
+    ),
+    $this->Html->link(
+        '<i class="glyphicon glyphicon-upload"></i> ' . __('Import'),
+            '#confirmimport',
+            array(
+                'escape' => false,
+                'data-toggle' => 'modal',
+            )
+    ),
+);
+
+if(AuthComponent::user('role') != 'admin' && AuthComponent::user('role') != 'root'){
+    unset($dropdownCsvButtonItems[0]);
+}
+
+echo $this->element('dropdownButton', array(
+    'buttonCount' => 1,
+    'class' => 'btn-primary',
+    'title' => __('CSV'),
+    'icon' => 'glyphicon glyphicon-file',
+    'items' => $dropdownCsvButtonItems
+));
+
+echo '<div id="modalimport">';
+echo $this->element('modalImport', array(
+    'id'   => 'import',
+    'url' => array(
+        'controller' => 'Nas',
+        'action' => 'import',
+    ),
+    'link' => $this->Html->link(
+        '<i class="glyphicon glyphicon-upload glyphicon-white"></i> ' . __('Upload'),
+        array(
+            'controller' => 'Nas',
+            'action' => 'import',
+        ),
+        array(
+            'escape' => false,
+            'class'  => 'btn btn-primary'
+        )
+    )
+));
+echo '</div>';
+
+
 /*
  * Show a filter panel.
  */
