@@ -48,6 +48,12 @@ chown $INTERFACE_USER: $DEST_PATH/$CA_CERT_CER
 # Affectation des permissions
 
 {
+chmod 770 $DEST_PATH
+chmod 710 $DEST_PATH/certs
+chmod 770 $DEST_PATH/cert/newcerts
+chmod 770 $DEST_PATH/cert/crl
+chmod 710 $DEST_PATH/cert/private
+chmod 770 $DEST_PATH/cert/users  
 chown $RADIUS_USER $DEST_PATH/private/$RADIUS_KEY
 chown $RADIUS_USER $DEST_PATH/private/$RADIUS_CERT
 chmod $ONLY_RADIUS_ACCESS $DEST_PATH/private/$RADIUS_KEY
