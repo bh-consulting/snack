@@ -130,6 +130,14 @@ function testslogsAD(id, pwd) {
     });
 }
 
+
+
+function reportsexpanderror(type, id) {
+    //alert(type);
+    //$(".reports-err-msg-0").toggle();
+    $(".reports-"+type+"-msg-"+id).toggle();
+}
+
 function refreshCode(){   
     if(document.getElementById("livelogs") !== null) {
         if (document.getElementById("LoglineAjax").checked == false) {

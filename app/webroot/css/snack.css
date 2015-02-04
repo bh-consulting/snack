@@ -469,3 +469,7 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+.reports-msg {
+    display: none;
+}
