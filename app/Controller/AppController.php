@@ -62,7 +62,6 @@ class AppController extends Controller {
             ),
             'authorize' => array('Controller'),
         ),
-        'BackupsChanges'
     );
 
     public $disableBackupsCheck = array(
@@ -99,15 +98,6 @@ class AppController extends Controller {
             'asc' => 'glyphicon glyphicon-chevron-down',
             'desc' => 'glyphicon glyphicon-chevron-up',
         ));
-
-        if (!isset($this->disableBackupsCheck[$this->name])
-            || $this->disableBackupsCheck[$this->name] != $this->action
-        ) {
-            $this->set(
-                'nasunwritten',
-                $this->BackupsChanges->areThereChangesUnwritten()
-            );
-        }
     }
 
     /**

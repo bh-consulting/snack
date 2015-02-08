@@ -11,7 +11,7 @@ class BackupsController extends AppController {
 
     private $git = '~snack/backups.git/';
 
-    public function getRegexSynchronisation($args = array()) {
+    /*public function getRegexSynchronisation($args = array()) {
         if (!empty($args['input']) && !empty($args['nas'])) {
             $data = &$this->request->data['Backup'][$args['input']];
             $regex = '(1 = 1';
@@ -51,20 +51,7 @@ class BackupsController extends AppController {
                 return $regex;
             }
         }
-    }
-
-    public function getUnwrittenBackups($nas, $inverse = false) {
-        $backups = $this->BackupsChanges
-            ->backupsUnwrittenInThisNAS($nas, $inverse);
-
-        $backupIds = array();
-
-        foreach($backups as $backup) {
-            $backupIds[] = $backup['Backup']['id'];
-        }
-
-        return $backupIds;
-    }
+    }*/
 
     public function index($id = null) {
         $this->loadModel('Nas');
@@ -100,7 +87,7 @@ class BackupsController extends AppController {
             'title' => false,
         ));
 
-        $this->Filters->addComplexConstraint(array(
+        /*$this->Filters->addComplexConstraint(array(
             'select' => array(
                 'items' => array(
                     'notchanged' => '<i class="icon-ok-sign icon-green"></i> '
@@ -118,7 +105,7 @@ class BackupsController extends AppController {
                             'nas' => $nas,
                         ),
                     ),
-                ));
+                ));*/
         
         $this->Filters->addComplexConstraint(array(
             'select' => array(
@@ -128,15 +115,15 @@ class BackupsController extends AppController {
                 'input' => 'lastchange',
                 'title' => false,
             ),
-            'callback' => array(
+            /*'callback' => array(
                 'getBackupsLastChange',
                 array(
                     'input' => 'lastchange',
                 ),
-            )
+            )*/
         ));
         
-        //$this->Filters->addGroupConstraint('commit');
+        $this->Filters->addGroupConstraint('commit');
 
         $backups = $this->Filters->paginate();
 
@@ -155,7 +142,7 @@ class BackupsController extends AppController {
         }
 
         $this->set('users', $users);
-        $this->set('unwrittenids', $this->getUnwrittenBackups($nas));
+        //$this->set('unwrittenids', $this->getUnwrittenBackups($nas));
         $this->set('backups', $backups);
     }
     
@@ -204,13 +191,13 @@ class BackupsController extends AppController {
                         'input' => 'writemem',
                         'title' => false,
                     ),
-                    'callback' => array(
+                    /*'callback' => array(
                         'getRegexSynchronisation',
                         array(
                             'input' => 'writemem',
                             'nas' => $nas,
                         ),
-                    )
+                    )*/
                 ));
 
         //$this->Filters->addGroupConstraint('commit');
@@ -232,7 +219,7 @@ class BackupsController extends AppController {
         }
 
         $this->set('users', $users);
-        $this->set('unwrittenids', $this->getUnwrittenBackups($nas));
+        //$this->set('unwrittenids', $this->getUnwrittenBackups($nas));
         $this->set('backups', $backups);
     }
 
@@ -669,7 +656,7 @@ class BackupsController extends AppController {
         }
     }
 
-    public function restore($nasId, $backupId) {
+    /*public function restore($nasId, $backupId) {
         $nas = new Nas($nasId);
         $nasname = $nas->field('nasname');
 
@@ -723,7 +710,7 @@ class BackupsController extends AppController {
                 return '(1=1)';
             }
         }
-    }
+    }*/
 }
 
 ?>

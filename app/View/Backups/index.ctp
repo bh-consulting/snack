@@ -8,12 +8,6 @@ $columns = array(
         'fit' => true,
         'bold' => true,
     ),
-    'sync' => array(
-        'text' => '<i class="glyphicon glyphicon-ok-circle" title="'
-        . __('Write memory') . '"></i>',
-        'fit' => true,
-        'id' => 'id',
-    ),
     'compare' => array(
         'text' => '<i class="glyphicon glyphicon-zoom-in"></i>',
         'fit' => true,
@@ -64,20 +58,13 @@ echo $this->element('filters_panel', array(
             'multiple' => 'checkbox',
             'type' => 'checkgroup',
         ),
-        array(
-            'name' => 'writemem',
-            'label' => __('Synchronization'),
-            'multiple' => 'checkbox',
-            'type' => 'checkgroup',
-            'escape' => false,
-        ),
-        array(
+        /*array(
             'name' => 'lastchange',
             'label' => __('Last changes'),
             'multiple' => 'checkbox',
             'type' => 'checkgroup',
             'escape' => false,
-        ),
+        ),*/
     )
 ));
 
@@ -174,17 +161,6 @@ if (!empty($backups)) {
                 echo $this->element('formatUsersList', array(
                     'users' => $users[$backup['Backup']['id']]
                 ));
-                break;
-            case 'sync':
-                if(in_array($backup['Backup'][$info['id']], $unwrittenids)) {
-                    echo '<i class="glyphicon glyphicon-exclamation-sign glyphicon glyphicon-red" title="'
-                        . __('Configuration NOT loaded if the device restart.')
-                        . '"></i>';
-                } else {
-                    echo '<i class="glyphicon glyphicon-ok-sign glyphicon glyphicon-green" title="'
-                        . __('Seems saved as starting configuration.')
-                        . '"></i>';
-                }
                 break;
             case 'compare':
                 if ($i != 0) {

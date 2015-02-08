@@ -15,30 +15,22 @@ echo $this->element('viewInfo', array(
 
 echo '<strong>';
 
-if($isunwritten) {
-    echo '<i class="glyphicon glyphicon-camera glyphicon-red"></i> ';
-    echo __('There are %s not saved on the memory.',
-	$this->Html->link(
-            __('some changes'),
-            array(
-                'action' => 'index',
-                'controller' => 'backups',
-                $nas['Nas']['id'],
-            )
-        )
-    );
+if(in_array($nas['Nas']['nasname'], $unBackupedNas)) {
+    echo '<i class="glyphicon glyphicon-warning-sign"></i> ';
+
+            echo __('NOT Backuped from 7 days or more',
+        	$this->Html->link(
+                    __('changes saved'),
+                    array(
+                        'action' => 'index',
+                        'controller' => 'backups',
+                        $nas['Nas']['id'],
+                    )
+                )
+            );
 } else {
-    echo '<i class="glyphicon glyphicon-camera glyphicon-green"></i> ';
-    echo __('All %s on the memory.',
-	$this->Html->link(
-            __('changes saved'),
-            array(
-                'action' => 'index',
-                'controller' => 'backups',
-                $nas['Nas']['id'],
-            )
-        )
-    );
+    echo '<i class="glyphicon glyphicon-ok"></i> ';
+    echo __('Backuped');
 }
 
 echo '</strong>';

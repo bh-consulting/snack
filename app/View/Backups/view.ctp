@@ -4,7 +4,7 @@ $this->assign('radius_active', 'active');
 $this->assign('nas_active', 'active');
 ?>
 
-<h1><?php echo __('View and restore'); ?></h1>
+<h1><?php echo __('View'); ?></h1>
 
 <?php
 if (isset($current) && isset($nas)) {
@@ -58,74 +58,6 @@ if (isset($current) && isset($nas)) {
 <?php
 if (!empty($diff)) {
 ?>
-<h2><?php echo __('Comparison with the current configuration'); ?></h2>
-
-<div class="toggleBlock" onclick="toggleBlock(this)">
-    <?php echo $this->Html->link(__('Show'), '#') ?>
-    <i class="glyphicon glyphicon-chevron-down"></i>
-</div>
-
-<div style="display: none">
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#tab1" data-toggle="tab">
-            <?php echo __('Graphical diff'); ?>
-        </a></li>
-        <li><a href="#tab2" data-toggle="tab">
-            <?php echo __('Raw diff'); ?>
-        </a></li>
-    </ul>
-    <div class="tab-content">
-        <div class="tab-pane active" id="tab1">
-            <table class="table-condensed diff-table">
-            <th><?php echo __('Line'); ?></th>
-            <th><?php echo __('This configuration'); ?></th>
-            <th><?php echo __('The running configuration'); ?></th>
-<?php
-    for ($i=0; $i<count($diffExtend['left']); ++$i) {
-        echo '<tr class="diff-line">';
-        echo '<td class="fit diff-number">' . ($i+1) . '</td>';
-        if (is_array($diffExtend['left'][$i])) {
-            switch (key($diffExtend['left'][$i])) {
-            case 'ADD':
-                echo '<td class="diff-cell blank">&nbsp;';
-                break;
-            case 'DEL':
-                echo '<td class="diff-cell del">&nbsp;';
-                break;
-            case 'UP':
-                echo '<td class="diff-cell up">&nbsp;';
-                break;
-            }
-            echo current($diffExtend['left'][$i]) . '</td>';
-        } else {
-            echo '<td class="diff-cell">&nbsp;' . $diffExtend['left'][$i] . '</td>';
-        }
-        if (is_array($diffExtend['right'][$i])) {
-            switch (key($diffExtend['right'][$i])) {
-            case 'ADD':
-                echo '<td class="diff-cell add">&nbsp;';
-                break;
-            case 'DEL':
-                echo '<td class="diff-cell blank">&nbsp;';
-                break;
-            case 'UP':
-                echo '<td class="diff-cell up">&nbsp;';
-                break;
-            }
-            echo current($diffExtend['right'][$i]) . '</td>';
-        } else {
-            echo '<td class="diff-cell">&nbsp;' . $diffExtend['right'][$i] . '</td>';
-        }
-        echo "</tr>";
-    }
-?>
-            </table>
-        </div>
-        <div class="tab-pane" id="tab2">
-            <pre class="well"><?php echo trim($diff) ?></pre>
-        </div>
-    </div>
-</div>
 
 <?php
 }
@@ -142,7 +74,7 @@ if (!empty($content)) {
 <div style="display:none">
     <pre class="well"><?php echo trim($content) ?></pre>
 <?php
-    if (!empty($diff) && !empty($current) && !empty($nas)) {
+    /*if (!empty($diff) && !empty($current) && !empty($nas)) {
         echo '<div id="modaldel">';
         echo $this->element('modalDelete', array(
             'id'   => 'restore',
@@ -171,7 +103,7 @@ if (!empty($content)) {
                 'class' => 'btn btn-primary',
             )
         );
-    }
+    }*/
 }
 ?>
 </div>

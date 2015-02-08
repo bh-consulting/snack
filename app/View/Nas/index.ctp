@@ -144,12 +144,13 @@ echo $this->element('MultipleAction', array('action' => 'start'));
 
 echo '<strong>';
 
-if($nasunwritten) {
-    echo '<i class="glyphicon glyphicon-camera glyphicon glyphicon-red"></i> ';
-    echo __('There is at least one NAS not synchronized with the starting configuration.');
+if(count($unBackupedNas)>0) {
+    echo '<i class="glyphicon glyphicon-warning-sign"></i> ';
+    echo __('There is at least one NAS not backuped since 7 days or more.');
+
 } else {
-    echo '<i class="glyphicon glyphicon-camera glyphicon glyphicon-green"></i> ';
-    echo __('All NAS seem synchronized with the starting configuration.');
+    echo '<i class="glyphicon glyphicon-ok"></i> ';
+    echo __('All NAS seem backuped.');
 }
 
 echo '</strong>';
@@ -247,31 +248,35 @@ if (!empty($nas)) {
                     );
                 }
                 if(AuthComponent::user('role') == 'root'){
-                    echo $this->element(
-                        'delete_links',
-                        array(
-                            'model' => 'Nas',
-                            'action' => 'link',
-                            'id' => $n['Nas']['id'],
-                        )
-                    );
+                    if ($n['Nas']['nasname'] != "127.0.0.1") {
+                        echo $this->element(
+                            'delete_links',
+                            array(
+                                'model' => 'Nas',
+                                'action' => 'link',
+                                'id' => $n['Nas']['id'],
+                            )
+                        );
+                    }
                 }
                 break;
             case 'backups':
                 if(AuthComponent::user('role') == 'root'){
-                    echo '<i class="glyphicon glyphicon-camera glyphicon glyphicon-' . (
-			    in_array($n['Nas']['id'], $unwrittenids) ?
-				'red" title="' . __('Running configuration NOT synchronized with the starting one.') :
-				'green" title="' . __('Running configuration seems synchronized with the starting configuration.')
-			) . '"></i> ';
-                    echo $this->Html->link(
-                        __('Backups'),
-                        array(
-                            'action' => 'index',
-                            'controller' => 'backups',
-                            $n['Nas']['id'],
-                        )
-                    );
+                    if ($n['Nas']['nasname'] != "127.0.0.1") {
+                        if (in_array($n['Nas']['nasname'], $unBackupedNas)) {
+                            echo '<i class="glyphicon glyphicon-warning-sign glyphicon" title="' . __('NOT Backuped since 7 days.') . '"></i> ';
+                        } else {
+                            echo '<i class="glyphicon glyphicon-ok glyphicon" title="' . __('Backuped.') . '"></i> ';
+                        }
+                        echo $this->Html->link(
+                            __('Backups'),
+                            array(
+                                'action' => 'index',
+                                'controller' => 'backups',
+                                $n['Nas']['id'],
+                            )
+                        );
+                    }
                 }
                 break;
             case 'id':

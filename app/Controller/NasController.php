@@ -3,7 +3,7 @@ App::import('Model', 'Backup');
 
 class NasController extends AppController {
     public $helpers = array('Html', 'Form', 'JqueryEngine');
-    public $uses = array('Nas');
+    public $uses = array('Nas', 'Backup');
     public $paginate = array(
         'limit' => 10,
         'order' => array('Nas.id' => 'asc')
@@ -11,7 +11,6 @@ class NasController extends AppController {
     public $components = array(
         'Filters' => array('model' => 'Nas'),
         'Session',
-    	'BackupsChanges',
         'MultipleAction' => array('model' => 'Nas', 'name' => 'nas'),
     );
 
@@ -68,24 +67,19 @@ class NasController extends AppController {
         }
     }
 
-    public function getUnwrittenNas($inverse = false) {
+    public function getunBackupedNas() {
         $allnas = $this->Nas->find('all');
-
-    	$unwrittenIds = array();
-
-    	foreach ($allnas as $nas) {
-            $changes = $this->BackupsChanges
-                ->areThereChangesUnwrittenInThisNAS($nas);
-            if ((!$inverse && $changes)
-                || ($inverse && !$changes)
-            ) {
-                $unwrittenIds[] = $nas['Nas']['id'];
+        $unBackupedNas = array();
+        foreach ($allnas as $nas) {
+            if ($nas['Nas']['nasname'] != "127.0.0.1") {
+                if (!$this->Backup->isBackuped($nas['Nas']['nasname'])) {
+                    $unBackupedNas[] = $nas['Nas']['nasname'];
+                }
             }
-    	}
-
-        return $unwrittenIds;
+        }
+        return $unBackupedNas;
     }
-    
+
     public function index() {
         $this->MultipleAction->process(
             array(
@@ -133,8 +127,7 @@ class NasController extends AppController {
 
         $this->Filters->paginate('nas');
 
-        //TODO: optimiser les requêtes
-    	$this->set('unwrittenids', $this->getUnwrittenNas());
+        $this->set('unBackupedNas', $this->getunBackupedNas());
     }
 
     public function view($id = null) {
@@ -165,8 +158,9 @@ class NasController extends AppController {
                 'Ports',
             )
         );
-	
-    	$this->set('isunwritten', $this->BackupsChanges->areThereChangesUnwrittenInThisNAS($nas));
+
+        $this->set('unBackupedNas', $this->getunBackupedNas());
+    	//$this->set('isunwritten', $this->BackupsChanges->areThereChangesUnwrittenInThisNAS($nas));
     }
 
     /**
