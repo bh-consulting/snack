@@ -2,7 +2,7 @@
 $this->extend('/Common/parameters_tabs');
 $this->assign('param_ad_active', 'active');
 
-echo $this->Form->create('Parameter', array('action' => 'edit_ad_group'));
+echo $this->Form->create('Parameter', array('action' => 'edit_ad_group', 'autocomplete' => 'off'));
 ?>
 <h4><?php echo __('ActiveDirectory Group configuration:'); ?></h4>
 <dl class="well dl-horizontal">

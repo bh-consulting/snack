@@ -9,6 +9,7 @@ echo '<h1>' . __('Edit') . ' ' . $username
 echo $this->Form->create('Raduser', array(
     'action' => 'edit_loginpass',
     'novalidate' => true,
+    'autocomplete' => 'off',
 ));
 
 $checks = '<fieldset>';

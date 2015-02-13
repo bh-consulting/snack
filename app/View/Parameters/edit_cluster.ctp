@@ -2,7 +2,7 @@
 $this->extend('/Common/parameters_tabs');
 $this->assign('param_cluster_active', 'active');
 
-echo $this->Form->create('Parameter', array('action' => 'edit_cluster'));
+echo $this->Form->create('Parameter', array('action' => 'edit_cluster', 'autocomplete' => 'off'));
 ?>
 
 <br>

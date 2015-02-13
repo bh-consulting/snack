@@ -5,7 +5,8 @@ $this->assign('users_active', 'active');
 
 echo '<h1>' . __('Add a user with login / password') . '</h1>';
 
-echo $this->Form->create('Raduser', array('novalidate' => true));
+echo $this->Form->create('Raduser', array('novalidate' => true, 
+                                        'autocomplete' => 'off'));
 
 $checks = '<fieldset>';
 $checks .= '<legend>' . __('Checks') . '</legend>';

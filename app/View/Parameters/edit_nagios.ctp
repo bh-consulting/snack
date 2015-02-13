@@ -2,7 +2,7 @@
 $this->extend('/Common/parameters_tabs');
 $this->assign('param_nagios_active', 'active');
 
-echo $this->Form->create('Parameter', array('action' => 'edit_nagios'));
+echo $this->Form->create('Parameter', array('action' => 'edit_nagios', 'autocomplete' => 'off'));
 ?>
 
 <h4><?php echo __('Nagios configuration:'); ?></h4>

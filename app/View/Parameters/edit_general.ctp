@@ -2,7 +2,7 @@
 $this->extend('/Common/parameters_tabs');
 $this->assign('param_active', 'active');
 
-echo $this->Form->create('Parameter', array('action' => 'edit'));
+echo $this->Form->create('Parameter', array('action' => 'edit', 'autocomplete' => 'off'));
 ?>
 
 <h4><?php echo __('General information:'); ?></h4>

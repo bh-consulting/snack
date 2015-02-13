@@ -2,7 +2,7 @@
 $this->extend('/Common/parameters_tabs');
 $this->assign('param_email_active', 'active');
 
-echo $this->Form->create('Parameter', array('action' => 'edit_email'));
+echo $this->Form->create('Parameter', array('action' => 'edit_email', 'autocomplete' => 'off'));
 ?>
 
 <h4><?php echo __('Email configuration:'); ?></h4>

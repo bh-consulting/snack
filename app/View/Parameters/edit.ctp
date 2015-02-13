@@ -5,7 +5,7 @@ $this->assign('param_active', 'active');
 
 echo '<h1>' . __('Edit server parameters') . '</h1>';
 
-echo $this->Form->create('Parameter', array('action' => 'edit'));
+echo $this->Form->create('Parameter', array('action' => 'edit', 'autocomplete' => 'off'));
 ?>
 
 <h4><?php echo __('General information:'); ?></h4>

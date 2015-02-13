@@ -2,7 +2,7 @@
 $this->extend('/Common/parameters_tabs');
 $this->assign('param_proxy_active', 'active');
 
-echo $this->Form->create('Parameter', array('action' => 'edit_proxy'));
+echo $this->Form->create('Parameter', array('action' => 'edit_proxy', 'autocomplete' => 'off'));
 ?>
 
 <br>

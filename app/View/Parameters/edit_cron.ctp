@@ -6,7 +6,7 @@ $this->assign('param_cron_active', 'active');
 <h4><?php echo $script; ?></h4>
 
 <?php
-echo $this->Form->create('Parameter', array('action' => 'edit_cron/'.$script));
+echo $this->Form->create('Parameter', array('action' => 'edit_cron/'.$script), 'autocomplete' => 'off');
 
 //debug($listcron);
 if (preg_match("/^(#*)(\*\/\d+|\d+|\*)\s+(\*\/\d+|\d+|\*)\s+(\*\/\d+|\d+|\*)\s+(\*\/\d+|\d+|\*)\s+(\*\/\d+|\d+|\*)\s+(www-data|root)\s+(.*)$/", $listcron, $matches)) {
