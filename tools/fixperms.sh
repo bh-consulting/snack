@@ -89,8 +89,8 @@ chmod -R $ONLY_INTERFACE_ACCESS $USER_HOME/scripts
 
 chown -R :snack $USER_HOME
 chmod 770 $USER_HOME/logs
-chown snack:snack $TFTP_FOLDER
-chmod 0770 $TFTP_FOLDER
+chown -R snack:snack $TFTP_FOLDER
+chmod -R 0770 $TFTP_FOLDER
 
 {
 chmod +x $USER_HOME/scripts
