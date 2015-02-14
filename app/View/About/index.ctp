@@ -28,4 +28,4 @@ Marc PINHÈDE<br />
 <a href="http://julien.vaubourg.com">Julien VAUBOURG</a><br />
 <a href="http://blog.guigeek.org">Guillaume ROCHE</a>
 <br /><br />
-<em>Copyright <a href="http://www.gnu.org/licenses/">GPL v3</a> &copy; 2013 <a href="http://www.bh-consulting.net">b.h. consulting</a></em>
+<em>Copyright <a href="http://www.gnu.org/licenses/">GPL v3</a> &copy; 2015 <a href="http://www.bh-consulting.net">b.h. consulting</a></em>
