@@ -401,12 +401,13 @@ body {
 
 @media (min-width: 768px) {
   .sidebar {
-    position: fixed;
-    top: 51px;
+    /*position: fixed;*/
+    /*top: 51px;*/
     bottom: 0;
-    left: 0;
-    z-index: 1000;
-    display: block;
+    left: 20px;
+    /*z-index: 1000;*/
+    display: inline-table;
+    float: left;
     padding: 20px;
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
@@ -417,9 +418,9 @@ body {
 
 /* Sidebar navigation */
 .nav-sidebar {
-  margin-right: -21px; /* 20px padding + 1px border */
-  margin-bottom: 20px;
-  margin-left: -20px;
+    position: fixed;
+    width: 75px;
+    margin-bottom: 20px;
 }
 .nav-sidebar > li > a {
   padding-right: 20px;
@@ -443,7 +444,6 @@ body {
 @media (min-width: 768px) {
   .main {
     padding-right: 40px;
-    padding-left: 40px;
   }
 }
 .main .page-header {

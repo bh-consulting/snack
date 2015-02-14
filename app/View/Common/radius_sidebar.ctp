@@ -1,11 +1,9 @@
 <?php
 if(AuthComponent::user('role') != 'tech'){
 ?>
-<div class="container-fluid">
-      <div class="row" id="sidebar">
-        <div class="col-sm-1 sidebar">
-          <ul class="nav nav-sidebar">           
-         <li class="<?php echo $this->fetch('users_active'); ?>">
+<div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav nav-sidebar side-nav">           
+    <li class="<?php echo $this->fetch('users_active'); ?>">
 <?php
 echo $this->Html->link(
     '<i class="fa fa-user fa-2x" title="' . __('Users') . '"></i>',
@@ -119,7 +117,7 @@ echo $this->Html->link(
 ?>
     </li>
     </ul>
-        </div>
+        
 <!--<div id="content" class="col-sm-9 col-sm-offset-1 col-md-10 col-md-offset-1 main content">-->
 <div id="content" class="main content">
     <?php } ?>
