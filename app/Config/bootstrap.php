@@ -172,12 +172,14 @@ CakeLog::config('error', array(
     'engine' => 'FileLog',
     'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
     'file' => 'error',
+    'mask' => 0777,
 ));
 
 CakeLog::config('debug', array(
     'engine' => 'FileLog',
     'types' => array('notice', 'info', 'debug'),
     'file' => 'debug',
+    'mask' => 0777,
 ));
 
 CakeLog::config('syslog', array(

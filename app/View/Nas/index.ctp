@@ -44,6 +44,10 @@ $columns = array(
         'text' => __('Backups'),
         'fit' => true,
     ),
+    'backuptype' => array(
+        'text' => __('Type'),
+        'fit' => true,
+    ),
 );
 
 if(AuthComponent::user('role') != 'root'){
@@ -92,6 +96,46 @@ echo $this->element('dropdownButton', array(
     'items' => $dropdownCsvButtonItems
 ));
 
+$dropdownConfigButtonItems = array(
+    $this->Html->link(
+        __('Backup config'),
+        '#',
+        array(
+            'class' => 'button',
+            'onclick' => 'getbackup()'
+        )
+    ),
+    $this->Html->link(
+        '<i class="glyphicon glyphicon-download"></i> ' . __('Download Config'),
+        array('action' => 'downloadconfig'),
+        array('escape' => false)
+    ),
+);
+
+if(AuthComponent::user('role') != 'admin' && AuthComponent::user('role') != 'root'){
+    unset($dropdownConfigButtonItems[0]);
+}
+
+echo $this->element('dropdownButton', array(
+    'buttonCount' => 1,
+    'class' => 'btn-primary',
+    'title' => __('Config'),
+    'icon' => 'glyphicon glyphicon-file',
+    'items' => $dropdownConfigButtonItems
+));
+
+if(AuthComponent::user('role') == 'root'){
+    echo $this->Html->link(
+        '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ' . __('Reinitialize conf'),
+            '#confirmreinitconf',
+            array(
+                'escape' => false,
+                'data-toggle' => 'modal',
+                'class' => 'btn btn-primary btn-danger',
+            )
+    );
+}
+
 echo '<div id="modalimport">';
 echo $this->element('modalImport', array(
     'id'   => 'import',
@@ -112,7 +156,22 @@ echo $this->element('modalImport', array(
     )
 ));
 echo '</div>';
-
+/*
+echo '<div id="confirmreinitconf">';
+echo $this->element('modalDelete', array(
+        'id'   => $id,
+        'link' => $this->Html->link(
+            '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ' . __('Delete'),
+            '#',
+            array(
+            'onclick' => "$('#{$model}DeleteForm input').val('$id');"
+                . "$('#{$model}DeleteForm').submit()",
+            'escape' => false,
+            'class' => 'btn btn-primary btn-danger'
+            )
+        )
+    ));
+echo '</div>';*/
 
 /*
  * Show a filter panel.
@@ -120,13 +179,6 @@ echo '</div>';
 echo $this->element('filters_panel', array(
     'controller' => 'nas/index',
     'inputs' => array(
-        array(
-            'name' => 'writemem',
-            'label' => __('Synchronization'),
-            'multiple' => 'checkbox',
-            'type' => 'checkgroup',
-            'escape' => false,
-        ),
         array(
             'name' => 'text',
             'label' => __('Contains (accept regex)'),
@@ -145,7 +197,7 @@ echo $this->element('MultipleAction', array('action' => 'start'));
 echo '<strong>';
 
 if(count($unBackupedNas)>0) {
-    echo '<i class="glyphicon glyphicon-warning-sign"></i> ';
+    echo '<i class="glyphicon glyphicon-warning-sign text-danger"></i> ';
     echo __('There is at least one NAS not backuped since 7 days or more.');
 
 } else {
@@ -159,7 +211,7 @@ echo '</strong>';
 <br />
 <br />
 
-<table class="table">
+<table class="table" id="tablenas">
     <thead>
 	    <tr>
 <?php
@@ -214,7 +266,7 @@ if (!empty($nas)) {
 
         foreach ($columns as $field=>$info) {
             if (isset($info['fit']) && $info['fit']) {
-                echo '<td class="fit">';
+                echo '<td class="fit" id="'.$field."_".$n['Nas']['id'].'">';
             } else {
                 echo '<td>';
             }
@@ -264,9 +316,9 @@ if (!empty($nas)) {
                 if(AuthComponent::user('role') == 'root'){
                     if ($n['Nas']['nasname'] != "127.0.0.1") {
                         if (in_array($n['Nas']['nasname'], $unBackupedNas)) {
-                            echo '<i class="glyphicon glyphicon-warning-sign glyphicon" title="' . __('NOT Backuped since 7 days.') . '"></i> ';
+                            echo '<i class="glyphicon glyphicon-warning-sign glyphicon text-danger" title="' . __('NOT Backuped since 7 days.') . '"></i> ';
                         } else {
-                            echo '<i class="glyphicon glyphicon-ok glyphicon" title="' . __('Backuped.') . '"></i> ';
+                            echo '<i class="glyphicon glyphicon-ok glyphicon text-success" title="' . __('Backuped.') . '"></i> ';
                         }
                         echo $this->Html->link(
                             __('Backups'),
@@ -279,6 +331,16 @@ if (!empty($nas)) {
                     }
                 }
                 break;
+            case 'backuptype':
+                if (isset($n['Nas'][$field])) {
+                    if ($n['Nas'][$field] == "ssh") {
+                        echo '<strong><p class="text-success">'.$n['Nas'][$field].'</p></strong>';
+                    }
+                    if ($n['Nas'][$field] == "telnet") {
+                        echo '<strong><p class="text-warning">'.$n['Nas'][$field].'</p></strong>';
+                    }
+                }
+                break;    
             case 'id':
                 echo '<strong>' . h($n['Nas'][$field]) . '</strong>';
                 break;

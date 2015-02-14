@@ -15,6 +15,10 @@ function loading() {
     $("div.loading").html("<i class='fa fa-circle-o-notch fa-inverse fa-spin fa-1x'></i>");
 }
 
+function unloading() {
+    $("div.loading").html("");
+}
+
 function loading_from_sidebar() {
     $("div.loading_from_sidebar").html("<i class='fa fa-circle-o-notch fa-inverse fa-spin fa-1x'></i>");
 }
@@ -130,11 +134,38 @@ function testslogsAD(id, pwd) {
     });
 }
 
-
+function getbackup() {
+    var arrayLignes = document.getElementById("tablenas").rows;
+    var longueur = arrayLignes.length;
+    var i=2; 
+    var newURL=window.location.protocol + "//" + window.location.host;
+    var elt="";
+    //loading();
+    while(i<longueur) {
+        newURL=window.location.protocol + "//" + window.location.host;
+        newURL+="/nas/backupconfig/"+i;
+        elt="backuptype_"+i;
+        document.getElementById(elt).innerHTML = "<i class='fa fa-circle-o-notch fa-spin fa-1x'></i>";
+        $.ajax({
+            url: newURL,
+            cache: false,
+            success: function(html){
+                var res=html.split(":");
+                var id = res[0].replace(/\s+/g,"");
+                elt="backuptype_"+id;
+                if (res[1] == "1") {
+                    document.getElementById(elt).innerHTML = "<i class='fa fa-check fa-1x text-success'></i>";
+                } else {
+                    document.getElementById(elt).innerHTML = "<i class='fa fa-times fa-1x text-danger'></i>";
+                }
+            }
+        })
+        i++;
+    }
+    //unloading();
+}
 
 function reportsexpanderror(type, id) {
-    //alert(type);
-    //$(".reports-err-msg-0").toggle();
     $(".reports-"+type+"-msg-"+id).toggle();
 }
 

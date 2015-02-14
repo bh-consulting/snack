@@ -1,4 +1,5 @@
 <?php
+App::uses('Security', 'Utility');
 App::import('Model', 'Backup');
 
 class NasController extends AppController {
@@ -12,6 +13,7 @@ class NasController extends AppController {
         'Filters' => array('model' => 'Nas'),
         'Session',
         'MultipleAction' => array('model' => 'Nas', 'name' => 'nas'),
+        'Security',
     );
 
     public function isAuthorized($user) {
@@ -108,7 +110,7 @@ class NasController extends AppController {
             'ahead' => array('nasname','shortname', 'type', 'ports', 'server'),
         ));
 
-        $this->Filters->addComplexConstraint(array(
+        /*$this->Filters->addComplexConstraint(array(
             'select' => array(
                 'items' => array(
                     'notchanged' => '<i class="icon-camera icon-green"></i> '
@@ -123,7 +125,7 @@ class NasController extends AppController {
                 'getRegexSynchronisation',
                 array('input' => 'writemem'),
             )
-        ));
+        ));*/
 
         $this->Filters->paginate('nas');
 
@@ -144,6 +146,7 @@ class NasController extends AppController {
         $attributes['Description'] = $nas['Nas']['description'];
         $attributes['Type'] = $nas['Nas']['type'];
         $attributes['Ports'] = $nas['Nas']['ports'];
+        $attributes['Login'] = $nas['Nas']['login'];
         $attributes['Virtual server'] = $nas['Nas']['server'];
         $attributes['Community'] = $nas['Nas']['community'];
 
@@ -156,11 +159,11 @@ class NasController extends AppController {
                 'Description',
                 'Type',
                 'Ports',
+                'Login',
             )
         );
 
         $this->set('unBackupedNas', $this->getunBackupedNas());
-    	//$this->set('isunwritten', $this->BackupsChanges->areThereChangesUnwrittenInThisNAS($nas));
     }
 
     /**
@@ -189,11 +192,10 @@ class NasController extends AppController {
     public function add(){
         if($this->request->is('post')){
             $this->Nas->create();
-
             // init with default values
             $this->request->data['Nas']['type'] = 'other';
             $this->request->data['Nas']['ports'] = 1812;
-
+            debug($this->request->data);
             if ($this->Nas->save($this->request->data)) {
                 $this->alert_restart_server();
                 Utils::userlog(__('added NAS %s', $this->Nas->id));
@@ -210,10 +212,23 @@ class NasController extends AppController {
 
     public function edit($id = null)
     {
-        $this->Nas->id = $id;
-        if($this->request->is('get')){
-            $this->request->data = $this->Nas->read();
-        } else {
+        $this->Nas->id = $id;   
+        if($this->request->is('post')){
+            $nas = $this->Nas->read();
+            /*echo "<pre style=\"margin-left: 100px;\">";
+                print_r($this->request->data);
+                var_dump($this->request->data);
+            echo "</pre>";
+            debug($this->request->data);*/
+            if (($this->request->data['Nas']['password'] == '' && $this->request->data['Nas']['confirm_password'] == '')) {
+                unset($this->request->data['Nas']['password']);
+                unset($this->request->data['Nas']['confirm_password']);
+            }
+            if (($this->request->data['Nas']['enablepassword'] == '') && ($this->request->data['Nas']['confirm_enablepassword'] == '')) {
+                unset($this->request->data['Nas']['enablepassword']);
+                unset($this->request->data['Nas']['confirm_enablepassword']);
+            }
+            //debug($this->request->data);
             if($this->Nas->save($this->request->data)){
                 $this->alert_restart_server();
                 Utils::userlog(__('edited NAS %s', $id));
@@ -225,6 +240,12 @@ class NasController extends AppController {
                 );
                 Utils::userlog(__('error while editing NAS %s', $id), 'error');
             }
+        } else {
+            $this->request->data = $this->Nas->read();
+            unset($this->request->data['Nas']['password']);
+            unset($this->request->data['Nas']['confirm_password']);
+            unset($this->request->data['Nas']['enablepassword']);
+            unset($this->request->data['Nas']['confirm_enablepassword']);
         }
     }
 
@@ -253,7 +274,18 @@ class NasController extends AppController {
     public function exporttocsv() {
         $nass = $this->Nas->find('all');
         foreach ($nass as $nas) {
-            $nasData[] = array($nas['Nas']['nasname'], $nas['Nas']['shortname'], $nas['Nas']['description'], $nas['Nas']['version'], $nas['Nas']['image'], $nas['Nas']['serialnumber'], $nas['Nas']['model'] );
+            $nasData[] = array($nas['Nas']['nasname'], 
+                               $nas['Nas']['shortname'], 
+                               $nas['Nas']['description'], 
+                               $nas['Nas']['version'], 
+                               $nas['Nas']['image'], 
+                               $nas['Nas']['serialnumber'], 
+                               $nas['Nas']['model'], 
+                               $nas['Nas']['login'],
+                               $nas['Nas']['password'],
+                               $nas['Nas']['enablepassword'],
+                               $nas['Nas']['backuptype'],
+                               );
         }
         $this->layout = false;
         $this->set('nasData', $nasData);
@@ -279,6 +311,9 @@ class NasController extends AppController {
                         case "image":
                         case "serialnumber":
                         case "model":
+                        case "login":
+                        case "password":
+                        case "enablepassword":
                         case "secret":
                             $col[$i] = $fieldlower;
                             break;
@@ -306,6 +341,40 @@ class NasController extends AppController {
             }
             $this->set('results', $results);
         }
+    }
+
+    /*
+    * Get the configuration of all NAS
+    */
+    public function backupconfig($id) {
+        $this->layout = "ajax";
+        if (isset($id)) {
+            $this->set('id', $id);
+            $nas = $this->Nas->find('first', array(
+                'conditions' => array('Nas.id' => $id)));
+            if ($this->Nas->backupOneNas($nas['Nas']['nasname'], "Manual", $this->Session->read('Auth.User.username'))) {
+                $this->set('res', '1');
+            } else {
+                $this->set('res', '0');
+            }
+        }
+            /*
+        if ($this->Nas->backupAllNas("Manual", $this->Session->read('Auth.User.username'))) {
+            $this->Session->setFlash(__('Backup config succeed.'), 'flash_success');
+            Utils::userlog(__('backup config succeed'));
+            $this->redirect(array('action' => 'index'));
+        }*/
+    }
+
+    /*
+    * Download all configurations of NAS on the computer
+    */
+    public function downloadconfig() {
+        $now = new DateTime('NOW');
+        $strdate = $now->format("Y-m-d");
+        $return = shell_exec("cd /home/snack/backups.git && zip ".APP."/tmp/nasconfig-".$strdate.".zip *");
+        $this->response->file(APP."/tmp/nasconfig-".$strdate.".zip", array('download' => true, 'name' => "nasconfig-".$strdate.".zip"));
+        return $this->response;
     }
 }
 

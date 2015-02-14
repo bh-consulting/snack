@@ -16,7 +16,7 @@ echo $this->element('viewInfo', array(
 echo '<strong>';
 
 if(in_array($nas['Nas']['nasname'], $unBackupedNas)) {
-    echo '<i class="glyphicon glyphicon-warning-sign"></i> ';
+    echo '<i class="glyphicon glyphicon-warning-sign text-danger"></i> ';
 
             echo __('NOT Backuped from 7 days or more',
         	$this->Html->link(
@@ -29,7 +29,7 @@ if(in_array($nas['Nas']['nasname'], $unBackupedNas)) {
                 )
             );
 } else {
-    echo '<i class="glyphicon glyphicon-ok"></i> ';
+    echo '<i class="glyphicon glyphicon-ok text-success"></i> ';
     echo __('Backuped');
 }
 
