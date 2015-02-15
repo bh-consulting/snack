@@ -376,7 +376,21 @@ class NasController extends AppController {
         $this->response->file(APP."/tmp/nasconfig-".$strdate.".zip", array('download' => true, 'name' => "nasconfig-".$strdate.".zip"));
         return $this->response;
     }
+
+    /*
+    * Reinitalize the git repository of all configurations 
+    */
+    public function reinitconf() {
+        $this->Backup->deleteAll(array('Backup.id >' => '0'), false);
+        shell_exec("rm -rf /home/snack/backups.git/.git");
+        $return = shell_exec("cd /home/snack/backups.git && git init");
+        if(preg_match('/Reinitialized existing Git/', $return, $matches)) {
+            Utils::userlog(__('reinitialize GIT'));
+        }
+        else {
+            Utils::userlog(__('error while reinitializing GIT'), 'error');
+        }
+        $this->redirect(array('action' => 'index'));
+    }
 }
-
-
 ?>

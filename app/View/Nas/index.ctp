@@ -156,22 +156,26 @@ echo $this->element('modalImport', array(
     )
 ));
 echo '</div>';
-/*
-echo '<div id="confirmreinitconf">';
-echo $this->element('modalDelete', array(
-        'id'   => $id,
+
+echo $this->element('modalReinitgit', array(
+        'id'   => 'reinitconf',
+        'url' => array(
+            'controller' => 'Nas',
+            'action' => 'reinitconf',
+        ),
         'link' => $this->Html->link(
-            '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ' . __('Delete'),
-            '#',
+            '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ' . __('Reinitialize'),
             array(
-            'onclick' => "$('#{$model}DeleteForm input').val('$id');"
-                . "$('#{$model}DeleteForm').submit()",
+                'controller' => 'Nas',
+                'action' => 'reinitconf',
+            ),
+            array(
+            //'onclick' => "reinitconf();",
             'escape' => false,
             'class' => 'btn btn-primary btn-danger'
             )
         )
     ));
-echo '</div>';*/
 
 /*
  * Show a filter panel.

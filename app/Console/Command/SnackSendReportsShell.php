@@ -19,7 +19,6 @@ class SnackSendReportsShell extends AppShell {
             }
         }
         $this->domain = $matches[1];
-        $this->domain = "guigeek.org";
 
         if (Configure::read('Parameters.role') == "master") {
             $this->file = new File(APP.'tmp/notifications.txt', true, 0644);

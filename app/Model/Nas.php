@@ -172,12 +172,12 @@ class Nas extends AppModel {
             $backup = new Backup();
             $backup->create();
             if($backup->save($data)) {
-                return true;
                 if (!$this->updateAll(
                     array("Nas.backuptype" => "'$backuptype'"),
-                    array("Nas.nasname" => $host))) {
+                    array("Nas.nasname =" => $host))) {
                         return false;
                 }
+                return true;
             } else {
                 return false;
             }
