@@ -15,6 +15,17 @@ class SnackBackupConfigShell extends AppShell {
         $return = shell_exec("echo \$NAS_IP_ADDRESS");
         $infos = explode("\n", $return);
         $NAS_IP_ADDRESS=$infos[0];
+
+        if ( $USER_NAME != "snack" ) {
+            $user = $this->Raduser->find('first', array(
+                'fields' => array('Raduser.id', 'Raduser.username', 'Raduser.is_cisco'),
+                'conditions' => array('Raduser.username' => $USER_NAME, 'Raduser.is_cisco' => 1)
+            ));
+            if (count($user) > 0) {
+                return 0;
+            }
+        }
+
         if ($ACCT_STATUS_TYPE == "") {
             $ACCT_STATUS_TYPE = "auto";
         }
@@ -23,7 +34,7 @@ class SnackBackupConfigShell extends AppShell {
         }
         else if ($NAS_IP_ADDRESS != "127.0.0.1") {
             $this->Nas->backupAllNas($ACCT_STATUS_TYPE, "system");
-        }       
+        }
     }
 }
 ?>

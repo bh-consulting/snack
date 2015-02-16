@@ -60,6 +60,21 @@ if(AuthComponent::user('role') != 'root'){
 <h1><?php echo __('NAS'); ?></h1>
 
 <?php
+
+if ($isnaserrors) {
+    echo '<div class="alert alert-danger">';
+    echo '<center><b>';
+    echo __('Error on configuration of NAS ( ');
+    foreach ($listnaserr as $naserr) {
+        echo $naserr['Nas']['shortname']." ";
+    }
+    echo ")<br>";
+    echo '</b>';
+    echo "Login used for backup is present in radusers and so will not used for backup (loop detected)<br>";
+    echo "Please use a specific user for backup, create a snack user if not exists";
+    echo '</center></div>';
+}
+
 if(AuthComponent::user('role') == 'root'){
     echo $this->Html->link(
         '<i class="glyphicon glyphicon-hdd glyphicon glyphicon-white"></i> ' . __('Add a NAS'),
@@ -265,14 +280,15 @@ foreach ($columns as $field => $info) {
     <tbody>
 <?php
 if (!empty($nas)) {
+    $i=1;
     foreach ($nas as $n) {
-        echo '<tr>';
+        echo '<tr id="nas_'.$n['Nas']['id'].'">';
 
         foreach ($columns as $field=>$info) {
             if (isset($info['fit']) && $info['fit']) {
                 echo '<td class="fit" id="'.$field."_".$n['Nas']['id'].'">';
             } else {
-                echo '<td>';
+                echo '<td id="'.$field."_".$n['Nas']['id'].'">';
             }
 
             switch ($field) {
@@ -356,6 +372,7 @@ if (!empty($nas)) {
             echo '</td>';
         }
         echo '</tr>';
+        $i++;
     }
 } else {
 ?>

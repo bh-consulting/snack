@@ -4,7 +4,7 @@ App::import('Model', 'Backup');
 
 class NasController extends AppController {
     public $helpers = array('Html', 'Form', 'JqueryEngine');
-    public $uses = array('Nas', 'Backup');
+    public $uses = array('Nas', 'Backup', 'Raduser');
     public $paginate = array(
         'limit' => 10,
         'order' => array('Nas.id' => 'asc')
@@ -83,6 +83,25 @@ class NasController extends AppController {
     }
 
     public function index() {
+        $listNas = $this->Nas->find('all', array(
+            'fields' => array('Nas.login', 'Nas.shortname')
+        ));
+
+        $listnaserr = array();
+        $isnaserrors = false;
+        foreach ($listNas as $nas) {
+            $user = $this->Raduser->find('first', array(
+                'fields' => array('Raduser.id', 'Raduser.username', 'Raduser.is_cisco'),
+                'conditions' => array('Raduser.username' => $nas['Nas']['login'], 'Raduser.is_cisco' => 1)
+            ));
+            if (count($user) > 0) {
+                $isnaserrors = true;
+                $listnaserr[] = $nas;
+            }
+        }
+        $this->set('isnaserrors', $isnaserrors);
+        $this->set('listnaserr', $listnaserr);
+
         $this->MultipleAction->process(
             array(
                 'success' => array(
