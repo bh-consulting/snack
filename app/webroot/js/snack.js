@@ -135,34 +135,31 @@ function testslogsAD(id, pwd) {
 }
 
 function getbackup() {
-    var arrayLignes = document.getElementById("tablenas").rows;
-    var longueur = arrayLignes.length;
-    var i=2; 
-    var newURL=window.location.protocol + "//" + window.location.host;
-    var elt="";
-    //loading();
-    while(i<longueur) {
-        newURL=window.location.protocol + "//" + window.location.host;
-        newURL+="/nas/backupconfig/"+i;
-        elt="backuptype_"+i;
-        document.getElementById(elt).innerHTML = "<i class='fa fa-circle-o-notch fa-spin fa-1x'></i>";
-        $.ajax({
-            url: newURL,
-            cache: false,
-            success: function(html){
-                var res=html.split(":");
-                var id = res[0].replace(/\s+/g,"");
+    $( "tr" ).each(function( index ) {
+        if(this.id.match(/^nas_(\d+)$/)) {
+            id=this.id.replace(/nas_/, '');
+            nasname=document.getElementById("nasname_"+id).innerHTML;
+            if (nasname != "127.0.0.1") {
                 elt="backuptype_"+id;
-                if (res[1] == "1") {
-                    document.getElementById(elt).innerHTML = "<i class='fa fa-check fa-1x text-success'></i>";
-                } else {
-                    document.getElementById(elt).innerHTML = "<i class='fa fa-times fa-1x text-danger'></i>";
-                }
+                document.getElementById(elt).innerHTML = "<i class='fa fa-circle-o-notch fa-spin fa-1x'></i>";
+                newURL="nas/backupconfig/"+id;
+                $.ajax({
+                    url: newURL,
+                    cache: false,
+                    success: function(html){
+                        var res=html.split(":");
+                        var id = res[0].replace(/\s+/g,"");
+                        elt="backuptype_"+id;
+                        if (res[1] == "1") {
+                            document.getElementById(elt).innerHTML = "<i class='fa fa-check fa-1x text-success'></i>";
+                        } else {
+                            document.getElementById(elt).innerHTML = "<i class='fa fa-times fa-1x text-danger'></i>";
+                        }
+                    }
+                })
             }
-        })
-        i++;
-    }
-    //unloading();
+        }
+    });
 }
 
 function reportsexpanderror(type, id) {

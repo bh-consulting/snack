@@ -139,7 +139,7 @@ class Nas extends AppModel {
     }
 
     public function backupNas($host, $login, $password, $enablepassword, $ACCT_STATUS_TYPE, $USER_NAME) {
-        $cmd="/home/snack/scripts/backup.sh $host $login $password";
+        $cmd="/home/snack/scripts/backup.sh $host $login $password $enablepassword";
         //echo $cmd."\n";
         $return = shell_exec($cmd);
         $resu = explode("\n", $return);
