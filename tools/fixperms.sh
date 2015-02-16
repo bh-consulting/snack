@@ -98,6 +98,12 @@ chown snmp:snack $BACKUP_CREATE_SCRIPT
 chmod 0550 $BACKUP_CREATE_SCRIPT
 chown snmp:snack $BACKUP_TRAPS_SCRIPT
 chmod 0550 $BACKUP_TRAPS_SCRIPT
+chown snack:snack $USER_HOME/scripts/backup.sh
+chmod 770 $USER_HOME/scripts/backup.sh
+chown snack:snack $USER_HOME/scripts/telnet.pl
+chmod 770 $USER_HOME/scripts/telnet.pl
+chown snack:snack $USER_HOME/scripts/ssh.expect
+chmod 770 $USER_HOME/scripts/ssh.expect
 } >> $OUT 2>>$LOG
 
 {
