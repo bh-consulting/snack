@@ -95,8 +95,10 @@ class NasController extends AppController {
                 'conditions' => array('Raduser.username' => $nas['Nas']['login'], 'Raduser.is_cisco' => 1)
             ));
             if (count($user) > 0) {
-                $isnaserrors = true;
-                $listnaserr[] = $nas;
+                if ($user['Raduser']['username'] != "snack") {
+                    $isnaserrors = true;
+                    $listnaserr[] = $nas;
+                }
             }
         }
         $this->set('isnaserrors', $isnaserrors);

@@ -19,21 +19,16 @@ class SnackSendReportsShell extends AppShell {
             }
         }
         $this->domain = $matches[1];
+        $this->file = new File(APP.'tmp/notifications.txt', true, 0644);
 
         if (Configure::read('Parameters.role') == "master") {
-            $this->file = new File(APP.'tmp/notifications.txt', true, 0644);
             $date = new DateTime('23:00');
             $this->str .= "<h2>SNACK Report</h2>";
             $this->getInfos();
             $this->checkServices();
             $this->checkBackup();
             $this->checkHA();
-
-            /* check Problems*/
-            $this->strPB .= "<h2>SNACK Problems</h2>";
-            $this->checkProblem();
-
-            //$this->testUsers();
+            
             if ($date->format('H:i') == date('H:i')) {
                 $this->cleanDBSessions();
                 $this->get_failures_by_users();
@@ -49,9 +44,21 @@ class SnackSendReportsShell extends AppShell {
             }
             //echo $this->str;
             //echo $this->errors;
+        } else {
+            $datetime1 = new DateTime();
+            $str = "[".$datetime1->format('Y-m-d H:i')."] [ERR] Authentication detected on SLAVE from ";
+            $listNas = $this->Logline->get_AuthReq();
+            foreach ($listNas as $nas) {
+                $str .= $nas." ";
+            }
+            $str .= "/ CRITICAL";
+            $this->file->append($str);
         }
+        /* check Problems*/
+        $this->strPB .= "<h2>SNACK Problems</h2>";
+        $this->checkProblem();
     }
-    
+
     public function getInfos() {
         $this->str .= "<h3>Infos</h3>";
         $this->str .= "Name : ".$this->SystemDetail->getName()."<br>";

@@ -4,8 +4,8 @@ EMAIL=`grep configurationEmail /home/snack/interface/app/Config/parameters.php |
 MAILFROM=`grep smtp_email_from /home/snack/interface/app/Config/parameters.php | cut -d"'" -f4`
 PASSWORD=`grep password /home/snack/interface/app/Config/database.php | tac | tail -1 | cut -d"'" -f4`
 MAIL=/tmp/mail
-NOTIFPREC=/home/snack/interface/app/tmp/notifications.txt
-NOTIF=/home/snack/interface/app/tmp/notifications-prec.txt
+NOTIF=/home/snack/interface/app/tmp/notifications.txt
+NOTIFPREC=/home/snack/interface/app/tmp/notifications-prec.txt
 
 function check-freeradius {
     if [ -f /tmp/watchdog-freeradius ]; then

@@ -24,6 +24,15 @@ class SnackBackupConfigShell extends AppShell {
             if (count($user) > 0) {
                 return 0;
             }
+            else {
+                $radacct = $this->Radacct->find('first', array(
+                    'fields' => array('Radacct.username'),
+                    'conditions' => array('Radacct.username' => $USER_NAME, 'Radacct.nasipaddress' => $NAS_IP_ADDRESS)
+                ));
+                if (count($radacct) > 0) {
+                    return 0;
+                }
+            }
         }
 
         if ($ACCT_STATUS_TYPE == "") {

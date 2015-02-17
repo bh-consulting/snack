@@ -122,6 +122,24 @@ class Logline extends AppModel {
         return $arr;
     }
     
+    public function get_AuthReq() {
+        $listNas = array();
+        $constraints=array('facility' => 'local2', 'string' => 'Login', 'pageSize' => '100000');
+        $page=1;
+        $arr = $this->findLogs($page, $constraints);
+        $logs = $arr['loglines'];
+        foreach ($logs as $log) {
+            if (preg_match('/Login .* \(from client\s+(.*)\s+port.*\)/', $log['Logline']['msg'], $matches)) {
+                if (($matches[1] != "localhost") && ($matches[1] != "loop")) {
+                    if (!in_array($matches[1], $listNas)) {
+                        $listNas[] = $matches[1];
+                    }
+                }
+            }
+        }
+        return $listNas;
+    }
+
     public function get_failures() {
         $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
         $page=1;
@@ -354,6 +372,7 @@ class Logline extends AppModel {
     
     public function voiceTopCalled ($file) {
         //$file="snacklog";
+        $results = array();
         $return = shell_exec("grep %VOIPAAA-5-VOIP_FEAT_HISTORY ".$this->path . $file." | sort -u -t, -k7,7 | awk -F',' '{print $4}' | sort | uniq -c | sort -rn | head");
         $infos = explode("\n", $return);
         foreach ($infos as $line) {
@@ -372,6 +391,7 @@ class Logline extends AppModel {
     
     public function voiceTopCalling ($file) {
         //$file="snacklog";
+        $results = array();
         $cmd = "grep %VOIPAAA-5-VOIP_FEAT_HISTORY ".$this->path . $file." | sort -u -t, -k7,7 | awk -F',' '{print $3}' | sort | uniq -c | sort -rn | head";
         //debug($cmd);
         $return = shell_exec($cmd);
