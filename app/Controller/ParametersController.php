@@ -358,6 +358,44 @@ class ParametersController extends AppController {
             $this->request->data = $this->Parameter->read();
         }
     }
+
+    public function send_emailtest() {
+        App::uses('CakeEmail', 'Network/Email');
+        $Email = new CakeEmail();
+        if (Configure::read('Parameters.smtp_login') != '') {
+            $Email->config(array('transport' => 'Smtp',
+                'port' => Configure::read('Parameters.smtp_port'),
+                'host' => Configure::read('Parameters.smtp_ip'),
+                'username' => Configure::read('Parameters.smtp_login'),
+                'password' => Configure::read('Parameters.smtp_password')));
+        } else {
+            $Email->config(array('transport' => 'Smtp',
+                'port' => Configure::read('Parameters.smtp_port'),
+                'host' => Configure::read('Parameters.smtp_ip')));
+        }
+        $Email->emailFormat('both');
+        $Email->from(array(Configure::read('Parameters.smtp_email_from') => 'SNACK'));
+        $emails = explode(';', Configure::read('Parameters.configurationEmail'));
+        $listemails = array();
+        foreach ($emails as $email) {
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $listemails[] = $email;
+            }
+        }
+        $Email->to($listemails);
+        $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));
+        foreach ($values as $val) {
+            if (preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
+                continue;
+            }
+        }
+        $subject = "SNACK - " . $matches[1] . " - TEST";
+        $Email->subject($subject);
+        $Email->send('This is a test');
+        $this->redirect(
+                array('action' => 'index')
+        );
+    }
 }
 
 ?>

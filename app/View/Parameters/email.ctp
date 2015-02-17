@@ -7,7 +7,11 @@ $this->assign('param_email_active', 'active');
 
 <?php
 echo $this->Html->link(
-        '<i class="glyphicon glyphicon-wrench glyphicon glyphicon-white"></i> ' . __('Edit email parameters'), array('controller' => 'parameters', 'action' => 'edit_email'), array('escape' => false, 'class' => 'btn btn-primary')
+        '<i class="glyphicon glyphicon-wrench glyphicon-white"></i> ' . __('Edit email parameters'), array('controller' => 'parameters', 'action' => 'edit_email'), array('escape' => false, 'class' => 'btn btn-primary')
+);
+echo " ";
+echo $this->Html->link(
+        '<i class="glyphicon glyphicon glyphicon-send"></i> ' . __('Send email test'), array('controller' => 'parameters', 'action' => 'send_emailtest'), array('escape' => false, 'class' => 'btn btn-primary')
 );
 ?>
 
