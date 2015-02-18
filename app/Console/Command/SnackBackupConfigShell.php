@@ -33,6 +33,8 @@ class SnackBackupConfigShell extends AppShell {
                     return 0;
                 }
             }
+        } else {
+            return 0;
         }
 
         if ($ACCT_STATUS_TYPE == "") {
