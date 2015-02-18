@@ -235,8 +235,8 @@ class RadacctsController extends AppController {
 	
     public function getActive($args = array()) {
         if (!empty($args['input'])) {
-	    $data = &$this->request->data['Radacct'][$args['input']];
-
+	    //$data = &$this->request->data['Radacct'][$args['input']];
+            $data = &$this->request->query['active'];
             if (isset($data[0]) && $data[0] == 'active') {
                 return "(radacctid IN (SELECT radacctid from radacct "
                     . "where acctstoptime is NULL ))";
