@@ -92,6 +92,8 @@ fi
 echo "" > $NOTIF
 chmod 660 $NOTIF
 chown root:snack $NOTIF
+chmod 660 $NOTIFPREC
+chown root:snack $NOTIFPREC
 
 check-freeradius
 check-mysql
