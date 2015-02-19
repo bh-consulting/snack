@@ -41,20 +41,22 @@ class ParametersController extends AppController {
             $this->set($key, $value);
         }
         //debug(checkdnsrr($this->Parameter->data['Parameter']['addomain'], "A"));
-        if (checkdnsrr($this->Parameter->data['Parameter']['addomain'], "A")) {
-        //if(preg_match("/^Ping to winbindd succeeded.*/", $return, $matches)) {
-            $return = shell_exec("sudo /usr/bin/perl /home/snack/interface/tools/scriptConfigAD.pl status");
-            //debug($return);
-            if(preg_match("/^checking the trust secret for domain(.*) via RPC calls (.*)/", $return, $matches)) {
-                if ($matches[2] == "succeeded") {
-                    $this->set('adstatus', "Joined domain ".$matches[1]);
+        if (isset($this->Parameter->data['Parameter']['addomain'])) {
+            if (checkdnsrr($this->Parameter->data['Parameter']['addomain'], "A")) {
+            //if(preg_match("/^Ping to winbindd succeeded.*/", $return, $matches)) {
+                $return = shell_exec("sudo /usr/bin/perl /home/snack/interface/tools/scriptConfigAD.pl status");
+                //debug($return);
+                if(preg_match("/^checking the trust secret for domain(.*) via RPC calls (.*)/", $return, $matches)) {
+                    if ($matches[2] == "succeeded") {
+                        $this->set('adstatus', "Joined domain ".$matches[1]);
+                    }
                 }
+                else {
+                    $this->set('adstatus', $return);
+                }
+            } else {
+                $this->set('adstatus', "SERVER UNREACHABLE");
             }
-            else {
-                $this->set('adstatus', $return);
-            }
-        } else {
-            $this->set('adstatus', "SERVER UNREACHABLE");
         }
         
         //}
