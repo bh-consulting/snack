@@ -134,7 +134,27 @@ function testslogsAD(id, pwd) {
     });
 }
 
-function getbackup() {
+function getbackupid(id) {
+    elt="backuptype_"+id;
+    document.getElementById(elt).innerHTML = "<i class='fa fa-circle-o-notch fa-spin fa-1x'></i>";
+    newURL="nas/backupconfig/"+id;
+    $.ajax({
+        url: newURL,
+        cache: false,
+        success: function(html){
+            var res=html.split(":");
+            var id = res[0].replace(/\s+/g,"");
+            elt="backuptype_"+id;
+            if (res[1] == "1") {
+                document.getElementById(elt).innerHTML = "<i class='fa fa-check fa-1x text-success'></i>";
+            } else {
+                document.getElementById(elt).innerHTML = "<i class='fa fa-times fa-1x text-danger'></i>";
+            }
+        }
+    })
+}
+
+function getbackupall() {
     $( "tr" ).each(function( index ) {
         if(this.id.match(/^nas_(\d+)$/)) {
             id=this.id.replace(/nas_/, '');

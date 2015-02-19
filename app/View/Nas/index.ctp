@@ -117,7 +117,7 @@ $dropdownConfigButtonItems = array(
         '#',
         array(
             'class' => 'button',
-            'onclick' => 'getbackup()'
+            'onclick' => 'getbackupall()'
         )
     ),
     $this->Html->link(
@@ -328,6 +328,14 @@ if (!empty($nas)) {
                                 'action' => 'link',
                                 'id' => $n['Nas']['id'],
                             )
+                        );
+                        echo $this->Html->link(
+                            '<i class="glyphicon glyphicon-download-alt" data-toggle="tooltip" data-placement="top" title='.__('Backup').'></i> ',
+                            array(  
+                            ),
+                            array(
+                                'onclick' => 'getbackupid('.$n['Nas']['id'].')',
+                                'escape' => false)
                         );
                     }
                 }
