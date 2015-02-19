@@ -290,7 +290,7 @@ class SystemDetailsController extends AppController {
         $name = $infos[0];
         $Email->attachments(array(
             $name => array(
-                'file' => 'conf/' . $name,
+                'file' => APP . 'conf/' . $name,
                 'mimetype' => 'application/gzip',
                 'contentId' => '123456789'
             )
