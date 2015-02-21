@@ -95,23 +95,28 @@ class Nas extends AppModel {
         $key = Configure::read('Security.snackkey');
         $nas = $this->find('first', array(
             'conditions' => array('Nas.nasname' => $NAS_IP_ADDRESS)));
-        if ($nas['Nas']['password'] != "") {
+        if (($nas['Nas']['login'] != "") || ($nas['Nas']['password'] != "")) {
             $secret64Enc = $nas['Nas']['password'];
             $secret64Dec = base64_decode($secret64Enc);
             $password = Security::decrypt($secret64Dec,$key);
-        }
-        if ($nas['Nas']['enablepassword'] != "") {
-            $secret64Enc = $nas['Nas']['enablepassword'];
-            $secret64Dec = base64_decode($secret64Enc);
-            $enablepassword = Security::decrypt($secret64Dec,$key);
-        }
-        if ($nas['Nas']['password'] != "") {
+
+            if ($nas['Nas']['enablepassword'] != "") {
+                $secret64Enc = $nas['Nas']['enablepassword'];
+                $secret64Dec = base64_decode($secret64Enc);
+                $enablepassword = Security::decrypt($secret64Dec,$key);
+            }
+            if (($nas['Nas']['enablepassword'] == "") || ($enablepassword == "")) {
+                $enablepassword = $password;
+            }
             if ($this->backupNas($nas['Nas']['nasname'], $nas['Nas']['login'], $password, $enablepassword, $ACCT_STATUS_TYPE, $USER_NAME)) {
                 return true;
             }
             else {
                 return false;
             }
+        }
+        else {
+            return false;
         }
     }
 
@@ -129,6 +134,9 @@ class Nas extends AppModel {
                     $secret64Enc = $n['Nas']['enablepassword'];
                     $secret64Dec = base64_decode($secret64Enc);
                     $enablepassword = Security::decrypt($secret64Dec,$key);
+                }
+                if ($n['Nas']['enablepassword'] != "" && $enablepassword="") {
+                    $enablepassword = $password;
                 }
                 if ($n['Nas']['password'] != "") {
                     $this->backupNas($n['Nas']['nasname'], $n['Nas']['login'], $password, $enablepassword, $ACCT_STATUS_TYPE, $USER_NAME);
