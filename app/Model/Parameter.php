@@ -172,14 +172,7 @@ class Parameter extends AppModel {
     );
 
     public $validate = array(
-        /*'configurationEmail' => array(
-            'email' => array(
-                'rule' => 'email',
-                'message' => 'Invalid email format.',
-                'required' => true
-            )
-        ),*/
-        'errorEmail' => array(
+        'configurationEmail' => array(
             'email' => array(
                 'rule' => 'email',
                 'message' => 'Invalid email format.',

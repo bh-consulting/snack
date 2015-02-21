@@ -16,14 +16,7 @@ echo $this->Form->input('smtp_email_from', array('label' => __('SMTP Email From'
 echo $this->Form->input(
     'configurationEmail',
     array(
-        'label' => __('Configuration email'),
-        'class' => 'email',
-    )
-);
-echo $this->Form->input(
-    'errorEmail',
-    array(
-        'label' => __('Error email'),
+        'label' => __('Email destination'),
         'class' => 'email',
     )
 );

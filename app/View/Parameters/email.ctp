@@ -47,16 +47,10 @@ echo empty($smtp_ip) ? __('Not set.') : $smtp_ip;
         echo empty($smtp_email_from) ? __('Not set.') : $smtp_email_from;
         ?>
     </dd>
-    <dt><?php echo __('Configuration email'); ?></dt>
+    <dt><?php echo __('Email destination'); ?></dt>
     <dd>
         <?php
         echo empty($configurationEmail) ? __('Not set.') : $configurationEmail;
-        ?>
-    </dd>
-    <dt><?php echo __('Error email'); ?></dt>
-    <dd>
-        <?php
-        echo empty($errorEmail) ? __('Not set.') : $errorEmail;
         ?>
     </dd>
 </dl>
