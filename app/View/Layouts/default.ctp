@@ -74,7 +74,7 @@ $cakeDescription = __('SNACK');
             <?php
             echo $this->Html->image('logo.png', array('height' => '45px', 'class' => 'logo', 'alt' => 'SNACK'));
             ?>
-            <a class="navbar-brand" href=""><?php echo $cakeDescription ?></a>
+            <a class="navbar-brand" href="/"><?php echo $cakeDescription ?></a>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
@@ -143,6 +143,9 @@ $cakeDescription = __('SNACK');
                         '</li>';
                 $file = APP . 'tmp/notifications.txt';
                 $nbnotif = count(file($file))-1;
+                if ($nbnotif == -1) {
+                    $nbnotif=0;
+                }
                 if($this->Session->read('Auth.User')){
                 echo '<li>' .
                         $this->Html->link(
@@ -190,12 +193,15 @@ if (Configure::read('Parameters.role')=="slave") {
     
 </div>
 <!--<div class="container">-->
-    <div class="row bhbody">
+    <div class="bhbody">
 
     <? echo $this->fetch('content'); ?>
 
     <hr/>
-    
+    <span class="flags">
+    <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-fr', 'alt' => __('French'))), array('controller' => 'app', 'action' => 'changeLang', 'fra'), array('escape' => false)); ?>
+    <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-us', 'alt' => __('English'))), array('controller' => 'app', 'action' => 'changeLang', 'eng'), array('escape' => false)); ?>
+    </span>
 <?php
 echo $this->element('sql_dump');
 echo $this->Html->script('jquery.min');
