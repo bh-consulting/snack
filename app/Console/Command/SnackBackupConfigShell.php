@@ -15,25 +15,11 @@ class SnackBackupConfigShell extends AppShell {
         $return = shell_exec("echo \$NAS_IP_ADDRESS");
         $infos = explode("\n", $return);
         $NAS_IP_ADDRESS=$infos[0];
-
-        if ( $USER_NAME != "snack" ) {
-            $user = $this->Raduser->find('first', array(
-                'fields' => array('Raduser.id', 'Raduser.username', 'Raduser.is_cisco'),
-                'conditions' => array('Raduser.username' => $USER_NAME, 'Raduser.is_cisco' => 1)
-            ));
-            if (count($user) > 0) {
-                return 0;
-            }
-            else {
-                $radacct = $this->Radacct->find('first', array(
-                    'fields' => array('Radacct.username'),
-                    'conditions' => array('Radacct.username' => $USER_NAME, 'Radacct.nasipaddress' => $NAS_IP_ADDRESS)
-                ));
-                if (count($radacct) > 0) {
-                    return 0;
-                }
-            }
-        } else {
+        $nas = $this->Nas->find('first', array(
+            'fields' => array('Nas.nasname', 'Nas.login'),
+            'conditions' => array('Nas.nasname' => $NAS_IP_ADDRESS)
+        ));
+        if ($USER_NAME == $nas['Nas']['login']) {
             return 0;
         }
 
