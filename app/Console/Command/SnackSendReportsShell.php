@@ -46,13 +46,15 @@ class SnackSendReportsShell extends AppShell {
             //echo $this->errors;
         } else {
             $datetime1 = new DateTime();
-            $str = "[".$datetime1->format('Y-m-d H:i')."] [ERR] Authentication detected on SLAVE from ";
             $listNas = $this->Logline->get_AuthReq();
-            foreach ($listNas as $nas) {
-                $str .= $nas." ";
+            if (count($listNas)) {
+                $str = "[".$datetime1->format('Y-m-d H:i')."] [ERR] Authentication detected on SLAVE from ";
+                foreach ($listNas as $nas) {
+                    $str .= $nas." ";
+                }
+                $str .= "/ CRITICAL";
+                $this->file->append($str);
             }
-            $str .= "/ CRITICAL";
-            $this->file->append($str);
         }
         /* check Problems*/
         $this->strPB .= "<h2>SNACK Problems</h2>";
