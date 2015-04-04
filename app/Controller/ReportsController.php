@@ -7,9 +7,12 @@ class ReportsController extends AppController {
     
     public $paginate = array('maxLimit' => 10, 'limit' => 10, 'order' => array('id' => 'desc'));
     public $uses = array('Logline', 'Radacct', 'Raduser');
-    public $components = array('Mpdf.Mpdf');
+    public $components = array('Mpdf.Mpdf', 'Users');
     
     public function index() {
+    }
+
+    public function errors_reports() {
         //debug("test.txt");
         //2014-01-30 22:14:28
         
@@ -27,7 +30,42 @@ class ReportsController extends AppController {
         
     }
 
-    
+    public function sessions_reports() {
+        $users = array();
+        $usernames = $this->Radacct->query('select distinct username from radacct;');
+        $sessions = array();
+        foreach ($usernames as $username) {
+            $session = $this->Radacct->query('select * from radacct where username="'.$username['radacct']['username'].'" order by radacctid desc limit 1;');
+            $users[$session[0]['radacct']['radacctid']] =
+                $this->Users->extendUsers($username['radacct']['username']);
+            $session[0]['radacct']['duration'] = Utils::formatDate(
+                array(
+                    $session[0]['radacct']['acctstarttime'],
+                    $session[0]['radacct']['acctstoptime'],
+                ),
+                'durdisplay'
+            ); 
+
+            if(is_null($session[0]['radacct']['acctstoptime'])) {
+                $session[0]['radacct']['durationsec'] = Utils::formatDate(
+                    array(
+                    $session[0]['radacct']['acctstarttime'],
+                    $session[0]['radacct']['acctstoptime'],
+                    ),
+                    'durdisplaysec'
+                ); 
+            } else
+                $session[0]['radacct']['durationsec'] = -1;
+            $sessions[] = $session[0];
+        }
+        $sessionsbydatetime = array();
+        foreach ($sessions as $key => $value){
+            $sessionsbydatetime[] = strtotime($value['radacct']['acctstarttime']);
+        }
+        array_multisort($sessionsbydatetime, SORT_DESC, $sessions);
+        $this->set('sessions', $sessions);
+        $this->set('users', $users);
+    }
 
     public function exportpdf() {
         // initializing mPDF
