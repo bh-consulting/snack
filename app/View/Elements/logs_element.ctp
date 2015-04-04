@@ -44,11 +44,6 @@ echo $this->element('filters_panel', array(
             'options' => array('id' => 'dateto'),
         ),
         array(
-            'name' => 'host',
-            'label' => __('Host'),
-            'options' => array('host' => 'host'),
-        ),
-        array(
             'name' => 'text',
             'label' => __('Message contains (accept regex)'),
             'options' => array('id' => 'logmessage'),
@@ -62,7 +57,7 @@ echo $this->element('filters_panel', array(
 <?php
 echo "Results found : ".$nbResults;
 ?>
-<table class="table loglinks">
+<table class="table loglinks table-hover table-bordered">
     <thead>
         <tr>
 <?php

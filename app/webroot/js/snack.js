@@ -257,4 +257,131 @@ function refreshCode(){
     }
 }
 
+// SLIDER
+function applySlider(index, elt, range) {
+    var select = $(elt).parent().prev();
+    var iSelected = select.find('option')
+    .index(select.children('option[selected]'));
+
+    var value = function(v) {
+        return select.children(':nth-child(' + (v+1) + ')')
+        .attr('value');
+    };
+
+    var label = function(v) {
+        return select.children(':nth-child(' + (v+1) + ')')
+        .text();
+    };
+
+    select.hide();
+
+    var labelColor = select.children('option[selected]')
+    .attr('label-color');
+    $(elt).next()
+    .css('color', labelColor === undefined ? '#000' : labelColor);
+    $(elt).next()
+    .text( label(iSelected) );
+
+    $(elt).slider({
+        range: range,
+        value: iSelected,
+        min: 0,
+        max: select.find('option').size() - 1,
+        step: 1,
+        slide: function(event, ui) {
+            select.val( value(ui.value) );
+            $(elt).next().text( label(ui.value) );
+
+            var labelColor = select.children('option[selected]')
+            .attr('label-color');
+            $(elt).next()
+            .css('color', labelColor === undefined ? '#000' : labelColor);
+        }
+    });
+}
+
+// SLIDER MAX
+$('<div class="slider"><div></div><span></span></div>')
+.insertAfter('.slidermax');
+$('.slidermax + div :first-child').each(function(index, elt){
+    applySlider(index, elt, 'max');
+});
+
+// SLIDER MIN
+$('<div class="slider"><div></div><span></span></div>')
+.insertAfter('.slidermin');
+$('.slidermin + div :first-child').each(function(index, elt){
+    applySlider(index, elt, 'min');
+});
+
+// SELECT ROLE
+$("#role").change(function() {
+    var value = $(this).val();
+    if (value == "master") {
+        $("#ParameterMasterIp" ).prop( "readonly", true );
+        $("#ParameterMasterIp" ).val("");
+        $("#ParameterSlaveIpToMonitor" ).prop( "readonly", false );
+    }
+    if (value == "slave") {
+        $("#ParameterMasterIp" ).prop( "readonly", false );
+        $("#ParameterSlaveIpToMonitor" ).prop( "readonly", true );
+        $("#ParameterSlaveIpToMonitor" ).val("");
+    }
+});
+
+// CISCO ATTRIBUTE
+$("#RaduserCisco").change(function() {
+    var chk = $('#RaduserCisco').is(':checked');
+    if (chk) {
+        $("#RaduserNas-port-type").removeAttr("readonly");
+        $("#RaduserPrivilege").removeAttr("readonly");
+    } else {
+        //alert(chk);
+        $("#RaduserNas-port-type").attr( "readonly");
+        $("#RaduserPrivilege").attr( "readonly");
+        $("#RaduserPrivilege" ).prop( "readonly", true );
+        
+    }
+});
+
+// MAC ADDRESS ADD CISCO PHONE
+$("#RaduserIsMac").change(function() {
+    if($(this).is(":checked")) {
+        $("#RaduserPasswd").prop( "readonly", true );
+        $("#RaduserConfirmPassword").prop( "readonly", true );
+    } else {
+        $("#RaduserPasswd").prop( "readonly", false );
+        $("#RaduserConfirmPassword").prop( "readonly", false );
+    }
+});
+
+// DATETIMEPICKER
+var_date=new Date();
+str_date=var_date.getYear()+1900+"-"+var_date.getMonth()+"-"+var_date.getDate();
+$('.form_datetime').datetimepicker({
+    //language:  'fr',
+    format: "yyyy-mm-dd hh:ii:00",
+    weekStart: 1,
+    todayBtn: 1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    forceParse: 0,
+    showMeridian: 0
+});
+
+// HA LOGS
+$(".halog").click(function(event) {
+    //alert("Handler for .click() called.");
+    $.get("halog/"+this.id, function(data) {            
+        $("div.halogs").html(data);
+        //alert(data);
+    }).fail(function() {
+        alert( "error" );
+    })
+    .always(function() {
+        //alert( "finished" );
+    });
+});
+
 setInterval(function(){ refreshCode(); }, 3000)

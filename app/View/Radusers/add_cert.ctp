@@ -7,7 +7,22 @@ Configure::load('parameters');
 
 <h1><?php echo __('Add a user with a certificate'); ?></h1>
 <?php
-echo $this->Form->create('Raduser', array('novalidate' => true));
+
+$mainLabelOptions = array('class' => 'col-sm-4 control-label');
+echo $this->Form->create('Raduser', array(
+    'novalidate' => true, 
+    'autocomplete' => 'off',
+    'class' => 'form-horizontal',
+    'inputDefaults' => array(
+        'div' => 'form-group',
+        'label' => array(
+            'class' => $mainLabelOptions
+        ),
+        'between' => '<div class="col-sm-4">',
+        'after'   => '</div>',
+        'class' => 'form-control'
+    ),
+));
 
 $certificate = '<fieldset>';
 $certificate .= '<legend>' . __('Certificate') . '</legend>';
@@ -36,11 +51,11 @@ $certificate .= '</fieldset>';
 $checks = '<fieldset>';
 $checks .= '<legend>' . __('Checks') . '</legend>';
 
-$checks .= $this->Form->input(
-    'calling-station-id',
-    array('label' => __('MAC address'))
-);
+$myLabelOptions = array('text' => __('MAC address'));
+$checks .= $this->Form->input('calling-station-id', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
+
 $checks .= $this->element('check_common_fields');
+$checks .= '<div class="col-sm-2"></div>';
 $checks .= $this->element(
     'doubleListsSelector',
     array(
@@ -63,7 +78,7 @@ $checks .= $this->Form->input(
 
 $checks .= '</fieldset>';
 
-$cisco = $this->element('cisco_common_fields', array('type' => 'cert'));
+//$cisco = $this->element('cisco_common_fields', array('type' => 'cert'));
 
 $replies = '<fieldset>';
 $replies .= '<legend>' . __('Replies') . '</legend>';
@@ -74,7 +89,7 @@ $role = $this->element('snack_role_input');
 
 $finish = $this->Form->end(array(
     'label' => __('Create'),
-    'class' => 'next finish',
+    'class' => 'next finish btn btn-primary',
     'style' => 'display:none;'
 ));
 
@@ -82,7 +97,7 @@ echo $this->element('wizard', array(
     'steps' => array(
         __('Certificate') => $certificate,
         __('Checks') => $checks,
-        __('Cisco') => $cisco,
+        //__('Cisco') => $cisco,
         __('Replies') => $replies,
         __('Role') => $role,
     ),

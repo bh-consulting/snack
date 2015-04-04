@@ -6,8 +6,10 @@ $title = isset($title) ? $title : __('Import');
     <div class="modal-dialog">
         <div class="modal-content">
             <?php
+            $mainLabelOptions = array('class' => 'col-sm-4 control-label');
             echo $this->Form->create('importCsv', array('url' => $url, 'enctype' => 'multipart/form-data'));
             ?>
+            <div class="col-sm-4"></div>
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h3><?php echo $title; ?></h3>
@@ -15,7 +17,8 @@ $title = isset($title) ? $title : __('Import');
             <div class="modal-body">
                 <p>
                     <?php
-                    echo $this->Form->input('file', array('type' => 'file', 'label' => __('Please, select a file:')));
+                    $myLabelOptions = array('text' => __('Please, select a file:'));
+                    echo $this->Form->input('file', array('type' => 'file', 'label' => array_merge($mainLabelOptions, $myLabelOptions)));
                     ?>
                 </p>
             </div>

@@ -6,15 +6,12 @@ $ipAddress=Configure::read('Parameters.ipAddress');
 
 <h4><?php echo __('General information:');?></h4>
 <dl class="well dl-horizontal">
-    <dt><?php echo __('IOS < 15.x'); ?></dt>
+    <dt><?php echo __('IOS < 15.x'); ?></dt><br/>
     <pre>
 
 ip ssh pubkey-chain
 username snack
-key-string 
-<?php
-echo $sshrsa;
-?>
+key-string
 exit
 !
 aaa group server radius RadiusServers
@@ -40,15 +37,12 @@ snmp-server trap-source Vlan 1
 radius-server host <?php echo $ipAddress;?> auth-port 1812 acct-port 1813 key 0 sharedkey
     </pre>
     
-    <dt><?php echo __('IOS > 15.x'); ?></dt>
+    <dt><?php echo __('IOS > 15.x'); ?></dt><br/>
     <pre>
 
 ip ssh pubkey-chain
 username snack
 key-string 
-<?php
-echo $sshrsa;
-?>
 exit
 !
 aaa group server radius RadiusServers
@@ -79,11 +73,7 @@ radius server snack
     key 0 sharedkey
     </pre>
     
-    <dt><?php echo __('Interface Conf'); ?></dt>
-    <br>
-    <pre>
-authentication port-control auto
-    </pre>
+    <dt><?php echo __('Interface Conf'); ?></dt></br>
     <pre>
         mab
         switchport mode access
@@ -96,7 +86,8 @@ authentication port-control auto
         authentication periodic
         authentication timer inactivity server
     </pre>
-    Authentification mode :
+
+    <dt><?php echo __('Authentification mode'); ?></dt></br>
     <pre>
 authentication host-mode [multi-auth | multi-domain | multi-host | single-host]
 Allow multiple hosts (clients) on an 802.1x-authorized port : 
@@ -105,7 +96,8 @@ Allow multiple hosts (clients) on an 802.1x-authorized port :
     • multi-domain : Allow both a host and a voice device, such as an IP phone (Cisco or non-Cisco), to be authenticated on an IEEE 802.1x-authorized port.
     • multi-auth : Allow one client on the voice VLAN and multiple authenticated clients on the data VLAN. 
     </pre>
-    Violation mode :
+
+    <dt><?php echo __('Violation mode'); ?></dt></br>
     <pre>
 authentication violation shutdown | restrict | protect | replace}
 dot1x violation-mode {shutdown | restrict | protect}

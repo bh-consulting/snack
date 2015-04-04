@@ -65,12 +65,6 @@ echo $this->element('filters_panel', array(
     'controller' => 'loglines/voice_logs',
     'inputs' => array(
         array(
-            'name' => 'level',
-            'label' => __('Severity from'),
-            'type' => 'slidermax',
-            'options' => array('id' => 'severity'),
-        ),
-        array(
             'name' => 'datefrom',
             'label' => __('From'),
             'type' => 'datetimepicker',
@@ -81,11 +75,6 @@ echo $this->element('filters_panel', array(
             'label' => __('To'),
             'type' => 'datetimepicker',
             'options' => array('id' => 'dateto'),
-        ),
-        array(
-            'name' => 'host',
-            'label' => __('Host'),
-            'options' => array('host' => 'host'),
         ),
         array(
             'name' => 'text',

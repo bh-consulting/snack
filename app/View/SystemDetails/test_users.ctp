@@ -19,7 +19,7 @@ $columns = array(
 );
 ?>
 <br>
-<table class="table">
+<table class="table table-hover table-bordered">
     <thead>
         <tr>
             <?php
@@ -67,7 +67,7 @@ $columns = array(
                             if (isset($password)) {
                                 echo $this->Html->link(
                                     $key,
-                                    '#',
+                                    '#testslogs',
                                     array(
                                         'class' => 'button',
                                         'onclick' => 'testslogsAD("'.$key.'","'.$password.'");',
@@ -80,7 +80,7 @@ $columns = array(
                             } else {
                                 echo $this->Html->link(
                                     $key,
-                                    '#',
+                                    '#testslogs',
                                     array(
                                         'class' => 'button',
                                         'onclick' => 'testslogs("'.$key.'");',
@@ -100,7 +100,7 @@ $columns = array(
                                         echo $this->Html->image('phone.png', array('alt' => __('Phone'), 'title' => __('Phone')));
                                     }
                                     if ($username['raduser']['is_loginpass']) {
-                                        echo $this->Html->image('user_password.png', array('alt' => __('Login/Pwd by ActiveDirectory'), 'title' => __('Login/Pwd by ActiveDirectory')));
+                                        echo $this->Html->image('user_password.png', array('alt' => __('Login/Pwd'), 'title' => __('Login/Pwd')));
                                     }
                                     if ($username['raduser']['is_cert']) {
                                         echo $this->Html->image('certificate.png', array('alt' => __('Certificate'), 'title' => __('Certificate')));

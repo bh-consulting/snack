@@ -81,7 +81,22 @@ class LoglinesController extends AppController {
         $start = $this->start_time();
 
         $arr = $this->init();
-        $constraints=array('facility' => 'local7');
+        $listnas = $this->Logline->findNas($arr['file']);
+        $this->set('listnas', $listnas);
+        if (isset($this->passedArgs['host'])) {
+            if ($this->passedArgs['host'] != 0) {
+                $host = $listnas[$this->passedArgs['host']];
+                $constraints = array(
+                    'host' => $host
+                );
+            } else {
+                $constraints = array();
+            }
+        }
+        else {
+            $constraints = array();
+        }
+        //$constraints=array();//'facility' => 'local7');
         $this->defaultValues($arr['file'], $arr['page'], $constraints);
         
         $total_time = $this->stop_time($start);
@@ -174,7 +189,7 @@ class LoglinesController extends AppController {
         $this->redirect(array('action' => 'index'));
     }
     
-    public function chooselogfile() {
+    public function chooselogfile($page="index") {
         $home="/home/snack/logs";
         if ($this->request->is('post')) {
             if (!empty($this->request->data)) {
@@ -187,16 +202,26 @@ class LoglinesController extends AppController {
                     $file = $matches[1];
                 }
                 $this->redirect(array(
-                    'action' => 'index',
+                    'action' => $page,
                     'file' => $file,
                 ));
             }
         }
     }
     
+    public function choosenas() {
+        if ($this->request->is('post')) {
+            if (!empty($this->request->data)) {
+                $this->redirect(array(
+                    'action' => 'nas_logs',
+                    'host' => $this->request->data['Loglines']['choosenas'],
+                ));
+            }
+        }
+    }
+
     public function logelementradius($type) {
         $start = $this->start_time();
-        
         $arr = $this->init();
         if (isset($type)) {
             if ($type == "index") { 
@@ -206,7 +231,19 @@ class LoglinesController extends AppController {
                 $constraints=array('facility' => 'local4');
             }
             if ($type == "nas_logs") { 
-                $constraints=array('facility' => 'local7');
+                if (isset($this->request->params['named']['host'])) {
+                    if ($this->request->params['named']['host'] != 0) {
+                        $listnas = $this->Logline->findNas($arr['file']);
+                        $host = $listnas[$this->request->params['named']['host']];
+                        $constraints=array(
+                            'host' => $host
+                        );
+                    } else {
+                        $constraints=array();//'facility' => 'local7');
+                    }
+                } else {
+                    $constraints=array();//'facility' => 'local7');
+                }
             }
             if ($type == "voice_logs") { 
                 $pageSize =  Configure::read('Parameters.paginationCount')*2;

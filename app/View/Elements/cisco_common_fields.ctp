@@ -3,41 +3,43 @@
 echo '<fieldset>';
 echo '<legend>' . __('Cisco') . '</legend>';
 
-echo $this->Form->input(
-    'cisco',
-    array(
-	'type' => 'checkbox',
-	'label' => __('Cisco user'),
-	'class' => 'switchbtn form-control'
-    )
-);
+echo $this->Form->input('cisco', array(
+    'type' => 'checkbox',
+    'between' => '',
+    'after'   => '',
+    'class' => 'form-control', 
+    //'label' => array_merge($mainLabelOptions, $myLabelOptions),
+    'before' => '<label class="col-sm-4 control-label">'.__('Cisco user').'</label><div class="col-sm-1">',
+    'between' => '',
+    'after'   => '</div>',
+    'label' => false,
+));
 
-if($type != 'loginpass'){
-    echo $this->Form->input('passwd', array('type' => 'password',
-    	'label' => __('Password')));
-    echo $this->Form->input('confirm_password',	array('type' => 'password',
-	    'label' => __('Confirm password')));
-}
+$mainLabelOptions = array('class' => 'col-sm-4 control-label');
 
-echo $this->Form->input('nas-port-type', array(
+$myLabelOptions = array('text' => __('NAS Port Type'));
+echo  $this->Form->input('nas-port-type', array(
+    'label' => array_merge($mainLabelOptions, $myLabelOptions),
     'options' => array(
-	'Async' => __('Console'),
-	'Virtual' => __('Telnet/SSH'),
-	'both' => __('Both'),
+        'Async' => __('Console'),
+        'Virtual' => __('Telnet/SSH'),
+        'both' => __('Both'),
     ),
-    //'disabled' => true,
+    'readonly' => true,
     'empty' => false,
-    'label' => __('NAS Port Type'),
 ));
 
 $priv = array();
 for($i=1;$i<16;$i++) {
     $priv[$i]=$i;
 }
+$mainLabelOptions = array('class' => 'col-sm-4 control-label');
+$myLabelOptions = array('text' => __('Privilege'));
 echo $this->Form->input('privilege', array(
       'options' => $priv,
       'default' => '15',
-      'label' => __('Privilege'),
+      'label' => array_merge($mainLabelOptions, $myLabelOptions),
+      'readonly' => true,
   ));
 
 echo '</fieldset>';

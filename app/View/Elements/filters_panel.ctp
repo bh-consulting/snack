@@ -27,17 +27,28 @@
 	echo '<i class="glyphicon glyphicon-chevron-down"></i>';
 	echo '</div>';
 
+    $mainLabelOptions = array('class' => 'col-sm-4 control-label');
 	echo $this->Form->create(null, array(
 		'url' => $url,
 		'type' => isset($method) ? $method : 'get',
 		'id' => 'filtersForm',
-		'class' => 'well',
+		'class' => 'well form-horizontal',
+        'inputDefaults' => array(
+            'div' => 'form-group',
+            /*'label' => array(
+                'class' => $mainLabelOptions
+            ),*/
+            'between' => '<div class="col-sm-4">',
+            'after'   => '</div>',
+            'class' => 'form-control'
+        ),
 		'style' => (isset($filtersPanOpen) && $filtersPanOpen) ? 'display: block' : null
 	));
 
 	foreach ($inputs as $input) {
+        $myLabelOptions = array('text' => $input['label']);
 		$options = array(
-			'label' => $input['label'],
+			'label' => array_merge($mainLabelOptions, $myLabelOptions),
 			'class' => isset($input['type']) ? $input['type'] : null,
 			'multiple' => isset($input['multiple']) ? $input['multiple'] : false,
 			'escape' => isset($input['escape']) ? $input['escape'] : true,
@@ -58,7 +69,6 @@
 		if (isset($input['options'])) {
 			$options = array_merge($input['options'], $options);
         }
-
 		echo $this->Form->input($input['name'], $options);
 	}
     $options = array(
@@ -66,6 +76,7 @@
     'div' => array(
         'class' => 'form-group',
     ),
+    'class' => 'btn btn-primary',
     'before' => '<div class="col-sm-offset-4 col-sm-4">',
     'after' => '</div>'
     );

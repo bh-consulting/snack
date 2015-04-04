@@ -73,7 +73,7 @@ echo $this->Html->tag(
 ?>
 
 <br>
-<table class="table">
+<table class="table table-hover table-bordered">
     <thead>
         <tr>
             <?php
@@ -120,7 +120,7 @@ echo $this->Html->tag(
                         case 'name':
                             echo $this->Html->link(
                                     $file[$field],
-                                    '#',
+                                    '#halogs',
                                     array('class' => 'button halog', 
                                         'id' => $file[$field])
                                     );
@@ -218,4 +218,5 @@ echo $this->Html->tag(
 );
 unset($listlogs);
 ?>
-<div class="halogs"></div>
+<br/><br/><br/><br/>
+<div class="halogs" id="halogs"></div>

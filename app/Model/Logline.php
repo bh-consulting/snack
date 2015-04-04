@@ -41,6 +41,20 @@ class Logline extends AppModel {
 		)
 	);
     
+    public function findNas($file="snacklog") {
+        $nas = array();
+        $nas[]="All Nas";
+        $cmd = 'cat '.$this->path.$file.' | cut -d" " -f2 | sort -r | uniq';
+        $return = shell_exec($cmd);
+        $infos = explode("\n", $return);
+        foreach ($infos as $line) {
+            if ($line != "") {
+                $nas[] = $line;
+            }
+        }
+        return $nas;
+    }
+
     public function findLogs($page=-1, $options=array(), $file="snacklog") {
         $arr = array();
         $pageSize =  Configure::read('Parameters.paginationCount');
@@ -56,23 +70,29 @@ class Logline extends AppModel {
         }
         if (isset($options['priority'])) {
             if ($options['priority'] == "debug") {
-                $cmd .= "--priority debug,notice,warning,err,crit,emerg ";
+                $cmd .= "--priority debug,notice,warn,err,crit,alert,emerg ";
             }
             if ($options['priority'] == "notice") {
-                $cmd .= "--priority notice,warning,err,crit,emerg ";
+                $cmd .= "--priority notice,warn,err,crit,alert,emerg ";
             }
-            if ($options['priority'] == "warning") {
-                $cmd .= "--priority warning,err,crit,emerg ";
+            if ($options['priority'] == "warn") {
+                $cmd .= "--priority warn,err,crit,alert,emerg ";
             }
             if ($options['priority'] == "err") {
-                $cmd .= "--priority err,crit,emerg ";
+                $cmd .= "--priority err,crit,alert,emerg ";
+            }
+            if ($options['priority'] == "crit") {
+                $cmd .= "--priority crit,alert,emerg ";
+            }
+            if ($options['priority'] == "alert") {
+                $cmd .= "--priority alert,emerg ";
             }
             if ($options['priority'] == "emerg") {
                 $cmd .= "--priority emerg ";
             }
         }
         else {
-            $cmd .= "--priority info,notice,warning,err,crit,emerg ";
+            $cmd .= "--priority info,notice,warn,err,crit,emerg ";
         }
         if (isset($options['string'])) {
             if ($options['string'] != '') {
@@ -102,8 +122,8 @@ class Logline extends AppModel {
         //debug($count);
         foreach ($infos as $line) {
             if ($line != '') {
-                //debug($line);
-                if(preg_match('/(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2})\s+([^\s]+)\s+([^\s]+):\s+\[(local\d+)\.(debug|info|notice|warning|err|crit|alert|emerg)\]\s+(.*)/', $line, $matches)) {
+                if(preg_match('/(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+\d{2}:\d{2})\s+([^\s]+)\s+([^\s]+):\s+\[(.*)\.(debug|info|notice|warning|err|crit|alert|emerg)\]\s+(.*)/', $line, $matches)) {
+                    //debug($line);
                     $date = $matches[1];
                     $host = $matches[2];
                     $program = $matches[3];
@@ -225,7 +245,8 @@ class Logline extends AppModel {
         foreach ($logs as $log) {
             //echo $log['Logline']['msg'];
             if($log['Logline']['level']=="err") {
-                if(preg_match('/\d{2}:\d{2}:\d{2}\.\d{3}:\s+(%[^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
+                //if(preg_match('/\d{2}:\d{2}:\d{2}\.\d{3}:\s+(%[^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
+                if(preg_match('/\S+\s+([^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
                     $errtype = $matches[1];
                     $msg = $matches[2];
                     //echo $msg;
@@ -274,7 +295,7 @@ class Logline extends AppModel {
         foreach ($logs as $log) {
             //echo $log['Logline']['msg'];
             if($log['Logline']['level']=="warning") {
-                if(preg_match('/\d{2}:\d{2}:\d{2}\.\d{3}:\s+(%.+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
+                if(preg_match('/\S+\s+([^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
                     $errtype = $matches[1];
                     $msg = $matches[2];
                     $host = $log['Logline']['host'];

@@ -7,7 +7,7 @@ $this->assign('param_nagios_active', 'active');
 
 <?php
 echo $this->Html->link(
-        '<i class="glyphicon glyphicon-wrench glyphicon glyphicon-white"></i> ' . __('Edit email parameters'), array('controller' => 'parameters', 'action' => 'edit_nagios'), array('escape' => false, 'class' => 'btn btn-primary')
+        '<i class="glyphicon glyphicon-wrench glyphicon glyphicon-white"></i> ' . __('Edit nagios parameters'), array('controller' => 'parameters', 'action' => 'edit_nagios'), array('escape' => false, 'class' => 'btn btn-primary')
 );
 ?>
 

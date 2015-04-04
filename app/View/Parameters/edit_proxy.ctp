@@ -2,18 +2,40 @@
 $this->extend('/Common/parameters_tabs');
 $this->assign('param_proxy_active', 'active');
 
-echo $this->Form->create('Parameter', array('action' => 'edit_proxy', 'autocomplete' => 'off'));
+$mainLabelOptions = array('class' => 'col-sm-4 control-label');
+echo $this->Form->create('Parameter', array(
+    'action' => 'edit_proxy',
+    'novalidate' => true, 
+    'autocomplete' => 'off',
+    'class' => 'form-horizontal',
+    'inputDefaults' => array(
+        'div' => 'form-group',
+        'label' => array(
+            'class' => $mainLabelOptions
+        ),
+        'between' => '<div class="col-sm-4 input-group">',
+        'after'   => '</div>',
+        'class' => 'form-control'
+    ),
+));
 ?>
 
 <br>
 
 <h4><?php echo __('Proxy configuration:'); ?></h4>
 <dl class="well dl-horizontal">
-<?php 
-echo $this->Form->input('proxy_ip', array('label' => __('Proxy IP Address')));
-echo $this->Form->input('proxy_port', array('label' => __('Proxy Port')));
-echo $this->Form->input('proxy_login', array('label' => __('Proxy Login')));
-echo $this->Form->input('proxy_password', array('label' => __('Proxy Password'), 'type' => 'password', 'empty' => true));
+<?php
+$myLabelOptions = array('text' => __('Proxy IP Address'));
+echo $this->Form->input('proxy_ip', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
+$myLabelOptions = array('text' => __('Proxy Port'));
+echo $this->Form->input('proxy_port', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
+$myLabelOptions = array('text' => __('Proxy Login'));
+echo $this->Form->input('proxy_login', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
+$myLabelOptions = array('text' => __('Proxy Password'));
+echo $this->Form->input('proxy_password', array(
+    'label' => array_merge($mainLabelOptions, $myLabelOptions),
+    'type' => 'password',
+));
 ?>
 </dl>
 
@@ -23,6 +45,7 @@ $options = array(
     'div' => array(
         'class' => 'form-group',
     ),
+    'class' => 'btn btn-primary',
     'before' => '<div class="col-sm-offset-4 col-sm-4">',
     'after' => '</div>'
 );

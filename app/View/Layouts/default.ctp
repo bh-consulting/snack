@@ -202,12 +202,48 @@ if (Configure::read('Parameters.role')=="slave") {
     <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-fr', 'alt' => __('French'))), array('controller' => 'app', 'action' => 'changeLang', 'fra'), array('escape' => false)); ?>
     <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-us', 'alt' => __('English'))), array('controller' => 'app', 'action' => 'changeLang', 'eng'), array('escape' => false)); ?>
     </span>
+    <br/>
 <?php
-echo $this->element('sql_dump');
+if (Configure::read('debug')>0) {
+    ?>
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingOne">
+                <h4 class="panel-title">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">Requêtes
+                    </a>
+                </h4>
+            </div>       
+            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body">
+                    <?php pr($this->request);?>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="headingTwo">
+                <h4 class="panel-title">
+                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">SQL Dump
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                <div class="panel-body">
+                    <?php echo $this->element('sql_dump');?>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+<?php 
+}
+
+
+//echo $this->element('sql_dump');
 echo $this->Html->script('jquery.min');
 echo $this->Html->script('jquery-ui.min');
 echo $this->Html->script('bootstrap.min');
-echo $this->Html->script('bootstrapify');
+//echo $this->Html->script('bootstrapify');
 echo $this->Html->script('jquery.toggle.buttons');
 echo $this->Html->script('bootstrap-datetimepicker');
 echo $this->Html->script('bootstrap-datetimepicker.fr');

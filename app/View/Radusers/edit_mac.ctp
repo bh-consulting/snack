@@ -5,14 +5,26 @@ $this->assign('users_active', 'active');
 
 echo '<h1>' . __('Edit') . ' ' . $username . ' ' . __('(MAC user)') . '</h1>';
 
+$mainLabelOptions = array('class' => 'col-sm-4 control-label');
 echo $this->Form->create('Raduser', array(
-    'action' => 'edit_mac',
-    'novalidate' => true,
+    'novalidate' => true, 
+    'autocomplete' => 'off',
+    'class' => 'form-horizontal',
+    'inputDefaults' => array(
+        'div' => 'form-group',
+        'label' => array(
+            'class' => $mainLabelOptions
+        ),
+        'between' => '<div class="col-sm-4">',
+        'after'   => '</div>',
+        'class' => 'form-control'
+    ),
 ));
 
 $checks = '<fieldset>';
 $checks .= '<legend>' . __('Checks') . '</legend>';
 $checks .= $this->element('check_common_fields');
+$checks .= '<div class="col-sm-2"></div>';
 $checks .= $this->element('doubleListsSelector', array('leftTitle' => 'Groups', 'rightTitle' => 'Selected groups', 'contents' => $groups, 'selectedContents' => $selectedGroups));
 $checks .= $this->Form->input('groups', array('type' => 'select', 'id' => 'select-right', 'label' => '', 'class' => 'hidden', 'multiple' => 'multiple'));
 $checks .= '</fieldset>';
@@ -25,7 +37,7 @@ $replies .= '</fieldset>';
 $finish = $this->Form->input('id', array('type' => 'hidden'));
 $finish .= $this->Form->end(array(
     'label' => __('Update'),
-    'class' => 'next finish',
+    'class' => 'next finish btn btn-primary',
     'style' => 'display:none;',
 ));
 

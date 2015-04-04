@@ -230,7 +230,7 @@ echo '</strong>';
 <br />
 <br />
 
-<table class="table" id="tablenas">
+<table class="table table-hover table-bordered" id="tablenas">
     <thead>
 	    <tr>
 <?php

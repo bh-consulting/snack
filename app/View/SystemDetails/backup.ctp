@@ -66,7 +66,7 @@ echo $this->Html->tag(
 ?>
 
 <br>
-<table class="table">
+<table class="table table-hover table-bordered">
     <thead>
         <tr>
             <?php

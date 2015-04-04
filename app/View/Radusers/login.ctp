@@ -7,32 +7,44 @@
             <div class="panel-body">
                 <?php echo $this->Session->flash('role'); ?>        
                 <?php echo $this->Session->flash('auth'); ?>
-                <?php echo $this->Form->create('Raduser'); ?>
+                <?php //$mainLabelOptions = array('class' => 'col-sm-4 control-label');
+                echo $this->Form->create('Raduser', array(
+                    'action' => 'login',
+                    'novalidate' => true, 
+                    'autocomplete' => 'off',
+                    'inputDefaults' => array(
+                        'div' => 'form-group',
+                        'between' => '<div class="input text">',
+                        'after'   => '</div>',
+                        'class' => 'form-control'
+                    ),
+                )); 
+                ?>
 
                 <fieldset>
                     <legend>
                     </legend>
                     <?
                     echo $this->Form->input(
-                    'username',
-                    array(
-                    'placeholder' => __('Username'),
-                    'label' => false,
-                    'class' => 'form-control',
-                    'id' => 'username_login',
-                    'autocomplete' => 'off',
-                    'autofocus'
-                    )
+                        'username',
+                        array(
+                        'placeholder' => __('Username'),
+                        'label' => false,
+                        'class' => 'form-control',
+                        'id' => 'username_login',
+                        //'autocomplete' => 'off',
+                        'autofocus'
+                        )
                     );
                     echo $this->Form->input(
-                    'passwd',
-                    array(
-                    'placeholder' => __('Password'),
-                    'label' => false,
-                    'class' => 'form-control',
-                    'id' => 'password_login',
-                    'autocomplete' => 'off',
-                    )
+                        'passwd',
+                        array(
+                        'placeholder' => __('Password'),
+                        'label' => false,
+                        //'class' => 'form-control',
+                        'id' => 'password_login',
+                        //'autocomplete' => 'off',
+                        )
                     );
                     ?>
                 </fieldset>

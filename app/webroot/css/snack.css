@@ -473,3 +473,37 @@ body {
 .reports-msg {
     display: none;
 }
+
+input[type="checkbox"] {
+    margin: 0px 10px 0px 0px;
+}
+
+.label-inline {
+    margin-left: 25px;
+    margin-right: 25px;
+}
+
+/* Filters */
+#RadacctExpiredExpired {
+    margin-top: 10px;
+}
+
+#RadacctAuthtypeIsCisco {
+    margin-top: 10px;
+}
+
+#RadacctRolefilterUser {
+    margin-top: 10px;
+}
+
+#RadgroupExpiredExpired {
+    margin-top: 10px;
+}
+
+#RadacctActiveActive {
+    margin-top: 10px;
+}
+
+#RadacctDisctintusernameDisctintusername {
+    margin-top: 10px;
+}

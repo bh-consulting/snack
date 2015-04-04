@@ -233,6 +233,8 @@ if (!empty($radaccts)) {
                     echo $this->Html->image('cisco.png', array('alt' => __('Cisco'), 'title' => __('Cisco')));
                 if ($users[$acct['Radacct']['radacctid']][0]['is_loginpass'] == 1)
                     echo $this->Html->image('user_password.png', array('alt' => __('Login/Pwd'), 'title' => __('Login/Pwd')));
+                if ($users[$acct['Radacct']['radacctid']][0]['is_windowsad'] == 1)
+                    echo $this->Html->image('windows.png', array('alt' => __('Login/Pwd by ActiveDirectory'), 'title' => __('Login/Pwd by ActiveDirectory')));
                 if ($users[$acct['Radacct']['radacctid']][0]['is_phone'] == 1)
                     echo $this->Html->image('phone.png', array('alt' => __('Phone'), 'title' => __('Phone')));
                 if ($users[$acct['Radacct']['radacctid']][0]['is_cert'] == 1)

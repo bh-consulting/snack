@@ -125,7 +125,7 @@ if(AuthComponent::user('role') == 'root'){
 
 echo $this->element('MultipleAction', array('action' => 'start'));
 ?>
-<table class="table">
+<table class="table table-hover table-bordered">
     <thead>
 	<tr>
 <?php

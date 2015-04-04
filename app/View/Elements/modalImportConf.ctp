@@ -6,7 +6,22 @@ $title = isset($title) ? $title : __('Import');
     <div class="modal-dialog">
         <div class="modal-content">
             <?php
-            echo $this->Form->create('importConf', array('url' => $url, 'enctype' => 'multipart/form-data'));
+            $mainLabelOptions = array('class' => 'col-sm-4 control-label');
+            echo $this->Form->create('importConf', array(
+                'url' => $url,
+                'enctype' => 'multipart/form-data',
+                'class' => 'form-horizontal',
+                'inputDefaults' => array(
+                    'div' => 'form-group',
+                    'label' => array(
+                        'class' => $mainLabelOptions
+                    ),
+                    'between' => '<div class="col-sm-8">',
+                    'after'   => '</div>',
+                    'class' => 'form-control'
+                ),
+            ));
+            //echo $this->Form->create('importConf', array('url' => $url, 'enctype' => 'multipart/form-data'));
             ?>
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -15,7 +30,20 @@ $title = isset($title) ? $title : __('Import');
             <div class="modal-body">
                 <p>
                     <?php
-                    echo $this->Form->input('file', array('type' => 'file', 'label' => __('Please, select a file:')));
+                    $myLabelOptions = array('text' => __('Please, select a file:'));
+                    echo $this->Form->input('file', array('type' => 'file', 'label' => array_merge($mainLabelOptions, $myLabelOptions)));
+
+                    echo $this->Form->input('force', array(
+                        'type' => 'checkbox',
+                        'between' => '',
+                        'after'   => '',
+                        //'class' => 'form-control', 
+                        //'label' => array_merge($mainLabelOptions, $myLabelOptions),
+                        'before' => '<label class="col-sm-4 control-label">'.__('Force import').'</label><div class="col-sm-1">',
+                        'between' => '',
+                        'after'   => '</div>',
+                        'label' => false,
+                    ));
                     ?>
                 </p>
             </div>

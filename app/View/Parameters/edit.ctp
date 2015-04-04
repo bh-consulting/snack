@@ -4,19 +4,31 @@ $this->assign('radius_active', 'active');
 $this->assign('param_active', 'active');
 
 echo '<h1>' . __('Edit server parameters') . '</h1>';
-
-echo $this->Form->create('Parameter', array('action' => 'edit', 'autocomplete' => 'off'));
+$mainLabelOptions = array('class' => 'col-sm-4 control-label');
+echo $this->Form->create('Parameter', array(
+    'action' => 'edit',
+    'novalidate' => true, 
+    'autocomplete' => 'off',
+    'class' => 'form-horizontal',
+    'inputDefaults' => array(
+        'div' => 'form-group',
+        'label' => array(
+            'class' => $mainLabelOptions
+        ),
+        'between' => '<div class="col-sm-4">',
+        'after'   => '</div>',
+        'class' => 'form-control'
+    ),
+    'class' => 'form-horizontal'
+));
 ?>
 
 <h4><?php echo __('General information:'); ?></h4>
 <dl class="well dl-horizontal">
 <?php
-echo $this->Form->input(
-    'ipAddress',
-    array(
-        'label' => __('Server IP'),
-    )
-);
+$myLabelOptions = array('text' => __('Server IP'));
+echo $this->Form->input('ipAddress', array('ipAddress' => array_merge($mainLabelOptions, $myLabelOptions)));
+
 echo $this->Form->input(
     'scriptsPath',
     array(

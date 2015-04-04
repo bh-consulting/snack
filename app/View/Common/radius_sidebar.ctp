@@ -117,14 +117,14 @@ echo $this->Html->link(
 ?>
     </li>
     </ul>
-        
+</div>        
 <!--<div id="content" class="col-sm-9 col-sm-offset-1 col-md-10 col-md-offset-1 main content">-->
 <div id="content" class="main content">
     <?php } ?>
 <?php echo $this->Session->flash(); ?>
 <?php echo $this->fetch('content'); ?>
 <?php
-if(AuthComponent::user('role') != 'tech'){
-    echo '</div>';
-}
+/*if(AuthComponent::user('role') != 'tech'){
+    //echo '</div>';
+}*/
 ?>

@@ -59,7 +59,7 @@ else {
 echo "Results found : ".$nbResults;
 ?>
 
-<table class="table loglinks">
+<table class="table loglinks table-hover table-bordered">
     <thead>
         <tr>
             <?php

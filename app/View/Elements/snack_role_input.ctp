@@ -2,8 +2,10 @@
 
 echo '<fieldset>';
 echo '<legend>' . __('Snack rights') . '</legend>';
+$mainLabelOptions = array('class' => 'col-sm-4 control-label');
+$myLabelOptions = array('text' => __('Role'));
 echo $this->Form->input('role', array(
-    'label' => __('Role'),
+    'label' => array_merge($mainLabelOptions, $myLabelOptions),
     'class' => 'slidermin',
 ));
 

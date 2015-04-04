@@ -9,20 +9,32 @@ $this->assign('logs_active', 'active');
 $dir = new Folder('/home/snack/logs');
 $files = $dir->find('snacklog.*');
 sort($files);
-echo $this->Form->create('Loglines', array('action' => 'chooselogfile'));
-echo $this->Form->input('chooselogfile', array(
+$mainLabelOptions = array('class' => 'label-inline  control-label');
+echo $this->Form->create('Loglines', array(
+    'action' => 'chooselogfile/'.$this->request['action'],
+    'novalidate' => true, 
+    'autocomplete' => 'off',
+    'class' => 'form-inline',
+    'inputDefaults' => array(
+        'div' => 'form-group',
+        'class' => 'form-control'
+    ),
+));
+//echo $this->Form->create('Loglines', array('action' => 'chooselogfile'));
+$myLabelOptions = array('text' => __('Log file'));
+echo  $this->Form->input('chooselogfile', array(
+    'label' => array_merge($mainLabelOptions, $myLabelOptions),
     'options' => $files,
-    //'disabled' => true,
-    'empty' => false,
     'selected' => array_search($file, $files),
-    'label' => __('Log file'),
-    ));
+    'empty' => false,
+));
 $options = array(
     'label' => __('Update'),
     'div' => array(
         'class' => 'form-group',
     ),
-    'before' => '<div class="col-sm-offset-4 col-sm-4">',
+    'class' => 'btn btn-primary',
+    'before' => '<div class="col-sm-offset-1 col-sm-2">',
     'after' => '</div>'
 );
 echo $this->Form->end($options);

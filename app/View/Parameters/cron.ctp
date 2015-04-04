@@ -7,11 +7,10 @@ $this->assign('param_cron_active', 'active');
 <table>
     
 <?php
-echo $this->Html->tableHeaders(
-    array('Script', 'Frequence', 'Actions'),
-    array('class' => 'table table-striped table-condensed'),
-    array('class' => '')
-);
+echo '<table class="table table-striped">';
+echo '<th>Script</th>';
+echo '<th>Frequence</th>';
+echo '<th>Actions</th>';
 $infos = explode("\n", $listcron);
 //debug($infos);
 foreach ($infos as $ligne) {
