@@ -215,13 +215,13 @@ class Parameter extends AppModel {
 			'rule' => 'numeric',
             'message' => 'The smtp port must be a number.'
         ),
-        'smtp_email_from' => array(
+        /*'smtp_email_from' => array(
             'email' => array(
                 'rule' => 'email',
                 'message' => 'Invalid email format.',
                 'required' => true
             )
-        ),
+        ),*/
         'proxy_ip' => array(
 			'ipFormat' => array(
 				'rule' => 'isIPFormat',
