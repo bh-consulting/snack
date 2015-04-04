@@ -1111,6 +1111,8 @@ class RadusersController extends AppController {
             try {
                 if ($this->request->data['Raduser']['is_mac'] == 1) {
                     $username = Utils::cleanMAC($this->request->data['Raduser']['username']);
+                    $this->request->data['Raduser']['passwd'] = $username;
+                    $this->request->data['Raduser']['confirm_password'] = $username;
                 } else {
                     $username = $this->request->data['Raduser']['username'];
                 }
