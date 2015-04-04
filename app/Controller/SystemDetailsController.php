@@ -176,7 +176,11 @@ class SystemDetailsController extends AppController {
                     //debug("test");
                     //$cmd = "sudo /home/snack/interface/tools/scriptSnackImport.sh ".APP."webroot/conf/".$path;
                     //exec($cmd , $ouput, $err);
-                    $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackImport.sh ".$uploadfile);
+                    if ($this->request->data['importConf']['force'] == "1") {
+                        $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackImport.sh --file ".$uploadfile." --force");
+                    } else {
+                        $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackImport.sh --file ".$uploadfile);
+                    }
                     debug($return);
                     $file = new File('/tmp/log-import', false, 0644);
                     $tmp="";
@@ -356,11 +360,13 @@ class SystemDetailsController extends AppController {
                 }
                 if (preg_match('/IP:([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/', $tmp, $matches)) {
                     $ip = $matches[1];
-                }                
-                if ($rsync == 0 && $mysql == 0 && $res_versions == 0) {
-                    $file_list[] = array('name' => $files[$index + $i], 'results' => 0, 'slave' => $ip);
-                } else {
-                    $file_list[] = array('name' => $files[$index + $i], 'results' => 1, 'slave' => $ip);
+                }
+                if (isset($ip) && isset($files)) {                
+                    if ($rsync == 0 && $mysql == 0 && $res_versions == 0) {
+                        $file_list[] = array('name' => $files[$index + $i], 'results' => 0, 'slave' => $ip);
+                    } else {
+                        $file_list[] = array('name' => $files[$index + $i], 'results' => 1, 'slave' => $ip);
+                    }
                 }
             }     
         }

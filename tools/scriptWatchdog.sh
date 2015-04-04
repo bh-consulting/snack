@@ -86,6 +86,13 @@ function check-disk-used {
     fi
 }
 
+SYNC=/tmp/snacksync.lock
+while [ -f $SYNC ]
+do
+    echo "Synchro en cours ... en attente"
+    sleep 5
+done
+touch $SYNC
 if [ -f $NOTIF ]; then
     cp $NOTIF $NOTIFPREC
 fi
@@ -101,3 +108,4 @@ check-apache
 check-disk-used 
 /home/snack/interface/tools/scriptProvAD.sh >> $NOTIF
 sudo -u www-data  /home/snack/interface/app/Console/cake SnackSendReports
+rm $SYNC

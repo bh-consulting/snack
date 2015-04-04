@@ -1,5 +1,11 @@
 #!/bin/bash
-
+SYNC=/tmp/snacksync.lock
+while [ -f $SYNC ]
+do
+    echo "Synchro en cours ... en attente"
+    sleep 5
+done
+touch $SYNC
 LOG=ha-`TZ='Europe/Paris' date "+%Y-%m-%d_%H-%M"`.log
 USER_HOME=/home/snack
 ROLE=`grep role $USER_HOME/interface/app/Config/parameters.php | cut -d"'" -f4`
@@ -9,7 +15,7 @@ if [ "$ROLE" == 'slave' ]; then
     NAME=`ssh root@$MASTER $USER_HOME/interface/tools/scriptSnackExport.sh`
     scp root@$MASTER:/home/snack/interface/app/conf/$NAME /tmp
     ssh root@$MASTER rm /home/snack/interface/app/conf/$NAME
-    sudo /home/snack/interface/tools/scriptSnackImport.sh /tmp/$NAME
+    sudo /home/snack/interface/tools/scriptSnackImport.sh --file /tmp/$NAME
     rm -f /tmp/$NAME
     #rm -f /tmp/log
     sed \
@@ -26,3 +32,4 @@ if [ "$ROLE" == 'slave' ]; then
     scp /tmp/$LOG root@$MASTER:$USER_HOME/interface/app/tmp/ha
     rm /tmp/$LOG
 fi
+rm $SYNC
