@@ -19,10 +19,11 @@ class SnackBackupConfigShell extends AppShell {
             'fields' => array('Nas.nasname', 'Nas.login'),
             'conditions' => array('Nas.nasname' => $NAS_IP_ADDRESS)
         ));
-        if ($USER_NAME == $nas['Nas']['login']) {
-            return 0;
+        if (count($nas) > 0) {
+            if ($USER_NAME == $nas['Nas']['login']) {
+                return 0;
+            }
         }
-
         if ($ACCT_STATUS_TYPE == "") {
             $ACCT_STATUS_TYPE = "auto";
         }

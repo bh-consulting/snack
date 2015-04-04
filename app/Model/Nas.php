@@ -135,7 +135,7 @@ class Nas extends AppModel {
                     $secret64Dec = base64_decode($secret64Enc);
                     $enablepassword = Security::decrypt($secret64Dec,$key);
                 }
-                if ($n['Nas']['enablepassword'] != "" && $enablepassword="") {
+                if (($n['Nas']['enablepassword'] == "") || ($enablepassword == "")) {
                     $enablepassword = $password;
                 }
                 if ($n['Nas']['password'] != "") {
