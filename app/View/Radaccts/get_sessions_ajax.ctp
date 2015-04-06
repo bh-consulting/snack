@@ -75,7 +75,7 @@ foreach ($columns as $field => $info) {
 
         echo $this->Paginator->sort(
             $field,
-            $info['text'] . $field' '. $sort,
+            $info['text'] . ' '. $sort,
             array(
                 'escape' => false,
                 'url' => array('page' => 1),
