@@ -44,13 +44,22 @@ $myLabelOptions = array('text' => __('Password'));
 echo $this->Form->input('password', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
 
 $myLabelOptions = array('text' => __('Confirm Password'));
-echo $this->Form->input('confirm_password', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
+echo $this->Form->input('confirm_password', array(
+    'label' => array_merge($mainLabelOptions, $myLabelOptions),
+    'type' => 'password'
+));
 
 $myLabelOptions = array('text' => __('Enable Password'));
-echo $this->Form->input('enablepassword', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
+echo $this->Form->input('enablepassword', array(
+    'label' => array_merge($mainLabelOptions, $myLabelOptions),
+    'type' => 'password'
+));
 
 $myLabelOptions = array('text' => __('Confirm Enable Password'));
-echo $this->Form->input('confirm_enablepassword', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
+echo $this->Form->input('confirm_enablepassword', array(
+    'label' => array_merge($mainLabelOptions, $myLabelOptions),
+    'type' => 'password'
+));
 
 
 
