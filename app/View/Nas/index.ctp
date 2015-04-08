@@ -344,9 +344,9 @@ if (!empty($nas)) {
                 if(AuthComponent::user('role') == 'root'){
                     if ($n['Nas']['nasname'] != "127.0.0.1") {
                         if (in_array($n['Nas']['nasname'], $unBackupedNas)) {
-                            echo '<i class="glyphicon glyphicon-warning-sign glyphicon text-danger" title="' . __('NOT Backuped since 7 days.') . '"></i> ';
+                            echo '<i class="glyphicon glyphicon-warning-sign glyphicon text-danger" title="' . $lastBackupNas[$n['Nas']['nasname']] . '"> ';
                         } else {
-                            echo '<i class="glyphicon glyphicon-ok glyphicon text-success" title="' . __('Backuped.') . '"></i> ';
+                            echo '<i class="glyphicon glyphicon-ok glyphicon text-success" title="' . $lastBackupNas[$n['Nas']['nasname']] . '"> ';
                         }
                         echo $this->Html->link(
                             __('Backups'),
@@ -356,6 +356,7 @@ if (!empty($nas)) {
                                 $n['Nas']['id'],
                             )
                         );
+                        echo "</i>";
                     }
                 }
                 break;

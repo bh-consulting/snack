@@ -41,6 +41,19 @@ class Backup extends AppModel {
             return false;
         }
     }
+
+    public function dateOfLastBackup($nasname) {
+        $backup = $this->find('all', array(
+            'conditions' => array('Backup.nas =' => $nasname),
+            'order' => array('id' => 'desc'),
+            'limit' => 1
+        ));
+        if (count($backup) > 0) {
+            return $backup[0]['Backup']['datetime'];
+        } else {
+            return 0;
+        }
+    }
 }
 
 ?>

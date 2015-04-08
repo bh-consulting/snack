@@ -82,6 +82,17 @@ class NasController extends AppController {
         return $unBackupedNas;
     }
 
+    public function getLastBackupNas() {
+        $allnas = $this->Nas->find('all');
+        $lastBackup = array();
+        foreach ($allnas as $nas) {
+            if ($nas['Nas']['nasname'] != "127.0.0.1") {
+                $lastBackup[$nas['Nas']['nasname']] = $this->Backup->dateOfLastBackup($nas['Nas']['nasname']);
+            }
+        }
+        return $lastBackup;
+    }
+
     public function index() {
         $listNas = $this->Nas->find('all', array(
             'fields' => array('Nas.login', 'Nas.shortname')
@@ -151,6 +162,7 @@ class NasController extends AppController {
         $this->Filters->paginate('nas');
 
         $this->set('unBackupedNas', $this->getunBackupedNas());
+        $this->set('lastBackupNas', $this->getLastBackupNas());
     }
 
     public function view($id = null) {
