@@ -96,6 +96,7 @@ class LoglinesController extends AppController {
         else {
             $constraints = array();
         }
+
         //$constraints=array();//'facility' => 'local7');
         $this->defaultValues($arr['file'], $arr['page'], $constraints);
         
@@ -201,19 +202,27 @@ class LoglinesController extends AppController {
                     system("cd ".$home." && tar jxvf ".$file);
                     $file = $matches[1];
                 }
-                $this->redirect(array(
-                    'action' => $page,
-                    'file' => $file,
-                ));
+                if (isset($this->nas)) {
+                    $this->redirect(array(
+                        'action' => $page,
+                        'file' => $file,
+                    ));
+                } else {
+                    $this->redirect(array(
+                        'action' => $page,
+                        'file' => $file,
+                    ));
+                }
             }
         }
     }
     
-    public function choosenas() {
+    public function choosenas($file="snacklog") {
         if ($this->request->is('post')) {
             if (!empty($this->request->data)) {
                 $this->redirect(array(
                     'action' => 'nas_logs',
+                    'file' => $file,
                     'host' => $this->request->data['Loglines']['choosenas'],
                 ));
             }

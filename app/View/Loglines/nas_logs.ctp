@@ -1,12 +1,18 @@
 <?php
 $this->extend('/Common/logs_tabs');
 $this->assign('naslogs_active', 'active');
+//$this->passedArgs['file']
 
 if (count($listnas)>1) {
     echo "<br/>";
     $mainLabelOptions = array('class' => 'label-inline control-label');
+    if (isset($this->passedArgs['file'])) {
+        $action = 'choosenas/'.$this->passedArgs['file'];
+    } else {
+        $action = 'choosenas';
+    }
     echo $this->Form->create('Loglines', array(
-        'action' => 'choosenas',
+        'action' => $action,
         'novalidate' => true, 
         'autocomplete' => 'off',
         'class' => 'form-inline',
