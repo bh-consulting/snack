@@ -176,7 +176,7 @@ class Parameter extends AppModel {
             'email' => array(
                 'rule' => 'email',
                 'message' => 'Invalid email format.',
-                'required' => true
+                'allowEmpty' => true,
             )
         ),
         'ipAddress' => array(
@@ -208,7 +208,7 @@ class Parameter extends AppModel {
 			'ipFormat' => array(
 				'rule' => 'isIPFormat',
 				'message' => 'This is not an IP address format.',
-                'required' => true
+                'allowEmpty' => true,
             )
         ),
         'smtp_port' => array(

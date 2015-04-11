@@ -51,6 +51,7 @@ echo $this->Form->create('Parameter', array(
     $myLabelOptions = array('text' => __('Admin Password'));
     echo $this->Form->input('adminpassword', array(
         'label' => array_merge($mainLabelOptions, $myLabelOptions),
+        'type' => 'password',
     ));
 ?>
 </dl>
