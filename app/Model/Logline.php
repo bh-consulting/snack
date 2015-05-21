@@ -44,101 +44,146 @@ class Logline extends AppModel {
     public function findNas($file="snacklog") {
         $nas = array();
         $nas[]="All Nas";
-        $cmd = 'cat '.$this->path.$file.' | cut -d" " -f2 | sort -r | uniq';
-        $return = shell_exec($cmd);
-        $infos = explode("\n", $return);
-        foreach ($infos as $line) {
-            if ($line != "") {
-                $nas[] = $line;
-            }
+        $data = array();
+        $data["aggs"] = array( "hosts" => array("terms" => array(
+            "field" => "host",
+            "order" => array("_count" => "asc")
+        )));
+        $data_string = json_encode($data, TRUE);
+        $url = 'http://localhost:9200/_search?search_type=count';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);                                                                   
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);  
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        $data_decode = json_decode($data, true);
+        foreach ($data_decode["aggregations"]["hosts"]["buckets"] as $data) {
+            $nas[] = $data['key'];
         }
         return $nas;
     }
 
-    public function findLogs($page=-1, $options=array(), $file="snacklog") {
+    public function findLogs($page=-1, $options=array()) {
         $arr = array();
-        $pageSize =  Configure::read('Parameters.paginationCount');
+        $levels = array_keys($this->levels);
+        if (isset($options['pageSize'])) {
+            $pageSize = $options['pageSize'];
+        } else {
+            $pageSize =  Configure::read('Parameters.paginationCount');
+        }
         $loglines = array();
         $log = array();
         if (isset($options['pageSize'])) {
             $pageSize = $options['pageSize'];
         }
-        
-        $cmd = "/home/snack/interface/tools/scriptLogs.sh -f " . $this->path . $file . " -n " . $pageSize . " --page " . $page . " ";
+        /*$data = array("query" => array( "bool" => array( "must" => array( array("wildcard" => array("fluentd.severity" => "err"))), "must_not" => array(), "should" => array())), 
+                                "from" => 0, 
+                                "size" => 10, 
+                                "sort" => array(), 
+                                "facets" => new \stdClass(),
+        );
+        $data = array("query" => array( "bool" => array( "must" => array(), "must_not" => array(), "should" => array())), 
+                      "from" => 0, 
+                      "size" => $pageSize, 
+                      "sort" => array(), 
+                      "facets" => new \stdClass(),
+        );*/
+        $arrmustnot = array();
+        $arrmust = array();
+        //debug($options);
         if (isset($options['facility'])) {
-            $cmd .= "--facility " . $options['facility'] . " ";
+            $arrmust[] = array("wildcard" => array("fluentd.facility" => $options['facility']));
         }
-        if (isset($options['priority'])) {
-            if ($options['priority'] == "debug") {
-                $cmd .= "--priority debug,notice,warn,err,crit,alert,emerg ";
-            }
-            if ($options['priority'] == "notice") {
-                $cmd .= "--priority notice,warn,err,crit,alert,emerg ";
-            }
-            if ($options['priority'] == "warn") {
-                $cmd .= "--priority warn,err,crit,alert,emerg ";
-            }
-            if ($options['priority'] == "err") {
-                $cmd .= "--priority err,crit,alert,emerg ";
-            }
-            if ($options['priority'] == "crit") {
-                $cmd .= "--priority crit,alert,emerg ";
-            }
-            if ($options['priority'] == "alert") {
-                $cmd .= "--priority alert,emerg ";
-            }
-            if ($options['priority'] == "emerg") {
-                $cmd .= "--priority emerg ";
-            }
-        }
-        else {
-            $cmd .= "--priority info,notice,warn,err,crit,emerg ";
-        }
-        if (isset($options['string'])) {
-            if ($options['string'] != '') {
-                $cmd .= "--string '" . $options['string'] . "' ";
-            }
-        }
-        if (isset($options['host'])) {
-            if ($options['host'] != '') {
-                $cmd .= "--host " . $options['host'] . " ";
-            }
-        }
-        if (isset($options['datefrom']) && isset($options['dateto'])) {
-            if ($options['datefrom'] != '' && $options['dateto'] != '') {
-                $cmd .= "--between-dates " . $options['datefrom'] . "/" . $options['dateto'] . " ";
-            }
-        }
-        if (isset($options['type'])) {
-            if ($options['type'] == 'voip') {
-                $cmd .= "--voip ";
-            }
-        }
-        $return = shell_exec($cmd);
-        debug($cmd);
-        //debug($return);
-        $infos = explode("\n", $return);
-        $arr['count'] = $infos[0];
-        //debug($count);
-        foreach ($infos as $line) {
-            if ($line != '') {
-                if(preg_match('/(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[\+\d{2}:\d{2}]*)\s+([^\s]+)\s+([^\s]+):*\s+\[(.*)\.(debug|info|notice|warning|err|crit|alert|emerg)\]\s+(.*)/', $line, $matches)) {
-                    //debug($line);
-                    $date = $matches[1];
-                    $host = $matches[2];
-                    $program = $matches[3];
-                    $facility = $matches[4];
-                    $priority = $matches[5];
-                    $msg = $matches[6];
-                    $log['Logline']['level'] = $priority;
-                    $log['Logline']['datetime'] = $date;
-                    $log['Logline']['host'] = $host;
-                    $log['Logline']['msg'] = $msg;
-                    $loglines[] = $log;
+        if (isset($options['severity'])) {
+            $arrmust[] = array("wildcard" => array("fluentd.severity" => $options['severity']));
+        } else {
+            if (isset($options['priority'])) {
+                foreach($levels as $level) {
+                    $arrmustnot[] = array("wildcard" => array("fluentd.severity" => $level));
+                    if ($level == $options['priority']) {
+                        break;
+                    }
                 }
             }
         }
+        if (isset($options['host'])) {
+            $arrmust[] = array("wildcard" => array("fluentd.host" => $options['host']));
+        }
+        if (isset($options['type'])) {
+            if ($options['type'] == "voip") {
+                $arrmust[] = array("query_string" => array("default_field" => "fluentd.message",
+                                                         "query" => "*CALL_HISTORY")
+                );
+            }
+        }
+        /*if (isset($options['string'])) {
+            $arrmust[] = array("query_string" => array("default_field" => "fluentd.message",
+                                                         "query" => "*".$options['string']."*")
+            );
+        }*/
+        if (isset($options['string'])) {
+            //$arrmust[] = array("query_string" => array("default_field" => "fluentd.message",
+                                                      //   "query" => $options['string'])
+            $arrmust[] = array("match_phrase_prefix" => array("fluentd.message" => $options['string']));
+        }
+        if (isset($options['datefrom']) && isset($options['dateto'])) {
+            $arrmust[] = array("range" => array("fluentd.@timestamp" => array("from" => $options['datefrom'], "to" => $options['dateto'])));
+        }
+        
+        $from = ($page-1)*$pageSize;
+        /*$data = array("query" => array( "bool" => array( "must" => isset($arrmust) ? array($arrmust) : array(), "must_not" => array(), "should" => array())), 
+                      "from" => 0, 
+                      "size" => $pageSize, 
+                      "sort" => array(array("@timestamp" => array("order" => "desc"))), 
+                      "facets" => new \stdClass(),
+        );*/
+        $data = array();
+        $data["query"] = array( "bool" => array( "must" => $arrmust, "must_not" => $arrmustnot, "should" => array()));
+        $data["from"] = $from;
+        $data["size"] = $pageSize;
+        $data["sort"] = array(array("@timestamp" => array("order" => "desc")));
+        $data["facets"] = new \stdClass();
+        /*$data = array("query" => array( "bool" => array( "must" => $arrmust, "must_not" => $arrmustnot, "should" => array())), 
+                      "from" => $from, 
+                      "size" => $pageSize, 
+                      "sort" => array(array("@timestamp" => array("order" => "desc"))), 
+                      "facets" => new \stdClass(),
+        );*/
+        //debug($data);
+        //isset($input['escape']) ? $input['escape'] : true,
+        $data_string = json_encode($data, TRUE);
+        //debug($data_string);
+        $url = 'http://localhost:9200/_search';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        //curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);  
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        //echo $data;
+
+        $data_decode = json_decode($data, true);
+        //debug($data_decode) ;
+        $arr['count'] = $data_decode['hits']['total'];
+        //debug($arr);
+        //debug($data_decode['hits']['hits']);
+        foreach ($data_decode['hits']['hits'] as $line) {
+            if (isset($line['_source']['severity'])) {
+                $log['Logline']['level'] = $line['_source']['severity'];
+            }
+            $log['Logline']['datetime'] = $line['_source']['@timestamp'];
+            $log['Logline']['host'] = $line['_source']['host'];
+            $log['Logline']['msg'] = $line['_source']['message'];
+            $loglines[] = $log;
+        }
         $arr['loglines'] = $loglines;
+        //debug($arr);
         return $arr;
     }
     
@@ -235,7 +280,7 @@ class Logline extends AppModel {
     }
     
     public function get_errors_from_NAS() {
-        $constraints = array('priority' => 'err', 'pageSize' => '100000');
+        $constraints = array('severity' => 'err', 'pageSize' => '100000');
         $page = 1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];
@@ -285,7 +330,7 @@ class Logline extends AppModel {
     }
     
     public function get_warnings_from_NAS() {
-        $constraints = array('priority' => 'warning', 'pageSize' => '100000');
+        $constraints = array('severity' => 'warn', 'pageSize' => '100000');
         $page = 1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];
@@ -294,34 +339,36 @@ class Logline extends AppModel {
         //debug($logs);
         foreach ($logs as $log) {
             //echo $log['Logline']['msg'];
-            if($log['Logline']['level']=="warning") {
-                if(preg_match('/\S+\s+([^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
-                    $errtype = $matches[1];
-                    $msg = $matches[2];
-                    $host = $log['Logline']['host'];
-                    if (array_key_exists($host, $err)) {
-                        if (array_key_exists($errtype, $err[$host])) {
-                            if (array_key_exists($msg, $err[$host][$errtype])) {
-                                //$err[$host][$errtype] = $err[$host][$errtype] + 1;
-                                $err[$host][$errtype][$msg] = $err[$host][$errtype][$msg] + 1;
+            if (isset($log['Logline']['level'])) {
+                if($log['Logline']['level']=="warn") {
+                    if(preg_match('/\S+\s+([^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
+                        $errtype = $matches[1];
+                        $msg = $matches[2];
+                        $host = $log['Logline']['host'];
+                        if (array_key_exists($host, $err)) {
+                            if (array_key_exists($errtype, $err[$host])) {
+                                if (array_key_exists($msg, $err[$host][$errtype])) {
+                                    //$err[$host][$errtype] = $err[$host][$errtype] + 1;
+                                    $err[$host][$errtype][$msg] = $err[$host][$errtype][$msg] + 1;
+                                }
+                                else {
+                                    $err[$host][$errtype][$msg] = 1;
+                                    $date = new DateTime($log['Logline']['datetime']);
+                                    $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
+                                }
                             }
                             else {
+                                $err[$host][$errtype] = array();
                                 $err[$host][$errtype][$msg] = 1;
                                 $date = new DateTime($log['Logline']['datetime']);
                                 $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
                             }
-                        }
-                        else {
-                            $err[$host][$errtype] = array();
+                        } else {
+                            $err[$host] = array();
                             $err[$host][$errtype][$msg] = 1;
                             $date = new DateTime($log['Logline']['datetime']);
                             $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
                         }
-                    } else {
-                        $err[$host] = array();
-                        $err[$host][$errtype][$msg] = 1;
-                        $date = new DateTime($log['Logline']['datetime']);
-                        $lasts[$host][$errtype][$msg] = $date->format('Y-m-d H:i:s');
                     }
                 }
             }
@@ -333,30 +380,56 @@ class Logline extends AppModel {
     }
     
     public function voiceNbCalls($constraints) {
-        $file="snacklog";
-        $pageSize=-1;
-        $age=40;
+        //$file="snacklog";
+        //$pageSize=-1;
+        debug($constraints);
+        $page = 1;
         $results=array();
-        /* Stats sur 5 jours*/
+        /* Stats sur 15 jours*/
         $nb=15;
         $today = date("Y-m-d");
         //$today="2014-10-22";
         $date = new DateTime($today);
-        $dir = new Folder('/home/snack/logs');
-        $files = $dir->find('snacklog-\d{4}-.*');
-        sort($files);
+        $date->modify('-1 day');
         //debug($files);
-        $index=count($files)-1;
         for ($i=0;$i<$nb;$i++) {
             $strdate=$date->format('Y-m-d');
-            //debug($file." ".$strdate);
             $startdate = $strdate."T00:00:00";
             $stopdate = $strdate."T23:59:59";
-            //echo $strdate;
-            $cmd = "grep %VOIPAAA-5-VOIP_FEAT_HISTORY " . $this->path . $file;
-            $cmd .= " | awk -v datefrom=\"".$startdate."\" '$0 >= datefrom' | awk -v dateto=\"".$stopdate."\" '$0 <= dateto' | sort -u -t, -k7,7";
-            $strdate2=$date->format('d M');
+            
             if(isset($constraints['directorynumber'])) {
+                $constraints2 = array('type' => 'voip', 'string' => 'PeerAddress '.$constraints['directorynumber'], 'datefrom' => $startdate, 'dateto' => $stopdate,'pageSize' => '100000');
+                $arr = $this->findLogs($page, $constraints2);
+                $logs = $arr['loglines'];
+                //debug($logs);
+                $calling=0;
+                $called=0;
+                foreach ($logs as $log) {
+                    if (preg_match('/PeerAddress '.$constraints['directorynumber'].'.*CallOrigin 2/', $log['Logline']['msg'], $matches)) {
+                        $calling++;
+                    }
+                    if (preg_match('/PeerAddress '.$constraints['directorynumber'].'.*CallOrigin 1/', $log['Logline']['msg'], $matches)) {
+                        $called++;
+                    }
+                }
+                $strdate2=$date->format('d M');
+                $results['1'][$strdate2] = $calling;
+                $results['2'][$strdate2] = $called;
+                $results['0'][$strdate2]=$arr['count'];
+                //debug($logs);
+            } else {
+                $constraints2 = array('type' => 'voip', 'datefrom' => $startdate, 'dateto' => $stopdate,'pageSize' => '100000');
+                $arr = $this->findLogs($page, $constraints2);
+                $logs = $arr['loglines'];
+                //debug($logs);
+                $strdate2=$date->format('d M');
+                $results['0'][$strdate2]=$arr['count'];
+            }
+            //echo $strdate;
+            //$cmd = "grep %VOIPAAA-5-VOIP_FEAT_HISTORY " . $this->path . $file;
+            //$cmd .= " | awk -v datefrom=\"".$startdate."\" '$0 >= datefrom' | awk -v dateto=\"".$stopdate."\" '$0 <= dateto' | sort -u -t, -k7,7";
+            
+            /*if(isset($constraints['directorynumber'])) {
                 $cmd_calling = $cmd . " |grep -E \"cgn:[0-9]*" . $constraints['directorynumber'] . ",\" |wc -l";
                 //debug($cmd_calling);
                 $cmd_called = $cmd . " |grep -E \"cdn:[0-9]*" . $constraints['directorynumber'] . ",\" |wc -l";
@@ -375,35 +448,29 @@ class Logline extends AppModel {
                 //debug($return);
                 $infos = explode("\n", $return);
                 $results['0'][$strdate2]=$infos[0];
-            }
+            }*/
 
             /* Next day */
-            $nbDay=date('N', strtotime($strdate));
-            if ($nbDay == 1) {
-                if ($index>=0 && $index<count($files)) {
-                    $file=$files[$index];
-                    $index--;
-                }
-            }
+            
             $date->modify('-1 day');
         }
         //debug($results);
         return $results;
     }
     
+    /*
     public function voiceTopCalled ($file) {
         //$file="snacklog";
-        $results = array();
-        $return = shell_exec("grep %VOIPAAA-5-VOIP_FEAT_HISTORY ".$this->path . $file." | sort -u -t, -k7,7 | awk -F',' '{print $4}' | sort | uniq -c | sort -rn | head");
-        $infos = explode("\n", $return);
-        foreach ($infos as $line) {
-            if ($line != '') {
-                if (preg_match('/^\s*(\d+)\s+cdn:(\d+)/', $line, $matches)) {
+        $constraints = array('type' => 'voip', 'pageSize' => '100000');
+        $page = 1;
+        $arr = $this->findLogs($page, $constraints);
+        $logs = $arr['loglines'];
+        foreach ($logs as $log) {
+            //debug($log);
+            if (preg_match('/%VOIPAAA-5-VOIP_FEAT_HISTORY:.*cgn:(\d+),cdn:(\d+)/', $log['Logline']['msg'], $matches)) {
                     //$res['times'] = intval($matches[1]);
                     //$res['dest'] = strval($matches[2]);
-                    $results[strval($matches[2])] = intval($matches[1]);
-                    //$results[] = $res;
-                }
+                $results[strval($matches[2])] = intval($matches[1]);
             }
         }
         //debug($results);
@@ -429,7 +496,7 @@ class Logline extends AppModel {
         }
         //debug($results);
         return $results;
-    }
+    }*/
 }
 
 ?>

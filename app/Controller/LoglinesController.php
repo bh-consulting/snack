@@ -20,22 +20,13 @@ class LoglinesController extends AppController {
     }
     
     public function init() {
-        if (isset($this->passedArgs['file'])) {
-            $file = $this->passedArgs['file'];
-        }
-        else {
-            $dir = new Folder('/home/snack/logs');
-            $files = $dir->find('snacklog.*');
-            sort($files);
-            $file = $files[0];
-        }
         if (isset($this->passedArgs['page'])) {
             $page = $this->passedArgs['page'];
         }
         else {
             $page = 1;
         }
-        return array('file' => $file, 'page' => $page);
+        return array('page' => $page);
     }
     
     public function start_time() {
@@ -60,7 +51,7 @@ class LoglinesController extends AppController {
         
         $arr = $this->init();
         $constraints=array('facility' => 'local2');
-        $this->defaultValues($arr['file'], $arr['page'], $constraints);
+        $this->defaultValues($arr['page'], $constraints);
         
         $total_time = $this->stop_time($start);
         $this->set('total_time', $total_time);
@@ -71,7 +62,7 @@ class LoglinesController extends AppController {
         
         $arr = $this->init();
         $constraints=array('facility' => 'local4');
-        $this->defaultValues($arr['file'], $arr['page'], $constraints);
+        $this->defaultValues($arr['page'], $constraints);
         
         $total_time = $this->stop_time($start);
         $this->set('total_time', $total_time);
@@ -81,7 +72,7 @@ class LoglinesController extends AppController {
         $start = $this->start_time();
 
         $arr = $this->init();
-        $listnas = $this->Logline->findNas($arr['file']);
+        $listnas = $this->Logline->findNas();
         $this->set('listnas', $listnas);
         if (isset($this->passedArgs['host'])) {
             if ($this->passedArgs['host'] != 0) {
@@ -98,7 +89,7 @@ class LoglinesController extends AppController {
         }
 
         //$constraints=array();//'facility' => 'local7');
-        $this->defaultValues($arr['file'], $arr['page'], $constraints);
+        $this->defaultValues($arr['page'], $constraints);
         
         $total_time = $this->stop_time($start);
         $this->set('total_time', $total_time);
@@ -110,13 +101,16 @@ class LoglinesController extends AppController {
         $arr = $this->init();
         $pageSize =  Configure::read('Parameters.paginationCount')*2;
         $constraints=array('facility' => 'local7', 'type' => 'voip', 'pageSize' => $pageSize);
-        $this->defaultValues($arr['file'], $arr['page'], $constraints);
-        $this->set('file', $arr['file']);
+        $count = $this->defaultValues($arr['page'], $constraints);
+        //$this->set('file', $arr['file']);
         $total_time = $this->stop_time($start);
         $this->set('total_time', $total_time);
+        $totalPages = floor($count/$pageSize)+1;
+        //$this->set('nbResults', $count);
+        $this->set('totalPages', $totalPages);
     }
 
-    private function defaultValues($file, $page, $constraints){
+    private function defaultValues($page, $constraints){
         $pageSize =  Configure::read('Parameters.paginationCount');
         $this->Filters->addSliderConstraint(array(
             'fields' => 'level', 
@@ -152,7 +146,7 @@ class LoglinesController extends AppController {
                 $constraints['dateto'] = $date->format('Y-m-d').'T'.$date->format('H:i:s');
             }
         }
-        $arr = $this->Logline->findLogs($page, $constraints, $file);
+        $arr = $this->Logline->findLogs($page, $constraints);
         //debug($loglines);
         $count = $arr['count'];
         $loglines = $arr['loglines'];
@@ -162,8 +156,9 @@ class LoglinesController extends AppController {
         $totalPages = floor($count/$pageSize)+1;
         $this->set('nbResults', $count);
         $this->set('totalPages', $totalPages);
-        $this->set('file', $file);
+        //$this->set('file', $file);
         $this->set('loglines', $loglines);
+        return $count;
     }
 
     public function deleteAll($program) {
@@ -190,39 +185,11 @@ class LoglinesController extends AppController {
         $this->redirect(array('action' => 'index'));
     }
     
-    public function chooselogfile($page="index") {
-        $home="/home/snack/logs";
-        if ($this->request->is('post')) {
-            if (!empty($this->request->data)) {
-                $dir = new Folder('/home/snack/logs');
-                $files = $dir->find('snacklog.*');
-                sort($files);
-                $file=$files[$this->request->data['Loglines']['chooselogfile']];
-                if (preg_match('/(.*)\.tar\.bz2/', $file, $matches)) {
-                    system("cd ".$home." && tar jxvf ".$file);
-                    $file = $matches[1];
-                }
-                if (isset($this->nas)) {
-                    $this->redirect(array(
-                        'action' => $page,
-                        'file' => $file,
-                    ));
-                } else {
-                    $this->redirect(array(
-                        'action' => $page,
-                        'file' => $file,
-                    ));
-                }
-            }
-        }
-    }
-    
-    public function choosenas($file="snacklog") {
+    public function choosenas() {
         if ($this->request->is('post')) {
             if (!empty($this->request->data)) {
                 $this->redirect(array(
                     'action' => 'nas_logs',
-                    'file' => $file,
                     'host' => $this->request->data['Loglines']['choosenas'],
                 ));
             }
@@ -242,7 +209,7 @@ class LoglinesController extends AppController {
             if ($type == "nas_logs") { 
                 if (isset($this->request->params['named']['host'])) {
                     if ($this->request->params['named']['host'] != 0) {
-                        $listnas = $this->Logline->findNas($arr['file']);
+                        $listnas = $this->Logline->findNas();
                         $host = $listnas[$this->request->params['named']['host']];
                         $constraints=array(
                             'host' => $host
@@ -262,7 +229,7 @@ class LoglinesController extends AppController {
         else {
             $constraints=array('facility' => 'local2');
         }
-        $this->defaultValues($arr['file'], $arr['page'], $constraints);
+        $this->defaultValues($arr['page'], $constraints);
         
         $total_time = $this->stop_time($start);
         $this->set('total_time', $total_time);
@@ -280,7 +247,7 @@ class LoglinesController extends AppController {
             $constraints=array('facility' => 'local7', 'type' => 'voip', 'pageSize' => $pageSize);
         }
         
-        $this->defaultValues($arr['file'], $arr['page'], $constraints);
+        $this->defaultValues($arr['page'], $constraints);
         
         $total_time = $this->stop_time($start);
         $this->set('total_time', $total_time);

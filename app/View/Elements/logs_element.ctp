@@ -23,7 +23,7 @@ $columns = array(
 <br>
 <?php
 echo $this->element('filters_panel', array(
-    'controller' => 'loglines/' . $controller.'/file:'.$file,
+    'controller' => 'loglines/' . $controller,
     'inputs' => array(
         array(
             'name' => 'level',

@@ -205,7 +205,9 @@ if (Configure::read('Parameters.role')=="slave") {
     <br/>
 <?php
 if (Configure::read('debug')>0) {
+    debug("Memory ".memory_get_usage());
     ?>
+
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="headingOne">

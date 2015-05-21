@@ -314,7 +314,7 @@ class ReportsController extends AppController {
     }
     
     public function voice_reports() {
-        debug($this->request->data);
+        //debug($this->request->data);
         $file="snacklog";
         $dir = new Folder('/home/snack/logs');
         $files = $dir->find('snacklog.*');

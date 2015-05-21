@@ -76,50 +76,6 @@ echo $graph;
 </div>
 <!-- Top called/callings -->
 <h1><?php echo __('Top called and calling'); ?></h1>
-<?php
-$mainLabelOptions = array('class' => 'col-sm-4 control-label');
-echo $this->Form->create('Reports', array(
-    'action' => 'voice_reports',
-    'novalidate' => true, 
-    'autocomplete' => 'off',
-    'class' => 'form-horizontal',
-    'inputDefaults' => array(
-        'div' => 'form-group',
-        'label' => array(
-            'class' => $mainLabelOptions
-        ),
-        'between' => '<div class="col-sm-4">',
-        'after'   => '</div>',
-        'class' => 'form-control'
-    ),
-));
-$dir = new Folder('/home/snack/logs');
-$files = $dir->find('snacklog.*');
-sort($files);
-//echo $this->Form->create('Reports', array('action' => 'voice_reports'));
-$myLabelOptions = array('text' => __('Log file'));
-echo  $this->Form->input('logfile', array(
-    'label' => array_merge($mainLabelOptions, $myLabelOptions),
-    'options' => $files,
-    'selected' => array_search($file, $files),
-    'empty' => false,
-));
-
-$options = array(
-    'label' => __('Update'),
-    'div' => array(
-        'class' => 'form-group',
-    ),
-    'class' => "btn btn-primary",
-    'before' => '<div class="col-sm-offset-4 col-sm-4">',
-    'after' => '</div>'
-);
-echo $this->Form->end($options);
-?>
-
-
-
-
 
 <h3><?php echo __('Top called'); ?></h3>
 <?php

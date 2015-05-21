@@ -123,159 +123,94 @@ echo "Results found : ".$nbResults;
     <tbody>
 <?php
 if (!empty($loglines)) {
-    $listfcid = array();
+    //debug($loglines);
+    $listcalls = array();
     $end = count($loglines)-1;
-    for ($i = 0; $i < $end; $i = $i + 2) {
+    $datetime1 = new DateTime();
+    $datetime2 = new DateTime();
+    for ($i = 0; $i < count($loglines); $i++) {
+        //debug($listcalls);
         $logline = $loglines[$i];
-        if (!(preg_match('/%VOIPAAA-5-VOIP_FEAT_HISTORY:/', $logline['Logline']['msg'], $matches))) {
-            $i++;
-            $logline = $loglines[$i];
-            $end--;
-        }
-        $logline2 = $loglines[$i + 1];
+    //foreach($loglines as $logline) {
         //debug($logline);
-        //debug($logline2['Logline']['msg']);
-        if (preg_match('/%VOIPAAA-5-VOIP_CALL_HISTORY: CallLegType 1/', $logline2['Logline']['msg'], $matches) && !preg_match('/ConnectionId 0000/', $logline2['Logline']['msg'], $matches)) {
-            //debug("test");
-            //debug($logline2['Logline']['msg']);
-            if (preg_match('/fcid:(.*),legID:/', $logline['Logline']['msg'], $matches)) {                
-                if (!in_array($matches[1], $listfcid)) {
-                    $listfcid[] = $matches[1];
-                    echo "<tr class='loglevel{$logline['Logline']['level']}'>";
-                    foreach ($columns as $field => $info) {
-                        if (isset($info['fit']) && $info['fit']) {
-                            echo "<td class='fit logcell$field'>";
-                        } else {
-                            echo "<td class='logcell$field'>";
-                        }
-
-                        switch ($field) {
-                            case 'calling':
-                                if (preg_match('/cgn:([0-9]+)/', $logline['Logline']['msg'], $matches)) {
-                                    echo $matches[1];
-                                }
-                                break;
-                            case 'called':
-                                if (preg_match('/cdn:([0-9]+)/', $logline['Logline']['msg'], $matches)) {
-                                    echo $matches[1];
-                                }
-                                break;
-                            case 'datetime':
-                                if (preg_match('/ConnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
-                                    $datetime1 = new DateTime($matches[1]);
-                                    if (preg_match('/(CET|UTP|UTC|cet|utp|est|cest)\+*\d*\s+(.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
-                                        $datetime2 = new DateTime($matches[2]);
-                                        echo $datetime2->format('Y-m-d');
-                                        echo " ";
-                                        echo $datetime1->format('H:i:s');
-                                    }
-                                }
-                                break;
-                            case 'duration':
-                                if (preg_match('/ConnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
-                                    $datetime1 = new DateTime($matches[1]);
-                                    if (preg_match('/DisconnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
-                                        $datetime2 = new DateTime($matches[1]);
-                                        $interval = $datetime2->diff($datetime1);
-                                        echo $interval->format('%H:%I:%S');
-                                    }
-                                }
-                                break;
-                            case 'status':
-                                if (preg_match('/DisconnectText (.*) \(([0-9]+)\)/', $logline2['Logline']['msg'], $matches)) {
-                                    if ($matches[2] == "16") {
-                                        echo '<i class="glyphicon glyphicon-ok glyphicon-white"></i> ';
-                                    } else {
-                                        echo '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ' . $matches[1];
-                                    }
-                                }
-                                break;
-                            case 'msg':
-                                echo $logline['Logline'][$field];
-                                echo $logline2['Logline'][$field];
-                                break;
-                            default:
-                                //echo $logline2['Logline'][$field];
-                                break;
-                        }
-
-                        echo '</td>';
-                    } // foreach
-                    echo '</tr>';
-                }
+        /*if (preg_match('/%VOIPAAA-5-VOIP_FEAT_HISTORY: .*,cgn:(\d+),cdn:(\d+),.*,fcid:([^,]+),/', $logline['Logline']['msg'], $matches)) {
+            //$listcalls[$matches[3]]['type'] = "FEAT";
+            $fcid = $matches[3];
+            $listcalls[$fcid]['cgn'] = $matches[1];
+            $listcalls[$fcid]['cdn'] = $matches[2];
+        }*/
+        if (preg_match('/%VOIPAAA-5-VOIP_CALL_HISTORY: CallLegType \d+, ConnectionId ([^,]+),/', $logline['Logline']['msg'], $matches) && !preg_match('/ConnectionId 0000/', $logline['Logline']['msg'], $matches2)) {
+            $fcid = $matches[1];
+            if (preg_match('/PeerAddress (\d+).*CallOrigin 2/', $logline['Logline']['msg'], $matches5)) {
+                $listcalls[$fcid]['cgn'] = $matches5[1];
             }
-        }
-        else if (preg_match('/%VOIPAAA-5-VOIP_CALL_HISTORY: CallLegType 2/', $logline2['Logline']['msg'], $matches) && !preg_match('/ConnectionId 0000/', $logline2['Logline']['msg'], $matches)) {
-            //debug("test");
-            //debug($logline2['Logline']['msg']);
-            if (preg_match('/fcid:(.*),legID:/', $logline['Logline']['msg'], $matches)) {                
-                if (!in_array($matches[1], $listfcid)) {
-                    $listfcid[] = $matches[1];
-                    echo "<tr class='loglevel{$logline['Logline']['level']}'>";
-                    foreach ($columns as $field => $info) {
-                        if (isset($info['fit']) && $info['fit']) {
-                            echo "<td class='fit logcell$field'>";
-                        } else {
-                            echo "<td class='logcell$field'>";
-                        }
-
-                        switch ($field) {
-                            case 'calling':
-                                if (preg_match('/cgn:([0-9]+)/', $logline['Logline']['msg'], $matches)) {
-                                    echo $matches[1];
-                                }
-                                break;
-                            case 'called':
-                                if (preg_match('/cdn:([0-9]+)/', $logline['Logline']['msg'], $matches)) {
-                                    echo $matches[1];
-                                }
-                                break;
-                            case 'datetime':
-                                if (preg_match('/ConnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
-                                    $datetime1 = new DateTime($matches[1]);
-                                    if (preg_match('/(CET|UTP|UTC|cet|utp|est|cest)\+*\d*\s+(.*), PeerAddress/', $logline2['Logline']['msg'], $matches)) {
-                                        $datetime2 = new DateTime($matches[2]);
-                                        echo $datetime2->format('Y-m-d');
-                                        echo " ";
-                                        echo $datetime1->format('H:i:s');
-                                    }
-                                }
-                                break;
-                            case 'duration':
-                                if (preg_match('/ConnectTime ([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
-                                    $datetime1 = new DateTime($matches[1]);
-                                    if (preg_match('/DisconnectTime ([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline2['Logline']['msg'], $matches)) {
-                                        $datetime2 = new DateTime($matches[1]);
-                                        $interval = $datetime2->diff($datetime1);
-                                        echo $interval->format('%H:%I:%S');
-                                    }
-                                }
-                                break;
-                            case 'status':
-                                if (preg_match('/DisconnectText (.*) \(([0-9]+)\)/', $logline2['Logline']['msg'], $matches)) {
-                                    if ($matches[2] == "16") {
-                                        echo '<i class="glyphicon glyphicon-ok glyphicon-white"></i> ';
-                                    } else {
-                                        echo '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ' . $matches[1];
-                                    }
-                                }
-                                break;
-                            case 'msg':
-                                echo $logline['Logline'][$field];
-                                echo $logline2['Logline'][$field];
-                                break;
-                            default:
-                                //echo $logline2['Logline'][$field];
-                                break;
-                        }
-
-                        echo '</td>';
-                    } // foreach
-                    echo '</tr>';
+            if (preg_match('/PeerAddress (\d+).*CallOrigin 1/', $logline['Logline']['msg'], $matches5)) {
+                $listcalls[$fcid]['cdn'] = $matches5[1];
+            }
+            if (preg_match('/ConnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline['Logline']['msg'], $matches3)) {
+                $datetime1 = DateTime::createFromFormat("H:i:s", $matches3[1]);
+                if (preg_match('/(CET|UTP|UTC|cet|utp|est|cest)\+*\d*\s+(.*), PeerAddress/', $logline['Logline']['msg'], $matches4)) {
+                    $datetime2 = new DateTime($matches4[2]);
+                    $listcalls[$fcid]['date'] = $datetime2->format('Y-m-d');
+                    $listcalls[$fcid]['time'] = $datetime1->format('H:i:s');
                 }
+                if (preg_match('/DisconnectTime \**([0-9]{2}:[0-9]{2}:[0-9]{2})/', $logline['Logline']['msg'], $matches4)) {
+                    $datetime2 = DateTime::createFromFormat("H:i:s", $matches4[1]);
+                    //debug($datetime2);
+                    $interval = $datetime2->diff($datetime1);
+                    $listcalls[$fcid]['duration'] =  $interval->format('%H:%I:%S');
+                }
+                //DisconnectText normal call clearing (16)
+            }
+            if (preg_match('/DisconnectText ([^\(]*) \((\d+)\)/', $logline['Logline']['msg'], $matches3)) {
+                $listcalls[$fcid]['statusmsg'] = $matches3[1];
+                $listcalls[$fcid]['statusnum'] = $matches3[2];
+            }
+            $listcalls[$fcid]['text'] = $logline['Logline']['msg'];
+        }
+    }
+    unset($datetime1);
+    unset($datetime2);
+    //debug($listcalls);
+    foreach ($listcalls as $key=>$call) {
+        //debug($call);
+        //debug($key);
+        if (isset($call['date'])) {
+            if (isset($call['cdn'])) {
+                echo "<tr class='loglevel{$logline['Logline']['level']}'>";
+                echo "<td>".$call['date']." ".$call['time']."</td>";
+                if (isset($call['cgn'])) {
+                    echo "<td>".$call['cgn']."</td>";
+                } else {
+                    echo "<td></td>";
+                }
+                if (isset($call['cdn'])) {
+                    echo "<td>".$call['cdn']."</td>";
+                } else {
+                    echo "<td></td>";
+                }
+                if (isset($call['duration'])) {
+                    echo "<td>".$call['duration']."</td>";
+                } else {
+                    echo "<td></td>";
+                }
+                if (isset($call['statusnum'])) {
+                    if ($call['statusnum'] == "16") {
+                        echo '<td><i class="glyphicon glyphicon-ok glyphicon-white"></i></td>';
+                    } else {
+                        echo '<td><i class="glyphicon glyphicon-remove glyphicon-white"> '.$call['statusmsg'].'</i></td>';
+                    }
+                }
+                if (Configure::read('debug') == 2) {
+                    echo "<td>".$call['text']."</td>";
+                }
+                //echo "<td>".$key."</td>";
+                
+                echo "</tr>";
             }
         }
     }
+   //debug($listcalls);
 } else {
     ?>
             <tr>
