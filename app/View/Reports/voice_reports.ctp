@@ -75,12 +75,12 @@ echo $graph;
     
 </div>
 <!-- Top called/callings -->
-<h1><?php echo __('Top called and calling'); ?></h1>
+<!--
+<h1><?php //echo __('Top called and calling'); ?></h1>
 
-<h3><?php echo __('Top called'); ?></h3>
+<h3><?php //echo __('Top called'); ?></h3>
 <?php
-//debug($resultsCalled);
-    echo "<table class='table table-striped table-condensed'>";
+    /*echo "<table class='table table-striped table-condensed'>";
     echo "<th>".__('Times')."</th>";
     echo "<th>".__('Called')."</th>";
     foreach($resultsCalled as $key=>$res) {
@@ -89,15 +89,13 @@ echo $graph;
         echo "<td>".$key."</td>";
         echo "</tr>";
     }
-    echo "</table>";
+    echo "</table>";*/
 ?>
 
-<h3><? echo __('Top calling'); ?></h3>
+<h3><? //echo __('Top calling'); ?></h3>
 
 <?php
-//echo $G->draw($resultsOutgoingCalling);
-//debug($results);
-    echo "<table class='table table-striped table-condensed'>";
+   /* echo "<table class='table table-striped table-condensed'>";
     echo "<th>".__('Times')."</th>";
     echo "<th>".__('Calling')."</th>";
     foreach($resultsOutgoingCalling as $key=>$res) {
@@ -106,9 +104,10 @@ echo $graph;
         echo "<td>".$key."</td>";
         echo "</tr>";
     }
-    echo "</table>";
+    echo "</table>";*/
 //App::uses('phpGraph', 'Lib');
 
 
 ?>
+-->
 

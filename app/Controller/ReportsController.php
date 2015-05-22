@@ -253,10 +253,6 @@ class ReportsController extends AppController {
     }
     
     public function voice_reports_pdf($directorynumber="") {
-        $file="snacklog";
-        $dir = new Folder('/home/snack/logs');
-        $files = $dir->find('snacklog.*');
-        sort($files);
         $constraints=array();
         //debug($this->request->data);
         if ($directorynumber != "") {
@@ -266,14 +262,13 @@ class ReportsController extends AppController {
         $arr = $this->Logline->voiceNbCalls($constraints);
         $this->set('nbappelsstats', $arr);
         //debug($arr);
-        $results = $this->Logline->voiceTopCalled($file);
+        /*$results = $this->Logline->voiceTopCalled($file);
         //debug($results);
         $this->set('resultsCalled', $results);
 
         $results = $this->Logline->voiceTopCalling($file);
         //debug($results);
-        $this->set('resultsOutgoingCalling', $results);
-        $this->set('file', $file);
+        $this->set('resultsOutgoingCalling', $results);*/
         $G = new phpGraph();
         $graph = $G->draw($arr,array(
                 //'steps' => 50,
@@ -314,11 +309,6 @@ class ReportsController extends AppController {
     }
     
     public function voice_reports() {
-        //debug($this->request->data);
-        $file="snacklog";
-        $dir = new Folder('/home/snack/logs');
-        $files = $dir->find('snacklog.*');
-        sort($files);
         $constraints=array();
         //debug($this->request->data);
         if (isset($this->request->data)) {
@@ -328,21 +318,10 @@ class ReportsController extends AppController {
                     $this->set('directorynumber', $constraints['directorynumber']);
                 }
             }
-            if (isset($this->request->data['Reports']['logfile'])) {
-                $file=$files[$this->request->data['Reports']['logfile']];
-            }
         }
         $arr = $this->Logline->voiceNbCalls($constraints);
         $this->set('nbappelsstats', $arr);
         //debug($arr);
-        $results = $this->Logline->voiceTopCalled($file);
-        //debug($results);
-        $this->set('resultsCalled', $results);
-
-        $results = $this->Logline->voiceTopCalling($file);
-        //debug($results);
-        $this->set('resultsOutgoingCalling', $results);
-        $this->set('file', $file);
         $G = new phpGraph();
         $graph = $G->draw($arr,array(
                 //'steps' => 50,

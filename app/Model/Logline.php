@@ -41,7 +41,7 @@ class Logline extends AppModel {
 		)
 	);
     
-    public function findNas($file="snacklog") {
+    public function findNas() {
         $nas = array();
         $nas[]="All Nas";
         $data = array();
@@ -97,16 +97,13 @@ class Logline extends AppModel {
         if (isset($options['facility'])) {
             $arrmust[] = array("wildcard" => array("fluentd.facility" => $options['facility']));
         }
-        if (isset($options['severity'])) {
-            $arrmust[] = array("wildcard" => array("fluentd.severity" => $options['severity']));
-        } else {
-            if (isset($options['priority'])) {
-                foreach($levels as $level) {
-                    $arrmustnot[] = array("wildcard" => array("fluentd.severity" => $level));
-                    if ($level == $options['priority']) {
-                        break;
-                    }
+        if (isset($options['priority'])) {
+            foreach($levels as $level) {
+                if ($level == $options['priority']) {
+                    break;
                 }
+                $arrmustnot[] = array("wildcard" => array("fluentd.severity" => $level));
+                //debug($level);
             }
         }
         if (isset($options['host'])) {
