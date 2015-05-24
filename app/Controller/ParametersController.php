@@ -398,6 +398,63 @@ class ParametersController extends AppController {
                 array('action' => 'index')
         );
     }
+
+    public function logs() {
+        $params = $this->Parameter->read();
+        $this->set('logs_delete_date', $params['Parameter']['logs_delete_date']);
+        $this->set('logs_archive_date', $params['Parameter']['logs_archive_date']);
+    }
+
+    public function edit_logs() {
+        $archive_dates = array();
+        $archive_dates[] = "15";
+        $archive_dates[] = "30";
+        $archive_dates[] = "60";
+        $delete_dates = array();
+        $delete_dates[] = "30";
+        $delete_dates[] = "60";
+        $delete_dates[] = "90";
+        $params = $this->Parameter->read();
+        if ($this->request->is('post')) {
+            $request = array();
+            $request['Parameter'] = array();
+            $delete_date = $delete_dates[$this->request->data['Parameter']['logs_delete_date']];
+            $archive_date = $archive_dates[$this->request->data['Parameter']['logs_archive_date']];
+            if ($archive_date >= $delete_date) {
+                $this->Session->setFlash(
+                    __('Archive date must be lower than delete date'),
+                    'flash_error'
+                );
+                Utils::userlog(__('Unable to update parameters.'), 'error');
+            }
+            else {
+                $request['Parameter']['logs_archive_date'] = $archive_date;
+                $request['Parameter']['logs_delete_date'] = $delete_date;
+                debug($request);
+                $this->Parameter->set($request);
+                if ($this->Parameter->save()) {
+                    $this->Session->setFlash(
+                        __('Parameters have been updated.'),
+                        'flash_success'
+                    );
+                    Utils::userlog(__('Parameters have been updated.'));
+                    $this->redirect(array('action' => 'logs'));
+                } else {
+                    $this->Session->setFlash(
+                        __('Unable to update parameters.'),
+                        'flash_error'
+                    );
+                    Utils::userlog(__('Unable to update parameters.'), 'error');
+                }
+            }
+        } else {
+            $this->request->data = $this->Parameter->read();
+        }
+        $this->set('archive_dates', $archive_dates);
+        $this->set('archive_date', $archive_date);
+        $this->set('delete_dates', $delete_dates);
+        $this->set('delete_date', $delete_date);
+    }
 }
 
 ?>

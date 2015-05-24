@@ -168,7 +168,19 @@ class Parameter extends AppModel {
             'null' => true,
             'default' => '',
             'length' => '255',
-        )
+        ),
+        'logs_archive_date' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '',
+            'length' => '255',
+        ),
+        'logs_delete_date' => array(
+            'type' => 'string',
+            'null' => true,
+            'default' => '',
+            'length' => '255',
+        ),
     );
 
     public $validate = array(

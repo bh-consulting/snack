@@ -64,6 +64,14 @@ $this->assign('param_active', 'active');
                 );
                 ?>
             </li>
+            <li class="<?php echo $this->fetch('param_logs_active'); ?>">
+                <?php
+                echo $this->Html->link(
+                    __('Logs'),
+                    array('controller' => 'parameters', 'action' => 'logs')
+                );
+                ?>
+            </li>
     </ul>
     <div class="tab-content">
         <?php echo $this->fetch('content'); ?>
