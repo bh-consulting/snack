@@ -40,11 +40,16 @@ class SnackSendReportsShell extends AppShell {
                 }
 
                 $this->sendMail($subject, $this->str);
-                //curator --logfile /home/snack/logs/curator.log close indices --time-unit days --older-than 15 --timestring '%Y.%m.%d' --prefix logstash
-                $cmd = "curator --logfile /home/snack/logs/curator.log close indices --time-unit days --older-than ".Configure::read('Parameters.logs_archive_date')." --timestring '%Y.%m.%d' --prefix logstash";
-                $return = shell_exec($cmd);
-                $cmd = "curator --logfile /home/snack/logs/curator.log delete indices --time-unit days --older-than ".Configure::read('Parameters.logs_delete_date')." --timestring '%Y.%m.%d' --prefix logstash";
-                $return = shell_exec($cmd);
+                $archivedate = Configure::read('Parameters.logs_archive_date');
+                $deletedate = Configure::read('Parameters.logs_delete_date');
+                if (isset($archivedate)) {
+                    $cmd = "curator --logfile /home/snack/logs/curator.log close indices --time-unit days --older-than ".Configure::read('Parameters.logs_archive_date')." --timestring '%Y.%m.%d' --prefix logstash";
+                    $return = shell_exec($cmd);
+                }
+                if (isset($deletedate)) {
+                    $cmd = "curator --logfile /home/snack/logs/curator.log delete indices --time-unit days --older-than ".Configure::read('Parameters.logs_delete_date')." --timestring '%Y.%m.%d' --prefix logstash";
+                    $return = shell_exec($cmd);
+                }
                 //Configure::read('Parameters.logs_delete_date')
                 /* Curator logs elastic search */
 

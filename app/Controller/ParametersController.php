@@ -410,10 +410,12 @@ class ParametersController extends AppController {
         $archive_dates[] = "15";
         $archive_dates[] = "30";
         $archive_dates[] = "60";
+        $archive_dates[] = "90";
         $delete_dates = array();
         $delete_dates[] = "30";
         $delete_dates[] = "60";
         $delete_dates[] = "90";
+        $delete_dates[] = "180";
         $params = $this->Parameter->read();
         if ($this->request->is('post')) {
             $request = array();
@@ -449,6 +451,8 @@ class ParametersController extends AppController {
             }
         } else {
             $this->request->data = $this->Parameter->read();
+            $delete_date = $this->request->data['Parameter']['logs_delete_date'];
+            $archive_date = $this->request->data['Parameter']['logs_archive_date'];
         }
         $this->set('archive_dates', $archive_dates);
         $this->set('archive_date', $archive_date);

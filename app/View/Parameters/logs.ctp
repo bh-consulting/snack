@@ -15,13 +15,13 @@ echo $this->Html->link(
     <dt><?php echo __('Archive older than'); ?></dt>
     <dd>
 		<?php
-		echo empty($logs_delete_date) ? __('Not set.') : $logs_delete_date . " days";
+		echo empty($logs_archive_date) ? __('Not set.') : $logs_archive_date . " days";
 		?>
     </dd>
     <dt><?php echo __('Delete older than'); ?></dt>
     <dd>
         <?php
-        echo empty($logs_archive_date) ? __('Not set.') : $logs_archive_date . " days";
+        echo empty($logs_delete_date) ? __('Not set.') : $logs_delete_date . " days";
         ?>
     </dd>
 </dl>
