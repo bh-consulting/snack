@@ -8,7 +8,7 @@ echo $this->Form->input('expiration_date', array(
     'label' => array_merge($mainLabelOptions, $myLabelOptions), 
     'class' => 'datetimepicker form-control',
     'between' => '<div class="col-sm-4"><div class="input-group date form_datetime col-sm-12">',
-    'after'   => '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span><span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span></div></div>')
+    'after'   => '</div></div>')
 );
 
 $myLabelOptions = array('text' => __('Simultaneous Use'));
