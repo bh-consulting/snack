@@ -12,7 +12,10 @@ class LoglinesController extends AppController {
 
     public function isAuthorized($user) {
         
-        if($user['role'] === 'admin' && $this->action === 'index'){
+        if ($user['role'] === 'admin' && in_array($this->action, array(
+                    'index', 'nas_logs', 'view_mac',
+                    'snack_logs', 'logelementradius',
+                ))) {
             return true;
         }
 

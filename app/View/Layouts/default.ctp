@@ -165,7 +165,7 @@ $cakeDescription = __('SNACK');
                             __('Logout from %s', $this->Session->read('Auth.User.username')) .
                             ' <i class="glyphicon glyphicon-off glyphicon glyphicon-white"></i>',
                             array(
-                                'controller' => 'radusers',
+                                'controller' => 'snackusers',
                                 'action' => 'logout'
                             ),
                             array('escape' => false)
@@ -180,6 +180,9 @@ $cakeDescription = __('SNACK');
 
     </div>
 <?php
+//debug($this->Session->read());
+//debug(AuthComponent::user('role'));
+
 if (Configure::read('Parameters.role')=="slave") {
     echo '<div class="alert alert-danger">';
     echo '<br>';

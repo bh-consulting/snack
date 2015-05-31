@@ -29,62 +29,11 @@ class RadusersController extends AppController {
     );
     public $uses = array('Radacct', 'Raduser');
 
-    public function login() {
-        if ($this->request->is('post')) {
-            if ($this->checkAuthentication(
-                            $this->request->data['Raduser']['username'], $this->request->data['Raduser']['passwd']
-                    )) {
-                $this->Auth->login($this->request->data['Raduser']);
-                Utils::userlog(__('logged in'));
-
-                $this->redirect($this->Auth->redirect());
-            } else {
-                $this->Session->setFlash(
-                        __('Username or password is incorrect,'
-                                . ' or user is not authorized to access Snack interface.'), 'default', array(), 'auth'
-                );
-            }
-        }
-        if (Configure::read('Parameters.role')=="slave") {
-            $this->Session->setFlash(
-                    __('Warning this is a SLAVE node : all changement will be not saved'), 'default', array(), 'role'
-            );
-        }
-    }
-
-    public function logout() {
-        Utils::userlog(__('logged out'));
-        $this->redirect($this->Auth->logout());
-    }
-
-    private function checkAuthentication($username, $passwd) {
-        $user = $this->Raduser
-                ->findByUsername($this->request->data['Raduser']['username']);
-        if (isset($user) && !empty($user)) {
-            $role = $this->Raduser->getRole($user['Raduser']['id']);
-            if ($role != 'user') {
-                $this->request->data['Raduser']['role'] = $role;
-                $checks = $this->Checks->getChecks($user['Raduser']['id']);
-                foreach ($checks as $check) {
-                    if ($check['Radcheck']['attribute'] == 'Cleartext-Password') {
-                        if ($check['Radcheck']['value'] == $passwd) {
-                            return true;
-                        }
-                    }
-                }
-            } else {
-                return false;
-            }
-        }
-
-        return false;
-    }
-
     public function isAuthorized($user) {
 
         // All registered user can view users
         if (in_array($this->action, array(
-                    'index', 'view_mac', 'view_cert', 'view_loginpass', 'export',
+                    'index', 'view_mac', 'view_cert', 'view_loginpass',
                 ))) {
             return true;
         }
@@ -98,11 +47,6 @@ class RadusersController extends AppController {
         }
 
         return parent::isAuthorized($user);
-    }
-
-    public function beforeFilter() {
-        $this->Auth->allow('login', 'logout');
-        parent::beforeFilter();
     }
 
     public function beforeValidateForFilters() {
@@ -224,18 +168,6 @@ class RadusersController extends AppController {
             ),
         ));
 
-        $this->Filters->addSelectConstraint(array(
-            'fields' => array('role'),
-            'items' => array(
-                'user' => $this->Raduser->roles['user'],
-                'tech' => $this->Raduser->roles['tech'],
-                'admin' => $this->Raduser->roles['admin'],
-                'root' => $this->Raduser->roles['root'],
-            ),
-            'input' => 'rolefilter',
-            'title' => false,
-        ));
-
         $this->Filters->addComplexConstraint(array(
             'select' => array(
                 'items' => array(
@@ -324,7 +256,6 @@ class RadusersController extends AppController {
             }
         }
 
-        $this->set('roles', $this->Raduser->roles);
         $this->set('radusers', $radusers);
     }
 
@@ -368,7 +299,6 @@ class RadusersController extends AppController {
                         if (count($fields) >= 7) {
                             $user = new Raduser();
                             $user->set('username', $fields[1]);
-                            $user->set('role', $fields[2]);
                             $user->set('is_cisco', $fields[3]);
                             $user->set('is_loginpass', $fields[4]);
                             $user->set('is_cert', $fields[5]);
@@ -462,7 +392,6 @@ class RadusersController extends AppController {
                         echo "is login";
                         $user = new Raduser();
                         $user->set('username', $fields[0]);
-                        $user->set('role', 'user');
                         $user->set('comment', $fields[8]);
                         $user->set('is_loginpass', '1');
                         if ($user->save()) {
@@ -539,7 +468,6 @@ class RadusersController extends AppController {
                         echo "is phone";
                         $user = new Raduser();
                         $user->set('username', $fields[0]);
-                        $user->set('role', 'user');
                         $user->set('comment', $fields[8]);
                         $user->set('is_phone', '1');
                         if ($user->save()) {
@@ -595,7 +523,6 @@ class RadusersController extends AppController {
                         echo "is mac";
                         $user = new Raduser();
                         $user->set('username', $fields[0]);
-                        $user->set('role', 'user');
                         $user->set('comment', $fields[8]);
                         $user->set('is_mac', '1');
                         if ($user->save()) {
@@ -700,7 +627,6 @@ class RadusersController extends AppController {
                     $usersData[] = array(
                         'Raduser',
                         $user['Raduser']['username'],
-                        !empty($user['Raduser']['role']) ? $user['Raduser']['role'] : 'user',
                         isset($user['Raduser']['is_cisco']) && $user['Raduser']['is_cisco'],
                         isset($user['Raduser']['is_loginpass']) && $user['Raduser']['is_loginpass'],
                         isset($user['Raduser']['is_cert']) && $user['Raduser']['is_cert'],
@@ -796,7 +722,6 @@ class RadusersController extends AppController {
             $attributes['Username'] = $username;
         }
         $attributes['Comment'] = $views['base']['Raduser']['comment'];
-        $attributes['Role'] = $this->Raduser->roles[$views['base']['Raduser']['role']];
         $attributes['Cisco'] = $views['base']['Raduser']['is_cisco'] ? __('Yes') : __('No');
 
         // Radchecks
@@ -836,7 +761,6 @@ class RadusersController extends AppController {
             'Groups',
             'Cisco',
             'MAC address',
-            'Role',
         );
         $raduser = $this->Raduser->findById($id);
         if ($raduser['Raduser']['is_cisco']) {
@@ -861,7 +785,6 @@ class RadusersController extends AppController {
             'Cisco',
             'MAC address',
             'EAP-Type',
-            'Role',
         );
 
         $raduser = $this->Raduser->findById($id);
@@ -911,24 +834,9 @@ class RadusersController extends AppController {
             'Expiration',
             'Simultaneous-Use',
             'Groups',
-            'Role',
                 )
         );
         $this->view($id, array('Authentication type' => 'MAC address'));
-    }
-
-    /**
-     * View a user of the interface
-     * @param  $id - user id
-     */
-    public function view_snack($id = null) {
-        $this->set(
-                'showedAttr', array(
-            'Role',
-            'Comment',
-                )
-        );
-        $this->view($id, array('Authentication type' => 'None'));
     }
 
     /**
@@ -974,7 +882,6 @@ class RadusersController extends AppController {
         $this->set(
                 'groups', $groups->find('list', array('fields' => array('groupname')))
         );
-        $this->set('roles', $this->Raduser->roles);
     }
 
     /**
@@ -1218,7 +1125,6 @@ class RadusersController extends AppController {
                 $username = Utils::cleanMAC($this->request->data['Raduser']['mac']);
 
                 $this->request->data['Raduser']['username'] = $username;
-                $this->request->data['Raduser']['role'] = 'user';
 
                 $this->request->data['Raduser']['is_mac'] = 1;
                 $rads = array(
@@ -1255,98 +1161,6 @@ class RadusersController extends AppController {
         }
 
         $this->add($success);
-    }
-
-    /**
-     * Controller method to add a Snack user
-     */
-    public function add_snack() {
-        if ($this->request->is('post')) {
-            $found = false;
-            $username = '';
-            $Radcheck = new Radcheck();
-
-            // add the admin rights to an existing user
-            if (isset($this->request->data['Raduser']['existing_user']) && !empty($this->request->data['Raduser']['existing_user'])
-            ) {
-                $user = $this->Raduser->findById($this->request->data['Raduser']['existing_user']);
-
-                if ($user) {
-                    $user['Raduser']['role'] = $this->request->data['Raduser']['role'];
-                    $username = $user['Raduser']['username'];
-
-                    // change or add the password to the user
-                    if (isset($this->request->data['Raduser']['passwd'])) {
-                        $checks = $this->Checks->getChecks($this->request->data['Raduser']['existing_user']);
-                        foreach ($checks as $check) {
-                            if ($check['Radcheck']['attribute'] == 'Cleartext-Password') {
-                                $check['Radcheck']['value'] = $this->request->data['Raduser']['passwd'];
-                                $found = true;
-                                $Radcheck->save($check);
-                                break;
-                            }
-                        }
-                    }
-
-                    $success = $this->Raduser->save($user, true, array('role'));
-                } else {
-                    $success = false;
-                }
-                // create a new user (only admin)
-            } else {
-                $this->Raduser->create();
-                $success = $this->Raduser->save($this->request->data);
-            }
-
-            // the user does not exist in radcheck, create it
-            if (!$found) {
-                $Radcheck->create();
-                $Radcheck->save(array(
-                    'username' => $username,
-                    'attribute' => 'Cleartext-Password',
-                    'op' => ':=',
-                    'value' => $this->request->data['Raduser']['passwd']
-                ));
-            }
-
-            if ($success) {
-                $this->Session->setFlash(__(
-                                'The SNACK user %s was added', $this->request->data['Raduser']['username']), 'flash_success'
-                );
-                Utils::userlog(__('added admin user %s', $this->request->data['Raduser']['username']), 'error');
-                $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash(
-                        'Unable to add the SNACK user', 'flash_error'
-                );
-                Utils::userlog(__('error while adding a SNACK user'), 'error');
-            }
-        }
-
-        $users = $this->Raduser->find(
-                'all', array(
-            'fields' => array(
-                '*',
-                '(SELECT attribute from radcheck where username=Raduser.username and attribute=\'Cleartext-Password\' limit 1) as pwd',
-            ),
-            'conditions' => array(
-                'Raduser.role' => 'user',
-            ),
-                )
-        );
-
-        $values = array();
-        foreach ($users as $u) {
-            if ($this->Checks->getType($u['Raduser'], false) != 'mac') {
-                $values[] = array(
-                    'name' => $u['Raduser']['username'],
-                    'value' => $u['Raduser']['id'],
-                    'data-pwd' => is_null($u[0]['pwd']),
-                );
-            }
-        }
-        $this->set('users', $values);
-        $this->set('roles', $this->Raduser->roles);
     }
 
     private function edit($success) {      
@@ -1401,7 +1215,6 @@ class RadusersController extends AppController {
             );
         }
 
-        $this->set('roles', $this->Raduser->roles);
     }
 
     public function edit_loginpass($id = null) {
@@ -1573,7 +1386,7 @@ class RadusersController extends AppController {
 
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
-            $this->request->data['Raduser']['was_user'] = $this->request->data['Raduser']['role'] === 'user';
+            //$this->request->data['Raduser']['was_user'] = $this->request->data['Raduser']['role'] === 'user';
         } else {
             try {
                 $this->request->data['Raduser']['is_cert'] = 1;
@@ -1615,46 +1428,6 @@ class RadusersController extends AppController {
         }
 
         $this->edit($success);
-    }
-
-    /**
-     * Controller method to edit a Snack user
-     */
-    public function edit_snack($id = null) {
-        $this->Raduser->id = $id;
-        $success = false;
-
-        if ($this->request->is('get')) {
-            $this->request->data = $this->Raduser->read();
-        } else {
-            try {
-                if (!$this->Raduser->save($this->request->data)) {
-                    throw new EditException(
-                    'Raduser', $id, $this->Raduser->field('username')
-                    );
-                }
-
-                // TODO: update password
-            } catch (UserGroupException $e) {
-                $this->Session->setFlash(
-                        $e->getMessage(), 'flash_error'
-                );
-                Utils::userlog(__('error while editing Snack user %s', $this->Raduser->id), 'error');
-                $success = false;
-            }
-            $success = true;
-        }
-
-        if ($success) {
-            $this->Session->setFlash(
-                    __('User has been updated.'), 'flash_success');
-
-            Utils::userlog(__('edited user %s', $this->Raduser->id));
-            $this->redirect(array('action' => 'index'));
-        }
-        $this->request->data = $this->Raduser->read();
-        $this->set('username', $this->Raduser->field('username'));
-        $this->set('roles', $this->Raduser->roles);
     }
 
     public function delete($id = null) {

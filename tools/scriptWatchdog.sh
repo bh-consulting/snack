@@ -12,9 +12,8 @@ function check-freeradius {
         echo "Freeradius en cours de redémarrage";
     else
         echo "" > /tmp/watchdog-freeradius
-        ADMINPASS=`mysql -uradius -p${PASSWORD} radius -NBe "SELECT value from radcheck where username='admin'"`
-        res=$(( echo "User-Name = \"admin\"";   echo "Cleartext-Password = \"$ADMINPASS\"";   echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"admin\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x 127.0.0.1 auth loopsecret | tail -1)
-        if [[ "$res" =~ 'EAP-Code = Failure' ]]; then
+        res = $(netstat -lu | grep radius | wc -l)
+        if [[ "$res" != "2" ]]; then
             datenow=$(date "+%Y-%m-%d %H:%m")
             echo "[$datenow] [ERR] SNACK Freeradius restart" >> $NOTIF
             service freeradius stop

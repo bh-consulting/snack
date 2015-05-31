@@ -174,9 +174,9 @@ class Raduser extends AppModel {
      * Avoid override current password with empty password.
      */
     public function beforeSave($options = array()) {
-        if (empty($this->data[$this->name]['passwd'])) {
+        /*if (empty($this->data[$this->name]['passwd'])) {
             unset($this->data[$this->name]['passwd']);
-        }
+        }*/
 
         return true;
     }

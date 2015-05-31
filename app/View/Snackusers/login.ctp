@@ -8,7 +8,7 @@
                 <?php echo $this->Session->flash('role'); ?>        
                 <?php echo $this->Session->flash('auth'); ?>
                 <?php //$mainLabelOptions = array('class' => 'col-sm-4 control-label');
-                echo $this->Form->create('Raduser', array(
+                echo $this->Form->create('Snackuser', array(
                     'action' => 'login',
                     'novalidate' => true, 
                     'autocomplete' => 'off',

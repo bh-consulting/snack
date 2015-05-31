@@ -85,17 +85,12 @@ $checks .= $this->Form->input(
 );
 $checks .= '</fieldset>';
 
-//$cisco = $this->element('cisco_common_fields', array('type' => 'cert'));
-
 $replies = '<fieldset>';
 $replies .= '<legend>' . __('Replies') . '</legend>';
 $replies .= $this->element('reply_common_fields');
 $replies .= '</fieldset>';
 
-$role = $this->element('snack_role_input');
-
 $finish = $this->Form->input('id', array('type' => 'hidden'));
-//$finish .= $this->Form->input('was_cisco', array('type' => 'hidden'));
 $finish .= $this->Form->input('was_user', array('type' => 'hidden'));
 
 $finish .= $this->Form->end(array(
@@ -108,9 +103,7 @@ echo $this->element('wizard', array(
     'steps' => array(
         __('Certificate') => $certs,
         __('Checks') => $checks,
-        //__('Cisco') => $cisco,
         __('Replies') => $replies,
-        __('Role') => $role,
     ),
     'finishButton' => $finish,
 ));

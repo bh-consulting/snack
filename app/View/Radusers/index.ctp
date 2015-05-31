@@ -22,11 +22,6 @@ $columns = array(
     'username' => array(
         'text' => __('Username'),
     ),
-    'role' => array(
-        'text' => __('Role'),
-        'fit' => true,
-        'bold' => true,
-    ),
     'comment' => array(
         'text' => __('Comment'),
     ),
@@ -37,30 +32,6 @@ $columns = array(
         'text' => __('Type'),
         'fit' => true,
     ),
-    /*'is_cert' => array(
-        'text' => $this->Html->image('certificate.png', array('alt' => __('Certificate'), 'title' => __('Certificate'))),
-        'fit' => true,
-    ),
-    'is_loginpass' => array(
-        'text' => $this->Html->image('user_password.png', array('alt' => __('Login/Pwd'), 'title' => __('Login/Pwd'))),
-        'fit' => true,
-    ),
-    'is_windowsad' => array(
-        'text' => $this->Html->image('windows.png', array('alt' => __('Login/Pwd by ActiveDirectory'), 'title' => __('Login/Pwd by ActiveDirectory'))),
-        'fit' => true,
-    ),
-    'is_phone' => array(
-        'text' => $this->Html->image('phone.png', array('alt' => __('Phone'), 'title' => __('Phone'))),
-        //'fit' => true,
-    ),
-    'is_mac' => array(
-        'text' => $this->Html->image('mac.png', array('alt' => __('MAC'), 'title' => __('MAC'))),
-        //'fit' => true,
-    ),
-    'is_cisco' => array(
-        'text' => $this->Html->image('cisco.png', array('alt' => __('Cisco'), 'title' => __('Cisco'))),
-        'fit' => true,
-    ),*/
    'action' => array(
         'id' => 'id',
         'text' => __('Action'),
@@ -100,11 +71,6 @@ $dropdownUsersButtonItems = array(
     $this->Html->link(
         __('Passive (MAC)'), 
         array('action' => 'add_mac'),
-        array('escape' => false)
-    ),
-    $this->Html->link(
-        __('SNACK'), 
-        array('action' => 'add_snack'),
         array('escape' => false)
     ),
 );
@@ -147,17 +113,17 @@ $dropdownCsvButtonItems = array(
     ),
 );
 
-if(AuthComponent::user('role') != 'admin' && AuthComponent::user('role') != 'root'){
-    unset($dropdownCsvButtonItems[0]);
+if(AuthComponent::user('role') != 'tech'){
+    echo $this->element('dropdownButton', array(
+        'buttonCount' => 1,
+        'class' => 'btn-primary',
+        'title' => __('CSV'),
+        'icon' => 'glyphicon glyphicon-file',
+        'items' => $dropdownCsvButtonItems
+    ));
 }
 
-echo $this->element('dropdownButton', array(
-    'buttonCount' => 1,
-    'class' => 'btn-primary',
-    'title' => __('CSV'),
-    'icon' => 'glyphicon glyphicon-file',
-    'items' => $dropdownCsvButtonItems
-));
+
 
 echo '<div id="modalimport">';
 echo $this->element('modalImport', array(
@@ -208,12 +174,6 @@ echo $this->element('filters_panel', array(
         array(
             'name' => 'authtype',
             'label' => __('Authentication type'),
-            'multiple' => 'checkbox',
-            'type' => 'checkgroup',
-        ),
-        array(
-            'name' => 'rolefilter',
-            'label' => __('Role'),
             'multiple' => 'checkbox',
             'type' => 'checkgroup',
         ),
@@ -324,7 +284,6 @@ if (!empty($radusers)) {
                 );
                 break;
             case 'action':
-		        //echo '<i class="glyphicon glyphicon-eye-open"></i> ';
                 echo $this->Html->link(
                     '<i class="glyphicon glyphicon-eye-open" data-toggle="tooltip" data-placement="top" title='.__('View').'></i> ',
                     array(
@@ -334,14 +293,11 @@ if (!empty($radusers)) {
                     ),
                     array('escape' => false)
                 );
-                if (AuthComponent::user('role') === 'admin'
-                    && $user['Raduser']['type'] === 'snack'
-                ) {
+                if (AuthComponent::user('role') == 'tech') {
                     echo '<span class="unknown" title="'
                         . __('Not allowed!')
                         . '">'
-                        . '<i class="glyphicon glyphicon-edit glyphicon-red"></i> '
-                        . __('Edit') . '</span>';
+                        . '<i class="glyphicon glyphicon-edit glyphicon-red" data-toggle="tooltip" data-placement="top" title='.__('Edit').'></i> </span>';
                 } else {
                     //echo '<i class="glyphicon glyphicon-edit"></i> ';
                     echo $this->Html->link(
@@ -367,13 +323,6 @@ if (!empty($radusers)) {
                 ? $field : !$field):
                 echo $user['Raduser'][$field] ? '<i class="glyphicon glyphicon-ok"></i>' : '';
                 break;*/
-            case 'role':
-                if (isset($roles[$user['Raduser'][$field]])) {
-                    echo __($roles[$user['Raduser'][$field]]);
-                } else {
-                    echo __($user['Raduser'][$field]);
-                }
-                break;
             case 'type':
                 if ($user['Raduser']['is_windowsad']) {
                     echo $this->Html->image('windows.png', array('alt' => __('Login/Pwd by ActiveDirectory'), 'title' => __('Login/Pwd by ActiveDirectory')));

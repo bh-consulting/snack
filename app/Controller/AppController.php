@@ -40,7 +40,7 @@ class AppController extends Controller {
         'Session',
         'Auth' => array(
             'loginAction' => array(
-                'controller' => 'radusers',
+                'controller' => 'snackusers',
                 'action' => 'login',
             ),
             'loginRedirect' => array(
@@ -57,7 +57,7 @@ class AppController extends Controller {
                         'username' => 'username',
                         'password' => 'passwd',
                     ),
-                    'userModel' => 'Raduser'
+                    'userModel' => 'snackuser'
                 )
             ),
             'authorize' => array('Controller'),
@@ -65,7 +65,7 @@ class AppController extends Controller {
     );
 
     public $disableBackupsCheck = array(
-        'Radusers' => 'login',
+        'snackusers' => 'login',
     );
 
     /**

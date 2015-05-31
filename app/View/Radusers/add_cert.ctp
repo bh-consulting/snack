@@ -78,14 +78,10 @@ $checks .= $this->Form->input(
 
 $checks .= '</fieldset>';
 
-//$cisco = $this->element('cisco_common_fields', array('type' => 'cert'));
-
 $replies = '<fieldset>';
 $replies .= '<legend>' . __('Replies') . '</legend>';
 $replies .= $this->element('reply_common_fields');
 $replies .= '</fieldset>';
-
-$role = $this->element('snack_role_input');
 
 $finish = $this->Form->end(array(
     'label' => __('Create'),
@@ -97,9 +93,7 @@ echo $this->element('wizard', array(
     'steps' => array(
         __('Certificate') => $certificate,
         __('Checks') => $checks,
-        //__('Cisco') => $cisco,
         __('Replies') => $replies,
-        __('Role') => $role,
     ),
     'finishButton' => $finish,
 ));

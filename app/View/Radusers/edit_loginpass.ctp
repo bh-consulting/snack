@@ -77,8 +77,6 @@ $replies .= '<legend>' . __('Replies') . '</legend>';
 $replies .= $this->element('reply_common_fields');
 $replies .= '</fieldset>';
 
-$role = $this->element('snack_role_input');
-
 $finish = $this->Form->input('id', array('type' => 'hidden'));
 $finish .= $this->Form->end(array(
     'label' => __('Update'),
@@ -91,7 +89,6 @@ echo $this->element('wizard', array(
         __('Checks') => $checks,
         __('Cisco') => $cisco,
         __('Replies') => $replies,
-        __('Role') => $role,
     ),
     'finishButton' => $finish,
 ));

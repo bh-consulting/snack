@@ -51,14 +51,10 @@ $checks .= $this->Form->input(
 );
 $checks .= '</fieldset>';
 
-$cisco = $this->element('cisco_common_fields', array('type' => 'loginpass'));
-
 $replies = '<fieldset>';
 $replies .= '<legend>' . __('Replies') . '</legend>';
 $replies .= $this->element('reply_common_fields');
 $replies .= '</fieldset>';
-
-$role = $this->element('snack_role_input');
 
 $finish = $this->Form->input('id', array('type' => 'hidden'));
 $finish .= $this->Form->end(array(

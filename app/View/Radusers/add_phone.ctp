@@ -64,14 +64,10 @@ $checks .= $this->Form->input(
 );
 $checks .= '</fieldset>';
 
-//$cisco = $this->element('cisco_common_fields', array('type' => 'loginpass'));
-
 $replies = '<fieldset>';
 $replies .= '<legend>' . __('Replies') . '</legend>';
 $replies .= $this->element('reply_common_fields_phone');
 $replies .= '</fieldset>';
-
-//$role = $this->element('snack_role_input');
 
 $finish = $this->Form->end(array(
     'label' => __('Create'),
@@ -82,9 +78,7 @@ $finish = $this->Form->end(array(
 echo $this->element('wizard', array(
     'steps' => array(
         __('Checks') => $checks,
-//        __('Cisco') => $cisco,
         __('Replies') => $replies,
-//        __('Role') => $role,
     ),
     'finishButton' => $finish,
 ));

@@ -1,5 +1,5 @@
 <?php
-if(AuthComponent::user('role') != 'tech'){
+
 ?>
 <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav nav-sidebar side-nav">           
@@ -15,6 +15,9 @@ echo $this->Html->link(
 );
 ?>
 	</li>
+<?php
+    if(AuthComponent::user('role') != 'tech'){
+?>
 	<li class="<?php echo $this->fetch('groups_active'); ?>">
 <?php
 echo $this->Html->link(
@@ -63,6 +66,9 @@ echo $this->Html->link(
 );
 ?>
 	</li>
+<?php
+    if(AuthComponent::user('role') == 'root'){
+?>
     <li class="<?php echo $this->fetch('reports_active'); ?>">
 <?php
 echo $this->Html->link(
@@ -78,6 +84,9 @@ echo $this->Html->link(
 );
 ?>
     </li>
+<?php
+    }
+?>
 	<li class="<?php echo $this->fetch('dashboard_active'); ?>">
 <?php
 echo $this->Html->link(
@@ -90,6 +99,20 @@ echo $this->Html->link(
 );
 ?>
 	</li>
+<?php if(AuthComponent::user('role') == 'root'){ ?>
+    <li class="<?php echo $this->fetch('snackusers_active'); ?>">
+<?php
+echo $this->Html->link(
+    '<i class="fa fa-user-secret fa-2x" title="' . __('Snack Users') . '"></i>',
+    array(
+        'controller' => 'snackusers',
+        'action' => 'index',
+    ),
+    array('escape' => false)
+);
+?>
+    </li>
+    <?php } ?>
 <?php if(AuthComponent::user('role') == 'root'){ ?>
 	<li class="<?php echo $this->fetch('param_active'); ?>">
 <?php
@@ -116,11 +139,12 @@ echo $this->Html->link(
 );
 ?>
     </li>
+    <?php } ?>
     </ul>
 </div>        
 <!--<div id="content" class="col-sm-9 col-sm-offset-1 col-md-10 col-md-offset-1 main content">-->
 <div id="content" class="main content">
-    <?php } ?>
+    
 <?php echo $this->Session->flash(); ?>
 <?php echo $this->fetch('content'); ?>
 <?php
