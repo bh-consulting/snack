@@ -5,6 +5,7 @@ class Snackuser extends AppModel {
     public $useTable = 'snackuser';
     public $roles = array();
     public $name = 'Snackuser';
+    public $displayField = 'username';
     public $actsAs = array('Validation');
     public $validate = array(
         'username' => array(
@@ -93,6 +94,13 @@ class Snackuser extends AppModel {
     public function getRole($id) {
         $user = $this->findById($id);
         return $user['Snackuser']['role'];
+    }
+
+    public function beforeSave($options = array()) {
+        if (!empty($this->data['Snackuser']['password'])) {
+            $this->data['Snackuser']['password'] = Security::hash($this->data['Snackuser']['password'], 'sha1', true);
+        }
+        return true;
     }
 
 }

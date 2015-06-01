@@ -277,7 +277,7 @@ class Logline extends AppModel {
     }
     
     public function get_errors_from_NAS() {
-        $constraints = array('severity' => 'err', 'pageSize' => '100000');
+        $constraints = array('severity' => 'err', 'pageSize' => '50000');
         $page = 1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];
@@ -327,7 +327,7 @@ class Logline extends AppModel {
     }
     
     public function get_warnings_from_NAS() {
-        $constraints = array('severity' => 'warn', 'pageSize' => '100000');
+        $constraints = array('severity' => 'warn', 'pageSize' => '50000');
         $page = 1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];

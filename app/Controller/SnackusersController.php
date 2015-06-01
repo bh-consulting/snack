@@ -7,7 +7,10 @@ App::uses('AppController', 'Controller');
  */
 class SnackusersController extends AppController {
 	public $helpers = array('Html', 'Form', 'JqueryEngine', 'Csv');
-
+    public $components = array(
+        'Session',
+        'RequestHandler'
+    );
 	public $uses = array('Snackuser');
 
 	public function login() {
@@ -15,8 +18,9 @@ class SnackusersController extends AppController {
             if ($this->checkAuthentication(
                     $this->request->data['Snackuser']['username'], $this->request->data['Snackuser']['passwd']
                 )) {
-                $this->Session->write('Auth.User.username', $this->request->data['Snackuser']['username']);
                 $this->Auth->login($this->request->data['Raduser']);
+                $this->Session->write('Auth.User.username', $this->request->data['Snackuser']['username']);
+                //$this->Session->write('Auth.username', $this->request->data['Snackuser']['username']);
                 Utils::userlog(__('logged in'));
 
                 $this->redirect($this->Auth->redirect());
@@ -44,6 +48,15 @@ class SnackusersController extends AppController {
         parent::beforeFilter();
     }
     
+    public function isAuthorized($user) {
+        if (in_array($this->action, array(
+                    'login', 'logout', 'changepwd',
+                ))) {
+            return true;
+        }
+        return parent::isAuthorized($user);
+    }
+
     private function checkAuthentication($username, $passwd) {
         $user = $this->Snackuser->findByUsername($username);
         if (isset($user) && !empty($user)) {
@@ -65,18 +78,15 @@ class SnackusersController extends AppController {
     	$this->Snackuser->recursive = 0;
         $this->set('snackusers', $this->paginate());
     }
-
+    
     public function add() {
     	if ($this->request->is('post')) {
             $this->Snackuser->create();
-            $this->request->data['Snackuser']['password'] = Security::hash($this->request->data['Snackuser']['password'], 'sha1', true);
-            $this->request->data['Snackuser']['confirm_password'] = Security::hash($this->request->data['Snackuser']['confirm_password'], 'sha1', true);
-            debug($this->request->data);
             if ($this->Snackuser->save($this->request->data)) {
-                 $this->Session->setFlash(
+                $this->Session->setFlash(
                     __('New user added.'), 'flash_success'
                 );
-                 Utils::userlog(__('added user %s', $this->Snackuser->id));
+                Utils::userlog(__('added user %s', $this->Snackuser->id));
                 return $this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(__('Error.'), 'flash_error');
@@ -95,10 +105,6 @@ class SnackusersController extends AppController {
                 unset($this->request->data['Snackuser']['password']);
                 unset($this->request->data['Snackuser']['confirm_password']);
             }
-            else {
-                $this->request->data['Snackuser']['password'] = Security::hash($this->request->data['Snackuser']['password'], 'sha1', true);
-                $this->request->data['Snackuser']['confirm_password'] = Security::hash($this->request->data['Snackuser']['confirm_password'], 'sha1', true);
-            }
             if($this->Snackuser->save($this->request->data, array('validate' => false))){
                 Utils::userlog(__('edited SNACK user %s', $id));
                 $this->redirect(array('action' => 'index'));
@@ -113,8 +119,7 @@ class SnackusersController extends AppController {
         $this->set('roles', $this->Snackuser->roles);
     }
 
-    public function delete($id = null)
-    {
+    public function delete($id = null) {
         if($this->request->is('get')){
             throw new MethodNotAllowedException();
         }
@@ -132,6 +137,24 @@ class SnackusersController extends AppController {
             $this->Session->setFlash(
                 __('Unable to delete SNACK user.'));
             Utils::userlog(__('error while deleting SNACK user %s', $id), 'error');
+        }
+    }
+
+    public function changepwd($username) {
+        if ($this->request->is('post')) {
+            $id = $this->Snackuser->find('first', array(
+            'conditions' => array('Snackuser.username' => $username),
+        ))['Snackuser']['id'];
+            $this->Snackuser->id = $id;
+            if ($this->Snackuser->save($this->request->data)) {
+                $this->Session->setFlash(
+                    __('Password saved.'), 'flash_success'
+                );
+                Utils::userlog(__('password of user %s saved', $this->Snackuser->id));
+                return $this->redirect($this->referer());
+            } else {
+                $this->Session->setFlash(__('Error.'), 'flash_error');
+            }
         }
     }
 

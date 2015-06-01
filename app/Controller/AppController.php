@@ -57,7 +57,7 @@ class AppController extends Controller {
                         'username' => 'username',
                         'password' => 'passwd',
                     ),
-                    'userModel' => 'snackuser'
+                    'userModel' => 'Snackuser'
                 )
             ),
             'authorize' => array('Controller'),
