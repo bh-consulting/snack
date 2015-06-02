@@ -85,6 +85,15 @@ $cakeDescription = __('SNACK');
                             ),
                             array()
                         ) . '</li>';
+                    echo '<li class="' . $this->fetch('tftp_active') . '">' .
+                        $this->Html->link(
+                            __('TFTP'),
+                            array(
+                                'controller' => 'tftp',
+                                'action' => 'index',
+                            ),
+                            array()
+                        ) . '</li>';    
                     echo '<li class="' . $this->fetch('nagios_active') . '">' .
                         $this->Html->link(
                             __('Nagios'),
@@ -140,27 +149,57 @@ $cakeDescription = __('SNACK');
                         '</li>';
                 $file = APP . 'tmp/notifications.txt';
                 $nbnotif = count(file($file))-1;
+                if ($nbnotif == -1) {
+                    $nbnotif=0;
+                }
                 if($this->Session->read('Auth.User')){
-                echo '<li>' .
+                    ?>
+                    <li class="dropdown">
+                        <a id="drop" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                            <?php
+                                //echo "Admin";
+                                echo $this->Session->read('Auth.User.username')." (".$this->Session->read('Auth.User.role').")";
+                            ?>
+                        <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="drop">
+                        <?php
+                            echo '<li>' .
+                            $this->Html->link(
+                                __('Preferences') .
+                                ' <i class="glyphicon glyphicon-wrench glyphicon-white"></i>',
+                                array(
+                                    'controller' => 'snackusers',
+                                    'action' => 'changepwd/'.$this->Session->read('Auth.User.username'),
+                                ),
+                                array('escape' => false)
+                            ) .
+                            '</li>';
+                        ?>
+                            <li role="presentation" class="divider"></li>
+                        <?php
+                            echo '<li>' .
+                            $this->Html->link(
+                                __('Logout') .
+                                ' <i class="glyphicon glyphicon-off glyphicon-white"></i>',
+                                array(
+                                    'controller' => 'snackusers',
+                                    'action' => 'logout'
+                                ),
+                                array('escape' => false)
+                            ) .
+                            '</li>';
+                        ?>
+                        </ul>
+                    </li>
+                    <?php
+                    echo '<li>' .
                         $this->Html->link(
                             '<i class="fa fa-bell-o "></i>'.
                             ' <span class="badge pull-right">'.$nbnotif.'</span>',
                             array(
                                 'controller' => 'systemDetails',
                                 'action' => 'notifications'
-                            ),
-                            array('escape' => false)
-                        ) .
-                        '</li>';
-                
-                
-                    echo '<li>' .
-                        $this->Html->link(
-                            __('Logout from %s', $this->Session->read('Auth.User.username')) .
-                            ' <i class="glyphicon glyphicon-off glyphicon glyphicon-white"></i>',
-                            array(
-                                'controller' => 'radusers',
-                                'action' => 'logout'
                             ),
                             array('escape' => false)
                         ) .

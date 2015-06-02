@@ -88,6 +88,15 @@ $cakeDescription = __('SNACK');
                             ),
                             array()
                         ) . '</li>';
+                    echo '<li class="' . $this->fetch('tftp_active') . '">' .
+                        $this->Html->link(
+                            __('TFTP'),
+                            array(
+                                'controller' => 'tftp',
+                                'action' => 'index',
+                            ),
+                            array()
+                        ) . '</li>';    
                     echo '<li class="' . $this->fetch('nagios_active') . '">' .
                         $this->Html->link(
                             __('Nagios'),

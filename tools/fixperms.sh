@@ -27,8 +27,8 @@ RADIUS_CERT=radius_cert.pem
 BACKUP_CONFIG_SCRIPT=$USER_HOME/scripts/backupConfig.sh
 BACKUP_CREATE_SCRIPT=$USER_HOME/scripts/backup_create.sh
 BACKUP_TRAPS_SCRIPT=$USER_HOME/scripts/backup_traps.sh
-TFTP_FOLDER=$USER_HOME/backups.git
-
+BACKUP_FOLDER=$USER_HOME/backups.git
+TFTP_FOLDER=$USER_HOME/tftp
 chown www-data:www-data /home/snack/interface/app/Config/parameters.php
 
 # Setting approriates permissions
@@ -91,6 +91,8 @@ chown -R :snack $USER_HOME
 chmod 770 $USER_HOME/logs
 chown -R snack:snack $TFTP_FOLDER
 chmod -R 0770 $TFTP_FOLDER
+chown -R snack:snack $BACKUP_FOLDER
+chmod -R 0770 $BACKUP_FOLDER
 
 {
 chmod +x $USER_HOME/scripts
