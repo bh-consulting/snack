@@ -30,7 +30,7 @@ $checks .= $this->Form->input('is_mac', array(
     'type' => 'checkbox',
     'between' => '',
     'after'   => '',
-    'class' => ' form-control', 
+    'class' => '', 
     'before' => '<label class="col-sm-4 control-label">'.__('MAC Address').'</label><div class="col-sm-1">',
     'between' => '',
     'after'   => '</div>',
