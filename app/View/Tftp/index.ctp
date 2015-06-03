@@ -38,18 +38,18 @@ echo '</div>';
 <p></p>
 <table class="table table-hover table-stripped table-condensed">
 <?php
-	foreach ($files as $file)  {
+	foreach ($files as $id => $file)  {
 		echo '<tr>';
 
 		echo '<td class="col-md-1"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></td>';
 		echo '<td>'.$this->Html->link(
 		    $file,
-		    array('controller' => 'tftp', 'action' => 'get_file/'.$file),
+		    array('controller' => 'tftp', 'action' => 'get_file/'.$id),
 		    array('escape' => false)
 		).'</td>';
 		echo '<td class="col-md-1">'.$this->Html->link(
 		    '<span class="glyphicon glyphicon-trash" aria-hidden="true">',
-		    array('controller' => 'tftp', 'action' => 'delete_file/'.$file),
+		    array('controller' => 'tftp', 'action' => 'delete_file/'.$id),
 		    array('escape' => false)
 		).'</td>';
 		echo '</tr>';

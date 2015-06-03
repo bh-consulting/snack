@@ -11,20 +11,19 @@ class TftpController extends AppController {
 	public $tftppath="/home/snack/tftp";
 
 	public function index() {
-		$dir = new Folder('/home/snack/tftp');
-		$files = $dir->find('.*');
-        sort($files);
-        $files=array_reverse($files);
+		$files = $this->list_files();
 		$this->set('files', $files);
 	}
 
-	public function get_file($filename) {
-		$this->response->file($this->tftppath.'/'.$filename);
+	public function get_file($id) {
+		$files = $this->list_files();
+		$this->response->file($this->tftppath.'/'.$files[$id]);
         return $this->response;
 	}
 
-	public function delete_file($filename) {
-		$file = new File($this->tftppath.'/'.$filename, false, 0644);
+	public function delete_file($id) {
+		$files = $this->list_files();
+		$file = new File($this->tftppath.'/'.$files[$id], false, 0644);
 		$file->delete();
 		return $this->redirect(array('action' => 'index'));
 	}
@@ -36,5 +35,12 @@ class TftpController extends AppController {
 			}
 		}
 		return $this->redirect(array('action' => 'index'));
+	}
+
+	public function list_files() {
+		$dir = new Folder($this->tftppath);
+		$files = $dir->find('.*');
+        sort($files);
+        return $files;
 	}
 }
