@@ -37,7 +37,7 @@ $checks .= $this->Form->input('ttls', array(
     'type' => 'checkbox',
     'between' => '',
     'after'   => '',
-    'class' => ' form-control', 
+    'class' => '', 
     'before' => '<label class="col-sm-4 control-label">'.__('Check server certificate').'</label><div class="col-sm-1">',
     'between' => '',
     'after'   => '</div>',

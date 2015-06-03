@@ -7,7 +7,7 @@ echo $this->Form->input('cisco', array(
     'type' => 'checkbox',
     'between' => '',
     'after'   => '',
-    'class' => 'form-control', 
+    'class' => '', 
     //'label' => array_merge($mainLabelOptions, $myLabelOptions),
     'before' => '<label class="col-sm-4 control-label">'.__('Cisco user').'</label><div class="col-sm-1">',
     'between' => '',
