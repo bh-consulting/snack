@@ -85,6 +85,14 @@ class SystemDetailsController extends AppController {
                 $this->set('nbupgraded', $matches[1]);
             }
         }
+        $elasticstate = $this->SystemDetail->checkService("java");
+        $this->set(
+            'elasticstate',
+            ($elasticstate == -1) ? __("Disabled") : __("Enabled for ")
+            . $elasticstate
+        );
+        $elastichealth = $this->SystemDetail->getElasticClusterHealth();
+        $this->set('elastichealth', $elastichealth);
     }
 
     public function refresh() {
@@ -102,8 +110,11 @@ class SystemDetailsController extends AppController {
                 break;
             case 'nagios':
                 $result = Utils::shell('sudo /usr/sbin/service nagios3 restart');
+                break; 
+            case 'elasticsearch':
+                $result = Utils::shell('sudo /usr/sbin/service elasticsearch restart');
                 break;
-            }
+            }    
             if (isset($result['code']) && $result['code'] == 0) {
                 $this->Session->setFlash(
                     __('Server %s has been restarted.', $server),

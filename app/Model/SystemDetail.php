@@ -294,6 +294,21 @@ class SystemDetail extends AppModel {
         } 
     }
 
+    public function getElasticClusterHealth() {
+        $arr = array();
+        $url = 'http://localhost:9200/_cluster/health?pretty';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);                                                                    
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        $data_decode = json_decode($data, true);
+        //debug($data_decode);
+        return $data_decode;
+    }
+
 }
 
 ?>

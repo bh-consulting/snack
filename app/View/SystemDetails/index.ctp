@@ -222,6 +222,34 @@ $this->assign('systemdetails_general_active', 'active');
                         }
                         ?>
                     </dd>
+                    <dt><?php echo __('Elasticsearch'); ?></dt>
+                    <dd>
+                        <?php
+                        //debug($elastichealth);
+                        echo $elasticstate;
+                        $shards=($elastichealth['active_primary_shards']+$elastichealth['unassigned_shards']);
+                        if ($elastichealth['status'] == "red") {
+                            echo '<span class="label label-danger">';
+                        }
+                        else {
+                            echo '<span class="label label-success">';
+                        }
+                        echo $elastichealth['active_primary_shards']."/".$shards;
+                        echo '</span>';
+                        if (AuthComponent::user('role') == 'root') {
+                            echo $this->Html->link(
+                                    '<i class="glyphicon glyphicon-refresh glyphicon-white"></i> ' . __('Restart Elasticsearch'), array(
+                                'action' => 'restart',
+                                'elasticsearch',
+                                    ), array(
+                                'class' => 'btn btn-xs btn-danger',
+                                'style' => 'margin-left:30px',
+                                'escape' => false
+                                    )
+                            );
+                        }
+                        ?>
+                    </dd>
                 </dl>
             </div>
         </div>
