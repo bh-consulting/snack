@@ -9,8 +9,8 @@ $this->assign('param_cron_active', 'active');
 <?php
 echo '<table class="table table-striped">';
 echo '<th>Script</th>';
-echo '<th>Frequence</th>';
-echo '<th>Actions</th>';
+echo '<th>Frequency</th>';
+//echo '<th>Actions</th>';
 $infos = explode("\n", $listcron);
 //debug($infos);
 foreach ($infos as $ligne) {
@@ -44,6 +44,9 @@ foreach ($infos as $ligne) {
                 
             }
         }
+        $name = "-- None --";
+        $scriptname = "None";
+
         if (preg_match("/^#+$/", $disabled, $matches)) {
             $freq = "Disabled";
         }
@@ -75,6 +78,11 @@ foreach ($infos as $ligne) {
             $name = "Send Reports";
             $scriptname = "SnackSendReports";
         }
+        if ($script == "/home/snack/interface/app/Console/cake SnackBackupConfig") {
+            $name = "Backup Config";
+            $scriptname = "SnackBackupConfig";
+        }
+
         if (AuthComponent::user('role') === 'admin' && $user['Raduser']['type'] === 'snack'
         ) {
             $actions .= '<span class="unknown" title="'
@@ -83,7 +91,7 @@ foreach ($infos as $ligne) {
             . '<i class="glyphicon glyphicon-edit glyphicon-red"></i> '
             . __('Edit') . '</span>';
             
-        } else {
+        } /*else {
             //echo '<i class="glyphicon glyphicon-edit"></i> ';
             $actions = $this->Html->link(
                     '<i class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="top" title=' . __('Edit') . '></i> ', array(
@@ -106,9 +114,9 @@ foreach ($infos as $ligne) {
                         ), array('escape' => false)
                 );
             }
-        }
+        }*/
         echo $this->Html->tableCells(array(
-            array($name, $freq, array($actions, array('class' => 'fit'))))
+            array($name, $freq))//, array($actions, array('class' => 'fit'))))
         );
         //echo "<td>".$min."</td><td>".$hour."</td><td>".$day."</td><td>".$month."</td><td>".$dayofmonth."</td><td>".$user."</td><td>".$name."</td>";
     }
