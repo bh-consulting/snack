@@ -70,6 +70,7 @@ class SnackSendReportsShell extends AppShell {
         }
         /* check Problems*/
         $this->strPB .= "<h2>SNACK Problems</h2>";
+        $this->strPB .= "IP Address : ".Configure::read('Parameters.ipAddress')."<br>";
         $this->checkProblem();
     }
 
