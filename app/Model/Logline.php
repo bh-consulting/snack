@@ -97,6 +97,9 @@ class Logline extends AppModel {
         if (isset($options['facility'])) {
             $arrmust[] = array("wildcard" => array("fluentd.facility" => $options['facility']));
         }
+        if (isset($options['ident'])) {
+            $arrmust[] = array("wildcard" => array("fluentd.ident" => $options['ident']));
+        }
         if (isset($options['priority'])) {
             foreach($levels as $level) {
                 if ($level == $options['priority']) {
@@ -177,6 +180,7 @@ class Logline extends AppModel {
             $log['Logline']['datetime'] = $line['_source']['@timestamp'];
             $log['Logline']['host'] = $line['_source']['host'];
             $log['Logline']['msg'] = $line['_source']['message'];
+            $log['Logline']['ident'] = $line['_source']['ident'];
             $loglines[] = $log;
         }
         $arr['loglines'] = $loglines;
@@ -277,7 +281,7 @@ class Logline extends AppModel {
     }
     
     public function get_errors_from_NAS() {
-        $constraints = array('severity' => 'err', 'pageSize' => '50000');
+        $constraints = array('priority' => 'err', 'pageSize' => '50000');
         $page = 1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];
@@ -289,7 +293,11 @@ class Logline extends AppModel {
             if($log['Logline']['level']=="err") {
                 //if(preg_match('/\d{2}:\d{2}:\d{2}\.\d{3}:\s+(%[^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
                 if(preg_match('/\S+\s+([^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
-                    $errtype = $matches[1];
+                    if ($log['Logline']['ident'] != "") {
+                        $errtype = $log['Logline']['ident'];
+                    } else {
+                        $errtype = $matches[1];
+                    }
                     $msg = $matches[2];
                     //echo $msg;
                     $host = $log['Logline']['host'];
@@ -327,7 +335,7 @@ class Logline extends AppModel {
     }
     
     public function get_warnings_from_NAS() {
-        $constraints = array('severity' => 'warn', 'pageSize' => '50000');
+        $constraints = array('priority' => 'warn', 'pageSize' => '50000');
         $page = 1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];
@@ -339,7 +347,11 @@ class Logline extends AppModel {
             if (isset($log['Logline']['level'])) {
                 if($log['Logline']['level']=="warn") {
                     if(preg_match('/\S+\s+([^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
-                        $errtype = $matches[1];
+                        if ($log['Logline']['ident'] != "") {
+                            $errtype = $log['Logline']['ident'];
+                        } else {
+                            $errtype = $matches[1];
+                        }
                         $msg = $matches[2];
                         $host = $log['Logline']['host'];
                         if (array_key_exists($host, $err)) {
