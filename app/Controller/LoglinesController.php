@@ -53,7 +53,7 @@ class LoglinesController extends AppController {
         $start = $this->start_time();
         
         $arr = $this->init();
-        $constraints=array('facility' => 'local2');
+        $constraints=array('ident' => 'freeradius');
         $this->defaultValues($arr['page'], $constraints);
         
         $total_time = $this->stop_time($start);
@@ -64,7 +64,7 @@ class LoglinesController extends AppController {
         $start = $this->start_time();
         
         $arr = $this->init();
-        $constraints=array('facility' => 'local4');
+        $constraints=array('ident' => 'snack');
         $this->defaultValues($arr['page'], $constraints);
         
         $total_time = $this->stop_time($start);
@@ -204,10 +204,10 @@ class LoglinesController extends AppController {
         $arr = $this->init();
         if (isset($type)) {
             if ($type == "index") { 
-                $constraints=array('facility' => 'local2');
+                $constraints=array('ident' => 'freeradius');
             }
             if ($type == "snack_logs") { 
-                $constraints=array('facility' => 'local4');
+                $constraints=array('ident' => 'snack');
             }
             if ($type == "nas_logs") { 
                 if (isset($this->request->params['named']['host'])) {
@@ -230,7 +230,7 @@ class LoglinesController extends AppController {
             }
         }
         else {
-            $constraints=array('facility' => 'local2');
+            $constraints=array('ident' => 'freeradius');
         }
         $this->defaultValues($arr['page'], $constraints);
         
