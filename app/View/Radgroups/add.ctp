@@ -43,7 +43,7 @@ $replies .= '</fieldset>';
 
 $finish = $this->Form->end(array(
     'label' => __('Create'),
-    'class' => 'next finish',
+    'class' => 'next finish btn btn-primary',
     'style' => 'display:none;',
 ));
 
