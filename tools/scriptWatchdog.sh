@@ -12,7 +12,7 @@ function check-freeradius {
         echo "Freeradius en cours de redémarrage";
     else
         echo "" > /tmp/watchdog-freeradius
-        res = $(netstat -lu | grep radius | wc -l)
+        res=$(netstat -lu | grep radius | wc -l)
         if [[ "$res" != "2" ]]; then
             datenow=$(date "+%Y-%m-%d %H:%m")
             echo "[$datenow] [ERR] SNACK Freeradius restart" >> $NOTIF
