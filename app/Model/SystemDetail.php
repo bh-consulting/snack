@@ -309,6 +309,13 @@ class SystemDetail extends AppModel {
         return $data_decode;
     }
 
+    public function checkUpdates() {
+        $return = shell_exec("sudo apt-get update > /dev/null 2> /dev/null && apt-cache show snack | grep Version | cut -d' ' -f2");
+        $file = new File(APP.'tmp/updates', true, 0644);
+        $file->write($return);
+        $file->close();
+    }
+
 }
 
 ?>

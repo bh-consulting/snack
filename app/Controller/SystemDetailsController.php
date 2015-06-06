@@ -80,9 +80,11 @@ class SystemDetailsController extends AppController {
         $file = new File(APP.'tmp/updates', false, 0644);
         $tmp="";
         if ($file->exists()) {
-            $tmp=$file->read(false, 'rb', false);
-            if(preg_match('/^upgraded ([0-9]*).*/', $tmp, $matches)) {
-                $this->set('nbupgraded', $matches[1]);
+            $tmp=trim($file->read(false, 'rb', false));
+            if(preg_match('/(\d+\.\d+-\d+)\s+(\d+\.\d+-\d+)/', $tmp, $matches)) {
+                if (version_compare($matches[1], $matches[2]) >=0 ) {
+                    $this->set("updates", __("Mise à jour disponible")." : $matches[1]");
+                }
             }
         }
         $elasticstate = $this->SystemDetail->checkService("java");
@@ -133,22 +135,8 @@ class SystemDetailsController extends AppController {
         $this->redirect(array('action' => 'index'));
     }
     
-    public function checkupdates() {        
-        $return = shell_exec("sudo apt-get update && apt-get upgrade snack -s");
-        if(preg_match('/([0-9]*) upgraded, ([0-9]*) newly installed, ([0-9]*) to remove and ([0-9]*) not upgraded/', $return, $matches)) {
-            $file = new File(APP.'tmp/updates', true, 0644);
-            $file->write("upgraded $matches[1]\nnewly installed $matches[2]\ntoremove $matches[3]\nupgraded $matches[4]");
-        }
-        elseif(preg_match('/([0-9]*) mis à jour, ([0-9]*) nouvellement installés, ([0-9]*) à enlever et ([0-9]*) non mis à jour/', $return, $matches)) {
-            $file = new File(APP.'tmp/updates', true, 0644);
-            $file->write("upgraded $matches[1]\nnewly installed $matches[2]\ntoremove $matches[3]\nupgraded $matches[4]");
-        }
-        else {
-            $this->Session->setFlash(
-                __('Unable to check updates.'),
-                'flash_error');
-        }
-        
+    public function checkupdates() {
+        $this->SystemDetail->checkUpdates();
         $this->redirect(
             array('action' => 'index')
         );

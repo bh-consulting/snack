@@ -62,7 +62,7 @@ $this->assign('systemdetails_general_active', 'active');
             </div>
             <div class="panel-body">
                 <dl class="dl-horizontal">
-                    <p>Nombre de mises à jour : <?php if (isset($nbupgraded)) echo $nbupgraded; else echo "0";?></p>
+                    <p><?php if (isset($updates)) echo $updates; else echo "0";?></p>
                     <!--<p><?php/*  echo $this->Html->link(
                         '<i class="glyphicon glyphicon-refresh glyphicon-white"></i> ' . __('Upgrade'), array('controller' => 'systemDetails', 'action' => 'upgrade'), array('class' => 'btn btn-success btn-large', 'escape' => false)
                     );*/

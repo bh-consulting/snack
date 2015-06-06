@@ -72,6 +72,7 @@ class SnackSendReportsShell extends AppShell {
         $this->strPB .= "<h2>SNACK Problems</h2>";
         $this->strPB .= "IP Address : ".Configure::read('Parameters.ipAddress')."<br>";
         $this->checkProblem();
+        $this->checkUpdates();
     }
 
     public function getInfos() {
@@ -396,6 +397,10 @@ class SnackSendReportsShell extends AppShell {
         
 
         $Email->send($body);
+    }
+
+    public function checkUpdates() {
+        $this->SystemDetail->checkUpdates();
     }
 
 }
