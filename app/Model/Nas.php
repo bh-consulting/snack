@@ -122,7 +122,7 @@ class Nas extends AppModel {
         $nas = $this->find('all');
         foreach ($nas as $n) {
             if ($n['Nas']['nasname'] != "127.0.0.1") {
-                if (($nas['Nas']['login'] != "") && ($nas['Nas']['password'] != "")) {
+                if (($n['Nas']['login'] != "") && ($n['Nas']['password'] != "")) {
                     $secret64Enc = $n['Nas']['password'];
                     $secret64Dec = base64_decode($secret64Enc);
                     $password = Security::decrypt($secret64Dec,$key);
