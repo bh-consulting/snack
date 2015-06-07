@@ -142,11 +142,32 @@ class SystemDetailsController extends AppController {
         );
     }
     
-    public function upgrade() {
-        $cmd = "sudo /usr/bin/apt-get install snack -y --force-yes";
-        $this->Process->run($cmd,APP.'tmp/logs/upgrade.log');
-        
-        $this->set('return', $return);
+    public function upgrade($bool=false) {
+        /* status :
+              0 : no upgrade
+              1 : upgrade started
+              2 : upgrade in progress
+        */
+        $status=0;
+        $return = trim(shell_exec('ps aux | grep "apt-get install snack" | grep -v "grep apt-get install snack" | wc -l'));
+        if ($return < 1) {
+            if ($bool) {
+                $status=1;
+                $cmd = "date '+%Y-%m-%d' && sudo /usr/bin/apt-get install snack -y --force-yes";
+                $this->Process->run($cmd,APP.'tmp/logs/upgrade.log');
+            } else {
+                $status=0;
+            }
+        }
+        else {
+            $status=2;
+        }
+        $file = new File(APP.'tmp/logs/upgrade.log', true, 0644);
+        $tmp=trim($file->read(false, 'rb', false));
+        $file->close();
+        $this->set('logupgrade', $tmp);
+        $this->set('bool', $bool);
+        $this->set('status', $status);
     }
     
     public function export() {

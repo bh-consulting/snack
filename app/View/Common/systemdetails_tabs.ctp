@@ -101,6 +101,14 @@ echo '</div>';
                 );            
             echo "</li>";
             ?>
+            <?php
+            echo "<li class=".$this->fetch('systemdetails_upgrade_active').">";
+                echo $this->Html->link(
+                    __('Upgrade'),
+                    array('controller' => 'SystemDetails', 'action' => 'upgrade')
+                );            
+            echo "</li>";
+            ?>
     </ul>
     <div class="tab-content">
         <?php echo $this->fetch('content'); ?>
