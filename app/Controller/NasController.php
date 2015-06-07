@@ -1,4 +1,6 @@
 <?php
+App::uses('File', 'Utility');
+App::uses('Folder', 'Utility');
 App::uses('Security', 'Utility');
 App::import('Model', 'Backup');
 
@@ -424,6 +426,42 @@ class NasController extends AppController {
             Utils::userlog(__('error while reinitializing GIT'), 'error');
         }
         $this->redirect(array('action' => 'index'));
+    }
+
+    /*
+    * Search text in all configurations 
+    */
+    public function searchinconfig() {
+        $this->set('post', false);
+        $dir = '/home/snack/backups.git';
+        if($this->request->is('post')){
+            $results = array();
+            $pattern = $this->request->data['Nas']['searchtext'];
+            //debug($pattern);
+            $this->set('post', true);
+            $listNas = $this->Nas->find('all', array(
+                'fields' => array('Nas.nasname', 'Nas.shortname')
+            ));
+            foreach ($listNas as $nas) {
+                if ($nas['Nas']['nasname'] != "127.0.0.1") {
+                    $path=$dir."/".$nas['Nas']['nasname'];
+                    //debug($path);
+                    $file = new File($path, false, 0644);
+                    if ($file->exists()) {
+                        $tmp=$file->read(false, 'rb', false);
+                        $tmp2 = str_replace(array("\n\n", "\r"), '', $tmp);
+                        //debug($tmp2);
+                        if (preg_match_all('/(.*'.$pattern.'.*)/', $tmp2, $matches)) {
+                            $results[$nas['Nas']['nasname']] = $matches[1];
+                        }
+                    }
+
+                    $file->close();
+                    //debug($files);
+                }
+            }
+            $this->set('results', $results);
+        }
     }
 }
 ?>

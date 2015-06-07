@@ -113,10 +113,15 @@ echo $this->element('dropdownButton', array(
 
 $dropdownConfigButtonItems = array(
     $this->Html->link(
-        __('Backup config'),
+        '<i class="glyphicon glyphicon-search"></i> ' . __('Search in config'),
+        array('action' => 'searchinconfig'),
+        array('escape' => false)
+    ),
+    $this->Html->link(
+        __(' Backup config'),
         '#',
         array(
-            'class' => 'button',
+            'class' => 'fa fa-archive button',
             'onclick' => 'getbackupall()'
         )
     ),
