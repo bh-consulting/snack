@@ -79,11 +79,12 @@ class SystemDetailsController extends AppController {
         );
         $file = new File(APP.'tmp/updates', false, 0644);
         $tmp="";
+        $this->set("updates", 0);
         if ($file->exists()) {
             $tmp=trim($file->read(false, 'rb', false));
             if(preg_match('/(\d+\.\d+-\d+)\s+(\d+\.\d+-\d+)/', $tmp, $matches)) {
                 if (version_compare($matches[1], $matches[2]) >=0 ) {
-                    $this->set("updates", __("Mise à jour disponible")." : $matches[1]");
+                    $this->set("updates", $matches[1]);
                 }
             }
         }
@@ -143,6 +144,17 @@ class SystemDetailsController extends AppController {
     }
     
     public function upgrade($bool=false) {
+        $file = new File(APP.'tmp/updates', false, 0644);
+        $tmp="";
+        $this->set("updates", 0);
+        if ($file->exists()) {
+            $tmp=trim($file->read(false, 'rb', false));
+            if(preg_match('/(\d+\.\d+-\d+)\s+(\d+\.\d+-\d+)/', $tmp, $matches)) {
+                if (version_compare($matches[1], $matches[2]) >=0 ) {
+                    $this->set("updates", $matches[1]);
+                }
+            }
+        }
         /* status :
               0 : no upgrade
               1 : upgrade started

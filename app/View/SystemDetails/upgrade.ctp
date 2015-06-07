@@ -6,9 +6,11 @@ $this->assign('systemdetails_upgrade_active', 'active');
 <?php
 switch ($status) {
 	case '0':
-		echo "<p>".$this->Html->link(
-		    '<i class="glyphicon glyphicon-refresh glyphicon-white"></i> ' . __('Upgrade'), array('controller' => 'systemDetails', 'action' => 'upgrade/true'), array('class' => 'btn btn-success btn-large', 'escape' => false)
-		)."</p>";
+		if ($updates != 0) {
+			echo "<p>".$this->Html->link(
+			    '<i class="glyphicon glyphicon-refresh glyphicon-white"></i> ' . __('Upgrade'), array('controller' => 'systemDetails', 'action' => 'upgrade/true'), array('class' => 'btn btn-success btn-large', 'escape' => false)
+			)."</p>";
+		}
 		echo "Last Upgrade :";
 		break;
 	case '1':

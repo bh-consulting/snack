@@ -62,7 +62,13 @@ $this->assign('systemdetails_general_active', 'active');
             </div>
             <div class="panel-body">
                 <dl class="dl-horizontal">
-                    <p><?php if (isset($updates)) echo $updates; else echo "0";?></p>
+                    <p><?php if ($updates == 0) {
+                            echo __("Up to date");
+                        } else { 
+                            echo __("Update ").$updates.__(" available");
+                        }
+                        ?>
+                        </p>
                 </dl>
             </div>
         </div>
