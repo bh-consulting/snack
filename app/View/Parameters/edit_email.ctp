@@ -39,6 +39,11 @@ echo $this->Form->input('smtp_email_from', array(
     'label' => array_merge($mainLabelOptions, $myLabelOptions),
     'after'  => '<div class="input-group-addon">@</div></div>',
 ));
+$myLabelOptions = array('text' => __('SMTP Email Dest'));
+echo $this->Form->input('configurationEmail', array(
+    'label' => array_merge($mainLabelOptions, $myLabelOptions),
+    'after'  => '<div class="input-group-addon">@</div></div>',
+));
 ?>
 </dl>
 
