@@ -186,14 +186,12 @@ function reportsexpanderror(type, id) {
     $(".reports-"+type+"-msg-"+id).toggle();
 }
 
-function refreshCode(){   
+function refreshCode(){
     if(document.getElementById("livelogs") !== null) {
         if (document.getElementById("LoglineAjax").checked == false) {
             var newURL=window.location.protocol + "//" + window.location.host;
             var pathArray = document.URL.split( '/' );
             newURL+="/loglines/logelementradius";
-            var type;
-            var file="";
             if (pathArray.length <= 4) {
                 newURL += "/index";
             } else {
@@ -202,6 +200,8 @@ function refreshCode(){
                     newURL += pathArray[i];
                 }
             }
+            var filters = document.URL.split( '?' )[1];
+            newURL = newURL+"?"+filters;
             $.ajax({
                     url: newURL,
                     cache: false,
@@ -214,45 +214,40 @@ function refreshCode(){
     if(document.getElementById("voicelivelogs") !== null) {
         if (document.getElementById("LoglineAjax").checked == false) {
             var newURL=window.location.protocol + "//" + window.location.host;
-            var pathArray = document.URL.split( '/' );
+            var params = document.URL.split( '?' );
             newURL+="/loglines/logelementvoice";
-            var type;
-            var file="";
-            if (pathArray.length <= 2) {
-                type="index";
-                file="snacklog";
-            } else {
-                for (i = 4; i < pathArray.length; i++) {
-                    newURL += "/";
-                    newURL += pathArray[i];
-                }
+            if (params.length > 1) {
+                newURL += "?";
+                newURL += params[1];
             }
+            //alert(newURL);
             $.ajax({
-                    url: newURL,
-                    cache: false,
-                    success: function(html){
-                      $("#voicelivelogs").html(html);
-                    }
+                url: newURL,
+                cache: false,
+                success: function(html){
+                  $("#voicelivelogs").html(html);
+                }
             })
         }
     }
     if(document.getElementById("livesessions") !== null) {
         if (document.getElementById("RadacctAjax").checked == false) {
             var newURL=window.location.protocol + "//" + window.location.host;
-            var pathArray = document.URL.split( '/' );
-            newURL+="/radaccts/get_sessions_ajax?";
+            //var pathArray = document.URL.split( '/' );
+            newURL+="/radaccts/get_sessions_ajax";
             var params=document.URL.split( '?' );
-            if (params.length > 0) {
-                newURL += "/"+params[1];
+            if (params.length > 1) {
+                newURL += "?";
+                newURL += params[1];
             }
             //alert(newURL);
             $.ajax({
-                    url: newURL,
-                    cache: false,
-                    success: function(html){
-                      $("#livesessions").html(html);
-                    }
-                  })
+                url: newURL,
+                cache: false,
+                success: function(html){
+                  $("#livesessions").html(html);
+                }
+            })
         }
     }
 }

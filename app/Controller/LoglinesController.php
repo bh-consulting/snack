@@ -240,15 +240,13 @@ class LoglinesController extends AppController {
         $this->layout = false;
     }
     
-    public function logelementvoice($type) {
+    public function logelementvoice() {
         $start = $this->start_time();
 
         $arr = $this->init();
 
-        if ($type == "voice_logs") { 
-            $pageSize =  Configure::read('Parameters.paginationCount')*2;
-            $constraints=array('facility' => 'local7', 'type' => 'voip', 'pageSize' => $pageSize);
-        }
+        $pageSize =  Configure::read('Parameters.paginationCount')*2;
+        $constraints=array('facility' => 'local7', 'type' => 'voip', 'pageSize' => $pageSize);
         
         $this->defaultValues($arr['page'], $constraints);
         
