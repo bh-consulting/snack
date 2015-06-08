@@ -21,6 +21,7 @@ class SnackBackupConfigShell extends AppShell {
         ));
         if (count($nas) > 0) {
             if ($USER_NAME == $nas['Nas']['login']) {
+                CakeLog::write('debug', 'NOT Backup config for '.$USER_NAME.'@'.$infos[0]);
                 return 0;
             }
         }
@@ -28,9 +29,11 @@ class SnackBackupConfigShell extends AppShell {
             $ACCT_STATUS_TYPE = "auto";
         }
         if ($NAS_IP_ADDRESS != "" && $NAS_IP_ADDRESS != "127.0.0.1") {
+            Cakelog::write('debug', 'Backup config '.$ACCT_STATUS_TYPE.' for '.$USER_NAME.'@'.$infos[0]);
             $this->Nas->backupOneNas($NAS_IP_ADDRESS, $ACCT_STATUS_TYPE, $USER_NAME);
         }
         else if ($NAS_IP_ADDRESS != "127.0.0.1") {
+            Cakelog::write('debug', 'Backup config for All Nas');
             $this->Nas->backupAllNas($ACCT_STATUS_TYPE, "system");
         }
     }
