@@ -53,7 +53,11 @@ if ($post) {
 			foreach ($result as $res) {
 				echo "<tr>";
 				echo "<td></td>";
-				echo "<td>".$res."</td>";
+				echo "<td>";
+				if(preg_match('/(.*)'.$pattern.'(.*)/', $res, $matches)) {
+					echo $matches[1]."<b><span class='text-danger'>".$pattern."</span></b>".$matches[2];
+				}
+				echo "</td>";
 				echo "</tr>";
 			}
 			
