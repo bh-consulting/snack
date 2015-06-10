@@ -77,6 +77,13 @@ class SystemDetailsController extends AppController {
             ($nagiosUptime == -1) ? __("Disabled") : __("Enabled for ")
             . $nagiosUptime
         );
+
+        $nagiosUptime = $this->SystemDetail->checkService("tftp");
+        $this->set(
+            'tftpstate',
+            ($nagiosUptime == -1) ? __("Disabled") : __("Enabled for ")
+            . $nagiosUptime
+        );
         $file = new File(APP.'tmp/updates', false, 0644);
         $tmp="";
         $this->set("updates", 0);
@@ -117,7 +124,10 @@ class SystemDetailsController extends AppController {
             case 'elasticsearch':
                 $result = Utils::shell('sudo /usr/sbin/service elasticsearch restart');
                 break;
-            }    
+            case 'tftp':
+                $result = Utils::shell('sudo /usr/sbin/service tftpd-hpa restart');
+                break;    
+            }
             if (isset($result['code']) && $result['code'] == 0) {
                 $this->Session->setFlash(
                     __('Server %s has been restarted.', $server),
