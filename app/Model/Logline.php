@@ -1,4 +1,5 @@
 <?php
+App::uses('CakeTime', 'Utility');
 class Logline extends AppModel {
 	public $useTable = false;
 	//public $primaryKey = 'id';
@@ -67,6 +68,10 @@ class Logline extends AppModel {
     }
 
     public function findLogs($page=-1, $options=array()) {
+        $offset=CakeTime::serverOffset();
+        $tz = sprintf( "%02d:%02d", $offset / 3600, $offset / 60 % 60);
+        //debug($tz);
+
         $arr = array();
         $levels = array_keys($this->levels);
         if (isset($options['pageSize'])) {
@@ -79,18 +84,7 @@ class Logline extends AppModel {
         if (isset($options['pageSize'])) {
             $pageSize = $options['pageSize'];
         }
-        /*$data = array("query" => array( "bool" => array( "must" => array( array("wildcard" => array("fluentd.severity" => "err"))), "must_not" => array(), "should" => array())), 
-                                "from" => 0, 
-                                "size" => 10, 
-                                "sort" => array(), 
-                                "facets" => new \stdClass(),
-        );
-        $data = array("query" => array( "bool" => array( "must" => array(), "must_not" => array(), "should" => array())), 
-                      "from" => 0, 
-                      "size" => $pageSize, 
-                      "sort" => array(), 
-                      "facets" => new \stdClass(),
-        );*/
+
         $arrmustnot = array();
         $arrmust = array();
         //debug($options);
@@ -119,41 +113,29 @@ class Logline extends AppModel {
                 );
             }
         }
-        /*if (isset($options['string'])) {
-            $arrmust[] = array("query_string" => array("default_field" => "fluentd.message",
-                                                         "query" => "*".$options['string']."*")
-            );
-        }*/
+
         if (isset($options['string'])) {
-            //$arrmust[] = array("query_string" => array("default_field" => "fluentd.message",
-                                                      //   "query" => $options['string'])
             $arrmust[] = array("match_phrase_prefix" => array("fluentd.message" => $options['string']));
         }
         if (isset($options['datefrom']) && isset($options['dateto'])) {
-            $arrmust[] = array("range" => array("fluentd.@timestamp" => array("from" => $options['datefrom'], "to" => $options['dateto'])));
+            $arrmust[] = array("range" => array(
+                "fluentd.@timestamp" => array(
+                    "gte" => $options['datefrom'], 
+                    "lte" => $options['dateto'],
+                    "time_zone" => $tz
+            )));
         }
         
         $from = ($page-1)*$pageSize;
-        /*$data = array("query" => array( "bool" => array( "must" => isset($arrmust) ? array($arrmust) : array(), "must_not" => array(), "should" => array())), 
-                      "from" => 0, 
-                      "size" => $pageSize, 
-                      "sort" => array(array("@timestamp" => array("order" => "desc"))), 
-                      "facets" => new \stdClass(),
-        );*/
+
         $data = array();
         $data["query"] = array( "bool" => array( "must" => $arrmust, "must_not" => $arrmustnot, "should" => array()));
         $data["from"] = $from;
         $data["size"] = $pageSize;
         $data["sort"] = array(array("@timestamp" => array("order" => "desc")));
         $data["facets"] = new \stdClass();
-        /*$data = array("query" => array( "bool" => array( "must" => $arrmust, "must_not" => $arrmustnot, "should" => array())), 
-                      "from" => $from, 
-                      "size" => $pageSize, 
-                      "sort" => array(array("@timestamp" => array("order" => "desc"))), 
-                      "facets" => new \stdClass(),
-        );*/
+
         //debug($data);
-        //isset($input['escape']) ? $input['escape'] : true,
         $data_string = json_encode($data, TRUE);
         //debug($data_string);
         $url = 'http://localhost:9200/_search';
@@ -171,8 +153,7 @@ class Logline extends AppModel {
         $data_decode = json_decode($data, true);
         //debug($data_decode) ;
         $arr['count'] = $data_decode['hits']['total'];
-        //debug($arr);
-        //debug($data_decode['hits']['hits']);
+
         foreach ($data_decode['hits']['hits'] as $line) {
             if (isset($line['_source']['severity'])) {
                 $log['Logline']['level'] = $line['_source']['severity'];
