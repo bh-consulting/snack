@@ -5,7 +5,10 @@ class RadacctsController extends AppController {
     public $paginate = array(
         'limit' => 10,
         'order' => array('acctstarttime' => 'desc'),
-        'conditions' => array('Radacct.acctauthentic !=' => 'Local'),
+        'conditions' => array(
+            'Radacct.acctauthentic !=' => 'Local',
+            'Radacct.acctauthentic !=' => 'Remote',
+        ),
         
     );
     public $components = array(
