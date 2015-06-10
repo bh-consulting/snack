@@ -461,6 +461,7 @@ class NasController extends AppController {
                 }
             }
             $this->set('results', $results);
+            $this->set('pattern', $pattern);
         }
     }
 }
