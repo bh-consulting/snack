@@ -41,41 +41,42 @@ if ($ARGV[0] eq 'config') {
     close(RESOLVCONF);
 
     system("service winbind restart");
-    $res=`wbinfo -p`;
-    print $res;
-    if ($res =~ /^Ping to winbindd succeeded.*/) {    
-        
-        $cmd = "sed -e 's/\\(127\\.0\\.1\\.1\\).*/\\1\\t$hostname\\t$hostname\\.$domain/' -i /etc/hosts";
-        #$cmd = "sed -e 's/\\(127\\.0\\.1\\.1\\).*/\\1\\t$hostname\\.$domain\\t$hostname/' -i /etc/hosts";
-        #print $cmd;
-        system($cmd);
-        $cmd = "net conf drop";
-        system($cmd);
-        $cmd = "net conf import /etc/samba/smb.conf";
-        system($cmd);
-        #$cmd = '/usr/bin/net join ads -S'.$hostname.'-I '.$adhostname.' -U '.$admin_account.'%'.$admin_password;
-        my @cmd = ('/usr/bin/net', '-I', $adhostname, '-W', $domain, '-U', $admin_account.'%'.$admin_password);
-        #print @cmd;
-        my $success = open(NET, '-|', @cmd, 'ads', 'join');
-        
-        open(RES,"> /etc/samba/joinresult");
-        while (<NET>) {
-           #print RES $_;
-            if ($_ =~ /^Joined '(.*)' to realm '(.*)'/) {
+    $res=`ping -c5 $hostname | grep packets`;
+    #print $res;
+    if ($res =~ /(\d+)\s+received*/)  {
+        if ($1 >= 3) {    
+            $cmd = "sed -e 's/\\(127\\.0\\.1\\.1\\).*/\\1\\t$hostname\\t$hostname\\.$domain/' -i /etc/hosts";
+            #$cmd = "sed -e 's/\\(127\\.0\\.1\\.1\\).*/\\1\\t$hostname\\.$domain\\t$hostname/' -i /etc/hosts";
+            #print $cmd;
+            system($cmd);
+            $cmd = "net conf drop";
+            system($cmd);
+            $cmd = "net conf import /etc/samba/smb.conf";
+            system($cmd);
+            #$cmd = '/usr/bin/net join ads -S'.$hostname.'-I '.$adhostname.' -U '.$admin_account.'%'.$admin_password;
+            my @cmd = ('/usr/bin/net', '-I', $adhostname, '-W', $domain, '-U', $admin_account.'%'.$admin_password);
+            #print @cmd;
+            my $success = open(NET, '-|', @cmd, 'ads', 'join');
+            
+            open(RES,"> /etc/samba/joinresult");
+            while (<NET>) {
+               #print RES $_;
+                if ($_ =~ /^Joined '(.*)' to realm '(.*)'/) {
+                    print "\n$1\ $2\n";
+                }
+            }
+            close(RES);
+            close(NET);
+
+            if ($output =~ /^'(.*)' to realm '(.*)'/) {
                 print "\n$1\ $2\n";
             }
+            #print $output;
+            open(RES,"> /etc/samba/joinresult");
+            print RES $output;
+            close(RES);
+            system("service winbind restart");
         }
-        close(RES);
-        close(NET);
-
-        if ($output =~ /^'(.*)' to realm '(.*)'/) {
-            print "\n$1\ $2\n";
-        }
-        #print $output;
-        open(RES,"> /etc/samba/joinresult");
-        print RES $output;
-        close(RES);
-        system("service winbind restart");
     }
 }
 
