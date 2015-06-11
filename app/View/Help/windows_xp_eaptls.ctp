@@ -3,6 +3,10 @@ $this->extend('/Common/help_tabs');
 $this->assign('help_windowsxp_active', 'active');
 ?>
 <h2><?php echo __('Certificates');?></h2>
+<b>
+ATTENTION : Si vous voulez que les certificats soient accessibles depuis toutes les sessions utilisateurs, il est nécessaire d'installer les certificat dans "la configuration ordiateur" via la console mmc.exe
+
+</b>
 <h4><?php echo __('Installation of root certificat');?></h4>
 <?php 
 echo __("Pour installer le certificat racine, ouvrer Démarrer puis cliquez sur 'Exécuter' et lancez 'certmgr.msc");
@@ -45,7 +49,7 @@ echo $this->Html->image('help/windows/importClient.PNG', array('alt' => 'importC
 echo "<br><br>";
 echo __("Cliquez ensuite sur suivant une nouvelle fois. La selection automatique du magasin est en effet adaptée pour ce cas.");
 echo "<br><br>";
-echo $this->Html->image('help/windows/importClient.PNG', array('alt' => 'importClient2'));
+echo $this->Html->image('help/windows/importClient2.PNG', array('alt' => 'importClient2'));
 echo "<br><br>";
 echo __("Cliquez enfin sur Terminer");
 echo "<br><br>";
@@ -63,26 +67,16 @@ echo __("Puis effectuez un clic droit sur la connexion que vous utilisez pour ac
 echo "<br><br>";
 echo $this->Html->image('help/windows/connectionProperties.PNG', array('alt' => 'Connection Properties'));
 echo "<br><br>";
-echo __("Choisissez alors 'EAP protégé (PEAP)' dans l'onglet 'Authentification'.");
+echo __("Choisissez alors 'Carte à puce ou autre certificat' dans l'onglet 'Authentification'.");
 echo "<br><br>";
-echo $this->Html->image('help/windows/peap.PNG', array('alt' => 'PEAP'));
+echo $this->Html->image('help/windows/tls.PNG', array('width'=>'960px', 'alt' => 'TLS'));
 echo "<br><br>";
-echo __("Cliquez ensuite sur le bouton 'Paramètres...' à coté de l'option PEAP et cochez votre authorité de certification dans la liste présentée.");
+echo __("Cliquez ensuite sur le bouton 'Paramètres...'");
 echo "<br><br>";
-echo $this->Html->image('help/windows/peapParams.PNG', array('alt' => 'PEAP'));
+echo $this->Html->image('help/windows/tlsParams.PNG', array('width'=>'960px', 'alt' => 'PEAP'));
 echo "<br><br>";
-echo __("Cliquez ensuite sur le bouton 'Configurer...' à coté du champs présentant la méthode d'authentification (Mot de passe sécurité (EAP MSCHAP Version 2)).");
-echo __("Décochez alors l'utilisation du nom de session, à moins que celui-ci soit effectivement celui utilisé par votre administrateur lors de la création du certificat.");
-echo "<br><br>";
-echo $this->Html->image('help/windows/peapParamsConfig.PNG', array('alt' => 'PEAP'));
-echo "<br><br>";
-echo __("Puis validez et fermez toutes les fenêtres ouvertes.
-Connectez-vous physiquement au reseau.\\
-Une info-bulle windows doit apparaître, vous signifiant que l'accès au réseaux requiert des informations supplémentaires.");
-echo __("Après avoir cliqué sur l'info-bulle, il suffit de renseigner ses identifiants.");
-echo "<br><br>";
-echo $this->Html->image('help/windows/credentials.PNG', array('alt' => 'credentials'));
-echo "<br><br>";
+echo __("Selectionnez le certificat correspondant.");
+echo "<br>";
 echo __("Après avoir validé, la connexion est établie.");
 ?>
 

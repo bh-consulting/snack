@@ -25,15 +25,6 @@ $this->assign('help_active', 'active');
                         <a href="#">
                             <?php
                             echo $this->Html->link(
-                                    __('User/Password'), array('controller' => 'help', 'action' => 'windows_xp_eap')
-                            );
-                            ?>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <?php
-                            echo $this->Html->link(
                                     __('User/Password with Certificate Server'), array('controller' => 'help', 'action' => 'windows_xp_eapttls')
                             );
                             ?>

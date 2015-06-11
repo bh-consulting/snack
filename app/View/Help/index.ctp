@@ -8,12 +8,6 @@ $ipAddress=Configure::read('Parameters.ipAddress');
 <dl class="well dl-horizontal">
     <dt><?php echo __('IOS < 15.x'); ?></dt><br/>
     <pre>
-
-ip ssh pubkey-chain
-username snack
-key-string
-exit
-!
 aaa group server radius RadiusServers
 server <?php echo $ipAddress;?> auth-port 1812 acct-port 1813
 !
@@ -29,22 +23,13 @@ dot1x system-auth-control
 !
 logging <?php echo $ipAddress;?> 
 logging source-interface Vlan 1
-snmp-server community private RW
-snmp-server enable traps snmp coldstart
-snmp-server enable traps config
-snmp-server host <?php echo $ipAddress;?> version 2c private
-snmp-server trap-source Vlan 1
+snmp-server community public RO
+snmp-server host <?php echo $ipAddress;?> version 2c public
 radius-server host <?php echo $ipAddress;?> auth-port 1812 acct-port 1813 key 0 sharedkey
     </pre>
     
     <dt><?php echo __('IOS > 15.x'); ?></dt><br/>
     <pre>
-
-ip ssh pubkey-chain
-username snack
-key-string 
-exit
-!
 aaa group server radius RadiusServers
     server snack
     ip radius source-interface Vlan1
@@ -62,11 +47,8 @@ authentication mac-move permit
 !
 logging <?php echo $ipAddress;?> 
 logging source-interface Vlan 1
-snmp-server community private RW
-snmp-server enable traps snmp coldstart
-snmp-server enable traps config
-snmp-server host <?php echo $ipAddress;?> version 2c private
-snmp-server trap-source Vlan 1
+snmp-server community public RO
+snmp-server host <?php echo $ipAddress;?> version 2c public
 radius-server vsa send cisco-nas-port
 radius server snack
     address ipv4 <?php echo $ipAddress;?> auth-port 1812 acct-port 1813 
