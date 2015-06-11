@@ -150,11 +150,17 @@ $cakeDescription = __('SNACK');
                             array('escape' => false)
                         ) .
                         '</li>';
-                $file = APP . 'tmp/notifications.txt';
-                $nbnotif = count(file($file))-1;
-                if ($nbnotif == -1) {
+                $filename = APP . 'tmp/notifications.txt';
+                
+                if (file_exists ($filename)) {
+                    $nbnotif = count(file($filename))-1;
+                    if ($nbnotif == -1) {
+                        $nbnotif=0;
+                    }
+                } else {
                     $nbnotif=0;
                 }
+                
                 if($this->Session->read('Auth.User')){
                     ?>
                     <li class="dropdown">
