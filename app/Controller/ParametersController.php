@@ -41,7 +41,7 @@ class ParametersController extends AppController {
             $this->set($key, $value);
         }
         //debug(checkdnsrr($this->Parameter->data['Parameter']['addomain'], "A"));
-        if (isset($this->Parameter->data['Parameter']['addomain'])) {
+        if (isset($this->Parameter->data['Parameter']['addomain']) && !empty($this->Parameter->data['Parameter']['addomain'])) {
             if (checkdnsrr($this->Parameter->data['Parameter']['addomain'], "A")) {
             //if(preg_match("/^Ping to winbindd succeeded.*/", $return, $matches)) {
                 $return = shell_exec("sudo /usr/bin/perl /home/snack/interface/tools/scriptConfigAD.pl status");
