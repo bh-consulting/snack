@@ -19,11 +19,11 @@ class CertsController extends AppController {
      * @return response file to download
      */
     public function get_cert($type) {
-	if($type == 'server') {
-	    $file = Utils::getServerCertPath();
-    } elseif($type == 'servercer') {
-        $file = Utils::getServerCertCerPath();
-	}
+    	if($type == 'server') {
+    	    $file = Utils::getServerCertPath();
+        } elseif($type == 'servercer') {
+            $file = Utils::getServerCertCerPath();
+    	}
         try {
             $this->response->file($file);
             return $this->response;
