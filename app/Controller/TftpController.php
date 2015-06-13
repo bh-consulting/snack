@@ -19,7 +19,11 @@ class TftpController extends AppController {
 
 	public function get_file($id) {
 		$files = $this->list_files();
-		$this->response->file($this->tftppath.'/'.$files[$id]);
+		debug($files[$id]['filename']);
+		$this->response->file(
+			$this->tftppath.'/'.$files[$id]['filename'],
+			array('download' => true, 'name' => $files[$id]['filename'])
+		);
         return $this->response;
 	}
 
