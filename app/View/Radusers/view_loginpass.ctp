@@ -3,25 +3,19 @@ $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
 
-if (isset($attributes['EAP-Type'])
-    && $attributes['EAP-Type'] == 'EAP-TTLS'
-) {
-    $servercertificatepem = $this->Html->link(
-            "cacert.pem", array(
-        'action' => 'get_cert/server',
-        'controller' => 'certs',
-            )
-    );
+$servercertificatepem = $this->Html->link(
+        "cacert.pem", array(
+    'action' => 'get_cert/server',
+    'controller' => 'certs',
+        )
+);
 
-    $servercerficatecer = $this->Html->link(
-            "cacert.cer", array(
-        'action' => 'get_cert/servercer',
-        'controller' => 'certs',
-            )
-    );
-} else if (array_search('Server certificate path', $showedAttr)) {
-    unset($showedAttr[array_search('Server certificate path', $showedAttr)]);
-}
+$servercerficatecer = $this->Html->link(
+        "cacert.cer", array(
+    'action' => 'get_cert/servercer',
+    'controller' => 'certs',
+        )
+);
 
 echo $this->element(
 	'viewInfo',
@@ -35,17 +29,16 @@ echo $this->element(
 		'showedAttr' => $showedAttr,
 	)
 );
-if (isset($attributes['EAP-Type']) && $attributes['EAP-Type'] == 'EAP-TTLS') {
-    echo '<dl class="well dl-horizontal">
-    <dt>For Windows : </dt>
-    <dd>';
-    echo $servercertificatepem;
-    echo '</dd>
+echo '<dl class="well dl-horizontal">
+<dt>For Windows : </dt>
+<dd>';
+echo $servercertificatepem;
+echo '</dd>
 </dl>
 <dl class="well dl-horizontal">
-    <dt>For Android / Linux: </dt>
-    <dd>';
-    echo $servercerficatecer;
-    echo '</dd></dl>';
-}
+<dt>For Android / Linux: </dt>
+<dd>';
+echo $servercerficatecer;
+echo '</dd></dl>';
+
 ?>

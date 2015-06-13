@@ -75,7 +75,7 @@ class NasController extends AppController {
         $allnas = $this->Nas->find('all');
         $unBackupedNas = array();
         foreach ($allnas as $nas) {
-            if ($nas['Nas']['nasname'] != "127.0.0.1") {
+            if ($nas['Nas']['nasname'] != "127.0.0.1" && $nas['Nas']['backup']) {
                 if (!$this->Backup->isBackuped($nas['Nas']['nasname'])) {
                     $unBackupedNas[] = $nas['Nas']['nasname'];
                 }
@@ -182,6 +182,7 @@ class NasController extends AppController {
         $attributes['Type'] = $nas['Nas']['type'];
         $attributes['Ports'] = $nas['Nas']['ports'];
         $attributes['Login'] = $nas['Nas']['login'];
+        $attributes['Backup'] = $nas['Nas']['backup'];
         $attributes['Virtual server'] = $nas['Nas']['server'];
         $attributes['Community'] = $nas['Nas']['community'];
 
@@ -195,6 +196,7 @@ class NasController extends AppController {
                 'Type',
                 'Ports',
                 'Login',
+                'Backup',
             )
         );
 
@@ -277,6 +279,7 @@ class NasController extends AppController {
             }
         } else {
             $this->request->data = $this->Nas->read();
+            $this->set('backup', $this->request->data['Nas']['backup']);
             unset($this->request->data['Nas']['password']);
             unset($this->request->data['Nas']['confirm_password']);
             unset($this->request->data['Nas']['enablepassword']);

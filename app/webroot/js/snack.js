@@ -68,35 +68,18 @@ $(document).ready(function() {
     document.onkeydown = Tastendruck;
 });
 
-function testlocalusers(){
-    if(document.getElementById("localusers") !== null) {
-        //alert( "error" );
-        $.get("test_users", function(data) {
-                loading();
-                $("#localusers").html(data);
-            }).fail(function() {
-                alert( "error" );
-            })
-            .always(function() {
-                //alert( "finished" );
-            });
-        /*$.ajax({
-            url: newURL,
-            cache: false,
-            success: function(html){
-              $("#livelogs").html(html);
-            }
-        })*/
-    }
-}
-
-function testadusers(){
-    if(document.getElementById("adusers") !== null) {
-        //alert( "error" );
-        var url="test_users/ad/"+document.getElementById('SystemDetailsUsername').value+"/"+document.getElementById('SystemDetailsPassword').value;
+function test_users(){
+    if(document.getElementById("users") !== null) {
+        if (document.getElementById('SystemDetailsPassword').value == "") {
+            password=null;
+        } else {
+            password=document.getElementById('SystemDetailsPassword').value;
+        }
+        var url="test_users/"+$("#SystemDetailsUsername option:selected").text()+"/"+password+"/"+$("#SystemDetailsAuthtype option:selected").text();
+        //alert(url);
         $.get(url, function(data) {
                 loading();
-                $("#adusers").html(data);
+                $("#users").html(data);
             }).fail(function() {
                 alert( "error" );
             })
@@ -104,34 +87,6 @@ function testadusers(){
                 //alert( "finished" );
             });
     }
-}
-
-function testslogs(id) {   
-    var url="testslog/"+id;
-    //alert(url);
-    $.get(url, function(data) {            
-        $("div.testslogs").html(data);
-        //alert(data);
-    }).fail(function() {
-        alert( "error" );
-    })
-    .always(function() {
-        //alert( "finished" );
-    });
-}
-
-function testslogsAD(id, pwd) {   
-    var url="testslog/"+id+"/"+pwd;
-    //alert(url);
-    $.get(url, function(data) {            
-        $("div.testslogs").html(data);
-        //alert(data);
-    }).fail(function() {
-        alert( "error" );
-    })
-    .always(function() {
-        //alert( "finished" );
-    });
 }
 
 function getbackupid(id) {
@@ -381,6 +336,47 @@ $(".halog").click(function(event) {
     .always(function() {
         //alert( "finished" );
     });
+});
+
+// SYSTEMDETAILS / TEST
+$("#SystemDetailsUsername").change(function() {
+    //alert($("#SystemDetailsUsername option:selected").text());
+    var patt = new RegExp("[0-9a-f]{12}");
+    var res = patt.test($("#SystemDetailsUsername option:selected").text());
+    if (res) {
+        $("#SystemDetailsPassword").val($("#SystemDetailsUsername option:selected").text());
+        $("#SystemDetailsAuthtype").val("eap-md5");
+        $("#SystemDetailsPassword").prop( "readonly", false);
+    }
+});
+
+// SYSTEMDETAILS / TEST
+$("#SystemDetailsAuthtype").change(function() {
+    //alert($("#SystemDetailsAuthtype option:selected").text());
+    if ($("#SystemDetailsAuthtype option:selected").text() == "EAP-TLS") {
+        $("#SystemDetailsPassword").val("");
+        $("#SystemDetailsPassword").prop( "readonly", true);
+    } else {
+        $("#SystemDetailsPassword").prop( "readonly", false);
+    }
+});
+
+
+// NAS / backup checkbox
+$("#NasBackup").change(function() {
+    if($(this).is(":checked")) {
+        $("#NasLogin").prop( "readonly", false );
+        $("#NasPassword").prop( "readonly", false );
+        $("#NasConfirmPassword").prop( "readonly", false );
+        $("#NasEnablepassword").prop( "readonly", false );
+        $("#NasConfirmEnablepassword").prop( "readonly", false );
+    } else {
+        $("#NasLogin").prop( "readonly", true );
+        $("#NasPassword").prop( "readonly", true );
+        $("#NasConfirmPassword").prop( "readonly", true );
+        $("#NasEnablepassword").prop( "readonly", true );
+        $("#NasConfirmEnablepassword").prop( "readonly", true );
+    }
 });
 
 setInterval(function(){ refreshCode(); }, 3000)

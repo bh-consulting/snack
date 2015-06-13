@@ -37,6 +37,20 @@ echo $this->Form->input('secret', array('label' => array_merge($mainLabelOptions
 $myLabelOptions = array('text' => __('Description'));
 echo $this->Form->input('description', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
 
+echo $this->Form->input('backup', array(
+    'type' => 'checkbox',
+    'between' => '',
+    'after'   => '',
+    'class' => '', 
+    //'before' => '<label class="col-sm-4 control-label">'.__('Check server certificate').'</label><div class="col-sm-1">',
+    'before' => '<label class="col-sm-4 control-label">'.__('Must be Backuped ?').'</label><div class="col-sm-1">',
+    'between' => '',
+    'after'   => '</div>',
+    'label' => false,
+    'checked' => 'checked',
+    //'readonly' => true,
+));
+
 $myLabelOptions = array('text' => __('Login'));
 echo $this->Form->input('login', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
 

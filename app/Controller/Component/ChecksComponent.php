@@ -172,7 +172,7 @@ class ChecksComponent extends Component {
      * @param array $checks checks lines to add 
      */
     public function add($request, $checks) {
-        pr("test");
+        //pr("test");
         if ($request->is('post')) {
             // add common checks values (expiration date and simultaneous uses)
             $name = $request->data[$this->baseClassName][$this->displayName];
@@ -522,7 +522,7 @@ class ChecksComponent extends Component {
                         break;
 
                     case 'NAS-Port-Type':
-                        $operator = '~=';
+                        $operator = '=~';
                         break;
 
                     default:

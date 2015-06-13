@@ -351,7 +351,11 @@ if (!empty($nas)) {
                         if (in_array($n['Nas']['nasname'], $unBackupedNas)) {
                             echo '<i class="glyphicon glyphicon-warning-sign glyphicon text-danger" title="' . $lastBackupNas[$n['Nas']['nasname']] . '"> ';
                         } else {
-                            echo '<i class="glyphicon glyphicon-ok glyphicon text-success" title="' . $lastBackupNas[$n['Nas']['nasname']] . '"> ';
+                            if ($n['Nas']['backup']) {
+                                echo '<i class="glyphicon glyphicon-ok glyphicon text-success" title="' . $lastBackupNas[$n['Nas']['nasname']] . '"> ';
+                            } else {
+                                echo '<i class="glyphicon glyphicon-eye-close" title="' . $lastBackupNas[$n['Nas']['nasname']] . '"> ';
+                            }
                         }
                         echo $this->Html->link(
                             __('Backups'),

@@ -858,7 +858,7 @@ class RadusersController extends AppController {
                         'title' => $cert,
                         'url' => array(
                             'controller' => 'certs',
-                            'action' => 'get_cert/' . $username,
+                            'action' => 'get_cert_user/' . $username . '/p12',
                         ),
                         'style' => array(
                             'class' => '',
@@ -971,32 +971,34 @@ class RadusersController extends AppController {
 
                 $this->request->data['Raduser']['is_loginpass'] = 1;
 
-                if (isset($this->request->data['Raduser']['ttls']) && $this->request->data['Raduser']['ttls'] == 1) {
+                /*if (isset($this->request->data['Raduser']['ttls']) && $this->request->data['Raduser']['ttls'] == 1) {
                     $eapType = 'EAP-TTLS';
                 } else {
                     $eapType = 'MD5-CHALLENGE';
-                }
+                }*/
 
-                $rads = array(
-                    array(
-                        $username,
-                        'NAS-Port-Type',
-                        '=~',
-                        'Ethernet|Wireless-802.11',
-                    ),
-                    array(
+                if (isset($this->request->data['Raduser']['cleartext']) && $this->request->data['Raduser']['cleartext'] == 1) {
+                    $rads[] = array(
                         $username,
                         'Cleartext-Password',
                         ':=',
                         $this->request->data['Raduser']['passwd'],
-                    ),
-                    array(
+                    );
+                } else {
+                    $rads[] = array(
                         $username,
-                        'EAP-Type',
+                        'NT-Password',
                         ':=',
-                        $eapType,
-                    )
+                        Utils::NTLMHash($this->request->data['Raduser']['passwd']),
+                    );
+                }
+                $rads[] = array(
+                    $username,
+                    'NAS-Port-Type',
+                    '=~',
+                    'Ethernet|Wireless-802.11',
                 );
+
                 $this->setCommonCiscoMacFields($rads);
                 $this->Checks->add($this->request, $rads);
                 $success = true;
@@ -1163,17 +1165,15 @@ class RadusersController extends AppController {
         $this->add($success);
     }
 
-    private function edit($success) {      
-        if ($this->request->is('post')) {
-            if ($success) {
-                $this->Session->setFlash(
-                        __('User has been updated.'), 'flash_success');
+    private function edit($success) {
+        if ($success) {
+            $this->Session->setFlash(
+                    __('User has been updated.'), 'flash_success');
 
-                Utils::userlog(__('edited user %s', $this->Raduser->id));
-                //debug($this->url);
-                $this->redirect(array('action' => 'index'));
-                //$this->redirect($this->url);
-            }
+            Utils::userlog(__('edited user %s', $this->Raduser->id));
+            //debug($this->url);
+            $this->redirect(array('action' => 'index'));
+            //$this->redirect($this->url);
         }
 
         if ($this->Raduser->field('is_mac')) {
@@ -1221,15 +1221,20 @@ class RadusersController extends AppController {
         $this->url = $this->referer();
         $this->Raduser->id = $id;
         $success = false;
-
-        foreach ($this->Checks->getChecks($id) AS $check) {
-            if ($check['Radcheck']['attribute'] == 'EAP-Type')
-                $ttls = ($check['Radcheck']['value'] == 'EAP-TTLS') ? 1 : 0;
+        $cleartext=0;
+        foreach ($this->Checks->getChecks($id) AS $check) { 
+            if ($check['Radcheck']['attribute'] == 'Cleartext-Password') {
+                $cleartext=1;
+                break;
+            }    
         }
 
         if ($this->request->is('get')) {
             $this->request->data = $this->Raduser->read();
-            $this->request->data['Raduser']['ttls'] = $ttls;
+            if (isset($cleartext)) {
+                $this->request->data['Raduser']['cleartext'] = $cleartext;
+            }
+            //$this->request->data['Raduser']['ttls'] = $ttls;
         } else {
             try {
                 $this->request->data['Raduser']['is_loginpass'] = 1;
@@ -1243,20 +1248,29 @@ class RadusersController extends AppController {
                 }
 
                 // update radchecks fields
-                $checkClassFields = array(
-                    'Cleartext-Password' =>
-                    $this->request->data['Raduser']['passwd'],
-                );
+                if ($this->request->data['Raduser']['passwd'] != "") {
+                    if (isset($this->request->data['Raduser']['cleartext']) && $this->request->data['Raduser']['cleartext'] == 1) {
+                        $checkClassFields = array(
+                            'Cleartext-Password' =>
+                            $this->request->data['Raduser']['passwd'],
+                        );
+                    } else {
+                        $checkClassFields = array(
+                            'NT-Password' =>
+                            Utils::NTLMHash($this->request->data['Raduser']['passwd']),
+                        );
+                    }
+                }
 
                 foreach ($checksCiscoMac as $c) {
                     $checkClassFields[$c[1]] = $c[3];
                 }
 
-                if (isset($this->request->data['Raduser']['ttls']) && $this->request->data['Raduser']['ttls'] == 1) {
+                /*if (isset($this->request->data['Raduser']['ttls']) && $this->request->data['Raduser']['ttls'] == 1) {
                     $checkClassFields['EAP-Type'] = 'EAP-TTLS';
                 } else {
                     $checkClassFields['EAP-Type'] = 'MD5-CHALLENGE';
-                }
+                }*/
 
                 $this->Checks->updateRadcheckFields(
                         $id, $this->request, $checkClassFields

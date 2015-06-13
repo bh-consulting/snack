@@ -44,6 +44,13 @@ class Nas extends AppModel {
                 'required' => true,
 			),
 		),
+        'backup' => array(
+            'notEmpty' => array(
+                'rule' => 'notEmpty',
+                'message' => 'You have to enter if the nas must be backuped or not',
+                'required' => true,
+            ),
+        ),
         'login' => array(
 		),
         'password' => array(

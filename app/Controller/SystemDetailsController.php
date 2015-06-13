@@ -425,70 +425,71 @@ class SystemDetailsController extends AppController {
         $this->layout = 'ajax';
     }
     
-    public function tests() {        
-        $this->test_users;
+    public function tests() {
+        $users = array();
+        $arr = $this->Raduser->query('select username from raduser;');
+        foreach ($arr as $user) {
+            $users[] = $user['raduser']['username'];
+        }
+        $this->set('user', 0);
+        $this->set('users', $users);
     }
     
-    public function test_users($type=false, $username="", $password="") {
+    public function test_users($username, $password="", $authtype) {
         $nas = $this->Raduser->query('select nasname,secret from nas where nasname="127.0.0.1";');
         foreach ($nas as $n) {
             $nasname=$n['nas']['nasname'];
             $secret=$n['nas']['secret'];
         }
-        if (!$type) {
-            $results=array();
-            $usernames = $this->Raduser->query('select * from raduser where is_windowsad=0;');
-            foreach ($usernames as $username) {
-                $this->SystemDetail->tests_users($username['raduser']['username'], $nasname, $secret, $results, $username['raduser']['comment']);
-            }
-            $this->set('results', $results);
-            $this->set('usernames', $usernames);
-        }
-        else {
-            $results=array();
-            $usernames = $this->Raduser->query('select * from raduser where username="'.$username.'";');
-            foreach ($usernames as $username) {
-                $this->SystemDetail->tests_usersAD($username['raduser']['username'], $password, $nasname, $secret, $results, $username['raduser']['comment']);
-            }
-            /*For debug
-             * ntlm_auth --request-nt-key --domain=BH-CONSULTING --username=Administrator --password=xxx
-             */
-            $this->set('results', $results);
-            $this->set('usernames', $usernames);
-            $this->set('password', $password);
-        }
-    }
-    
-    public function testslog($username, $password="") {
-        $return = shell_exec("getconf LONG_BIT");
-        if ($return == "64\n") {
-            $this->eapol="eapol_test_64";
-        }
-        elseif ($return == "32\n") {
-            $this->eapol="eapol_test_x86";
-        }
+
         $results=array();
-        $tls = 0;
-        $ttls = 0;
-        $nasporttype = "";
-        $nas = $this->Raduser->query('select nasname,secret from nas where nasname="127.0.0.1";');
-        foreach ($nas as $n) {
-            $nasname=$n['nas']['nasname'];
-            $secret=$n['nas']['secret'];
-        }
         $usernames = $this->Raduser->query('select * from raduser where username="'.$username.'";');
-        foreach ($usernames as $user) {
-            if ($user['raduser']['is_windowsad'] == 1) {
-                $this->SystemDetail->tests_usersAD($username, $password, $nasname, $secret, $results, $user['raduser']['comment']);
+        if (count($usernames)>0) {
+            $log = $this->SystemDetail->check_auth_user($username, $password, $authtype, $nasname, $secret);
+            if (preg_match('/Received Access-Accept packet/', $log, $matches)) {
+                $result=1;
+            } elseif (preg_match('/Received Access-Reject packet/', $log, $matches)) {
+                $result=0;
+            } elseif (preg_match('/SUCCESS/', $log, $matches)) {
+                $result=1;
+            } elseif (preg_match('/FAILURE/', $log, $matches)) {
+                $result=0;
             }
             else {
-                $this->SystemDetail->tests_users($username, $nasname, $secret, $results, "");
+                $result=-1;
             }
+            $this->set('username', $username);
+            $this->set('password', $password);
+            $this->set('comment', $usernames[0]['raduser']['comment']);
+            if ($usernames[0]['raduser']['is_windowsad']) {
+                $this->set('type', 'windowsad');
+            }
+            if ($usernames[0]['raduser']['is_phone']) {
+                $this->set('type', 'phone');
+            }
+            if ($usernames[0]['raduser']['is_loginpass']) {
+                $this->set('type', 'loginpass');
+            }
+            if ($usernames[0]['raduser']['is_cert']) {
+                $this->set('type', 'cert');
+            }
+            if ($usernames[0]['raduser']['is_mac']) {
+                $this->set('type', 'mac');
+            }
+            if ($usernames[0]['raduser']['is_cisco']) {
+                $this->set('type', 'cisco');
+            }
+            $this->set('authtype', $authtype);
+            $this->set('result', $result);
+            $this->set('log', $log);
         }
+        //For debug
+        // ntlm_auth --request-nt-key --domain=BH-CONSULTING --username=Administrator --password=xxx
+        //
         
-        //debug($results[$username]['res']);
-        $this->set('log', $results[$username]['res']);
         $this->layout = 'ajax';
+        //   $this->render('testslog');
+        //debug($results);
     }
     
     public function notifications() {

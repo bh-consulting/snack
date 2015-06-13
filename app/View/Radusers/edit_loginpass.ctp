@@ -33,15 +33,18 @@ $checks .= $this->Form->input('confirm_password', array(
     'type' => 'password',
 ));
 
-$checks .= $this->Form->input('ttls', array(
+//$checks .= $this->Form->input('ttls', array(
+$checks .= $this->Form->input('cleartext', array(
     'type' => 'checkbox',
     'between' => '',
     'after'   => '',
     'class' => '', 
-    'before' => '<label class="col-sm-4 control-label">'.__('Check server certificate').'</label><div class="col-sm-1">',
+    //'before' => '<label class="col-sm-4 control-label">'.__('Check server certificate').'</label><div class="col-sm-1">',
+    'before' => '<label class="col-sm-4 control-label">'.__('ClearText Password (for older supplicant Not Secure)').'</label><div class="col-sm-1">',
     'between' => '',
     'after'   => '</div>',
     'label' => false,
+    //'readonly' => true,
 ));
 
 $myLabelOptions = array('text' => __('MAC address'));

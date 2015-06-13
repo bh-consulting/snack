@@ -1,5 +1,6 @@
 <?php
 class SystemDetail extends AppModel {
+    public $useTable = false;
 	/* Gets the uptime of a service or -1 if the service is down. */
 	function checkService( $service ) {
 		$result = Utils::shell( "ps -e -o comm,etime | grep " . $service . " | tail -1");
@@ -180,8 +181,8 @@ class SystemDetail extends AppModel {
         return $matches[1];
     }
     
-    /* Test users */
-    function tests_users($username, $nasname, $nassecret, &$results, $comment = "") {        
+    /* Check auth user */
+    function check_auth_user($username, $password, $authtype, $nasname, $nassecret) {        
         $return = shell_exec("getconf LONG_BIT");
         if ($return == "64\n") {
             $this->eapol = "eapol_test_64";
@@ -203,14 +204,11 @@ class SystemDetail extends AppModel {
                     $tls = 1;
                 }
             }
-            if ($radcheck['radcheck']['attribute'] == "Cleartext-Password") {
-                $password = $radcheck['radcheck']['value'];
-            }
             if ($radcheck['radcheck']['attribute'] == "NAS-Port-Type") {
                 $nasporttype = $radcheck['radcheck']['value'];
             }
         }
-        if ($tls == 0 && $ttls == 0) {
+        if ($authtype == "EAP-MD5") {
             $nasports = explode("|", $nasporttype);
             if (count($nasports) > 0) {
                 $nasporttype = $nasports[0];
@@ -218,9 +216,10 @@ class SystemDetail extends AppModel {
             } else {
                 $request = '( echo "User-Name = \"' . $username . '\""; echo "Cleartext-Password = \"' . $password . '\"";  echo "EAP-Code = Response";   echo "EAP-Id = 210";   echo "EAP-Type-Identity = \"' . $username . '\"";   echo "Message-Authenticator = 0x00"; ) | radeapclient -x ' . $nasname . ' auth ' . $nassecret;
             }
+            //debug($request);
             $return = shell_exec($request);
-        } elseif ($ttls == 1) {
-            $file = new File(APP . 'tmp/eap-ttls.conf', true, 0644);
+        } elseif ($authtype == "EAP-TTLS") {
+            $file = new File(APP . 'tmp/eap.conf', true, 0644);
             $file->write("network={\n");
             $file->write("\teap=TTLS\n");
             $file->write("\teapol_flags=0\n");
@@ -230,10 +229,10 @@ class SystemDetail extends AppModel {
             $file->write("\tphase2=\"auth=MSCHAPv2\"\n");
             $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
             $file->write("}");
-            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap-ttls.conf -a".$nasname." -p1812 -s".$nassecret;
+            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
             $return = shell_exec($request);
-        } elseif ($tls == 1) {
-            $file = new File(APP . 'tmp/eap-tls.conf', true, 0644);
+        } elseif ($authtype == "EAP-TLS") {
+            $file = new File(APP . 'tmp/eap.conf', true, 0644);
             $file->write("network={\n");
             $file->write("\teap=TLS\n");
             $file->write("\teapol_flags=0\n");
@@ -243,38 +242,26 @@ class SystemDetail extends AppModel {
             $file->write("\tclient_cert=\"" . Utils::getUserCertsPemPath($username) . "\"\n");
             $file->write("\tprivate_key=\"" . Utils::getUserKeyPemPath($username) . "\"\n");
             $file->write("}");
-            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap-tls.conf -a".$nasname." -p1812 -s".$nassecret;
+            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
+            $return = shell_exec($request);
+        } elseif ($authtype == "EAP-PEAP-MSCHAPV2") {
+            $file = new File(APP . 'tmp/eap.conf', true, 0644);
+            $file->write("network={\n");
+            $file->write("\teap=PEAP\n");
+            $file->write("\teapol_flags=0\n");
+            $file->write("\tkey_mgmt=IEEE8021X\n");
+            $file->write("\tidentity=\"" . $username . "\"\n");
+            $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
+            $file->write("\tpassword=\"" . $password . "\"\n");
+            $file->write("\tphase2=\"auth=MSCHAPv2\"\n");
+            $file->write("}");
+            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
             $return = shell_exec($request);
         } else {
             $results[$username]['res'] = "NA";
             $return = "";
         }
-        $results[$username]['res'] = $return;
-        $results[$username]['comment'] = $comment;
-    }
-    
-    /* Test AD users */
-    function tests_usersAD($username, $password, $nasname, $nassecret, &$results, $comment = "") {        
-        $return = shell_exec("getconf LONG_BIT");
-        if ($return == "64\n") {
-            $this->eapol = "eapol_test_64";
-        } elseif ($return == "32\n") {
-            $this->eapol = "eapol_test_x86";
-        }
-        $file = new File(APP . 'tmp/eap-ad.conf', true, 0644);
-        $file->write("network={\n");
-        $file->write("\teap=TTLS\n");
-        $file->write("\teapol_flags=0\n");
-        $file->write("\tkey_mgmt=IEEE8021X\n");
-        $file->write("\tidentity=\"" . $username . "\"\n");
-        $file->write("\tpassword=\"" . $password . "\"\n");
-        $file->write("\tphase2=\"auth=MSCHAPv2\"\n");
-        $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
-        $file->write("}");
-        $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap-ad.conf -a".$nasname." -p1812 -s".$nassecret;
-        $return = shell_exec($request);
-        $results[$username]['res'] = $return;
-        $results[$username]['comment'] = $comment;
+        return $return;
     }
         
     public function checkProblem(&$results, $file="notifications.txt") {
