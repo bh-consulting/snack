@@ -145,8 +145,6 @@ class SnackSendReportsShell extends AppShell {
     }
     
     public function checkBackup() {
-        $oid_writeNet="iso.3.6.1.4.1.9.2.1.55";
-        $ip_address="10.254.20.192";
         $this->str .= "<h3>Backups NAS</h3>";
         $nas = $this->Nas->query('select nasname,secret from nas;');
         $datetime1 = new DateTime();
@@ -158,7 +156,7 @@ class SnackSendReportsShell extends AppShell {
                                   export ACCT_STATUS_TYPE=Write ;
                                    /home/snack/scripts/backup_create.sh");*/
             //echo "RETURN : ".$return;
-            if ($nasname != "127.0.0.1") {
+            if ($nasname != "127.0.0.1" && $n['Nas']['backup']) {
                 $backup = $this->Backup->query("select * from backups where nas='".$nasname."' order by id desc limit 1;");
                 $this->str .= $nasname." ";
                 if (count($backup) > 0) {
@@ -218,6 +216,7 @@ class SnackSendReportsShell extends AppShell {
                     if (preg_match('/MYSQL RES :([0-9]+)/', $tmp, $matches)) {
                         $mysql = $matches[1];
                     }
+                    $ip = "";
                     if (preg_match('/IP:([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/', $tmp, $matches)) {
                         $ip = $matches[1];
                     }
