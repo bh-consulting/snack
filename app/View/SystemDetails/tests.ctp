@@ -7,7 +7,7 @@ $this->assign('systemdetails_tests_active', 'active');
   <div class="panel-heading">Test Users</div>
   <div class="panel-body">
     <?php
-        $mainLabelOptions = array('class' => 'col-sm-2 control-label');
+        $mainLabelOptions = array('class' => 'col-sm-4 control-label');
         echo $this->Form->create('SystemDetails', array(
             'action' => 'testAD',
             'novalidate' => true, 
@@ -18,7 +18,7 @@ $this->assign('systemdetails_tests_active', 'active');
                 'label' => array(
                     'class' => $mainLabelOptions
                 ),
-                'between' => '<div class="col-sm-2">',
+                'between' => '<div class="col-sm-4">',
                 'after'   => '</div>',
                 'class' => 'form-control'
             ),
@@ -39,13 +39,14 @@ $this->assign('systemdetails_tests_active', 'active');
             'options' => array(
                 'eap-md5' => __('EAP-MD5'),
                 'eap-peap' => __('EAP-PEAP-MSCHAPV2'),
-                'eap-ttls' => __('EAP-TTLS'),
+                'eap-ttls-pap' => __('EAP-TTLS-PAP'),
+                'eap-ttls-mschap' => __('EAP-TTLS-MSCHAPV2'),
                 'eap-tls' => __('EAP-TLS'),
             ),
             'empty' => false,
         ));
 
-        echo '<div class="col-sm-2"></div>';
+        echo '<div class="col-sm-4"></div>';
         echo $this->Html->link(
             __('Launch Tests'),
             '#',

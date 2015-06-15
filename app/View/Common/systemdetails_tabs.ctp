@@ -53,9 +53,6 @@ echo '</div>';
 
 <h1><?php echo __('Dashboard'); ?></h1>
 
-<div class="loading">
-</div>
-
 <div class="tabbable">
     <ul class="nav nav-tabs">
             <li class="<?php echo $this->fetch('systemdetails_general_active'); ?>">

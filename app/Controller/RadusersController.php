@@ -706,7 +706,7 @@ class RadusersController extends AppController {
 
         $views['base']['Raduser']['ntype'] = $this->Checks->getType($views['base']['Raduser'], true);
         $views['base']['Raduser']['type'] = $this->Checks->getType($views['base']['Raduser'], false);
-
+        
         $this->set('raduser', $views['base']);
         $this->set('radchecks', $views['checks']);
         $this->set('radgroups', $views['groups']);
@@ -730,6 +730,9 @@ class RadusersController extends AppController {
             if ($check['Radcheck']['attribute'] == 'Calling-Station-Id') {
                 $attributes['MAC address'] = Utils::formatMAC(
                                 $check['Radcheck']['value']);
+            }
+            if ($check['Radcheck']['attribute'] == 'Cleartext-Password') {
+                $attributes['Cleartext-Password'] = true;
             }
         }
 
@@ -783,6 +786,7 @@ class RadusersController extends AppController {
             'Simultaneous-Use',
             'Groups',
             'Cisco',
+            'Cleartext-Password',
             'MAC address',
             'EAP-Type',
         );

@@ -76,14 +76,14 @@ function test_users(){
             password=document.getElementById('SystemDetailsPassword').value;
         }
         var url="test_users/"+$("#SystemDetailsUsername option:selected").text()+"/"+password+"/"+$("#SystemDetailsAuthtype option:selected").text();
-        //alert(url);
+        loading();
         $.get(url, function(data) {
-                loading();
                 $("#users").html(data);
             }).fail(function() {
                 alert( "error" );
             })
             .always(function() {
+                unloading();
                 //alert( "finished" );
             });
     }
@@ -309,7 +309,7 @@ $("#RaduserIsMac").change(function() {
 var_date=new Date();
 str_date=var_date.getYear()+1900+"-"+var_date.getMonth()+"-"+var_date.getDate();
 $('.datetimepicker').addClass('form-control');
-        $('.datetimepicker').wrap('<div class="input-group date form_datetime col-sm-6" data-date="'+str_date+'T05:25:07Z" data-date-format="yyyy MM dd - HH:ii p"></div>');
+        $('.datetimepicker').wrap('<div class="input-group date form_datetime" data-date="'+str_date+'T05:25:07Z" data-date-format="yyyy MM dd - HH:ii p"></div>');
         $('<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>').insertAfter(".datetimepicker");
         $('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>').insertAfter(".datetimepicker");
 $('.form_datetime').datetimepicker({

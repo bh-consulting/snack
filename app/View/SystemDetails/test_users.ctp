@@ -1,4 +1,4 @@
-<div class="col-md-offset-1 col-sm-3">
+<div class="col-sm-offset-3 col-sm-6">
     <?php
     //debug($result);
     if ($result==1) {

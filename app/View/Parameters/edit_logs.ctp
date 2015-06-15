@@ -22,21 +22,22 @@ echo $this->Form->create('Parameter', array(
 
 <h4><?php echo __('Logs configuration:'); ?></h4>
 <dl class="well dl-horizontal">
-<?php 
+<?php
+$myLabelOptions = array('text' => __('Archive older than (days)'));
 echo $this->Form->input('logs_archive_date', array(
     'options' => $archive_dates,
     //'disabled' => true,
     'empty' => false,
     'selected' => array_search($archive_date, $archive_dates),
-    'label' => __('Archive older than (days)'),
+    'label' => array_merge($mainLabelOptions, $myLabelOptions),
     ));
-
+$myLabelOptions = array('text' => __('Delete older than (days)'));
 echo $this->Form->input('logs_delete_date', array(
     'options' => $delete_dates,
     //'disabled' => true,
     'empty' => false,
     'selected' => array_search($delete_date, $delete_dates),
-    'label' => __('Delete older than (days)'),
+    'label' => array_merge($mainLabelOptions, $myLabelOptions),
     ));
 ?>
 </dl>

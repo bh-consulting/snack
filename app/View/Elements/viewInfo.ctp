@@ -53,6 +53,7 @@ if(AuthComponent::user('role') !== 'tech'){
 
 <dl class="well dl-horizontal">
 	<?php
+
 	foreach($attributes as $attr => $value) {
 		if( in_array( $attr, $showedAttr ) ) {
 			if( is_array( $value ) ) {
@@ -74,7 +75,9 @@ if(AuthComponent::user('role') !== 'tech'){
 				    else
 					$value = 'No (challenge MD5)';
 				}
-
+				if($attr == "Cleartext-Password") {
+					$value = "True";
+				}
 				if($attr == 'NAS-Port-Type') {
 				    $attr = 'NAS Port Type';
 
@@ -82,17 +85,17 @@ if(AuthComponent::user('role') !== 'tech'){
 				    $i18n_values = array();
 
 				    foreach ($values AS $val) {
-					switch($val) {
-						case 'Async':
-						    $i18n_values[] = __('Console');
-						    break;
-						case 'Virtual':
-						    $i18n_values[] = __('Telnet/SSH');
-						    break;
-						case 'Ethernet':
-						    $i18n_values[] = __('802.1x');
-						    break;
-					}
+						switch($val) {
+							case 'Async':
+							    $i18n_values[] = __('Console');
+							    break;
+							case 'Virtual':
+							    $i18n_values[] = __('Telnet/SSH');
+							    break;
+							case 'Ethernet':
+							    $i18n_values[] = __('802.1x');
+							    break;
+						}
 				    }
 
 				    $value = implode(', ', $i18n_values);

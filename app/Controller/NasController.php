@@ -33,6 +33,7 @@ class NasController extends AppController {
         unset($this->Nas->validate['nasname']['notEmpty']['required']);
         unset($this->Nas->validate['shortname']['notEmpty']['required']);
         unset($this->Nas->validate['secret']['notEmpty']['required']);
+        unset($this->Nas->validate['backup']['notEmpty']['required']);
     }
 
     public function getRegexSynchronisation($args = array()) {
@@ -139,6 +140,7 @@ class NasController extends AppController {
                 'server',
                 'community',
                 'description',
+                'backup',
             ),
             'input' => 'text',
             'ahead' => array('nasname','shortname', 'type', 'ports', 'server'),

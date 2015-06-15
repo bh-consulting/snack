@@ -218,7 +218,20 @@ class SystemDetail extends AppModel {
             }
             //debug($request);
             $return = shell_exec($request);
-        } elseif ($authtype == "EAP-TTLS") {
+        } elseif ($authtype == "EAP-TTLS-PAP") {
+            $file = new File(APP . 'tmp/eap.conf', true, 0644);
+            $file->write("network={\n");
+            $file->write("\teap=TTLS\n");
+            $file->write("\teapol_flags=0\n");
+            $file->write("\tkey_mgmt=IEEE8021X\n");
+            $file->write("\tidentity=\"" . $username . "\"\n");
+            $file->write("\tpassword=\"" . $password . "\"\n");
+            $file->write("\tphase2=\"auth=PAP\"\n");
+            $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
+            $file->write("}");
+            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
+            $return = shell_exec($request);
+        } elseif ($authtype == "EAP-TTLS-MSCHAPV2") {
             $file = new File(APP . 'tmp/eap.conf', true, 0644);
             $file->write("network={\n");
             $file->write("\teap=TTLS\n");
