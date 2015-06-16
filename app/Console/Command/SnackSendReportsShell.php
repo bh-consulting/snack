@@ -146,7 +146,7 @@ class SnackSendReportsShell extends AppShell {
     
     public function checkBackup() {
         $this->str .= "<h3>Backups NAS</h3>";
-        $nas = $this->Nas->query('select nasname,secret from nas;');
+        $nas = $this->Nas->query('select nasname,secret,backup from nas;');
         $datetime1 = new DateTime();
         //echo $datetime1->format('Y-m-d H:i:s');
         foreach ($nas as $n) {
@@ -156,7 +156,7 @@ class SnackSendReportsShell extends AppShell {
                                   export ACCT_STATUS_TYPE=Write ;
                                    /home/snack/scripts/backup_create.sh");*/
             //echo "RETURN : ".$return;
-            if ($nasname != "127.0.0.1" && $n['Nas']['backup']) {
+            if ($nasname != "127.0.0.1" && $n['nas']['backup']) {
                 $backup = $this->Backup->query("select * from backups where nas='".$nasname."' order by id desc limit 1;");
                 $this->str .= $nasname." ";
                 if (count($backup) > 0) {

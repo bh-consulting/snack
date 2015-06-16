@@ -33,9 +33,6 @@ function check-mysql {
             datenow=$(date "+%Y-%m-%d %H:%m")
             echo "[$datenow] [ERR] SNACK Mysql restart" >> $NOTIF
             service mysql stop
-            #DATE=`date +%Y%m%d%H%M%S`
-            #mv /var/log/mysql/error.log /var/log/mysql/error.log.$DATE
-            #cat /var/log/mysql/error.log.$DATE >> $MAIL
             service mysql start
         fi
         rm -f /tmp/watchdog-mysql        
@@ -47,21 +44,62 @@ function check-apache {
         echo "Apache en cours de redémarrage";
     else
         echo "" > /tmp/watchdog-apache
-        curl --insecure --connect-timeout 2 https://localhost/ > /dev/null 2> /dev/null
+        curl --insecure --connect-timeout 2 https://localhost/ -o /dev/null > /dev/null 2> /dev/null
         if [ $? -ne 0 ]; then
             datenow=$(date "+%Y-%m-%d %H:%m")
             echo "[$datenow] [ERR] SNACK Apache2 restart" >> $NOTIF
             service apache2 stop
-            #DATE=`date +%Y%m%d%H%M%S`
-            #mv /var/log/apache2/error.log /var/log/apache2/error.log.$DATE
-            #mv /var/log/apache2/other_vhosts_access.log /var/log/apache2/other_vhosts_access.log.$DATE
-            #echo "error.log" >> $MAIL
-            #cat /var/log/apache2/error.log.$DATE >> $MAIL
-            #echo "other_vhosts_access.log" >> $MAIL
-            #cat /var/log/apache2/other_vhosts_access.log.$DATE >> $MAIL
             service apache2 start
         fi
         rm -f /tmp/watchdog-apache
+    fi
+}
+
+function check-elasticsearch {
+    if [ -f /tmp/watchdog-elasticsearch ]; then
+        echo "Elasticsearch en cours de redémarrage";
+    else
+        echo "" > /tmp/watchdog-elasticsearch
+        curl "http://localhost:9200/_cluster/health?pretty" -o /dev/null > /dev/null 2> /dev/null
+        if [ $? -ne 0 ]; then
+            datenow=$(date "+%Y-%m-%d %H:%m")
+            echo "[$datenow] [ERR] SNACK Elasticsearch restart" >> $NOTIF
+            service elasticsearch stop
+            service elasticsearch start
+        fi
+        rm -f /tmp/watchdog-elasticsearch
+    fi
+}
+
+function check-tdagent {
+    if [ -f /tmp/watchdog-tdagent ]; then
+        echo "Td-agent en cours de redémarrage";
+    else
+        echo "" > /tmp/watchdog-tdagent
+        netstat -lun | grep 5140
+        if [ $? -ne 0 ]; then
+            datenow=$(date "+%Y-%m-%d %H:%m")
+            echo "[$datenow] [ERR] SNACK Td-agent restart" >> $NOTIF
+            service td-agent stop
+            service td-agent start
+        fi
+        rm -f /tmp/watchdog-tdagent
+    fi
+}
+
+function check-tftpd {
+    if [ -f /tmp/watchdog-tftpd ]; then
+        echo "Tftpd en cours de redémarrage";
+    else
+        echo "" > /tmp/watchdog-tftpd
+        ps -e -o comm,etime | grep tftp
+        if [ $? -ne 0 ]; then
+            datenow=$(date "+%Y-%m-%d %H:%m")
+            echo "[$datenow] [ERR] SNACK Tftpd restart" >> $NOTIF
+            service tftpd-hpa stop
+            service tftpd-hpa start
+        fi
+        rm -f /tmp/watchdog-tftpd
     fi
 }
 
@@ -104,7 +142,10 @@ chown root:snack $NOTIFPREC
 check-freeradius
 check-mysql
 check-apache
-check-disk-used 
+check-elasticsearch
+check-tdagent
+check-tftpd
+check-disk-used
 /home/snack/interface/tools/scriptProvAD.sh >> $NOTIF
 sudo -u www-data  /home/snack/interface/app/Console/cake SnackSendReports
 rm $SYNC
