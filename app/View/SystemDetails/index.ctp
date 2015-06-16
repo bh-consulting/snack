@@ -269,6 +269,24 @@ $this->assign('systemdetails_general_active', 'active');
                         }
                         ?>
                     </dd>
+                    <dt><?php echo __('Td-Agent'); ?></dt>
+                    <dd>
+                        <?php
+                        echo $tdagentstate;
+                        if (AuthComponent::user('role') == 'root') {
+                            echo $this->Html->link(
+                                    '<i class="glyphicon glyphicon-refresh glyphicon-white"></i> ' . __('Restart Td-Agent'), array(
+                                'action' => 'restart',
+                                'td-agent',
+                                    ), array(
+                                'class' => 'btn btn-xs btn-danger',
+                                'style' => 'margin-left:30px',
+                                'escape' => false
+                                    )
+                            );
+                        }
+                        ?>
+                    </dd>
                 </dl>
             </div>
         </div>

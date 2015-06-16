@@ -78,11 +78,18 @@ class SystemDetailsController extends AppController {
             . $nagiosUptime
         );
 
-        $nagiosUptime = $this->SystemDetail->checkService("tftp");
+        $tftpUptime = $this->SystemDetail->checkService("tftp");
         $this->set(
             'tftpstate',
-            ($nagiosUptime == -1) ? __("Disabled") : __("Enabled for ")
-            . $nagiosUptime
+            ($tftpUptime == -1) ? __("Disabled") : __("Enabled for ")
+            . $tftpUptime
+        );
+
+        $tdagentUptime = $this->SystemDetail->checkService("ruby");
+        $this->set(
+            'tdagentstate',
+            ($tdagentUptime == -1) ? __("Disabled") : __("Enabled for ")
+            . $tdagentUptime
         );
         $file = new File(APP.'tmp/updates', false, 0644);
         $tmp="";
