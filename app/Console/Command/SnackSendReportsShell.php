@@ -50,8 +50,6 @@ class SnackSendReportsShell extends AppShell {
                     $cmd = "curator --logfile /home/snack/logs/curator.log delete indices --time-unit days --older-than ".Configure::read('Parameters.logs_delete_date')." --timestring '%Y.%m.%d' --prefix logstash";
                     $return = shell_exec($cmd);
                 }
-                //Configure::read('Parameters.logs_delete_date')
-                /* Curator logs elastic search */
 
             }
             //echo $this->str;
@@ -369,18 +367,20 @@ class SnackSendReportsShell extends AppShell {
         $Email = new CakeEmail();
         $Email->subject($subject);
         $Email->template('default');
-        if (Configure::read('Parameters.smtp_login') != '') {
-            $Email->config(array('transport' => 'Smtp',
+        if (Configure::read('Parameters.smtp_ip') != '') {
+            if (Configure::read('Parameters.smtp_login') != '') {
+                $Email->config(array('transport' => 'Smtp',
                                  'port' => Configure::read('Parameters.smtp_port'),
                                  'host' => Configure::read('Parameters.smtp_ip'),
                                  'username' => Configure::read('Parameters.smtp_login'),
                                  'password' => Configure::read('Parameters.smtp_password'),
                                  'client' => 'snack'.$this->domain));
-        } else {
-            $Email->config(array('transport' => 'Smtp',
-                                 'port' => Configure::read('Parameters.smtp_port'),
-                                 'host' => Configure::read('Parameters.smtp_ip'),
-                                 'client' => 'snack'.$this->domain));
+            } else {
+                $Email->config(array('transport' => 'Smtp',
+                                     'port' => Configure::read('Parameters.smtp_port'),
+                                     'host' => Configure::read('Parameters.smtp_ip'),
+                                     'client' => 'snack'.$this->domain));
+            }
         }
         $Email->emailFormat('both');
         $Email->from(array(Configure::read('Parameters.smtp_email_from') => 'SNACK'));
@@ -392,10 +392,11 @@ class SnackSendReportsShell extends AppShell {
             }
         }
         $Email->to($listemails);
-        //$Email->to('groche@guigeek.org');
-        
-
-        $Email->send($body);
+        try {
+            $Email->send($body);
+        } catch ( Exception $e ) {
+            // Failure, with exception
+        }  
     }
 
     public function checkUpdates() {
