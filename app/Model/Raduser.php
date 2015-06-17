@@ -180,5 +180,22 @@ class Raduser extends AppModel {
 
         return true;
     }
+
+
+    /* 
+    * Get the revoked certificates
+    */
+    public function getRevokedCerts() {
+        $file = new File(Configure::read('Parameters.certsPath').'/index.txt', false, 0644);
+        $tmp="";
+        if ($file->exists()) {
+            $tmp=trim($file->read(false, 'rb', false));
+            //debug($tmp);
+            if(preg_match_all("/R\s+(\w+)\s+(\w+)\s+(\w+)\s+(\w+)\s+\/C\=FR\/ST\=France\/L\=Nancy\/O\=b.h.consulting\/CN=(\w+)/", $tmp, $matches)) {
+                //debug($matches);
+                return $matches;
+            }
+        }
+    }
 }
 ?>

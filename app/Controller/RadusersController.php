@@ -79,6 +79,29 @@ class RadusersController extends AppController {
     }
 
     /**
+     * method to display a warning field to restart the server after Nas changes
+     */
+    public function alert_restart_server(){
+        $this->Session->setFlash(
+            __('You HAVE to restart the Radius server to apply NAS changes!'),
+            'flash_error_link',
+            array(
+                'title' => __('Restart Freeradius') . ' <i class="icon-refresh icon-white"></i>',
+                'url' => array(
+                    'controller' => 'systemDetails',
+                    'action' => 'restart/freeradius',
+                ),
+                'style' => array(
+                    'class' => 'btn btn-danger btn-mini',
+                    'escape' => false,
+                    'style' => 'margin-left: 15px;'
+                ),
+            )
+        );
+        Utils::userlog(__('restarted the Radius server'));
+    }
+
+    /**
      * Get Vlan for user
      */
     public function getVLAN($username) {
@@ -1465,6 +1488,8 @@ class RadusersController extends AppController {
                     $this->removeCertificate(
                             $id, $this->Raduser->field('username')
                     );
+                    $this->alert_restart_server();
+                    $alreadyFlashed = true;
                 } catch (CertificateNotFoundException $e) {
                     $this->Session->setFlash(
                             $e->getMessage(), 'flash_warning'
@@ -1476,10 +1501,9 @@ class RadusersController extends AppController {
 
             $this->Checks->delete($this->request, $id);
             Utils::userlog(__('deleted user %s', $id));
-
             if (!$alreadyFlashed) {
                 $this->Session->setFlash(
-                        __('The user has been deleted.'), 'flash_success'
+                    __('The user has been deleted.'), 'flash_success'
                 );
             }
         } catch (Exception $e) {
@@ -1630,6 +1654,13 @@ class RadusersController extends AppController {
         $this->createCertificate($userID, $username, $password);
     }
 
+    /* 
+    * List revoked certs
+    */
+
+    public function revoked_certs() {
+        $this->set('results', $this->Raduser->getRevokedCerts());
+    }
 }
 
 ?>

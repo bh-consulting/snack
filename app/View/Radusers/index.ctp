@@ -3,10 +3,9 @@
 remove link from id, set blank
 shorter name for role in fr
 */
+$this->extend('/Common/radusers_tabs');
+$this->assign('radusers_users_active', 'active');
 
-$this->extend('/Common/radius_sidebar');
-$this->assign('radius_active', 'active');
-$this->assign('users_active', 'active');
 
 $columns = array(
     'checkbox' => array(
@@ -46,9 +45,7 @@ if(!in_array(AuthComponent::user('role'), array('root', 'admin'))){
     unset($columns['edit']);
 }
 ?>
-
-<h1><? echo __('Users'); ?></h1>
-
+<br/>
 <?php
 $dropdownUsersButtonItems = array(
     __('Active') => array(
