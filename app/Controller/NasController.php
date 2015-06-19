@@ -316,15 +316,14 @@ class NasController extends AppController {
         foreach ($nass as $nas) {
             $nasData[] = array($nas['Nas']['nasname'], 
                                $nas['Nas']['shortname'], 
-                               $nas['Nas']['description'], 
+                               $nas['Nas']['description'],
+                               $nas['Nas']['secret'],
                                $nas['Nas']['version'], 
                                $nas['Nas']['image'], 
                                $nas['Nas']['serialnumber'], 
                                $nas['Nas']['model'], 
                                $nas['Nas']['login'],
-                               $nas['Nas']['password'],
-                               $nas['Nas']['enablepassword'],
-                               $nas['Nas']['backuptype'],
+                               $nas['Nas']['backup'],
                                );
         }
         $this->layout = false;
@@ -354,6 +353,7 @@ class NasController extends AppController {
                         case "login":
                         case "password":
                         case "enablepassword":
+                        case "backup":
                         case "secret":
                             $col[$i] = $fieldlower;
                             break;
