@@ -93,6 +93,7 @@ chown -R snack:snack $TFTP_FOLDER
 chmod -R 0770 $TFTP_FOLDER
 chown -R snack:snack $BACKUP_FOLDER
 chmod -R 0770 $BACKUP_FOLDER
+setfacl -Rdm u:snack:rwx,g:snack:rwx,o::--- /home/snack/backups.git
 
 {
 chmod +x $USER_HOME/scripts
