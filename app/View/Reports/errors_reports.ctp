@@ -16,14 +16,12 @@ $this->assign('errorsreports_active', 'active');
     $id=0;
     foreach ($err as $host => $value) {
         foreach ($value as $errtype => $value2) {
-            if ($errtype != "%LINK-3-UPDOWN") {
-                echo "<tr><td onclick='javascript:reportsexpanderror(\"err\", $id);'><span class='glyphicon glyphicon-plus-sign' aria-hidden='true'></span></td><td>".$host."</td><td>".$errtype."</td><td></td><td></td></tr>";
-                echo "<tbody class='reports-msg reports-err-msg-".$id."'>";
-                foreach ($value2 as $msg => $nb) {
-                    echo "<tr><td></td><td></td><td></td><td>".$msg."</td><td>".$nb."</td><td>".$lasts[$host][$errtype][$msg]."</td></tr>";
-                }
-                echo "</tbody>";
+            echo "<tr><td onclick='javascript:reportsexpanderror(\"err\", $id);'><span class='glyphicon glyphicon-plus-sign' aria-hidden='true'></span></td><td>".$host."</td><td>".$errtype."</td><td></td><td></td></tr>";
+            echo "<tbody class='reports-msg reports-err-msg-".$id."'>";
+            foreach ($value2 as $msg => $nb) {
+                echo "<tr><td></td><td></td><td></td><td>".$msg."</td><td>".$nb."</td><td>".$lasts[$host][$errtype][$msg]."</td></tr>";
             }
+            echo "</tbody>";
             $id++;
         }
         $id++;
@@ -43,14 +41,12 @@ $this->assign('errorsreports_active', 'active');
     $id=0;
     foreach ($warn as $host => $value) {
         foreach ($value as $errtype => $value2) {
-            if ($errtype != "%LINK-3-UPDOWN") {
-                echo "<tr><td onclick='javascript:reportsexpanderror(\"warn\", $id);'><span class='glyphicon glyphicon-plus-sign' aria-hidden='true'></span></td><td>".$host."</td><td>".$errtype."</td><td></td><td></td></tr>";
-                echo "<tbody class='reports-msg reports-warn-msg-".$id."'>";
-                foreach ($value2 as $msg => $nb) {
-                    echo "<tr><td></td><td></td><td></td><td>".$msg."</td><td>".$nb."</td><td>".$warnlasts[$host][$errtype][$msg]."</td></tr>";
-                }
-                echo "</tbody>";
+            echo "<tr><td onclick='javascript:reportsexpanderror(\"warn\", $id);'><span class='glyphicon glyphicon-plus-sign' aria-hidden='true'></span></td><td>".$host."</td><td>".$errtype."</td><td></td><td></td></tr>";
+            echo "<tbody class='reports-msg reports-warn-msg-".$id."'>";
+            foreach ($value2 as $msg => $nb) {
+                echo "<tr><td></td><td></td><td></td><td>".$msg."</td><td>".$nb."</td><td>".$warnlasts[$host][$errtype][$msg]."</td></tr>";
             }
+            echo "</tbody>";
             $id++;
         }
         $id++;

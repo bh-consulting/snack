@@ -274,7 +274,7 @@ class Logline extends AppModel {
             if($log['Logline']['level']=="err") {
                 //if(preg_match('/\d{2}:\d{2}:\d{2}\.\d{3}:\s+(%[^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
                 if(preg_match('/\S+\s+([^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
-                    if ($log['Logline']['ident'] != "") {
+                    if (!preg_match('/\d+/',$log['Logline']['ident'], $matches2)) {
                         $errtype = $log['Logline']['ident'];
                     } else {
                         $errtype = $matches[1];
@@ -328,7 +328,7 @@ class Logline extends AppModel {
             if (isset($log['Logline']['level'])) {
                 if($log['Logline']['level']=="warn") {
                     if(preg_match('/\S+\s+([^:]+):\s+(.*)/', $log['Logline']['msg'], $matches)) {
-                        if ($log['Logline']['ident'] != "") {
+                        if (!preg_match('/\d+/',$log['Logline']['ident'], $matches2)) {
                             $errtype = $log['Logline']['ident'];
                         } else {
                             $errtype = $matches[1];
