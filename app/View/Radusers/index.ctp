@@ -88,7 +88,12 @@ if(AuthComponent::user('role') == 'admin' || AuthComponent::user('role') == 'roo
 
 $dropdownCsvButtonItems = array(
     $this->Html->link(
-        '<i class="glyphicon glyphicon-upload"></i> ' . __('Import config users'),
+        '<i class="glyphicon glyphicon-download"></i> ' . __('Export'),
+        array('action' => 'exportAll'),
+        array('escape' => false)
+    ),
+    $this->Html->link(
+        '<i class="glyphicon glyphicon-upload"></i> ' . __('Import'),
         '#confirmimport',
         array(
             'escape' => false,
@@ -96,16 +101,8 @@ $dropdownCsvButtonItems = array(
         )
     ),
     $this->Html->link(
-        '<i class="glyphicon glyphicon-upload"></i> ' . __('Import simple users'),
-        '#confirmimportSimple',
-        array(
-            'escape' => false,
-            'data-toggle' => 'modal',
-        )
-    ),
-    $this->Html->link(
-        '<i class="glyphicon glyphicon-download"></i> ' . __('Export users'),
-        array('action' => 'exportAll'),
+        '<i class="fa fa-file-excel-o"></i> ' . __('Download template'),
+        array('action' => 'downloadcsvtemplate'),
         array('escape' => false)
     ),
 );

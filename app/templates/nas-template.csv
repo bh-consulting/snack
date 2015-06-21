@@ -1,0 +1,2 @@
+Nasname,Shortname,Description,Secret,Login,Password,Enablepassword,Backup
+192.168.1.1,name,test-switch,secretswitch,login,password,enablepassword,1

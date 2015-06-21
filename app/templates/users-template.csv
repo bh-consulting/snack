@@ -1,0 +1,4 @@
+username,password,comment,vlan,cleartext,phone,cisco_user
+loginpass,aaa,dsds,10,1,0,1
+loginpass2,aaaaa,dsddsqdqs,12,0,0,0
+sep000123456,aaa,phone desc,,1,1,0

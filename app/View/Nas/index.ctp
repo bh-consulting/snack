@@ -97,6 +97,11 @@ $dropdownCsvButtonItems = array(
                 'data-toggle' => 'modal',
             )
     ),
+    $this->Html->link(
+        '<i class="fa fa-file-excel-o"></i> ' . __('Download template'),
+        array('action' => 'downloadcsvtemplate'),
+        array('escape' => false)
+    ),
 );
 
 if(AuthComponent::user('role') != 'admin' && AuthComponent::user('role') != 'root'){
@@ -113,7 +118,7 @@ echo $this->element('dropdownButton', array(
 
 $dropdownConfigButtonItems = array(
     $this->Html->link(
-        '<i class="glyphicon glyphicon-search"></i> ' . __('Search in config'),
+        '<i class="fa fa-search"></i> ' . __('Search in config'),
         array('action' => 'searchinconfig'),
         array('escape' => false)
     ),
@@ -121,7 +126,7 @@ $dropdownConfigButtonItems = array(
         __(' Backup config'),
         '#',
         array(
-            'class' => 'fa fa-archive button',
+            'class' => 'fa fa-archive',
             'onclick' => 'getbackupall()'
         )
     ),

@@ -315,318 +315,145 @@ class RadusersController extends AppController {
         if ($this->request->isPost()) {
             $handle = fopen($_FILES['data']['tmp_name']['importCsv']['file'], "r");
             $results = array();
-
+            $listradusers = array();
+            $col = array();
+            $line=0;
             while (($fields = fgetcsv($handle)) != false) {
-                switch ($fields[0]) {
-                    case 'Raduser':
-                        if (count($fields) >= 7) {
-                            $user = new Raduser();
-                            $user->set('username', $fields[1]);
-                            $user->set('is_cisco', $fields[3]);
-                            $user->set('is_loginpass', $fields[4]);
-                            $user->set('is_cert', $fields[5]);
-                            $user->set('is_mac', $fields[6]);
-
-                            if (isset($fields[7])) {
-                                $user->set('comment', $fields[7]);
-                            }
-
-                            if ($user->save()) {
-                                $results[] = __('%s was added', $fields[1]);
-                            } else {
-                                $results[] = __('ERROR: %s was not added', $fields[1]);
-                            }
-                        }
-                        break;
-                    case 'Radcheck':
-                        if (count($fields) == 5) {
-                            $check = new Radcheck();
-                            $check->set('username', $fields[1]);
-                            $check->set('attribute', $fields[2]);
-                            $check->set('op', $fields[3]);
-                            $check->set('value', $fields[4]);
-
-                            if ($check->save()) {
-                                $results[] = __('%s (%s) was added', $fields[1], $fields[2]);
-                            } else {
-                                $results[] = __('ERROR: %s (%s) was not added', $fields[1], $fields[2]);
-                            }
-                        }
-                        break;
-                    case 'Radreply':
-                        if (count($fields) == 5) {
-                            $reply = new Radreply();
-                            $reply->set('username', $fields[1]);
-                            $reply->set('attribute', $fields[2]);
-                            $reply->set('op', $fields[3]);
-                            $reply->set('value', $fields[4]);
-
-                            if ($reply->save()) {
-                                $results[] = __('%s (%s) was added', $fields[1], $fields[2]);
-                            } else {
-                                $results[] = __('ERROR: %s (%s) was not added', $fields[1], $fields[2]);
-                            }
-                        }
-                        break;
-                    case 'Radusergroup':
-                        if (count($fields) >= 2) {
-                            $usergroup = new Radusergroup();
-                            $usergroup->set('username', $fields[1]);
-                            $usergroup->set('groupname', $fields[2]);
-
-                            if (isset($fields[3])) {
-                                $usergroup->set('priority', $fields[3]);
-                            } else {
-                                $usergroup->set('priority', 1);
-                            }
-
-                            if ($usergroup->save()) {
-                                $results[] = __('%s was added to %s', $fields[1], $fields[2]);
-                            } else {
-                                $results[] = __('ERROR: %s was not added to %s', $fields[1], $fields[2]);
-                            }
-                        }
-                        break;
+                if (count($fields) != 7) {
+                    $this->Session->setFlash(
+                        __('Error number of columns on line %s', $line+1), 'flash_error'
+                    );
+                    continue;
                 }
+                //debug($fields);
+                $i=0;
+                $raduser = array();
+                foreach($fields as $field) {
+                    $fieldlower = strtolower($field);
+                    if ($line == 0) {
+                        switch($fieldlower) {
+                            case "username":
+                            case "password":
+                            case "comment":
+                            case "vlan":
+                            case "cleartext":
+                            case "phone":
+                            case "cisco_user":
+                                $col[$i] = $fieldlower;
+                                break;
+                        }
+                    } else {
+                        if ($field != "") {
+                            $raduser[$col[$i]]=$field;
+                        }
+                    }
+                    $i++;
+                }
+                if (count($raduser) > 0) {
+                    $listradusers[]=$raduser;
+                }
+                $line++;
             }
-
-            $this->set('results', $results);
-        } else {
-            $this->redirect(array('controller' => 'Radusers', 'action' => 'index'));
-        }
-    }
-
-    public function importSimple() {
-        if ($this->request->isPost()) {
-            $handle = fopen($_FILES['data']['tmp_name']['importCsv']['file'], "r");
-            $results = array();
-            while (($fields = fgetcsv($handle)) != false) {
-                if (count($fields) != 9) {
-                    echo "Erreur dans le formatage du fichier importé";
+            //debug($listradusers); 
+            foreach ($listradusers as $raduser) {
+                $usersaved = false;
+                $user = new Raduser();
+                $user->set('username', $raduser['username']);
+                $user->set('comment', $raduser['comment']);
+                if ($raduser['phone'] == "1") {
+                    $user->set('is_phone', '1');
+                } elseif (Utils::isMAC($raduser['username'])) {
+                    $user->set('is_mac', '1');
+                } else {
+                    $user->set('is_loginpass', '1');
                 }
-                if ($fields[0] != "username/mac") {
-                    /* Certificat */
-                    if ($fields[1] === "1") {
-                        echo "is certificat";
-                        $results[] = __('NOT YET IMPLEMENTED');
-                    }
-                    /* Login/PWD */
-                    if ($fields[2] === "1") {
-                        echo "is login";
-                        $user = new Raduser();
-                        $user->set('username', $fields[0]);
-                        $user->set('comment', $fields[8]);
-                        $user->set('is_loginpass', '1');
-                        if ($user->save()) {
-                            $results[] = __('%s was added', $fields[0]);
-                        } else {
-                            $results[] = __('ERROR: %s was not added', $fields[0]);
-                        }
-                        $user->set('is_loginpass', '1');
-                        $check = new Radcheck();
-                        $check->set('username', $fields[0]);
-                        $check->set('attribute', 'NAS-Port-Type');
-                        $check->set('op', '=~');
-                        $check->set('value', 'Ethernet|Wireless-802.11');
-                        if ($check->save()) {
-                            $results[] = __('%s (%s) was added', $fields[0], "Login/Pass");
-                        } else {
-                            $results[] = __('ERROR: %s (%s) was not added', $fields[0], "Login/Pass");
-                        }
-                        $check = new Radcheck();
-                        $check->set('username', $fields[0]);
+                if ($raduser['cisco_user'] == "1") {
+                    $user->set('is_cisco', '1');
+                }
+                $user->set('role', 'user');
+                if ($user->save()) {
+                    $usersaved = true;
+                    $results[] = __('<b><span class="text-success">SUCCESS</span></b> %s', $raduser['username']);
+                } else {
+                    $results[] = __('<b><span class="text-danger">ERROR</span></b> %s', $raduser['username']);
+                }
+
+                $results[] = "<ul>";
+                if ($usersaved) {
+                    $check = new Radcheck();
+                    if ($raduser['cleartext'] == "1" || $raduser['phone'] == "1") {
+                        $check->set('username', $raduser['username']);
                         $check->set('attribute', 'Cleartext-Password');
                         $check->set('op', ':=');
-                        $check->set('value', $fields[6]);
+                        $check->set('value', $raduser['password']);
                         if ($check->save()) {
-                            $results[] = __('%s (%s) was added', $fields[0], "Login/Pass");
+                            $results[] = __('<li><b><span class="text-success">SUCCESS</span></b> Cleartext-Password</li>');
                         } else {
-                            $results[] = __('ERROR: %s (%s) was not added', $fields[0], "Login/Pass");
+                            $results[] = __('<li><b><span class="text-danger">ERROR</span></b> Cleartext-Password');
                         }
-                        $check = new Radcheck();
-                        $check->set('username', $fields[0]);
-                        $check->set('attribute', 'EAP-Type');
+                    } else {
+                        $check->set('username', $raduser['username']);
+                        $check->set('attribute', 'NT-Password');
                         $check->set('op', ':=');
-                        $check->set('value', 'MD5-CHALLENGE');
+                        $check->set('value', Utils::NTLMHash($raduser['password']));
                         if ($check->save()) {
-                            $results[] = __('%s (%s) was added', $fields[0], "Login/Pass");
+                            $results[] = __('<li><b><span class="text-success">SUCCESS</span></b> NT-Password</li>');
                         } else {
-                            $results[] = __('ERROR: %s (%s) was not added', $fields[0], "Login/Pass");
-                        }
-                        if ($fields[7] != "NULL" && $fields[7] != "") {
-                            $reply = new Radreply();
-                            $reply->set('username', $fields[0]);
-                            $reply->set('attribute', 'Tunnel-Type');
-                            $reply->set('op', ':=');
-                            $reply->set('value', 'VLAN');
-                            if ($reply->save()) {
-                                $results[] = __('%s (%s) was added', $fields[0], "Login/Pass");
-                            } else {
-                                $results[] = __('ERROR: %s (%s) was not added', $fields[0], "Login/Pass");
-                            }
-                            $reply = new Radreply();
-                            $reply->set('username', $fields[0]);
-                            $reply->set('attribute', 'Tunnel-Medium-Type');
-                            $reply->set('op', ':=');
-                            $reply->set('value', 'IEEE-802');
-                            if ($reply->save()) {
-                                $results[] = __('%s (%s) was added', $fields[1], "Login/Pass");
-                            } else {
-                                $results[] = __('ERROR: %s (%s) was not added', $fields[1], "Login/Pass");
-                            }
-                            $reply = new Radreply();
-                            $reply->set('username', $fields[0]);
-                            $reply->set('attribute', 'Tunnel-Private-Group-Id');
-                            $reply->set('op', ':=');
-                            $reply->set('value', $fields[7]);
-                            if ($reply->save()) {
-                                $results[] = __('%s (%s) was added', $fields[0], "Login/Pass");
-                            } else {
-                                $results[] = __('ERROR: %s (%s) was not added', $fields[0], "Login/Pass");
-                            }
+                            $results[] = __('<li><b><span class="text-danger">ERROR</span></b> NT-Password</li>');
                         }
                     }
-                    /* Phone */
-                    if ($fields[3] === "1") {
-                        echo "is phone";
-                        $user = new Raduser();
-                        $user->set('username', $fields[0]);
-                        $user->set('comment', $fields[8]);
-                        $user->set('is_phone', '1');
-                        if ($user->save()) {
-                            $results[] = __('%s was added', $fields[0]);
-                        } else {
-                            $results[] = __('ERROR: %s was not added', $fields[0]);
-                        }
-                        $user->set('is_phone', '1');
-                        $check = new Radcheck();
-                        $check->set('username', $fields[0]);
-                        $check->set('attribute', 'NAS-Port-Type');
-                        $check->set('op', '=~');
-                        $check->set('value', 'Ethernet|Wireless-802.11');
-                        if ($check->save()) {
-                            $results[] = __('%s (%s) was added', $fields[0], "Phone");
-                        } else {
-                            $results[] = __('ERROR: %s (%s) was not added', $fields[0], "Phone");
-                        }
-                        $check = new Radcheck();
-                        $check->set('username', $fields[0]);
-                        $check->set('attribute', 'Cleartext-Password');
-                        $check->set('op', ':=');
-                        $check->set('value', $fields[6]);
-                        if ($check->save()) {
-                            $results[] = __('%s (%s) was added', $fields[0], "Phone");
-                        } else {
-                            $results[] = __('ERROR: %s (%s) was not added', $fields[0], "Phone");
-                        }
-                        $check = new Radcheck();
-                        $check->set('username', $fields[0]);
-                        $check->set('attribute', 'EAP-Type');
-                        $check->set('op', ':=');
-                        $check->set('value', 'MD5-CHALLENGE');
-                        if ($check->save()) {
-                            $results[] = __('%s (%s) was added', $fields[0], "Phone");
-                        } else {
-                            $results[] = __('ERROR: %s (%s) was not added', $fields[0], "Phone");
-                        }
+
+                    $check = new Radcheck();
+                    $check->set('username', $raduser['username']);
+                    $check->set('attribute', 'NAS-Port-Type');
+                    $check->set('op', '=~');
+                    $check->set('value', 'Ethernet|Wireless-802.11');
+                    if ($check->save()) {
+                        $results[] = __('<li><b><span class="text-success">SUCCESS</span></b> NAS-Port-Type Ethernet|Wireless-802.11</li>');
+                    } else {
+                        $results[] = __('<li><b><span class="text-danger">ERROR</span></b> NAS-Port-Type Ethernet|Wireless-802.11</li>');
+                    }
+
+                    if (isset($raduser['vlan'])) {
                         $reply = new Radreply();
-                        $reply->set('username', $fields[0]);
+                        $reply->set('username', $raduser['username']);
+                        $reply->set('attribute', 'Tunnel-Type');
+                        $reply->set('op', ':=');
+                        $reply->set('value', 'VLAN');
+                        if ($reply->save()) {
+                            $results[] = __('<li><b><span class="text-success">SUCCESS</span></b> Tunnel-Type VLAN</li>');
+                        } else {
+                            $results[] = __('<li><b><span class="text-danger">ERROR</span></b> Tunnel-Type VLAN</li>');
+                        }
+
+                        $reply = new Radreply();
+                        $reply->set('username', $raduser['username']);
+                        $reply->set('attribute', 'Tunnel-Private-Group-Id');
+                        $reply->set('op', ':=');
+                        $reply->set('value', $raduser['vlan']);
+                        if ($reply->save()) {
+                            $results[] = __('<li><b><span class="text-success">SUCCESS</span></b> VLAN %s</li>', $raduser['vlan']);
+                        } else {
+                            $results[] = __('<li><b><span class="text-danger">ERROR</span></b> VLAN %s</li>', $raduser['vlan']);
+                        }
+                    }
+
+                    if (isset($raduser['cisco_user'])) {
+                        $reply = new Radreply();
+                        $reply->set('username', $raduser['username']);
                         $reply->set('attribute', 'Cisco-AVPair');
                         $reply->set('op', '=');
                         $reply->set('value', 'device-traffic-class=voice');
                         if ($reply->save()) {
-                            $results[] = __('%s (%s) was added', $fields[0], "Phone");
+                            $results[] = __('<li><b><span class="text-success">SUCCESS</span></b> Voice phone attribute</li>');
                         } else {
-                            $results[] = __('ERROR: %s (%s) was not added', $fields[0], "Phone");
-                        }
-                        echo $fields[0] . " " . $fields[6] . " " . $fields[7] . " " . $fields[8];
-                    }
-                    /* Mac */
-                    if ($fields[4] === "1") {
-                        echo "is mac";
-                        $user = new Raduser();
-                        $user->set('username', $fields[0]);
-                        $user->set('comment', $fields[8]);
-                        $user->set('is_mac', '1');
-                        if ($user->save()) {
-                            $results[] = __('%s was added', $fields[0]);
-                        } else {
-                            $results[] = __('ERROR: %s was not added', $fields[0]);
-                        }
-                        $user->set('is_mac', '1');
-                        $check = new Radcheck();
-                        $check->set('username', $fields[0]);
-                        $check->set('attribute', 'NAS-Port-Type');
-                        $check->set('op', '=~');
-                        $check->set('value', 'Ethernet|Wireless-802.11');
-                        if ($check->save()) {
-                            $results[] = __('%s (%s) was added', $fields[0], "MAC");
-                        } else {
-                            $results[] = __('ERROR: %s (%s) was not added', $fields[0], "MAC");
-                        }
-                        $check = new Radcheck();
-                        $check->set('username', $fields[0]);
-                        $check->set('attribute', 'Cleartext-Password');
-                        $check->set('op', ':=');
-                        $check->set('value', $fields[0]);
-                        if ($check->save()) {
-                            $results[] = __('%s (%s) was added', $fields[0], "MAC");
-                        } else {
-                            $results[] = __('ERROR: %s (%s) was not added', $fields[0], "MAC");
-                        }
-                        $check = new Radcheck();
-                        $check->set('username', $fields[0]);
-                        $check->set('attribute', 'EAP-Type');
-                        $check->set('op', ':=');
-                        $check->set('value', 'MD5-CHALLENGE');
-                        if ($check->save()) {
-                            $results[] = __('%s (%s) was added', $fields[0], "MAC");
-                        } else {
-                            $results[] = __('ERROR: %s (%s) was not added', $fields[0], "MAC");
-                        }
-                        if ($fields[7] != "NULL" && $fields[7] != "") {
-                            $reply = new Radreply();
-                            $reply->set('username', $fields[0]);
-                            $reply->set('attribute', 'Tunnel-Type');
-                            $reply->set('op', ':=');
-                            $reply->set('value', 'VLAN');
-                            if ($reply->save()) {
-                                $results[] = __('%s (%s) was added - (%s)', $fields[0], "MAC", "Tunnel-Type VLAN");
-                            } else {
-                                $results[] = __('ERROR: %s (%s) was not added - (%s)', $fields[0], "MAC", "Tunnel-Type VLAN");
-                            }
-                            $reply = new Radreply();
-                            $reply->set('username', $fields[0]);
-                            $reply->set('attribute', 'Tunnel-Medium-Type');
-                            $reply->set('op', ':=');
-                            $reply->set('value', 'IEEE-802');
-                            if ($reply->save()) {
-                                $results[] = __('%s (%s) was added', $fields[0], "MAC");
-                            } else {
-                                $results[] = __('ERROR: %s (%s) was not added', $fields[0], "MAC");
-                            }
-                            $reply = new Radreply();
-                            $reply->set('username', $fields[0]);
-                            $reply->set('attribute', 'Tunnel-Private-Group-Id');
-                            $reply->set('op', ':=');
-                            $reply->set('value', $fields[7]);
-                            if ($reply->save()) {
-                                $results[] = __('%s (%s) was added', $fields[0], "MAC");
-                            } else {
-                                $results[] = __('ERROR: %s (%s) was not added', $fields[0], "MAC");
-                            }
+                            $results[] = __('<li><b><span class="text-danger">ERROR</span></b> Voice phone attribute</li>');
                         }
                     }
-                    /* Cisco */
-                    if ($fields[5] === "1") {
-                        echo "is cisco";
-                        $results[] = __('NOT YET IMPLEMENTED');
-                    }
-
-                    echo "\n";
-                    $this->set('results', $results);
                 }
+                $results[] = "</ul>";
             }
+            $this->set('results', $results);   
         }
     }
 
@@ -1660,6 +1487,14 @@ class RadusersController extends AppController {
 
     public function revoked_certs() {
         $this->set('results', $this->Raduser->getRevokedCerts());
+    }
+
+    /*
+    * Get the template csv for import
+    */
+    public function downloadcsvtemplate() {
+        $this->render('/Radusers/index');
+        return $this->response->file(APP."/templates/users-template.csv", array('download' => true, 'name' => "users-template.csv"));
     }
 }
 

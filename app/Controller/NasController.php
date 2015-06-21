@@ -337,37 +337,40 @@ class NasController extends AppController {
             $results = array();
             $listnas = array();
             $col = array();
+            $line=0;
             while (($fields = fgetcsv($handle)) != false) {
                 $i=0;
                 $nas = array();
                 foreach($fields as $field) {
                     $fieldlower = strtolower($field);
-                    switch($fieldlower) {
-                        case "nasname":
-                        case "shortname":
-                        case "description":
-                        case "version":
-                        case "image":
-                        case "serialnumber":
-                        case "model":
-                        case "login":
-                        case "password":
-                        case "enablepassword":
-                        case "backup":
-                        case "secret":
-                            $col[$i] = $fieldlower;
-                            break;
-                        default:
-                            if ($field != "") {
-                                $nas['Nas'][$col[$i]]=$field;
-                            }
-                            break;
+                    if ($line == 0) {
+                        switch($fieldlower) {
+                            case "nasname":
+                            case "shortname":
+                            case "description":
+                            case "version":
+                            case "image":
+                            case "serialnumber":
+                            case "model":
+                            case "login":
+                            case "password":
+                            case "enablepassword":
+                            case "backup":
+                            case "secret":
+                                $col[$i] = $fieldlower;
+                                break;
+                        }
+                    } else {
+                        if ($field != "") {
+                            $nas['Nas'][$col[$i]]=$field;
+                        }
                     }
                     $i++;
                 }
                 if (count($nas) > 0) {
                     $listnas[]=$nas;
                 }
+                $line++;
             }
             foreach ($listnas as $nas) {
                 $this->Nas->create();
@@ -468,6 +471,14 @@ class NasController extends AppController {
             $this->set('results', $results);
             $this->set('pattern', $pattern);
         }
+    }
+
+    /*
+    * Get the template csv for import
+    */
+    public function downloadcsvtemplate() {
+        $this->render('/Nas/index');
+        return $this->response->file(APP."/templates/nas-template.csv", array('download' => true, 'name' => "nas-template.csv"));
     }
 }
 ?>

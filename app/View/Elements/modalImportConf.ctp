@@ -37,7 +37,7 @@ $title = isset($title) ? $title : __('Import');
                         'type' => 'checkbox',
                         'between' => '',
                         'after'   => '',
-                        //'class' => 'form-control', 
+                        'class' => '', 
                         //'label' => array_merge($mainLabelOptions, $myLabelOptions),
                         'before' => '<label class="col-sm-4 control-label">'.__('Force import').'</label><div class="col-sm-1">',
                         'between' => '',
