@@ -48,7 +48,8 @@ class Logline extends AppModel {
         $data = array();
         $data["aggs"] = array( "hosts" => array("terms" => array(
             "field" => "host",
-            "order" => array("_count" => "asc")
+            "order" => array("_count" => "asc"),
+            "size" => 250,
         )));
         $data_string = json_encode($data, TRUE);
         $url = 'http://localhost:9200/_search?search_type=count';
