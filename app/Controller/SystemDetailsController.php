@@ -96,7 +96,7 @@ class SystemDetailsController extends AppController {
         $this->set("updates", 0);
         if ($file->exists()) {
             $tmp=trim($file->read(false, 'rb', false));
-            if(preg_match('/(\d+\.\d+-\d+)\s+(\d+\.\d+-\d+)/', $tmp, $matches)) {
+            if(preg_match('/(\d+\.\d+-*\d*)\s+(\d+\.\d+-*\d*)/', $tmp, $matches)) {
                 if (version_compare($matches[1], $matches[2]) >=0 ) {
                     $this->set("updates", $matches[1]);
                 }
