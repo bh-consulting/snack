@@ -93,7 +93,9 @@ class LoglinesController extends AppController {
 
         //$constraints=array();//'facility' => 'local7');
         $this->defaultValues($arr['page'], $constraints);
-        
+        if (isset($this->passedArgs['host'])) {
+            $this->set('host', $this->passedArgs['host']);
+        }
         $total_time = $this->stop_time($start);
         $this->set('total_time', $total_time);
     }
@@ -191,9 +193,20 @@ class LoglinesController extends AppController {
     public function choosenas() {
         if ($this->request->is('post')) {
             if (!empty($this->request->data)) {
+                debug($this->request->data['Loglines']['choosenas']);
+                $url="nas_logs/host:".$this->request->data['Loglines']['choosenas'];
+                if (count($this->request->query) > 0) {
+                    $url=$url."?";
+                }
+                foreach($this->request->query as $key=>$value) {
+                    $url=$url.$key."=".$value."&";
+                }
+                if (count($this->request->query) > 0) {
+                    $url = substr($url, 0, -1);
+                }
+                //debug ($this->request);
                 $this->redirect(array(
-                    'action' => 'nas_logs',
-                    'host' => $this->request->data['Loglines']['choosenas'],
+                    'action' => $url,
                 ));
             }
         }

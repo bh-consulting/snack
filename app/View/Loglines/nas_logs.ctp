@@ -6,11 +6,22 @@ $this->assign('naslogs_active', 'active');
 if (count($listnas)>1) {
     echo "<br/>";
     $mainLabelOptions = array('class' => 'label-inline control-label');
-    if (isset($this->passedArgs['file'])) {
-        $action = 'choosenas/'.$this->passedArgs['file'];
-    } else {
-        $action = 'choosenas';
+    $url="";
+    if (count($this->request->query) > 0) {
+        $url=$url."?";
     }
+    foreach($this->request->query as $key=>$value) {
+        $url=$url.$key."=".$value."&";
+    }
+    if (count($this->request->query) > 0) {
+        $url = substr($url, 0, -1);
+    }
+    if (isset($this->passedArgs['file'])) {
+        $action = 'choosenas/'.$this->passedArgs['file'].$url;
+    } else {
+        $action = 'choosenas'.$url;
+    }
+
     echo $this->Form->create('Loglines', array(
         'action' => $action,
         'novalidate' => true, 

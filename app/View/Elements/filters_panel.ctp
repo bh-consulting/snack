@@ -28,6 +28,10 @@
 	echo '</div>';
 
     $mainLabelOptions = array('class' => 'col-sm-4 control-label');
+    //debug($url);
+    if (isset($host)) {
+        $url['action'] = $url['action']."/host:".$host;
+    }
 	echo $this->Form->create(null, array(
 		'url' => $url,
 		'type' => isset($method) ? $method : 'get',
