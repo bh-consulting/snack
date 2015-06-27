@@ -79,6 +79,7 @@ $cakeDescription = __('SNACK');
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                     <?php
+                    if($this->Session->read('Auth.User')){
                     echo '<li class="' . $this->fetch('radius_active') . '">' .
                         $this->Html->link(
                             __('Radius'),
@@ -88,6 +89,7 @@ $cakeDescription = __('SNACK');
                             ),
                             array()
                         ) . '</li>';
+
                     echo '<li class="' . $this->fetch('tftp_active') . '">' .
                         $this->Html->link(
                             __('TFTP'),
@@ -124,6 +126,7 @@ $cakeDescription = __('SNACK');
                             ),
                             array()
                         ) . '</li>';
+                    }
                     /*if(AuthComponent::user('role') == 'root'){
                         echo '<li class="' . $this->fetch('term_active') . '">' .
                             $this->Html->link(
