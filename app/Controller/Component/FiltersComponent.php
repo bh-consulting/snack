@@ -362,6 +362,8 @@ class FiltersComponent extends Component {
                     if (isset($options['strict']) && $options['strict']) {
                         $template = "%field REGEXP '^(%value)\$'";
                     } else {
+                        $value = str_replace("(", "\\\\(", $value);
+                        $value = str_replace(")", "\\\\)", $value);
                         $template = "%field REGEXP '%value'";
                     }
 
