@@ -7,6 +7,9 @@ $this->assign('dashboard_active', 'active');
 <div class="pull-right">
     <?php
     echo $this->Html->link(
+        '<i class="glyphicon glyphicon-send glyphicon-white"></i>&nbsp;&nbsp;' . __('Send Report'), array('controller' => 'systemDetails', 'action' => 'send_report'), array('class' => 'btn btn-success btn-large', 'escape' => false)
+    );
+    echo $this->Html->link(
         '<i class="glyphicon glyphicon-send glyphicon-white"></i>&nbsp;&nbsp;' . __('Send Configuration'), array('controller' => 'systemDetails', 'action' => 'send_backup'), array('class' => 'btn btn-success btn-large', 'escape' => false)
     );
     echo $this->Html->link('<i class="glyphicon glyphicon-open glyphicon-white"></i> ' . __('Import'), '#confirmimport',

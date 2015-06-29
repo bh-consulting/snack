@@ -505,6 +505,11 @@ class SystemDetailsController extends AppController {
         //debug($results);
         $this->set('results', $results);
     }
+
+    public function send_report() {
+        $this->SystemDetail->createReports();
+        $this->redirect(array('action' => 'index'));
+    }
 }
 
 ?>

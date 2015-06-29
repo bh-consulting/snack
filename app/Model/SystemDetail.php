@@ -1,4 +1,8 @@
 <?php
+App::uses('Nas', 'Model');
+App::uses('Backup', 'Model');
+App::uses('Logline', 'Model');
+
 class SystemDetail extends AppModel {
     public $useTable = false;
 	/* Gets the uptime of a service or -1 if the service is down. */
@@ -316,6 +320,256 @@ class SystemDetail extends AppModel {
         $file = new File(APP.'tmp/updates', true, 0644);
         $file->write($return);
         $file->close();
+    }
+
+    public function createReports() {
+        $this->errors=0;
+        $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));
+        foreach ( $values as $val ) {
+            if( preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
+                continue;
+            }
+        }
+
+        $this->domain = $matches[1];
+        $str = "<h2>SNACK Report</h2>";
+        $str .= "<h3>Infos</h3>";
+        $str .= "Name : ".$this->getName()."<br>";
+        $str .= "Release : ".$this->getRelease()."<br>";
+        $str .= "Version : ".$this->getVersion($this->getRelease())."<br>";
+        $str .= "Version of Snack : ".$this->getVersionSnack()."<br>";
+        $str .= "IP Address : ".Configure::read('Parameters.ipAddress')."<br>";
+        $str .= "CA Validity : ".$this->getCAValidity()."<br>";
+
+        /* check Services */
+        $str .= "<h3>Services</h3>";
+        $mysqlUptime = $this->checkService("mysqld");
+        if ($mysqlUptime == -1) {
+            $this->errors++;
+            $str .= '<span style="color:#FF0000">';
+            $str .=  "ERROR : Mysql not running<br>";
+            $str .= '</span>';
+        }
+        else {
+            $str .= "Mysql enabled for ".$mysqlUptime."<br>";
+        }
+        $radiusUptime = $this->checkService("freeradius");
+        if ($radiusUptime == -1) {
+            $this->errors++;
+            $str .= '<span style="color:#FF0000">';
+            $str .=  "ERROR : Freeradius not running<br>";
+            $str .= '</span>';
+        }
+        else {
+            $str .= "Freeradius enabled for ".$radiusUptime."<br>";
+        }
+
+        /* check Backups */
+        $nasModel = new Nas();
+        $backupModel = new Backup();
+        $str .= "<h3>Backups NAS</h3>";
+        $nas = $nasModel->query('select nasname,secret,backup from nas;');
+        $datetime1 = new DateTime();
+        //echo $datetime1->format('Y-m-d H:i:s');
+        foreach ($nas as $n) {
+            $nasname=$n['nas']['nasname'];
+            /*$return = shell_exec("export NAS_IP_ADDRESS=".$nasname." ;
+                                  export USER_NAME=AUTO ;
+                                  export ACCT_STATUS_TYPE=Write ;
+                                   /home/snack/scripts/backup_create.sh");*/
+            //echo "RETURN : ".$return;
+            if ($nasname != "127.0.0.1") { 
+                if ($n['nas']['backup']) {
+                    $backup = $backupModel->query("select * from backups where nas='".$nasname."' order by id desc limit 1;");
+                    $str .= $nasname." ";
+                    if (count($backup) > 0) {
+                        $datetime2 = new DateTime($backup[0]['backups']['datetime']);
+                        $diff=$datetime2->diff($datetime1);
+                        $years=$diff->format('%y');
+                        $months=$diff->format('%m');
+                        $days=$diff->format('%d');
+                        if ($years > 0 or $months > 0 or $days > 3) {
+                            $str .= '<span style="color:#FF0000">';
+                            $str .= "WARNING : No backup  since ".$backup[0]['backups']['datetime']."<br>";
+                            $str .= '</span>';
+                            $this->errors++;
+                        }
+                        else {
+                            $str .= 'Last backup : <span style="color:#00FF00">OK</span> : '.$backup[0]['backups']['datetime'].'<br>';
+                        }
+                    }
+                    else {
+                        $str .= '<span style="color:#FF0000">';
+                        $str .= "No backup <br>";
+                        $str .= '</span>';
+                        $this->errors++;
+                    }
+                } else {
+                    $str .= $nasname." ";
+                    $str .= '<span style="color:#FFA500">';
+                    $str .= 'No Monitor<br>';
+                    $str .= '</span>';
+                }
+            }
+        }
+
+        /* check HA */
+        /* add no slave */
+        $str .= "<h3>High Availability</h3>";
+        $dir = new Folder(APP.'tmp/ha');
+        $datetime1 = new DateTime();
+        $results = array();
+        $files = $dir->find('ha-[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{2}-[0-9]{2}\.log');
+        sort($files);
+        $files=array_reverse($files);
+        $found = false;
+        $slaves=explode(';', Configure::read('Parameters.slave_ip_to_monitor'));
+        foreach($slaves as $slave) {
+            if ($slave != "") {
+                $str .= "<h4>Slave IP Address : ".$slave."</h4>";
+                foreach ($files as $file) {
+                    $rsync = -1;
+                    $mysql = -1;
+                    if (preg_match('/ha-([0-9]{4}-[0-9]{2}-[0-9]{2})_([0-9]{2})-([0-9]{2})\.log/', $file, $matches)) {
+                        $datetime2 = new DateTime($matches[1]." ".$matches[2].":".$matches[3]);
+                    }
+                    $fileha = new File(APP.'tmp/ha/'.$file, false, 0644);
+                    $tmp=$fileha->read(false, 'rb', false);
+                    $res_versions = 0;
+                    if (preg_match('/VERSIONS MISMATCH/', $tmp, $matches)) {
+                        $res_versions = 1;
+                    }
+                    if (preg_match('/RSYNC RES :([0-9]+)/', $tmp, $matches)) {
+                        $rsync = $matches[1];
+                    }
+                    if (preg_match('/MYSQL RES :([0-9]+)/', $tmp, $matches)) {
+                        $mysql = $matches[1];
+                    }
+                    $ip = "";
+                    if (preg_match('/IP:([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/', $tmp, $matches)) {
+                        $ip = $matches[1];
+                    }
+                    if ($ip == $slave) {
+                        $found = true;
+                        if ($rsync == 0 && $mysql == 0 && $res_versions == 0 ) {
+                            $diff = $datetime2->diff($datetime1);
+                            $years = $diff->format('%y');
+                            $months = $diff->format('%m');
+                            $days = $diff->format('%d');
+                            if ($years > 0 or $months > 0 or $days > 1) {
+                                $this->errors++;
+                                $str .= '<span style="color:#FF0000">';
+                                $str .= "ERROR : No replication since ".$datetime2->format('Y-m-d H:i:s')."<br>";
+                                $str .= '</span>';
+                                $this->file->append("[] [ERR] SNACK No replication since ".$datetime2->format('Y-m-d H:i:s'));
+                            }
+                            else {
+                                $str .= "Last replication OK : ".$datetime2->format('Y-m-d H:i:s')."<br>";
+                            }
+                            break;
+                        } else {
+                            $str .= '<span style="color:#FF0000">';
+                            $str .= "WARNING : Replication failed :  ".$datetime2->format('Y-m-d H:i:s')."<br>";
+                            $str .= '</span>';
+                            $this->file->append("[".$datetime2->format('Y-m-d H:i:s')."] [WARN] SNACK Last replication failed ");
+                        }
+                    }
+                }
+            }
+            if ($found == false) {
+                if ($slave != "") {
+                    $str .= '<span style="color:#FF0000">';
+                    $str .= "ERR : No replication for " . $slave . "<br>";
+                    $str .= '</span>';
+                    $this->file->append("[] [ERR] SNACK No replication for ".$slave);
+                }
+            }
+        }
+
+        /* Get Failures */
+        $loglineModel = new Logline();
+        $res = $loglineModel->get_failures();
+        $usersnbfailures = $res['usersnbfailures'];
+        $users = $res['users'];
+        $usernames = $res['usernames'];
+        $logins =$res['logins'];
+        $nb = count($usersnbfailures);
+        $str .= "<h3>$nb failures of connections order by users<br></h3>";
+        $str .=  "<table border='1'>";
+        $str .=  "<th>" . __('User') . "</th>";
+        $str .=  "<th>" . __('Nb') . "</th>";
+        $str .=  "<th>" . __('Last') . "</th>";
+        $str .=  "<th>" . __('Vendor') . "</th>";
+        $str .=  "<th>" . __('NAS') . "</th>";
+        $str .=  "<th>" . __('Port') . "</th>";
+        $str .=  "<th>" . __('Why ?') . "</th>";
+        //debug($users);
+        /*$infos = explode(",", $this->element('formatUsersList', array(
+                    'users' => $usernames
+        )));*/
+        $i = 0;
+        
+        foreach ($usersnbfailures as $key => $value) {
+            $str .=  "<tr>";
+            $str .=  "<td>" . $usernames[$i]['username'] . "</td>";
+            $str .=  "<td>" . $value . "</td>";
+            $str .=  "<td>" . $users[$logins[$i]]['last'] . "</td>";
+            $str .=  "<td>" . $users[$logins[$i]]['vendor'] . "</td>";
+            $str .=  "<td>" . $users[$logins[$i]]['nas'] . "</td>";
+            $str .=  "<td>" . $users[$logins[$i]]['port'] . "</td>";
+            $str .=  "<td>" . $users[$logins[$i]]['info'] . "</td>";
+            //echo " : ".$value." tentatives";
+            $i++;
+            $str .=  "</tr>";
+        }
+        $str .=  "</table>";
+
+
+        if ($this->errors > 0) {
+            $subject = "[".$this->domain."][ERR] SNACK - Reports";
+        }
+        else {
+            $subject = "[".$this->domain."][INFO] SNACK - Reports";
+        }
+        //debug($str);
+        $this->sendMail($subject , $str);
+    }
+
+    public function sendMail($subject, $body) {
+        App::uses('CakeEmail', 'Network/Email');
+        $Email = new CakeEmail();
+        $Email->subject($subject);
+        $Email->template('default');
+        if (Configure::read('Parameters.smtp_ip') != '') {
+            if (Configure::read('Parameters.smtp_login') != '') {
+                $Email->config(array('transport' => 'Smtp',
+                                 'port' => Configure::read('Parameters.smtp_port'),
+                                 'host' => Configure::read('Parameters.smtp_ip'),
+                                 'username' => Configure::read('Parameters.smtp_login'),
+                                 'password' => Configure::read('Parameters.smtp_password'),
+                                 'client' => 'snack'.$this->domain));
+            } else {
+                $Email->config(array('transport' => 'Smtp',
+                                     'port' => Configure::read('Parameters.smtp_port'),
+                                     'host' => Configure::read('Parameters.smtp_ip'),
+                                     'client' => 'snack'.$this->domain));
+            }
+        }
+        $Email->emailFormat('both');
+        $Email->from(array(Configure::read('Parameters.smtp_email_from') => 'SNACK'));
+        $emails = explode(';', Configure::read('Parameters.configurationEmail'));
+        $listemails = array();
+        foreach ( $emails as $email) {
+            if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $listemails[] = $email;
+            }
+        }
+        $Email->to($listemails);
+        try {
+            $Email->send($body);
+        } catch ( Exception $e ) {
+            // Failure, with exception
+        }  
     }
 
 }
