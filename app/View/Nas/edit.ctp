@@ -86,6 +86,25 @@ echo $this->Form->input('confirm_enablepassword', array(
 ));
 echo $this->Form->input('id', array('type' => 'hidden'));
 
+
+if (isset($password)) {
+    echo $this->Form->input('showpass', array(
+        'type' => 'checkbox',
+        'between' => '',
+        'after'   => '',
+        'class' => '', 
+        //'before' => '<label class="col-sm-4 control-label">'.__('Check server certificate').'</label><div class="col-sm-1">',
+        'before' => '<label class="col-sm-4 control-label">'.__('Show password ?').'</label><div class="col-sm-1">',
+        'between' => '',
+        'after'   => '</div>',
+        'label' => false,
+        'onchange' => "toggleNASCheckbox(this, '$password');",
+        //'readonly' => true,
+    ));
+
+    echo "<div class='password'></div>";
+}
+
 $options = array(
     'label' => __('Update'),
     'div' => array(

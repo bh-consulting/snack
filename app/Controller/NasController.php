@@ -254,11 +254,7 @@ class NasController extends AppController {
         $this->Nas->id = $id;   
         if($this->request->is('post')){
             $nas = $this->Nas->read();
-            /*echo "<pre style=\"margin-left: 100px;\">";
-                print_r($this->request->data);
-                var_dump($this->request->data);
-            echo "</pre>";
-            debug($this->request->data);*/
+            unset($this->request->data['Nas']['showpass']);
             if (($this->request->data['Nas']['password'] == '' && $this->request->data['Nas']['confirm_password'] == '')) {
                 unset($this->request->data['Nas']['password']);
                 unset($this->request->data['Nas']['confirm_password']);
@@ -281,7 +277,13 @@ class NasController extends AppController {
             }
         } else {
             $this->request->data = $this->Nas->read();
+            $key = Configure::read('Security.snackkey');           
+            $secret64Enc = $this->request->data['Nas']['password'];
+            $secret64Dec = base64_decode($secret64Enc);
+            $password = Security::decrypt($secret64Dec,$key);
+            $this->set('password', $password);
             $this->set('backup', $this->request->data['Nas']['backup']);
+            
             unset($this->request->data['Nas']['password']);
             unset($this->request->data['Nas']['confirm_password']);
             unset($this->request->data['Nas']['enablepassword']);

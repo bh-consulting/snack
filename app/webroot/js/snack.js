@@ -114,6 +114,7 @@ function getbackupall() {
         if(this.id.match(/^nas_(\d+)$/)) {
             id=this.id.replace(/nas_/, '');
             nasname=document.getElementById("nasname_"+id).innerHTML;
+            alert(document.getElementsByClassName('glyphicon-eye-close').innerHTML);
             if (nasname != "127.0.0.1") {
                 elt="backuptype_"+id;
                 document.getElementById(elt).innerHTML = "<i class='fa fa-circle-o-notch fa-spin fa-1x'></i>";
@@ -378,5 +379,18 @@ $("#NasBackup").change(function() {
         $("#NasConfirmEnablepassword").prop( "readonly", true );
     }
 });
+
+// NAS / show password checkbox
+function toggleNASCheckbox(element, text) {
+    if(element.checked) {
+        var text = '<div class="form-group">'+
+        '<label for="NasShowpasstext" class="col-sm-4 control-label">Password</label>'+
+        '<div class="col-sm-4"><input name="data[Nas][showpasstext]" class="form-control" value="'+text+'" readonly="readonly" id="NasShowpasstext" type="text"></div>'+
+        '</div>';
+        $("div.password").html(text);
+    } else {
+        $("div.password").html("");
+    }
+}
 
 setInterval(function(){ refreshCode(); }, 3000)
