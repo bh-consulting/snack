@@ -1,4 +1,5 @@
 <?php
+
 if (Configure::read('debug') == 2) {
     $columns = array(
         /*'id' => array(
@@ -138,7 +139,7 @@ if (!empty($loglines)) {
     foreach ($listcalls as $key=>$call) {
         //debug($key);
         if (isset($call['date'])) {
-            if (isset($call['cdn'])) {
+            //if (isset($call['cdn'])) {
                 echo "<tr class='loglevel{$logline['Logline']['level']}'>";
                 echo "<td>".$call['date']." ".$call['time']."</td>";
                 if (isset($call['cgn'])) {
@@ -169,7 +170,7 @@ if (!empty($loglines)) {
                 //echo "<td>".$key."</td>";
                 
                 echo "</tr>";
-            }
+            //}
         }
     }
    //debug($listcalls);
