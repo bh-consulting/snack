@@ -38,13 +38,15 @@ echo $this->Form->end();
                 );
                 ?>
             </li>
-            <li class="<?php echo $this->fetch('voicelogs_active'); ?>">
-                <?php
+            <?php
+            if($this->Session->read('Auth.User')['role'] == "root"){
+                echo "<li class=".$this->fetch('voicelogs_active').">";
                 echo $this->Html->link(
                         __('Voice'), array('controller' => 'loglines', 'action' => 'voice_logs')
                 );
-                ?>
-            </li>
+                echo "</li>";
+            }
+            ?>
     </ul>
     <div class="tab-content">
         <?php echo $this->fetch('content'); ?>
