@@ -196,5 +196,54 @@ class Nas extends AppModel {
             }
         }
     }
+
+    public function getInfosNas($nasname, $login, $password, $enablepassword) {
+        $results = array();
+        $cmd="/home/snack/interface/tools/command.sh $nasname serial $login $password $enablepassword";
+        $return = trim(shell_exec($cmd));
+        $results['serial'] = $return;
+        $cmd="/home/snack/interface/tools/command.sh $nasname version $login $password $enablepassword";
+        $return = trim(shell_exec($cmd));
+        $results['version'] = $return;
+        $cmd="/home/snack/interface/tools/command.sh $nasname model $login $password $enablepassword";
+        $return = trim(shell_exec($cmd));
+        $results['model'] = $return;
+        $cmd="/home/snack/interface/tools/command.sh $nasname image $login $password $enablepassword";
+        $return = trim(shell_exec($cmd));
+        $results['image'] = $return;
+        return $results;
+    }
+
+    public function getInfosAllNas() {
+        $key = Configure::read('Security.snackkey');
+        $nas = $this->find('all');
+        foreach ($nas as $n) {
+            if ($n['Nas']['nasname'] != "127.0.0.1") {
+                if (($n['Nas']['login'] != "") && ($n['Nas']['password'] != "")) {
+                    $secret64Enc = $n['Nas']['password'];
+                    $secret64Dec = base64_decode($secret64Enc);
+                    $password = Security::decrypt($secret64Dec,$key);
+
+                    if ($n['Nas']['enablepassword'] != "") {
+                        $secret64Enc = $n['Nas']['enablepassword'];
+                        $secret64Dec = base64_decode($secret64Enc);
+                        $enablepassword = Security::decrypt($secret64Dec,$key);
+                    }
+                    if (($n['Nas']['enablepassword'] == "") || ($enablepassword == "")) {
+                        $enablepassword = $password;
+                    }
+                    if ($password != "") {
+                        $results = $this->getInfosNas($n['Nas']['nasname'], $n['Nas']['login'], $password, $enablepassword);
+                        debug($results);
+                        $n['Nas']['version'] = $results['version'];
+                        $n['Nas']['image'] = $results['image'];
+                        $n['Nas']['serialnumber'] = $results['serial'];
+                        $n['Nas']['model'] = $results['model'];
+                        $this->save($n);
+                    }
+                }
+            }
+        }
+    }
 }
 ?>

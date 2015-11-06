@@ -482,5 +482,10 @@ class NasController extends AppController {
         $this->render('/Nas/index');
         return $this->response->file(APP."/templates/nas-template.csv", array('download' => true, 'name' => "nas-template.csv"));
     }
+
+    public function getInfos() {
+        $this->Nas->getInfosAllNas();
+        $this->redirect(array('action' => 'index'));
+    }
 }
 ?>

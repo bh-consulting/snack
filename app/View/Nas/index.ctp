@@ -149,6 +149,12 @@ echo $this->element('dropdownButton', array(
     'items' => $dropdownConfigButtonItems
 ));
 
+echo $this->Html->link(
+    '<i class="glyphicon glyphicon-retweet glyphicon-white"></i> ' . __('Get Infos'),
+    array('controller' => 'nas', 'action' => 'getInfos'),
+    array('escape' => false, 'class' => 'btn btn-primary')
+);
+echo " ";
 if(AuthComponent::user('role') == 'root'){
     echo $this->Html->link(
         '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ' . __('Reinitialize conf'),
