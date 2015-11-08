@@ -8,26 +8,46 @@ class ReportsController extends AppController {
     public $paginate = array('maxLimit' => 10, 'limit' => 10, 'order' => array('id' => 'desc'));
     public $uses = array('Logline', 'Radacct', 'Raduser');
     public $components = array('Mpdf.Mpdf', 'Users');
-    
-    public function index() {
+
+    public function errorsfromradius_reports() {
+        $list = array(
+            __('Daily'),
+            __('Weekly'),
+            __('Monthly'),
+            __('All'),
+        );
+        if (isset($this->request->data['Reports']['choosedate'])) {
+            $id = $this->request->data['Reports']['choosedate'];
+            $date= $list[$id];
+        } else {
+            $date = "Daily";
+            $id = 0;
+        }
+        $this->set('list', $list);
+        $this->users_snack_login($date);
+        $this->get_failures_by_users($date);
+        $this->get_failures_by_nas($date);
+        $this->set('id', $id);
     }
 
-    public function errors_reports() {
-        //debug("test.txt");
-        //2014-01-30 22:14:28
-        
-        $today=date('Y-m-d');
-        $yesterday  = date('Y-m-d',strtotime("-1 days"));
-        $this->set('str_date', $yesterday);
-        $this->get_errors_from_nas();
-        $this->get_warnings_from_nas();
-        //$this->users_snack_login($yesterday);
-        $this->users_radius_connect_ok($yesterday);
-        $this->get_failures_by_users();
-        $this->get_failures_by_nas();
-        //$this->send();
-        //debug("test");
-        
+    public function errorsfromnas_reports() {
+        $list = array(
+            __('Daily'),
+            __('Weekly'),
+            __('Monthly'),
+            __('All'),
+        );
+        if (isset($this->request->data['Reports']['choosedate'])) {
+            $id = $this->request->data['Reports']['choosedate'];
+            $date= $list[$id];
+        } else {
+            $date = "Daily";
+            $id = 0;
+        }
+        $this->set('list', $list);
+        $this->get_errors_from_nas($date);
+        $this->get_warnings_from_nas($date);
+        $this->set('id', $id);
     }
 
     public function sessions_reports() {
@@ -81,16 +101,16 @@ class ReportsController extends AppController {
         $this->Mpdf->SetWatermarkText("default");
     }
     
-    public function get_errors_from_nas() {
-        $res = $this->Logline->get_errors_from_NAS();
+    public function get_errors_from_nas($date) {
+        $res = $this->Logline->get_errors_from_NAS($date);
         $err = $res['err'];
         $lasts = $res['lasts'];
         $this->set('err', $err);
         $this->set('lasts', $lasts);
     }
     
-    public function get_warnings_from_nas() {
-        $res = $this->Logline->get_warnings_from_NAS();
+    public function get_warnings_from_nas($date) {
+        $res = $this->Logline->get_warnings_from_NAS($date);
         $warn = $res['err'];
         $warnlasts = $res['lasts'];
         $this->set('warn', $warn);
@@ -98,131 +118,64 @@ class ReportsController extends AppController {
     }
     
     public function users_snack_login($date) {
-        $today = new DateTime($date);
-        $tomorroy = new DateTime($date);
-        $tomorroy->add(new DateInterval('P1D'));
-
-        $str_today = $today->format('Y-m-d') . "\n";
-        $str_tomorrow = $tomorroy->format('Y-m-d') . "\n";
-        //echo $str_today." ".$str_tomorrow;
-        $constraints=array('facility' => 'local4', 'string' => 'logged in', 'pageSize' => '100000');
+        if ($date == "Daily") {
+            $start = date('Y-m-d')."T00:00:00";
+            $end = date('Y-m-d')."T".date('h:i:s');
+        }
+        if ($date == "Weekly") {
+            $start = date('Y-m-d', strtotime( '-7 days' ))."T00:00:00";
+            $end = date('Y-m-d')."T00:00:00";
+        }
+        if ($date == "Monthly") {
+            $start = date('Y-m-d', strtotime( '-31 days' ))."T00:00:00";
+            $end = date('Y-m-d')."T00:00:00";
+        }
+        
+        if ($date == "All") {
+            $constraints=array('facility' => 'local4', 'string' => 'logged in', 'pageSize' => '100000');
+        } else {
+            $constraints=array('facility' => 'local4', 'string' => 'logged in', 'pageSize' => '100000', 'datefrom' => $start, 'dateto' => $end);
+        }
         $page=1;
         $arr = $this->Logline->findLogs($page, $constraints);
         $logs = $arr['loglines'];
-        //debug($logs);
-        //$conditions = array("Logline.msg like" => "%logged in%");
-        //$logs = $this->Logline->find('all', array('order' => array('Logline.id DESC'), 'recursive' => 0, 'limit' => 2000, 'conditions' => $conditions));
         $snack_users = array();
-        //$logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 10000 ) Logline where msg like "%logged in%" and datetime>"' . $str_today . '" and datetime<"' . $str_tomorrow . '"');
-
-        //echo "$nb connected users on $str_today<br>";
-        //debug($logs);
         foreach ($logs as $log) {
             $date = new DateTime($log['Logline']['datetime']);
             $strdate = $date->format('Y-m-d H:i:s');
-            //echo $log['Logline']['datetime']." : ".$log['Logline']['msg']."<br>";
             $snack_users[$strdate] = $log['Logline']['msg'];
         }
         $this->set('snack_users', $snack_users);
     }
 
-    public function users_radius_connect_ok($date) {
-        $today = new DateTime($date);
-        $tomorroy = new DateTime($date);
-        $tomorroy->add(new DateInterval('P1D'));
-
-        $str_today = $today->format('Y-m-d') . "\n";
-        $str_tomorrow = $tomorroy->format('Y-m-d') . "\n";
-        //echo $str_today." ".$str_tomorrow;
-
-        $conditions = array("Logline.msg like" => "%logged in%");
-        //$logs = $this->Logline->find('all', array('order' => array('Logline.id DESC'), 'recursive' => 0, 'limit' => 2000, 'conditions' => $conditions));
-        $logs = $this->Radacct->query('select radacct.username,user.comment,radacct.acctstarttime,radacct.nasipaddress from (select username, radacctid, acctstarttime,  nasipaddress from radacct order by radacctid desc limit 40) as radacct, raduser as user where radacct.username=user.username and radacct.acctstarttime>"' . $str_today . '" and radacct.acctstarttime<"' . $str_tomorrow . '"');
-        //$logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from radacct order by id  desc limit 10000 ) Logline where msg like "%Login OK%" and datetime>"'.$str_today.'" and datetime<"'.$str_tomorrow.'"');
-        //debug($logs);
-        $this->set('sessions', $logs);
-        /* foreach($logs as $log) {
-          echo $log['radacct']['acctstarttime']." : ".$log['radacct']['username']."<br>";
-          } */
-    }
-
-    public function get_failures_by_users() {
-        //$logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 100000 ) Logline where msg like "%Login incorrect%"');
-        /*$constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
-        $page=1;
-        $arr = $this->Logline->findLogs($page, $constraints);
-        $logs = $arr['loglines'];
-        $usersnbfailures = array();
-        $users = array();
-        $logins = array();
-        $usernames = array();
-        foreach ($logs as $log) {
-            if (preg_match('/^Login incorrect\s*\(*(.*)\)*: \[(.*)\/.*\] \(from client (.*) port (\d+) /', $log['Logline']['msg'], $matches)) {
-                $login = $matches[2];
-                $info = $matches[1];
-                
-                $nasstr = $matches[3];
-                $portstr = $matches[4];
-                if (array_key_exists($login, $usersnbfailures)) {
-                    $usersnbfailures[$login] = $usersnbfailures[$login] + 1;
-                } else {
-                    $usersnbfailures[$login] = 1;
-                    $lasts[$login] = $log['Logline']['datetime'];
-                    //debug($info);
-                    //debug($log['Logline']['datetime']);
-                    $username = $this->Logline->query('select * from raduser where username="' . $login . '"');
-                    $port[$login] = $portstr;
-                    $nas[$login] = $nasstr;
-                    $date = new DateTime($log['Logline']['datetime']);
-                    $users[$login]['last'] = $date->format('Y-m-d H:i:s');
-                    $users[$login]['info'] = $info;
-                    $users[$login]['port'] = $portstr;
-                    $users[$login]['nas'] = $nasstr;
-                    $logins[] = $login;
-                    
-                    //$last = $this->Logline->query('select datetime from logs where msg like "Login incorrect: ['.$username.'%"');
-                    //debug($last);
-                    if (count($username) > 0) {
-                        $username[0]['raduser']['username'] = Utils::formatMAC(
-                                        $username[0]['raduser']['username']
-                        );
-                        //$users['login'] = $username[0]['raduser'];
-                        $usernames[] = $username[0]['raduser'];
-                    } else {
-                        $usernames[] = array('id' => '-1', 'username' => Utils::formatMAC($login));
-                    }
-                    if (Utils::isMAC($login)) {
-                        $url = "http://api.macvendors.com/" . urlencode(Utils::formatMAC($login));
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_TIMEOUT, 4);
-                        curl_setopt($ch, CURLOPT_PROXYPORT, Configure::read('Parameters.proxy_port'));
-                        curl_setopt($ch, CURLOPT_PROXY, Configure::read('Parameters.proxy_ip'));
-                        curl_setopt($ch, CURLOPT_PROXYUSERPWD, Configure::read('Parameters.proxy_login') . ":" . Configure::read('Parameters.proxy_password'));
-                        curl_setopt($ch, CURLOPT_URL, $url);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        $response = curl_exec($ch);
-                        if ($response) {
-                            $users[$login]['vendor'] = $response;
-                        } else {
-                            $users[$login]['vendor'] = "NA";
-                        }
-                    } else {
-                        $users[$login]['vendor'] = "";
-                    }
-                }
-            }
-            //echo $log['Logline']['datetime']." : ".$log['Logline']['msg']."<br>";
-        }*/
-        $res = $this->Logline->get_failures();
+    public function get_failures_by_users($date) {
+        $res = $this->Logline->get_failures($date);
         $this->set('failures', $res['usersnbfailures']);
         $this->set('users', $res['users']);
         $this->set('logins', $res['logins']);
         $this->set('usernames', $res['usernames']);
     }
 
-    public function get_failures_by_nas() {
-        //$logs = $this->Logline->query('select id,msg,datetime from (select id,msg,datetime from logs order by id  desc limit 100000 ) Logline where msg like "%Login incorrect%"');
-        $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
+    public function get_failures_by_nas($date) {
+        if ($date == "Daily") {
+            $start = date('Y-m-d')."T00:00:00";
+            $end = date('Y-m-d')."T".date('h:i:s');
+        }
+        if ($date == "Weekly") {
+            $start = date('Y-m-d', strtotime( '-7 days' ))."T00:00:00";
+            $end = date('Y-m-d')."T00:00:00";
+        }
+        if ($date == "Monthly") {
+            $start = date('Y-m-d', strtotime( '-31 days' ))."T00:00:00";
+            $end = date('Y-m-d')."T00:00:00";
+        }
+        
+        if ($date == "All") {
+            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
+        } else {
+            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000', 'datefrom' => $start, 'dateto' => $end);
+        }
+
         $page=1;
         $arr = $this->Logline->findLogs($page, $constraints);
         $logs = $arr['loglines'];
@@ -231,7 +184,6 @@ class ReportsController extends AppController {
         
         foreach($logs as $log) {
             if (preg_match('/^Login incorrect\s*\(*(.*)\)*: \[(.*)\/.*\] \(from client (.*) port (\d+) /', $log['Logline']['msg'], $matches)) {
-                //echo "ok ".$matches[1]." ".$matches[2]." ".$matches[3]." ".$matches[4]."\n";
                 $login = $matches[2];
                 $info = $matches[1];
                 $nas = $matches[3];
@@ -239,14 +191,13 @@ class ReportsController extends AppController {
                 $info = explode("[", $log['Logline']['msg']);
                 $info = explode("/", $info[1]);
                 $info2 = explode(" ", $info[1]);
-                //debug($info2);
                 if (array_key_exists($nas, $nasnbfailures)) {
                     $nasnbfailures[$nas] = $nasnbfailures[$nas] + 1;
                 } else {
                     $nasnbfailures[$nas] = 1;
                     $lasts[$nas] = $log['Logline']['datetime'];
                 }
-            }//echo $log['Logline']['datetime']." : ".$log['Logline']['msg']."<br>";
+            }
         }
         $this->set('nasfailures', $nasnbfailures);
         $this->set('naslasts', $lasts);

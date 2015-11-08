@@ -75,7 +75,7 @@ echo $this->Html->link(
     '<i class="fa fa-bar-chart fa-2x" title="' . __('Reports') . '"></i>',
     array(
         'controller' => 'reports',
-        'action' => 'index',
+        'action' => 'errorsfromradius_reports',
     ),
     array(
         'onclick'=>'loading()',

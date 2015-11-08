@@ -188,8 +188,27 @@ class Logline extends AppModel {
         return $listNas;
     }
 
-    public function get_failures() {
-        $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
+    public function get_failures($date) {
+        if ($date == "Daily") {
+            $start = date('Y-m-d')."T00:00:00";
+            $end = date('Y-m-d')."T".date('h:i:s');
+        }
+        if ($date == "Weekly") {
+            $start = date('Y-m-d', strtotime( '-7 days' ))."T00:00:00";
+            $end = date('Y-m-d')."T00:00:00";
+        }
+        if ($date == "Monthly") {
+            $start = date('Y-m-d', strtotime( '-31 days' ))."T00:00:00";
+            $end = date('Y-m-d')."T00:00:00";
+        }
+        
+        if ($date == "All") {
+            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
+        } else {
+            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000', 'datefrom' => $start, 'dateto' => $end);
+        }
+        //$constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
+        
         $page=1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];
@@ -199,6 +218,7 @@ class Logline extends AppModel {
         $usernames = array();
         foreach ($logs as $log) {
             if (preg_match('/^Login incorrect\s*\(*(.*)\)*: \[(.*)\/.*\] \(from client (.*) port (\d+) /', $log['Logline']['msg'], $matches)) {
+                //debug($log);
                 $login = $matches[2];
                 $info = $matches[1];
                 
@@ -262,8 +282,25 @@ class Logline extends AppModel {
         return $res;
     }
     
-    public function get_errors_from_NAS() {
-        $constraints = array('priority' => 'err', 'pageSize' => '50000');
+    public function get_errors_from_NAS($date) {
+        if ($date == "Daily") {
+            $start = date('Y-m-d')."T00:00:00";
+            $end = date('Y-m-d')."T".date('h:i:s');
+        }
+        if ($date == "Weekly") {
+            $start = date('Y-m-d', strtotime( '-7 days' ))."T00:00:00";
+            $end = date('Y-m-d')."T00:00:00";
+        }
+        if ($date == "Monthly") {
+            $start = date('Y-m-d', strtotime( '-31 days' ))."T00:00:00";
+            $end = date('Y-m-d')."T00:00:00";
+        }
+        
+        if ($date == "All") {
+            $constraints=array('priority' => 'err', 'pageSize' => '100000');
+        } else {
+            $constraints=array('priority' => 'err', 'pageSize' => '100000', 'datefrom' => $start, 'dateto' => $end);
+        }
         $page = 1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];
@@ -316,8 +353,26 @@ class Logline extends AppModel {
         return $res;
     }
     
-    public function get_warnings_from_NAS() {
-        $constraints = array('priority' => 'warn', 'pageSize' => '50000');
+    public function get_warnings_from_NAS($date) {
+        if ($date == "Daily") {
+            $start = date('Y-m-d')."T00:00:00";
+            $end = date('Y-m-d')."T".date('h:i:s');
+        }
+        if ($date == "Weekly") {
+            $start = date('Y-m-d', strtotime( '-7 days' ))."T00:00:00";
+            $end = date('Y-m-d')."T00:00:00";
+        }
+        if ($date == "Monthly") {
+            $start = date('Y-m-d', strtotime( '-31 days' ))."T00:00:00";
+            $end = date('Y-m-d')."T00:00:00";
+        }
+        
+        if ($date == "All") {
+            $constraints=array('priority' => 'warn', 'pageSize' => '100000');
+        } else {
+            $constraints=array('priority' => 'warn', 'pageSize' => '100000', 'datefrom' => $start, 'dateto' => $end);
+        }
+
         $page = 1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];

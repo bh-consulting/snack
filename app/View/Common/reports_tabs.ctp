@@ -7,19 +7,19 @@ $this->assign('reports_active', 'active');
 <h1><? echo __('Reports'); ?></h1>
 <div class="tabbable">
     <ul class="nav nav-tabs">
-            <li class="<?php echo $this->fetch('reportsgeneral_active'); ?>">
+            <li class="<?php echo $this->fetch('errorsfromradiusreports_active'); ?>">
                 <?php
                 echo $this->Html->link(
-                    __('General'),
-                    array('controller' => 'reports', 'action' => 'index')
+                    __('Errors from Radius'),
+                    array('controller' => 'reports', 'action' => 'errorsfromradius_reports')
                 );
                 ?>
             </li>
-            <li class="<?php echo $this->fetch('errorsreports_active'); ?>">
+            <li class="<?php echo $this->fetch('errorsfromnasreports_active'); ?>">
                 <?php
                 echo $this->Html->link(
-                    __('Errors'),
-                    array('controller' => 'reports', 'action' => 'errors_reports')
+                    __('Errors from NAS'),
+                    array('controller' => 'reports', 'action' => 'errorsfromnas_reports')
                 );
                 ?>
             </li>
