@@ -461,7 +461,6 @@ class SystemDetail extends AppModel {
                                 $str .= '<span style="color:#FF0000">';
                                 $str .= "ERROR : No replication since ".$datetime2->format('Y-m-d H:i:s')."<br>";
                                 $str .= '</span>';
-                                $this->file->append("[] [ERR] SNACK No replication since ".$datetime2->format('Y-m-d H:i:s'));
                             }
                             else {
                                 $str .= "Last replication OK : ".$datetime2->format('Y-m-d H:i:s')."<br>";
@@ -471,7 +470,6 @@ class SystemDetail extends AppModel {
                             $str .= '<span style="color:#FF0000">';
                             $str .= "WARNING : Replication failed :  ".$datetime2->format('Y-m-d H:i:s')."<br>";
                             $str .= '</span>';
-                            $this->file->append("[".$datetime2->format('Y-m-d H:i:s')."] [WARN] SNACK Last replication failed ");
                         }
                     }
                 }
@@ -481,7 +479,6 @@ class SystemDetail extends AppModel {
                     $str .= '<span style="color:#FF0000">';
                     $str .= "ERR : No replication for " . $slave . "<br>";
                     $str .= '</span>';
-                    $this->file->append("[] [ERR] SNACK No replication for ".$slave);
                 }
             }
         }
