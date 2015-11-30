@@ -19,6 +19,15 @@ function unloading() {
     $("div.loading").html("");
 }
 
+function load() {
+    $("div.load").html('<center>Veuillez patienter <img src="/img/ajax-loader.gif" alt=""></center>');
+    $("div.results").html('');
+}
+
+function unload() {
+    $("div.load").html("");
+}
+
 function loading_from_sidebar() {
     $("div.loading_from_sidebar").html("<i class='fa fa-circle-o-notch fa-inverse fa-spin fa-1x'></i>");
 }
@@ -89,6 +98,41 @@ function test_users(){
     }
 }
 
+function addallnas(login, encpassword) {
+    $( "tr" ).each(function( index ) {
+        if(this.id.match(/^nas_(\d+)$/)) {
+            id=this.id.replace(/nas_/, '');
+            nasip=document.getElementById("nasip_"+id).innerHTML;
+            nashostname=document.getElementById("nashostname_"+id).innerHTML;
+            addnas(id, nasip, nashostname, login, encpassword);
+        }
+    });
+}
+
+function addnas(id, ip, hostname, login, encpassword) {
+    elt="nasadd_"+id;
+    var url="addunconfigurednas";
+    document.getElementById(elt).innerHTML = "<i class='fa fa-circle-o-notch fa-spin fa-1x'></i>";
+    $.post( url, { id: id,ip: ip, hostname: hostname, login: login, encpassword: encpassword })
+        .done(function( data ) {
+        if (data.search("NOK "+id)>0) {
+            arr=data.split(' ');
+            id=arr[2];
+            elt="nasadd_"+id;
+            document.getElementById(elt).innerHTML = "<i class='fa fa-times fa-1x text-danger'></i>";
+        } 
+        else if (data.search("OK "+id)>0) {
+            arr=data.split(' ');
+            id=arr[2];
+            elt="nasadd_"+id;
+            document.getElementById(elt).innerHTML = "<i class='fa fa-check fa-1x text-success'></i>";
+
+        }
+      }).fail(function() {
+        //document.getElementById(elt).innerHTML = "<i class='fa fa-times fa-1x text-danger'></i>";
+      });
+}
+
 function getbackupid(id) {
     elt="backuptype_"+id;
     document.getElementById(elt).innerHTML = "<i class='fa fa-circle-o-notch fa-spin fa-1x'></i>";
@@ -114,7 +158,7 @@ function getbackupall() {
         if(this.id.match(/^nas_(\d+)$/)) {
             id=this.id.replace(/nas_/, '');
             nasname=document.getElementById("nasname_"+id).innerHTML;
-            alert(document.getElementsByClassName('glyphicon-eye-close').innerHTML);
+            //alert(document.getElementsByClassName('glyphicon-eye-close').innerHTML);
             if (nasname != "127.0.0.1") {
                 elt="backuptype_"+id;
                 document.getElementById(elt).innerHTML = "<i class='fa fa-circle-o-notch fa-spin fa-1x'></i>";

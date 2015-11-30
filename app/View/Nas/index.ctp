@@ -155,6 +155,18 @@ echo $this->Html->link(
     array('escape' => false, 'class' => 'btn btn-primary')
 );
 echo " ";
+echo $this->Html->link(
+    '<i class="fa fa-sitemap"></i> ' . __('Discover'),
+    array('controller' => 'nas', 'action' => 'discover'),
+    array('escape' => false, 'class' => 'btn btn-primary')
+);
+echo " ";
+echo $this->Html->link(
+    '<i class="fa fa-search"></i> ' . __('Find MAC'),
+    array('controller' => 'nas', 'action' => 'findmacaddress'),
+    array('escape' => false, 'class' => 'btn btn-primary')
+);
+echo " ";
 if(AuthComponent::user('role') == 'root'){
     echo $this->Html->link(
         '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ' . __('Reinitialize conf'),

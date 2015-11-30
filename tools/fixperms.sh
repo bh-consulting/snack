@@ -87,6 +87,7 @@ chown -R $INTERFACE_USER $USER_HOME/scripts
 chmod -R $ONLY_INTERFACE_ACCESS $USER_HOME/scripts
 } >> $OUT 2>>$LOG
 
+chmod $INTERFACE_ACCESS $USER_HOME/interface/app/webroot/img/tmp
 chown -R :snack $USER_HOME
 chmod 770 $USER_HOME/logs
 chown -R snack:snack $TFTP_FOLDER

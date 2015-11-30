@@ -18,6 +18,11 @@ class NasController extends AppController {
         'Security',
     );
 
+    public function beforeFilter() {
+        parent::beforeFilter();
+        $this->Security->unlockedActions = array('addunconfigurednas');
+    }
+
     public function isAuthorized($user) {
         
         if($user['role'] === 'admin' && in_array($this->action, array(
@@ -234,7 +239,7 @@ class NasController extends AppController {
             // init with default values
             $this->request->data['Nas']['type'] = 'other';
             $this->request->data['Nas']['ports'] = 1812;
-            debug($this->request->data);
+            //debug($this->request->data);
             if ($this->Nas->save($this->request->data)) {
                 $this->alert_restart_server();
                 Utils::userlog(__('added NAS %s', $this->Nas->id));
@@ -316,17 +321,17 @@ class NasController extends AppController {
     public function exporttocsv() {
         $nass = $this->Nas->find('all');
         foreach ($nass as $nas) {
-            $nasData[] = array($nas['Nas']['nasname'], 
+            if ($nas['Nas']['nasname'] != "127.0.0.1") {
+                $nasData[] = array($nas['Nas']['nasname'], 
                                $nas['Nas']['shortname'], 
                                $nas['Nas']['description'],
                                $nas['Nas']['secret'],
-                               $nas['Nas']['version'], 
-                               $nas['Nas']['image'], 
-                               $nas['Nas']['serialnumber'], 
-                               $nas['Nas']['model'], 
                                $nas['Nas']['login'],
+                               "",
+                               "",
                                $nas['Nas']['backup'],
                                );
+            }
         }
         $this->layout = false;
         $this->set('nasData', $nasData);
@@ -486,6 +491,220 @@ class NasController extends AppController {
     public function getInfos() {
         $this->Nas->getInfosAllNas();
         $this->redirect(array('action' => 'index'));
+    }
+
+    public function getInfosAAA() {
+        $results = $this->Nas->getInfosAllNasAAA();
+    }
+
+    public function checkconfnas() {
+        $list = array(
+            'Radius servers',
+            'Test servers on NAS',
+            'Show clock',
+            'Show CDP'
+        );
+        $this->set('list', $list);
+        if (isset($this->request->data['Nas']['checktype'])) {
+            $this->set('type', $list[$this->request->data['Nas']['checktype']]);
+            if ($list[$this->request->data['Nas']['checktype']] == "Radius servers") {
+                $results = $this->Nas->getInfosAllNasAAA();
+                $this->set('results', $results);
+            }
+            if ($list[$this->request->data['Nas']['checktype']] == "Test servers on NAS") {
+                $results = $this->Nas->testAllNasAAA();
+                $this->set('results', $results);
+            }
+            if ($list[$this->request->data['Nas']['checktype']] == "Show clock") {
+                $results = $this->Nas->getInfosAllNasClock();
+                $this->set('results', $results);
+            }
+            if ($list[$this->request->data['Nas']['checktype']] == "Show CDP") {
+                $results = $this->Nas->getInfosAllNasCDP();
+                $this->set('results', $results);
+                debug($results);
+            }
+        }
+    }
+
+    public function discover() {
+        $hostsToDisplay = array("All", "All except Phones");
+        $this->set('hostsToDisplay', $hostsToDisplay);
+        $this->set('post', false);
+        /* A SUPPRIMER */
+        $this->set('login', 'snack');
+        $this->set('secret64Enc', "YzlmNDQ3YWQ5NDM1M2JkZGYwZTMwYzgzMTI5MDQ1YTNkNGJlZmI5OTljMzRmMmFjY2M2YjgyMzA5ZmQ2ZmE0ZdisBvO8HNety6NG+HA7kC8wp6CHh8Wh/cfbBKXBrDwF");
+        if($this->request->is('post')){ 
+            $this->set('post', true);
+            $listNasTodo = array();
+            $listNasDone = array();
+            $login = $this->request->data['Nas']['login'];
+            $password = $this->request->data['Nas']['password'];
+            $enablepassword = $this->request->data['Nas']['password'];
+            $key = Configure::read('Security.snackkey');
+            $secret = Security::encrypt($this->data['Nas']['password'], $key);
+            $secret64Enc = base64_encode($secret);
+            $this->set('login', $login);
+            $this->set('secret64Enc', $secret64Enc);
+            $nasname = $this->request->data['Nas']['ipaddress'];
+            $depth = $this->request->data['Nas']['depth'];
+            $error = false;
+            if (!preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $nasname, $matches)) {
+                $this->Session->setFlash("IP must be look like x.x.x.x", 'flash_error');
+                $error = true;
+            }
+            if ($login == "") {
+                $this->Session->setFlash("Login is empty", 'flash_error');
+                $error = true;
+            }
+            if ($password == "") {
+                $this->Session->setFlash("Password is empty", 'flash_error');
+                $error = true;
+            }
+            if (!preg_match('/\d+/', $depth, $matches)) {
+                $this->Session->setFlash("Depth must be an integer", 'flash_error');
+                $error = true;
+            }
+            $this->set('error', $error);
+            if ($error) {
+                return;
+            }
+            $cmd="/home/snack/interface/tools/command.sh $nasname hostname $login $password $enablepassword";
+            $return = shell_exec($cmd);
+            $hostname = trim($return);
+            $listNasTodo[$hostname] = $nasname;
+            //debug($this->request->data['Nas']);
+            $i=0;
+            $results = array();
+            while($i<$depth) {
+                if (count($listNasTodo) > 0) {
+                    foreach ($listNasTodo as $hostname=>$nas) {
+                        $results[$hostname] = $this->Nas->getInfosNasCDP($nas, $login, $password, $enablepassword);
+                        unset($listNasTodo[$hostname]);
+                        foreach ($results[$hostname] as $neigh) {
+                            if (!array_key_exists($neigh['hostname'], $results) && !array_key_exists($neigh['hostname'], $listNasTodo)) {
+                                if (preg_match('/Switch/', $neigh['capabilities'], $matches)) {
+                                    if (isset($neigh['ipaddress'])) {
+                                        $listNasTodo[$neigh['hostname']] = $neigh['ipaddress'];
+                                    }
+                                }
+                            }
+                            if (!array_key_exists($neigh['hostname'], $listNasDone)) {
+                                if (isset($neigh['ipaddress'])) {
+                                    $listNasDone[$neigh['hostname']]['ipaddress'] = $neigh['ipaddress'];
+                                }
+                                if (isset($neigh['platform'])) {
+                                    $listNasDone[$neigh['hostname']]['platform'] = $neigh['platform'];
+                                }
+                                if (isset($neigh['capabilities'])) {
+                                    $listNasDone[$neigh['hostname']]['capabilities'] = $neigh['capabilities'];
+                                }
+                                if (isset($neigh['version'])) {
+                                    $listNasDone[$neigh['hostname']]['version'] = $neigh['version'];
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    break;
+                }
+                $i++;
+            }
+            $listNasRadius = array();
+            foreach($listNasDone as $hostname=>$nas) {
+                if (preg_match('/Switch\s+IGMP/',$nas['capabilities'])) {
+                    $listNasRadius[$hostname] = $nas['ipaddress'];
+                }
+                elseif (preg_match('/Router/',$nas['capabilities'])) {
+                    $listNasRadius[$hostname] = $nas['ipaddress'];
+                }
+            }
+            $allnasconfigured = $this->Nas->find('all');
+            $allnasnotconfigured = array();
+            foreach($listNasRadius as $hostname=>$ipaddress) {
+                $found = false;
+                foreach($allnasconfigured as $nas) {
+                    if ($hostname == $nas['Nas']['shortname']) {
+                        $found = true;
+                    }
+                    if ($ipaddress == $nas['Nas']['nasname']) {
+                        $found = true;
+                    }
+                }
+                if (!$found) {
+                    $allnasnotconfigured[$hostname] = $ipaddress;
+                }
+            }
+            $this->set('allnasnotconfigured', $allnasnotconfigured);
+            $this->set('listNasDone', $listNasDone);
+            $this->Nas->createGraph($results, $hostsToDisplay[$this->request->data['Nas']['hoststodisplay']]);
+            $this->set('results', $results);
+        }
+    }
+
+    public function findmacaddress() {
+        if($this->request->is('post')){ 
+            $this->set('post', true);
+            $mac = Utils::cleanMAC($this->request->data['Nas']['macaddress']);
+            if (!Utils::isMAC($mac)) {
+                $this->Session->setFlash("Mac Address format is not good", 'flash_error');
+                return ;
+            }
+            $newstr = substr_replace($mac, ".", 4, 0);
+            $ciscomac = substr_replace($newstr, ".", 9, 0);
+            $results = $this->Nas->getMacAllNas($ciscomac);
+            $this->set('results', $results);
+        }
+    }
+
+    public function addunconfigurednas() {
+        $this->layout = "ajax";
+        //$this->set("data", var_dump($this->request->data));
+        $allnas = $this->Nas->find('all');
+        $found = false;
+        foreach ($allnas as $nas) {
+            if ($nas['Nas']['nasname'] != "127.0.0.1" && $nas['Nas']['backup']) {
+                if ($nas['Nas']['login'] != "" && $nas['Nas']['password'] != "" && $nas['Nas']['enablepassword'] != "") {
+                    $login = $nas['Nas']['login'];
+                    $password = $nas['Nas']['password'];
+                    $found = true;
+                    break;
+                }
+            }
+        }
+        if (!$found) {
+            $login = $this->request->data['login'];
+            $password = $this->request->data['password'];
+        }
+        $data = array();
+        if($this->request->is('post')){
+            $this->Nas->create();
+            $data['Nas']['nasname'] = $this->request->data['ip'];
+            $data['Nas']['description'] = $this->request->data['hostname'];
+            $data['Nas']['shortname'] = $this->request->data['hostname'];
+            $data['Nas']['type'] = "other";
+            $data['Nas']['ports'] = 1812;
+            $data['Nas']['login'] = $login;
+            $data['Nas']['password'] = $this->Nas->getPassword($password);
+            $data['Nas']['enablepassword'] = $this->Nas->getPassword($password);
+            $data['Nas']['secret'] = bin2hex(openssl_random_pseudo_bytes(6));
+            $data['Nas']['backup'] = "1";
+            //$this->set('data', $data);
+            //$this->set('ip', $this->request->data['ip']);
+            $this->set('id', $this->request->data['id']);
+            if ($this->Nas->save($data)) {
+                $this->alert_restart_server();
+                Utils::userlog(__('added NAS %s', $this->Nas->id));
+                $this->set('res', "OK");
+            } else {
+                /*$this->Session->setFlash(
+                    __('Unable to add NAS.'),
+                    'flash_error'
+                );*/
+                Utils::userlog(__('error while adding NAS'), 'error');
+                $this->set('res', "NOK");
+            }
+        }
     }
 }
 ?>

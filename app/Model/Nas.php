@@ -220,21 +220,15 @@ class Nas extends AppModel {
         foreach ($nas as $n) {
             if ($n['Nas']['nasname'] != "127.0.0.1") {
                 if (($n['Nas']['login'] != "") && ($n['Nas']['password'] != "")) {
-                    $secret64Enc = $n['Nas']['password'];
-                    $secret64Dec = base64_decode($secret64Enc);
-                    $password = Security::decrypt($secret64Dec,$key);
-
+                    $password = $this->getPassword($n['Nas']['password']);
                     if ($n['Nas']['enablepassword'] != "") {
-                        $secret64Enc = $n['Nas']['enablepassword'];
-                        $secret64Dec = base64_decode($secret64Enc);
-                        $enablepassword = Security::decrypt($secret64Dec,$key);
+                        $enablepassword = $this->getPassword($n['Nas']['enablepassword']);
                     }
                     if (($n['Nas']['enablepassword'] == "") || ($enablepassword == "")) {
                         $enablepassword = $password;
                     }
                     if ($password != "") {
                         $results = $this->getInfosNas($n['Nas']['nasname'], $n['Nas']['login'], $password, $enablepassword);
-                        debug($results);
                         $n['Nas']['version'] = $results['version'];
                         $n['Nas']['image'] = $results['image'];
                         $n['Nas']['serialnumber'] = $results['serial'];
@@ -245,5 +239,358 @@ class Nas extends AppModel {
             }
         }
     }
+
+    public function getInfosNasAAA($nasname, $login, $password, $enablepassword) {
+        $results = array();
+        $cmd="/home/snack/interface/tools/command.sh $nasname aaasrv $login $password $enablepassword";
+        $return = trim(shell_exec($cmd));
+        if (preg_match_all('/RADIUS: .* host (\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/', $return, $matches)) {
+            $results[] = $matches[1];
+        }
+        return $results;
+    }
+
+    public function getInfosAllNasAAA() {
+        $key = Configure::read('Security.snackkey');
+        $nas = $this->find('all');
+        $results = array();
+        foreach ($nas as $n) {
+            if ($n['Nas']['nasname'] != "127.0.0.1") {
+                if (($n['Nas']['login'] != "") && ($n['Nas']['password'] != "")) {
+                    $password = $this->getPassword($n['Nas']['password']);
+                    if ($n['Nas']['enablepassword'] != "") {
+                        $enablepassword = $this->getPassword($n['Nas']['enablepassword']);
+                    }
+                    if (($n['Nas']['enablepassword'] == "") || ($enablepassword == "")) {
+                        $enablepassword = $password;
+                    }
+                    if ($password != "") {
+                        $results[$n['Nas']['nasname']] = $this->getInfosNasAAA($n['Nas']['nasname'], $n['Nas']['login'], $password, $enablepassword);
+                    }
+                }
+            }
+        }
+        return $results;
+    }
+
+    public function testAAA($nasname, $login, $password, $enablepassword) {
+        $results = array();
+        $radius1=Configure::read('Parameters.ipAddress');
+        $radius2=Configure::read('Parameters.slave_ip_to_monitor');
+        $times = 3;
+        while($times > 0) {
+            $cmd="/home/snack/interface/tools/command.sh $nasname testaaasrv $login $password $enablepassword \"test aaa group radius server $radius1 $login $password legacy\"";
+            $return = trim(shell_exec($cmd));
+            if (preg_match('/User (.*)/', $return, $matches)) {
+                $results[$radius1]=true;
+                break;
+            }
+            $times--;
+        }
+        if (!isset($results[$radius1])) {
+            $results[$radius1]=false;
+        }
+        if (isset($radius2)) {
+            if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $radius2, $matches)) {
+                while($times > 0) {
+                    $cmd="/home/snack/interface/tools/command.sh $nasname testaaasrv $login $password $enablepassword \"test aaa group radius server $radius2 $login $password legacy\"";
+                    $return = trim(shell_exec($cmd));
+                    if (preg_match('/User (.*)/', $return, $matches)) {
+                        $results[$radius2]=true;
+                        break;
+                    }
+                    $times--;
+                }
+                if (!isset($results[$radius2])) {
+                    $results[$radius2]=false;
+                }
+            }
+        }
+        return $results;
+    }
+
+    public function testAllNasAAA() {
+        
+        $nas = $this->find('all');
+        $results = array();
+        foreach ($nas as $n) {
+            if ($n['Nas']['nasname'] != "127.0.0.1") {
+                if (($n['Nas']['login'] != "") && ($n['Nas']['password'] != "")) {
+                    $password = $this->getPassword($n['Nas']['password']);
+                    if ($n['Nas']['enablepassword'] != "") {
+                        $enablepassword = $this->getPassword($n['Nas']['enablepassword']);
+                    }
+                    if (($n['Nas']['enablepassword'] == "") || ($enablepassword == "")) {
+                        $enablepassword = $password;
+                    }
+                    if ($password != "") {
+                        $results[$n['Nas']['nasname']] = $this->testAAA($n['Nas']['nasname'], $n['Nas']['login'], $password, $enablepassword);
+                    }
+                }
+            }
+        }
+        return $results;
+    }
+
+    public function getPassword($secret) {
+        $key = Configure::read('Security.snackkey');
+        $secret64Dec = base64_decode($secret);
+        $password = Security::decrypt($secret64Dec,$key);
+        return $password;
+    }
+
+    public function getInfosNasClock($nasname, $login, $password, $enablepassword) {
+        $results = array();
+        $cmd="/home/snack/interface/tools/command.sh $nasname clock $login $password $enablepassword";
+        $return = trim(shell_exec($cmd));
+        if (preg_match('/(.*\s+\d{4})(Connection)*/', $return, $matches)) {
+            return $matches[1];
+        }
+    }
+
+    public function getInfosAllNasClock() {
+        $key = Configure::read('Security.snackkey');
+        $nas = $this->find('all');
+        $results = array();
+        foreach ($nas as $n) {
+            if ($n['Nas']['nasname'] != "127.0.0.1") {
+                if (($n['Nas']['login'] != "") && ($n['Nas']['password'] != "")) {
+                    $password = $this->getPassword($n['Nas']['password']);
+                    if ($n['Nas']['enablepassword'] != "") {
+                        $enablepassword = $this->getPassword($n['Nas']['enablepassword']);
+                    }
+                    if (($n['Nas']['enablepassword'] == "") || ($enablepassword == "")) {
+                        $enablepassword = $password;
+                    }
+                    if ($password != "") {
+                        $results[$n['Nas']['nasname']] = $this->getInfosNasClock($n['Nas']['nasname'], $n['Nas']['login'], $password, $enablepassword);
+                    }
+                }
+            }
+        }
+        return $results;
+    }
+
+    public function getInfosNasCDP($nasname, $login, $password, $enablepassword) {
+        $results = array();
+        $cmd="/home/snack/interface/tools/command.sh $nasname cdp $login $password $enablepassword";
+        $return = shell_exec($cmd);
+        $infos = explode("\n", $return);
+        //debug($infos);
+        //$BEGINS = false;
+        $results = array();
+        $res = array();
+        foreach($infos as $line) {
+            $info = trim($line);
+            if (preg_match('/-------------------------/', $info, $matches)) {
+                if (count($res) > 0) {
+                    $results[] = $res;
+                    $res = array();
+                }
+            } else {
+                $res[] = $info;
+            }
+        }
+        if (count($res) > 0) {
+            $results[] = $res;
+        }
+        //debug($results);
+        $listNAS = array();
+        $id = 0;
+        foreach($results as $result) {
+            foreach ($result as $info) {
+                if (preg_match('/Device\s+ID\s*:\s*(.*)/', $info, $matches)) {
+                    $infos = explode(".", $matches[1]);
+                    $listNAS[$id]['hostname'] = $infos[0];
+                }
+                if (preg_match('/IP\s+address\s*:\s+(.*)/',$info, $matches)) {
+                    if ($listNAS[$id]['hostname'] != "") {
+                        $listNAS[$id]['ipaddress'] = $matches[1];
+                    }
+                }
+                if (preg_match('/Platform\s*:\s+(.*),\s*Capabilities:\s*(.*)/',$info, $matches)) {
+                    if ($listNAS[$id]['hostname'] != "") {
+                        $listNAS[$id]['platform'] = $matches[1];
+                        $listNAS[$id]['capabilities'] = $matches[2];
+                    }
+                }
+                if (preg_match('/Version\s*(.*),/',$info, $matches)) {
+                    if ($listNAS[$id]['hostname'] != "") {
+                        $listNAS[$id]['version'] = $matches[1];
+                    }
+                }
+                if (preg_match('/CCM:(.*)/',$info, $matches)) {
+                    if ($listNAS[$id]['hostname'] != "") {
+                        $listNAS[$id]['version'] = $matches[1];
+                    }
+                }
+                if (preg_match('/Product Version:\s*(.*)\s+/',$info, $matches)) {
+                    if ($listNAS[$id]['hostname'] != "") {
+                        $listNAS[$id]['version'] = $matches[1];
+                    }
+                }
+                if (preg_match('/(SCCP.*)/',$info, $matches)) {
+                    if ($listNAS[$id]['hostname'] != "") {
+                        $listNAS[$id]['version'] = $matches[1];
+                    }
+                }
+                if (preg_match('/(SIP.*)/',$info, $matches)) {
+                    if ($listNAS[$id]['hostname'] != "") {
+                        $listNAS[$id]['version'] = $matches[1];
+                    }
+                }
+                if (preg_match('/Product Version:\s*(.*)\s+/',$info, $matches)) {
+                    if ($listNAS[$id]['hostname'] != "") {
+                        $listNAS[$id]['version'] = $matches[1];
+                    }
+                }
+                if (preg_match('/Interface\s*:\s*(.*),\s+Port\s+ID\s*\(outgoing port\):\s+(.*)/',$info, $matches)) {
+                    if ($listNAS[$id]['hostname'] != "") {
+                        $tmp = str_replace("GigabitEthernet", "Gi", $matches[1]);
+                        $tmp2 = str_replace("FastEthernet", "Fa", $tmp);
+                        $localinterface = str_replace("Ethernet", "Eth", $tmp2);
+                        $tmp = str_replace("GigabitEthernet", "Gi", $matches[2]);
+                        $tmp2 = str_replace("FastEthernet", "Fa", $tmp);
+                        $remoteinterface = str_replace("Ethernet", "Eth", $tmp2);
+                        $listNAS[$id]['localinterface'] = $localinterface;
+                        $listNAS[$id]['remoteinterface'] = $remoteinterface;
+                    }
+                }
+            }
+            $id++;
+        }
+        return $listNAS;
+    }
+
+    
+    public function createGraph($listNAS, $hosttodisplay="All") {
+        $string="graph network {\noverlap = false;\n";
+        $string .= "bgcolor = transparent\n";
+        $path = WWW_ROOT.'img/tmp/';
+        $file = new File($path.'network.dot', true, 0644);
+        $listshapes = array();
+        foreach ($listNAS as $hostname=>$listneigh) {
+            foreach($listneigh as $neigh) {
+                if (!preg_match('/"'.$neigh['hostname'].'"'.'--'.'"'.$hostname.'"/', $string, $matches)) {
+                    if ($hosttodisplay=="All") {
+                        $string .= '"'.$hostname.'"'.'--'.'"'.$neigh['hostname'].'" ';
+                        $string .= '[fontsize=9 headlabel = "        '.$neigh['remoteinterface'].'", taillabel = "'.$neigh['localinterface'].'        "]'."\n";
+                    } else {
+                        if (!preg_match('/Phone/', $neigh['capabilities'], $matches)) {
+                            $string .= '"'.$hostname.'"'.'--'.'"'.$neigh['hostname'].'" ';
+                            $string .= '[fontsize=9 headlabel = "        '.$neigh['remoteinterface'].'", taillabel = "'.$neigh['localinterface'].'        "]'."\n";
+                        }
+                    }
+                }
+                if ($hosttodisplay=="All" || !preg_match('/Phone/', $neigh['capabilities'], $matches)) {
+                    if (!array_key_exists($neigh['hostname'], $listshapes)) {
+                        if (preg_match('/Host/', $neigh['capabilities'], $matches)) { 
+                            $listshapes[$neigh['hostname']] = "Host";
+                        }
+                        if (preg_match('/Phone/', $neigh['capabilities'], $matches)) {
+                            $listshapes[$neigh['hostname']] = "Phone";
+                        }
+                        if (preg_match('/Switch/', $neigh['capabilities'], $matches)) {
+                            if (preg_match('/VMware ESX/', $neigh['platform'], $matches)) {
+                                $listshapes[$neigh['hostname']] = "Host";
+                            } else {
+                                $listshapes[$neigh['hostname']] = "Switch";
+                            }
+                        }
+                        if (preg_match('/Trans-Bridge/', $neigh['capabilities'], $matches)) { 
+                            $listshapes[$neigh['hostname']] = "Wifi";
+                        }
+                    }
+                }
+            }
+        }
+        foreach ($listshapes as $hostname=>$type) {
+            if ($type == "Phone") {
+                $string .= '"'.$hostname.'" [shape=none, image="'.$path.'ipphone.png", label="'.$hostname.'"]'."\n";
+            }
+            if ($type == "Switch") {
+                $string .= '"'.$hostname.'" [shape=none, image="'.$path.'switch.png", label="'.$hostname.'"]'."\n";
+            }
+            if ($type == "Wifi") {
+                $string .= '"'.$hostname.'" [shape=none, image="'.$path.'wifi.png", label="'.$hostname.'"]'."\n";
+            }
+            if ($type == "Host") {
+                $string .= '"'.$hostname.'" [shape=none, image="'.$path.'server.png", label="'.$hostname.'"]'."\n";
+            }
+        }
+        $string .= "}";
+        $file->write($string);
+        $cmd = "neato -Tpng -O ".WWW_ROOT."img/tmp/network.dot -o ".WWW_ROOT."img/tmp/network";
+        //debug($cmd);
+        shell_exec($cmd);
+        //debug($string);
+    }
+
+    public function getInfosAllNasCDP() {
+        $key = Configure::read('Security.snackkey');
+        $nas = $this->find('all');
+        $results = array();
+        foreach ($nas as $n) {
+            if ($n['Nas']['nasname'] != "127.0.0.1") {
+                if (($n['Nas']['login'] != "") && ($n['Nas']['password'] != "")) {
+                    $password = $this->getPassword($n['Nas']['password']);
+                    if ($n['Nas']['enablepassword'] != "") {
+                        $enablepassword = $this->getPassword($n['Nas']['enablepassword']);
+                    }
+                    if (($n['Nas']['enablepassword'] == "") || ($enablepassword == "")) {
+                        $enablepassword = $password;
+                    }
+                    if ($password != "") {
+                        $results[$n['Nas']['shortname']] = $this->getInfosNasCDP($n['Nas']['nasname'], $n['Nas']['login'], $password, $enablepassword);
+                    }
+                }
+            }
+        }
+        $this->createGraph($results);
+        return $results;
+    }
+
+
+    /* Search MAC Address */
+    public function getMacNas($nasname, $login, $password, $enablepassword, $macaddress) {
+        $results = array();
+        $cmd="/home/snack/interface/tools/command.sh $nasname mac $login $password $enablepassword $macaddress";
+        $return = trim(shell_exec($cmd));
+        $infos = explode("\n", $return);
+        foreach($infos as $info) {
+            $res = array();
+            if (preg_match('/\s*(\d+)\s+'.$macaddress.'\s+(\w+)\s+(.*)/', $info, $matches)) {
+                $res['vlan'] = $matches[1];
+                $res['status'] = $matches[2];
+                $res['interface'] = $matches[3];
+            }
+            $results[] = $res;
+        }
+        return $results;
+    }
+
+    public function getMacAllNas($macaddress) {
+        $key = Configure::read('Security.snackkey');
+        $nas = $this->find('all');
+        $results = array();
+        foreach ($nas as $n) {
+            if ($n['Nas']['nasname'] != "127.0.0.1") {
+                if (($n['Nas']['login'] != "") && ($n['Nas']['password'] != "")) {
+                    $password = $this->getPassword($n['Nas']['password']);
+                    if ($n['Nas']['enablepassword'] != "") {
+                        $enablepassword = $this->getPassword($n['Nas']['enablepassword']);
+                    }
+                    if (($n['Nas']['enablepassword'] == "") || ($enablepassword == "")) {
+                        $enablepassword = $password;
+                    }
+                    if ($password != "") {
+                        $results[$n['Nas']['nasname']] = $this->getMacNas($n['Nas']['nasname'], $n['Nas']['login'], $password, $enablepassword, $macaddress);
+                    }
+                }
+            }
+        }
+        return $results;
+    }
+
 }
 ?>
