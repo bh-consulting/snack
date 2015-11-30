@@ -78,6 +78,73 @@ if ($ARGV[0] eq 'config') {
             system("service winbind restart");
         }
     }
+    my @cmd = ('wbinfo', '-t');
+    my $success = open(NET, '-|', @cmd);
+        
+    while (<NET>) {
+        if ($_ =~ /^checking the trust secret for domain (.*) via RPC calls succeeded/) {
+            $domain = $1;
+        }
+    }
+
+    my @cmd = ('wbinfo', '-D', $domain);
+    #print $cmd;
+    my $success = open(NET, '-|', @cmd);
+    while (<NET>) {
+        if ($_ =~ /^Alt_Name\s+:\s+(.*)/) {
+            $altdomain = $1;
+        }
+    }
+    
+    my $filename = '/etc/freeradius/proxy.conf';
+    open(my $fh, '<:encoding(UTF-8)', $filename)
+      or die "Could not open file '$filename' $!";
+    
+    $regex0 = "\\s*realm\\s+host\\s*{\s*";
+    $regex1 = "\\s*realm\\s+$domain\\s*{\s*";
+    $regex2 = "\\s*realm\\s+$altdomain\\s*{\s*"; 
+    $domainfound = 0;
+    $altdomainfound = 0;
+    $hostfound = 0;
+    
+    while (my $row = <$fh>) {
+      chomp $row;
+      #print $row;
+      if ($row =~ $regex0) {
+        $hostfound = 1;
+      }
+      if ($row =~ $regex1) {
+        $domainfound = 1;
+      }
+      if ($row =~ $regex2) {
+        $altdomainfound = 1;
+      }
+    }
+    close $fh;
+    open(my $fh, '>>:encoding(UTF-8)', $filename)
+      or die "Could not open file '$filename' $!";
+    if ($hostfound == 0) {
+        say $fh "realm host {
+    type = radius
+    authhost = LOCAL
+    accthost = LOCAL
+}\n";
+    }
+    if ($domainfound == 0) {
+        say $fh "realm $domain {
+    type = radius
+    authhost = LOCAL
+    accthost = LOCAL
+}\n";
+    }
+    if ($altdomainfound == 0) {
+        say $fh "realm $altdomain {
+    type = radius
+    authhost = LOCAL
+    accthost = LOCAL
+}\n";
+    }
+    close $fh;
 }
 
 if ($ARGV[0] eq 'status') {
