@@ -674,7 +674,7 @@ class NasController extends AppController {
         }
         if (!$found) {
             $login = $this->request->data['login'];
-            $password = $this->request->data['password'];
+            $password = $this->request->data['encpassword'];
         }
         $data = array();
         if($this->request->is('post')){
