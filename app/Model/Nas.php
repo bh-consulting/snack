@@ -482,12 +482,15 @@ class Nas extends AppModel {
                         }
                     }
                 }
-                if ($hosttodisplay=="All" || !preg_match('/Phone/', $neigh['capabilities'], $matches)) {
+                if ($hosttodisplay=="All" || !preg_match('/Phone/', $neigh['capabilities'], $matches) || !preg_match('/ATA/', $neigh['platform'], $matches)) {
                     if (!array_key_exists($neigh['hostname'], $listshapes)) {
                         if (preg_match('/Host/', $neigh['capabilities'], $matches)) { 
                             $listshapes[$neigh['hostname']] = "Host";
                         }
                         if (preg_match('/Phone/', $neigh['capabilities'], $matches)) {
+                            $listshapes[$neigh['hostname']] = "Phone";
+                        }
+                        if (preg_match('/ATA/', $neigh['platform'], $matches)) {
                             $listshapes[$neigh['hostname']] = "Phone";
                         }
                         if (preg_match('/Switch/', $neigh['capabilities'], $matches)) {
@@ -505,8 +508,10 @@ class Nas extends AppModel {
             }
         }
         foreach ($listshapes as $hostname=>$type) {
-            if ($type == "Phone") {
-                $string .= '"'.$hostname.'" [shape=none, image="'.$path.'ipphone.png", label="'.$hostname.'"]'."\n";
+            if ($hosttodisplay=="All") {
+                if ($type == "Phone") {
+                    $string .= '"'.$hostname.'" [shape=none, image="'.$path.'ipphone.png", label="'.$hostname.'"]'."\n";
+                }
             }
             if ($type == "Switch") {
                 $string .= '"'.$hostname.'" [shape=none, image="'.$path.'switch.png", label="'.$hostname.'"]'."\n";

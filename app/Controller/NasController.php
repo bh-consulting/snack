@@ -659,7 +659,6 @@ class NasController extends AppController {
 
     public function addunconfigurednas() {
         $this->layout = "ajax";
-        //$this->set("data", var_dump($this->request->data));
         $allnas = $this->Nas->find('all');
         $found = false;
         foreach ($allnas as $nas) {
@@ -689,18 +688,12 @@ class NasController extends AppController {
             $data['Nas']['enablepassword'] = $this->Nas->getPassword($password);
             $data['Nas']['secret'] = bin2hex(openssl_random_pseudo_bytes(6));
             $data['Nas']['backup'] = "1";
-            //$this->set('data', $data);
-            //$this->set('ip', $this->request->data['ip']);
             $this->set('id', $this->request->data['id']);
             if ($this->Nas->save($data)) {
                 $this->alert_restart_server();
                 Utils::userlog(__('added NAS %s', $this->Nas->id));
                 $this->set('res', "OK");
             } else {
-                /*$this->Session->setFlash(
-                    __('Unable to add NAS.'),
-                    'flash_error'
-                );*/
                 Utils::userlog(__('error while adding NAS'), 'error');
                 $this->set('res', "NOK");
             }
