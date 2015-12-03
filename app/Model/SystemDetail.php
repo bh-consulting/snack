@@ -485,42 +485,43 @@ class SystemDetail extends AppModel {
 
         /* Get Failures */
         $loglineModel = new Logline();
-        $res = $loglineModel->get_failures();
+        $res = $loglineModel->get_failures("Daily");
         $usersnbfailures = $res['usersnbfailures'];
         $users = $res['users'];
         $usernames = $res['usernames'];
         $logins =$res['logins'];
         $nb = count($usersnbfailures);
         $str .= "<h3>$nb failures of connections order by users<br></h3>";
-        $str .=  "<table border='1'>";
-        $str .=  "<th>" . __('User') . "</th>";
-        $str .=  "<th>" . __('Nb') . "</th>";
-        $str .=  "<th>" . __('Last') . "</th>";
-        $str .=  "<th>" . __('Vendor') . "</th>";
-        $str .=  "<th>" . __('NAS') . "</th>";
-        $str .=  "<th>" . __('Port') . "</th>";
-        $str .=  "<th>" . __('Why ?') . "</th>";
-        //debug($users);
-        /*$infos = explode(",", $this->element('formatUsersList', array(
-                    'users' => $usernames
-        )));*/
-        $i = 0;
-        
-        foreach ($usersnbfailures as $key => $value) {
-            $str .=  "<tr>";
-            $str .=  "<td>" . $usernames[$i]['username'] . "</td>";
-            $str .=  "<td>" . $value . "</td>";
-            $str .=  "<td>" . $users[$logins[$i]]['last'] . "</td>";
-            $str .=  "<td>" . $users[$logins[$i]]['vendor'] . "</td>";
-            $str .=  "<td>" . $users[$logins[$i]]['nas'] . "</td>";
-            $str .=  "<td>" . $users[$logins[$i]]['port'] . "</td>";
-            $str .=  "<td>" . $users[$logins[$i]]['info'] . "</td>";
-            //echo " : ".$value." tentatives";
-            $i++;
-            $str .=  "</tr>";
+        if ($nb > 0) {
+            $str .=  "<table border='1'>";
+            $str .=  "<th>" . __('User') . "</th>";
+            $str .=  "<th>" . __('Nb') . "</th>";
+            $str .=  "<th>" . __('Last') . "</th>";
+            $str .=  "<th>" . __('Vendor') . "</th>";
+            $str .=  "<th>" . __('NAS') . "</th>";
+            $str .=  "<th>" . __('Port') . "</th>";
+            $str .=  "<th>" . __('Why ?') . "</th>";
+            //debug($users);
+            /*$infos = explode(",", $this->element('formatUsersList', array(
+                        'users' => $usernames
+            )));*/
+            $i = 0;
+            
+            foreach ($usersnbfailures as $key => $value) {
+                $str .=  "<tr>";
+                $str .=  "<td>" . $usernames[$i]['username'] . "</td>";
+                $str .=  "<td>" . $value . "</td>";
+                $str .=  "<td>" . $users[$logins[$i]]['last'] . "</td>";
+                $str .=  "<td>" . $users[$logins[$i]]['vendor'] . "</td>";
+                $str .=  "<td>" . $users[$logins[$i]]['nas'] . "</td>";
+                $str .=  "<td>" . $users[$logins[$i]]['port'] . "</td>";
+                $str .=  "<td>" . $users[$logins[$i]]['info'] . "</td>";
+                //echo " : ".$value." tentatives";
+                $i++;
+                $str .=  "</tr>";
+            }
+            $str .=  "</table>";
         }
-        $str .=  "</table>";
-
 
         if ($this->errors > 0) {
             $subject = "[".$this->domain."][ERR] SNACK - Reports";
