@@ -14,7 +14,7 @@ switch ($status) {
 		echo "Last Upgrade :";
 		break;
 	case '1':
-		echo __("Upgrade stated");
+		echo __("Upgrade started");
 		break;
 	case '2':
 		echo __("Upgrade in progress ...");
