@@ -42,6 +42,9 @@ command() {
         if [[ "$info" == "mac" ]]; then
             $SCRPATH/ssh.expect $host $login $pass $enablepassword "show mac address-table" | grep $cmd
         fi
+        if [[ "$info" == "arp" ]]; then
+            $SCRPATH/ssh.expect $host $login $pass $enablepassword "show ip arp"
+        fi
     else
         res=$(nc -vnz -w 5 $host 23 >/dev/null 2>/dev/null; echo $?)
         if [[ "$res" == "0" ]]; then
@@ -74,6 +77,9 @@ command() {
             fi
             if [[ "$info" == "mac" ]]; then
                 $SCRPATH/telnet.pl $host $login $pass $enablepassword "show mac address-table" | grep $cmd
+            fi
+            if [[ "$info" == "arp" ]]; then
+                $SCRPATH/telnet.pl $host $login $pass $enablepassword "show ip arp"
             fi
         fi
     fi
