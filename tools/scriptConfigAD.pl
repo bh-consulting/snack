@@ -124,7 +124,7 @@ if ($ARGV[0] eq 'config') {
     open(my $fh, '>>:encoding(UTF-8)', $filename)
       or die "Could not open file '$filename' $!";
     if ($hostfound == 0) {
-        say $fh "realm host {
+        say $fh "\nrealm host {
     type = radius
     authhost = LOCAL
     accthost = LOCAL
