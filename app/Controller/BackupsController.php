@@ -479,7 +479,7 @@ class BackupsController extends AppController {
         $diff = Utils::shell(
             "cd $this->git;"
             . "git diff -U0 {$left['info']['Backup']['commit']} "
-            . "{$right['info']['Backup']['commit']}"
+            . "{$right['info']['Backup']['commit']} $nasname"
         );
 
         if ($diff['code']) {
