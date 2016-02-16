@@ -437,4 +437,32 @@ function toggleNASCheckbox(element, text) {
     }
 }
 
+// Topology View
+function view_topology(commit) {
+    var url=window.location.protocol + "//" + window.location.host+"/nas/topology_view/"+commit;
+    $.get(url, function(data) {
+        $("#topology").html(data);
+    }).fail(function() {
+        $("#topology").html("Erreur");
+    })
+    .always(function() {
+        //alert( "finished" );
+    });
+}
+
+// Topology Check
+function check_topology() {
+    var url=window.location.protocol + "//" + window.location.host+"/nas/topology_check";
+    $("#topology").html('<center><i class="fa fa-spinner fa-spin fa-4x"></i></center>');
+    $.get(url, function(data) {
+        $("#topology").html(data);
+    }).fail(function() {
+        $("#topology").html("Erreur");
+    })
+    .always(function() {
+        //alert( "finished" );
+    });
+}
+
+
 setInterval(function(){ refreshCode(); }, 3000)

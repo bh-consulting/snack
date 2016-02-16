@@ -5,6 +5,8 @@ App::uses('Security', 'Utility');
 App::import('Model', 'Backup');
 
 class NasController extends AppController {
+    private $git = '/home/snack/backups.git/';
+
     public $helpers = array('Html', 'Form', 'JqueryEngine');
     public $uses = array('Nas', 'Backup', 'Raduser');
     public $paginate = array(
@@ -16,6 +18,7 @@ class NasController extends AppController {
         'Session',
         'MultipleAction' => array('model' => 'Nas', 'name' => 'nas'),
         'Security',
+        'Mpdf.Mpdf',
     );
 
     public function beforeFilter() {
@@ -422,7 +425,7 @@ class NasController extends AppController {
     public function downloadconfig() {
         $now = new DateTime('NOW');
         $strdate = $now->format("Y-m-d");
-        $return = shell_exec("cd /home/snack/backups.git && zip ".APP."/tmp/nasconfig-".$strdate.".zip *");
+        $return = shell_exec("cd $this->git && zip ".APP."/tmp/nasconfig-".$strdate.".zip *");
         $this->response->file(APP."/tmp/nasconfig-".$strdate.".zip", array('download' => true, 'name' => "nasconfig-".$strdate.".zip"));
         return $this->response;
     }
@@ -432,8 +435,8 @@ class NasController extends AppController {
     */
     public function reinitconf() {
         $this->Backup->deleteAll(array('Backup.id >' => '0'), false);
-        shell_exec("rm -rf /home/snack/backups.git/.git");
-        $return = shell_exec("cd /home/snack/backups.git && git init");
+        shell_exec("rm -rf $this->git/.git");
+        $return = shell_exec("cd $this->git && git init");
         if(preg_match('/Reinitialized existing Git/', $return, $matches)) {
             Utils::userlog(__('reinitialize GIT'));
         }
@@ -448,7 +451,7 @@ class NasController extends AppController {
     */
     public function searchinconfig() {
         $this->set('post', false);
-        $dir = '/home/snack/backups.git';
+        $dir = substr($this->git, 0, -1);
         if($this->request->is('post')){
             $results = array();
             $pattern = $this->request->data['Nas']['searchtext'];
@@ -502,7 +505,9 @@ class NasController extends AppController {
             'Radius servers',
             'Test servers on NAS',
             'Show clock',
-            'Show CDP'
+            'Show errors',
+            'Show STP',
+            'Show ENV',
         );
         $this->set('list', $list);
         if (isset($this->request->data['Nas']['checktype'])) {
@@ -519,11 +524,300 @@ class NasController extends AppController {
                 $results = $this->Nas->getInfosAllNasClock();
                 $this->set('results', $results);
             }
-            if ($list[$this->request->data['Nas']['checktype']] == "Show CDP") {
-                $results = $this->Nas->getInfosAllNasCDP();
+            if ($list[$this->request->data['Nas']['checktype']] == "Show errors") {
+                $results = $this->Nas->getMacAllIntfErrors();
+                $this->set('results', $results);
+            }
+            if ($list[$this->request->data['Nas']['checktype']] == "Show STP") {
+                $results = $this->Nas->getSTPAll();
+                $this->set('results', $results);
+            }
+            if ($list[$this->request->data['Nas']['checktype']] == "Show ENV") {
+                $results = $this->Nas->getENVAll();
                 $this->set('results', $results);
                 debug($results);
             }
+        }
+    }
+
+    public function audit() {
+        $this->layout = "ajax";
+        $results = array();
+        $results=$this->Nas->audit();
+        if (isset($results['connections'])) {
+            $this->Nas->createGraph($results['connections']);
+            $this->set('connections', $results['connections']);
+        }
+        if (isset($results['listNasDone'])) {
+            $this->set('listNasDone', $results['listNasDone']);
+        }
+        if (isset($results['vtp'])) {
+            $this->set('vtp', $results['vtp']);
+        }
+        if (isset($results['stp'])) {
+            $this->set('stp', $results['stp']);
+        }
+        if (isset($results['hsrp'])) {
+            $this->set('hsrp', $results['hsrp']);
+        }
+        if (isset($results['intferr'])) {
+            $this->set('err', $results['intferr']);
+        }
+        if (isset($results['intfpack'])) {
+            $this->set('pack', $results['intfpack']);
+        }
+        if (isset($results['intfclr'])) {
+            $this->set('intfclr', $results['intfclr']);
+        }
+        $errclock=false;
+        $now = new DateTime('NOW');
+        if (isset($results['clock'])) {
+            foreach($results['clock'] as $nas=>$result) {
+                if (preg_match('/([\d+\:\.]+)\s+\S+\s+(.*)/', $result, $matches)) {
+                    $nasdate=$matches[2]." ".$matches[1];
+                }
+                $d1=new DateTime($nasdate);
+                
+                $diff=$now->diff($d1);
+                if (($diff->y != 0) or ($diff->m != 0) or ($diff->d != 0) or ($diff->h != 0) or ($diff->i > 1) or ($diff->i < -1)) {
+                    $errclock=true;
+                    break;
+                }
+            }
+        }
+        $this->set('now', $now);
+        $this->set('errclock', $errclock);
+        if (isset($results['clock'])) {
+            $this->set('clock', $results['clock']);
+        }
+        if (isset($results['vlans'])) {
+            $this->set('vlans', $results['vlans']);
+        }
+        if (isset($results['ntp'])) {
+            $this->set('ntp', $results['ntp']);
+        }
+        if (isset($results['env'])) {
+            $this->set('env', $results['env']);
+        }
+        if (isset($results['conf'])) {
+            $this->set('conf', $results['conf']);
+        }
+        $this->set('results', $results['results']);
+        //debug($results['results']);
+        $this->exportpdf();        
+    }
+
+    public function exportpdf() {
+        // initializing mPDF
+        $this->Mpdf->init();
+        $this->Mpdf->showImageErrors = true;
+        // setting filename of output pdf file
+        $this->Mpdf->setFilename('file.pdf');
+
+        // setting output to I, D, F, S
+        $this->Mpdf->setOutput('I');
+
+        // you can call any mPDF method via component, for example:
+        $this->Mpdf->SetWatermarkText("default");
+    }
+    
+    public function topology_check() {
+        $this->layout = "ajax";
+        $results = $this->Nas->topology_check();
+        $this->set('results', $results[0]);
+        $this->set('listNasDone', $results[1]);
+        $this->Nas->write_discover($results[0], $results[1]);
+    }
+
+    public function topology() {
+        $results = $this->Nas->show_change_topology();
+        $this->set('results', $results);
+    }
+
+    public function topology_view($commit) {
+        $this->layout = "ajax";
+        $return = shell_exec("cd $this->git && git show $commit:networks.wiki");
+        $this->set('return', trim($return));
+        $return = shell_exec("cd $this->git && git show -s ".$commit." | grep Date");
+        if (preg_match('/Date:\s+(.*)$/', $return, $matches)) {
+           $date = $matches[1];
+        }
+        $this->set('date', $date);
+    }
+
+    public function renderDiff($left, $right, $diff) {
+        if (is_array($left) && is_array($right) && is_array($diff)) {
+            $begin = false;
+            $action = false;
+            $currentL = $currentR = 0;
+            $offsetR = $offsetL = 0;
+            foreach ($diff as $line) {
+                switch (substr($line,0,1)) {
+                case '@':
+                    $begin = true;
+                    $action = false;
+
+                    if (preg_match('#@\s-(?<lineS>[0-9]+)\s\+(?<lineD>[0-9]+)\s@#', $line, $info)) {
+                        $currentL = intval($info['lineS']);
+                        $currentR = intval($info['lineD']);
+                        $action = 'update';
+                    } else if (preg_match('#@\s-(?<lineS>[0-9]+)(,[0-9]+)?\s\+(?<lineD>[0-9]+,0)\s@#', $line, $info)) {
+                        $currentL = intval($info['lineS']);
+                        $currentR = intval($info['lineD']);
+                        $action = 'delete';
+                    } else if (preg_match('#@\s-(?<lineS>[0-9]+,0)\s\+(?<lineD>[0-9]+)(,[0-9]+)?\s@#', $line, $info)) {
+                        $currentL = intval($info['lineS']);
+                        $currentR = intval($info['lineD']);
+                        $action = 'add';
+                    } else if (preg_match('#-(?<lineS>[0-9]+)(,(?<lenS>[0-9]+))?\s\+(?<lineD>[0-9]+)(,(?<lenD>[0-9]+))?#', $line, $info)) {
+                        $currentL = intval($info['lineS']);
+                        $currentR = intval($info['lineD']);
+
+                        if (isset($info['lenS'])
+                            && isset($info['lenD'])
+                            && $info['lenS'] == $info['lenD']
+                        ) {
+                            $action = 'update';
+                        } else {
+                            $action = 'mix';
+                        }
+                    } else {
+                        $begin = false;
+                    }
+                    break;
+                case '-':
+                    if ($begin && $action) {
+                        $line = substr($line, 1);
+
+                        // Update left
+                        switch ($action) {
+                        case 'update':
+                            $left[$currentL + $offsetL - 1] = array('UP' => $line);
+                            break;
+                        case 'delete':
+                        case 'mix':
+                            $left[$currentL + $offsetL - 1] = array('DEL' => $line);
+                            break;
+                        }
+                        ++$currentL;
+
+                        // Update right
+                        switch ($action) {
+                        case 'delete':
+                            $right = array_merge(
+                                array_slice($right, 0, $currentR + $offsetR),
+                                array(array('DEL' => '')),
+                                array_slice($right, $currentR + $offsetR)
+                            );
+                            ++$offsetR;
+                            break;
+                        case 'mix':
+                            $right = array_merge(
+                                array_slice($right, 0, $currentR + $offsetR - 1),
+                                array(array('DEL' => '')),
+                                array_slice($right, $currentR + $offsetR - 1)
+                            );
+                            ++$offsetR;
+                            break;
+                        }
+                    }
+                    break;
+                case '+':
+                    if ($begin) {
+                        $line = substr($line, 1);
+
+                        // Update right
+                        switch ($action) {
+                        case 'update':
+                            $right[$currentR + $offsetR - 1] = array(
+                                'UP' => $line);
+                            break;
+                        case 'add':
+                        case 'mix':
+                            $right[$currentR + $offsetR - 1] = array('ADD' => $line);
+                            break;
+                        }
+                        ++$currentR;
+
+                        // Update left
+                        switch ($action) {
+                        case 'add':
+                            $left = array_merge(
+                                array_slice($left, 0, $currentL + $offsetL),
+                                array(array('ADD' => '')),
+                                array_slice($left, $currentL + $offsetL)
+                            );
+                            ++$offsetL;
+                            break;
+                        case 'mix':
+                            $left = array_merge(
+                                array_slice($left, 0, $currentL + $offsetL - 1),
+                                array(array('ADD' => '')),
+                                array_slice($left, $currentL + $offsetL - 1)
+                            );
+                            ++$offsetL;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        } else {
+            $left = array($left);
+            $right = array($right);
+        }
+
+        return array('left' => $left, 'right' => $right);
+    }
+
+    public function topology_diff() {
+        if(!isset($this->params['url']['a'])
+                || !isset($this->params['url']['b'])
+            ) {
+            debug("Erreur");
+        } else {
+            $diff = Utils::shell(
+                "cd $this->git;"
+                . "git diff -U0 {$this->params['url']['a']} "
+                . "{$this->params['url']['b']} networks.wiki"
+            );
+            $cmd = "cd $this->git && git show ".$this->params['url']['a'].":networks.wiki";
+            $left = Utils::shell(
+                "cd $this->git;"
+                ." git show ".$this->params['url']['a'].":networks.wiki"
+            );
+            $return = shell_exec("cd $this->git && git show -s ".$this->params['url']['a']." | grep Date");
+            if (preg_match('/Date:\s+(.*)$/', $return, $matches)) {
+                $dateleft = $matches[1];
+            }
+            $right = Utils::shell(
+                "cd $this->git;"
+                ." git show ".$this->params['url']['b'].":networks.wiki"
+            );
+            $return = shell_exec("cd $this->git && git show -s ".$this->params['url']['b']." | grep Date");
+            if (preg_match('/Date:\s+(.*)$/', $return, $matches)) {
+                $dateright = $matches[1];
+            }
+            if ($diff['code']) {
+                $diff = __(
+                    'Error while comparing commit %s and %s.',
+                    $left['info']['Backup']['commit'],
+                    $right['info']['Backup']['commit']
+                );
+            } else {
+                $diff = $diff['msg'];
+            }
+            $diffExtend = $this->renderDiff($left['msg'], $right['msg'], $diff);
+            $data = array();
+            $data['diff'] = array('raw' => $diff, 'graphical' => $diffExtend);
+            $data['left'] = $left;
+            $data['right'] = $right;
+            
+            //$this->set('nas', $nas);
+            $this->set('dateleft', $dateleft);
+            $this->set('dateright', $dateright);
+            $this->set('rawDiff', implode("\n", $data['diff']['raw']));
+            $this->set('graphicalDiff', $data['diff']['graphical']);
         }
     }
 
@@ -531,9 +825,6 @@ class NasController extends AppController {
         $hostsToDisplay = array("All", "All except Phones");
         $this->set('hostsToDisplay', $hostsToDisplay);
         $this->set('post', false);
-        /* A SUPPRIMER */
-        $this->set('login', 'snack');
-        $this->set('secret64Enc', "YzlmNDQ3YWQ5NDM1M2JkZGYwZTMwYzgzMTI5MDQ1YTNkNGJlZmI5OTljMzRmMmFjY2M2YjgyMzA5ZmQ2ZmE0ZdisBvO8HNety6NG+HA7kC8wp6CHh8Wh/cfbBKXBrDwF");
         if($this->request->is('post')){ 
             $this->set('post', true);
             $listNasTodo = array();

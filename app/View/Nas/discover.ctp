@@ -56,7 +56,6 @@ $options = array(
 echo $this->Form->end($options);
 
 echo "<div class='load'></div>";
-//echo "<center>Veuillez patienter ".$this->Html->image('ajax-loader.gif')."</center>";
 
 echo "<div class='results'>";
 if ($post && !$error) {

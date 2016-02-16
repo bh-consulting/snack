@@ -2,7 +2,9 @@
 $this->extend('/Common/radius_sidebar'); 
 $this->assign('radius_active', 'active');
 $this->assign('nas_active', 'active');
-
+?>
+<div class='load'></div>
+<?php
 /*
  * Define fields to show.
  */
@@ -159,6 +161,18 @@ echo $this->Html->link(
     '<i class="fa fa-sitemap"></i> ' . __('Discover'),
     array('controller' => 'nas', 'action' => 'discover'),
     array('escape' => false, 'class' => 'btn btn-primary')
+);
+echo " ";
+echo $this->Html->link(
+    '<i class="fa fa-sitemap"></i> ' . __('Toplogy'),
+    array('controller' => 'nas', 'action' => 'topology'),
+    array('escape' => false, 'class' => 'btn btn-primary')
+);
+echo " ";
+echo $this->Html->link(
+    '<i class="glyphicon glyphicon-book glyphicon-white"></i> ' . __('Audit'),
+    array('controller' => 'nas', 'action' => 'audit'),
+    array('onclick' => 'load();', 'escape' => false, 'class' => 'btn btn-primary')
 );
 echo " ";
 echo $this->Html->link(

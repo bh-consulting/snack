@@ -90,14 +90,17 @@ class MpdfComponent extends Component {
      */
     public function shutdown(Controller $controller) {
         if ($this->_init) {
-            //$stylesheet = file_get_contents('css/bootstrap.css');
-            //$this->pdf->WriteHTML($stylesheet,1);
             $stylesheet = file_get_contents('css/bootstrap.css');
             $stylesheet .= file_get_contents('css/snack.css');
+            $stylesheet .= file_get_contents('css/mpdf.css');
             $this->pdf->WriteHTML($stylesheet,1);
-            //0$stylesheet = file_get_contents('css/snack.css');
             //$this->pdf->WriteHTML($stylesheet,2);
-            $this->pdf->WriteHTML((string)$controller->response);
+            $this->pdf->WriteHTML((string)$controller->response,2);
+
+            $this->pdf->SetTitle("AUDIT - SNACK");
+            $this->pdf->SetAuthor("BH Consulting");
+            $this->pdf->SetCreator("SNACK");
+
             $this->pdf->Output($this->_filename, $this->_output);
         }
     }

@@ -128,8 +128,98 @@ if (isset($results)) {
 		echo "</table>";
 		echo "</div>";
 	}
-	if ($type == "Show CDP") {
-		echo $this->Html->image('tmp/network.dot.png', array('alt' => 'Network'));//, 'width'=>'2048px'
+	if ($type == "Show errors") {
+		$cols = array(
+			'Align-Err',
+			'FCS-Err',
+			'Xmit-Err',
+			'Rcv-Err',
+			'UnderSize',
+			'OutDiscards',
+			'Single-Col',
+			'Multi-Col',
+			'Late-Col',
+			'Excess-Col',
+			'Carri-Sen',
+			'Runts',
+			'Giants',
+		);
+		echo "<div class='col-sm-4'>";
+		foreach($results as $nas=>$result) {
+			if (count($result)>0) {
+				echo "<h3>$nas</h3>";
+				echo "<table class='table table-bordered table-striped table-condensed '>";
+				echo "<th>Interface</th>";
+				foreach ($cols as $col) {
+					echo "<th>$col</th>";
+				}
+				foreach ($result as $intf=>$arr) {
+					echo "<tr>";
+					echo "<td>".$intf."</td>";
+					foreach ($cols as $col2) {
+						$found = false;
+						foreach ($arr as $col=>$nb) {	
+							if ($col == $col2) {
+								echo "<td>$nb</td>";
+								$found = true;
+							}	
+						}
+						if (!$found) {
+							echo "<td></td>";
+						}
+					}
+					echo "</tr>";
+				}
+				echo "</table>";
+			}
+		}
+		
+		echo "</div>";
+	}
+	if ($type == "Show STP") {
+
+		echo "<div class='col-sm-offset-3 col-sm-4'>";
+		echo "<table class='table table-bordered table-striped table-condensed '>";
+		echo "<th>NAS</th><th>STP Mode</th><th>is Root ?</th>";
+		foreach($results as $nas=>$result) {
+			echo "<tr>";
+			echo "<td>".$nas."</td>";
+			echo "<td>".$result['mode']."</td>";
+			if (count($result['rootvlans']) > 0) {
+				echo "<td>Yes</td>";
+			} else {
+				echo "<td>No</td>";
+			}
+			echo "</tr>";
+		}
+		echo "</table>";
+
+		echo "<table class='table table-bordered table-striped table-condensed '>";
+		echo "<th>NAS</th><th>VLAN</th><th>BLK</th><th>LIS</th><th>LRN</th><th>FWD</th><th>ACT</th>";
+		foreach($results as $nas=>$result) {
+			echo "<tr>";
+			echo "<td>".$nas."</td>";
+			echo "<td></td><td></td><td></td><td></td><td></td><td></td>";
+			$i=0;
+			echo "</tr>";
+			
+			foreach ($result['intfstates']['vlan'] as $vlan) {
+				echo "<tr>";
+				echo "<td></td>";
+				echo "<td>$vlan</td>";
+				echo "<td>".$result['intfstates']['BLK'][$i]."</td>";
+				echo "<td>".$result['intfstates']['LIS'][$i]."</td>";
+				echo "<td>".$result['intfstates']['LRN'][$i]."</td>";
+				echo "<td>".$result['intfstates']['FWD'][$i]."</td>";
+				echo "<td>".$result['intfstates']['ACT'][$i]."</td>";
+				echo "</tr>";
+				$i++;
+			} 
+			
+			echo "</tr>";
+		}
+		echo "</table>";
+		echo "</div>";
 	}
 }
 

@@ -18,6 +18,7 @@ class SnackSendReportsShell extends AppShell {
         if (Configure::read('Parameters.role') == "master") {
             $date = new DateTime('23:00');
             if ($date->format('H:i') == date('H:i')) {
+                $results = $this->Nas->topology_check();
                 $archivedate = Configure::read('Parameters.logs_archive_date');
                 $deletedate = Configure::read('Parameters.logs_delete_date');
                 if (isset($archivedate)) {

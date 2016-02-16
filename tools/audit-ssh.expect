@@ -1,0 +1,53 @@
+#!/usr/bin/expect
+
+#Usage ssh.expect <host> <ssh user> <ssh password>
+
+set timeout 10
+set cmds [list "show ver" "show clock" "show cdp neigh det" "sh int counters errors" "show spanning-tree summary" "show vtp status" "show vtp password" "show vlan brief" "show vlan-switch" "show ntp status" "show env all" "show int counters" "show int | include line protocol|Last clearing" "show standby brief" "show run"]
+set enablepasswd [lindex $argv 3]
+set passwd [lindex $argv 2]
+set login [lindex $argv 1]
+set hostname [lindex $argv 0]
+spawn ssh -o ConnectTimeout=$timeout -o StrictHostKeyChecking=no $login@$hostname
+set try 0
+
+expect {
+    "*?assword" {
+    	send "$passwd\n"
+        exp_continue
+    }
+    "*>" {
+        if { $try > 0 } {
+            send_error "\n>>> error in enable password\n"
+            exit 1
+        }
+        incr try
+        send "enable\n"
+        expect "*?assword"
+        send "$enablepasswd\n"
+        exp_continue
+    }
+    "*#" {
+        send "terminal length 0\n"
+        expect "*#"
+        foreach cmd $cmds {
+            send "$cmd\n"
+            expect "*#"
+        }
+        send "exit\n"
+    }
+    timeout {
+        send_error "\n>>> timed out\n"
+        exit 1
+    }
+}
+
+expect
+
+lassign [wait] pid spawnid os_error_flag value
+
+if {$os_error_flag == 0} {
+    puts "exit status: $value"
+} else {
+    puts "errno: $value"
+}
