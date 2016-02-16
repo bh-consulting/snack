@@ -334,8 +334,12 @@ class Nas extends AppModel {
 
     public function getPassword($secret) {
         $key = Configure::read('Security.snackkey');
-        $secret64Dec = base64_decode($secret);
-        $password = Security::decrypt($secret64Dec,$key);
+        if ($secret != "") {
+            $secret64Dec = base64_decode($secret);
+            $password = Security::decrypt($secret64Dec,$key);
+        } else {
+            $password = "";
+        }
         return $password;
     }
 

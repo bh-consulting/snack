@@ -287,8 +287,12 @@ class NasController extends AppController {
             $this->request->data = $this->Nas->read();
             $key = Configure::read('Security.snackkey');           
             $secret64Enc = $this->request->data['Nas']['password'];
-            $secret64Dec = base64_decode($secret64Enc);
-            $password = Security::decrypt($secret64Dec,$key);
+            if ($secret64Enc != "") {
+                $secret64Dec = base64_decode($secret64Enc);
+                $password = Security::decrypt($secret64Dec,$key);
+            } else {
+                $password = "";
+            }
             $this->set('password', $password);
             $this->set('backup', $this->request->data['Nas']['backup']);
             
