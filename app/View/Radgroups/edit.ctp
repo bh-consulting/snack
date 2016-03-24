@@ -27,7 +27,7 @@ $info = '<fieldset>';
 $info .= '<legend>' . __('Information') . '</legend>';
 $myLabelOptions = array('text' => __('Name'));
 $info .= $this->Form->input('groupname', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
-$info .= $this->element('doubleListsSelector', array('leftTitle' => __('Users'), 'rightTitle' => __('Selected users'), 'contents' => $users, 'comments' => $comments, 'selectedContents' => array()));
+$info .= $this->element('doubleListsSelector', array('leftTitle' => __('Users'), 'rightTitle' => __('Selected users'), 'contents' => $users, 'comments' => $comments, 'selectedContents' => $selectedUsers));
 $info .= $this->Form->input('users', array('type' => 'select', 'id' => 'select-right', 'label' => '', 'class' => 'hidden', 'multiple' => 'multiple'));
 $info .= '</fieldset>';
 
