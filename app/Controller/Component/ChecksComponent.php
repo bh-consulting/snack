@@ -71,6 +71,8 @@ class ChecksComponent extends Component {
             return $types[2][$nice];
         if ($rad['is_loginpass'])
             return $types[1][$nice];
+        if ($rad['is_windowsad'])
+            return $types[5][$nice];
         if ($rad['is_cert'])
             return $types[4][$nice];
         if ($rad['is_mac'])

@@ -303,15 +303,16 @@ if (!empty($radusers)) {
                         array('escape' => false)
                     );
                 }
-                echo $this->element(
-                    'delete_links',
-                    array(
-                        'model' => 'Raduser',
-                        'action' => 'link',
-                        'id' => $user['Raduser'][$info['id']],
-                    )
-                );
-
+                if ($user['Raduser']['type'] != "windowsad") {
+                    echo $this->element(
+                        'delete_links',
+                        array(
+                            'model' => 'Raduser',
+                            'action' => 'link',
+                            'id' => $user['Raduser'][$info['id']],
+                        )
+                    );
+                }
                 break;
             /*case (preg_match("#is_(cert|loginpass|windowsad|phone|mac|cisco)#i", $field)
                 ? $field : !$field):

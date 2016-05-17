@@ -354,7 +354,7 @@ class RadusersController extends AppController {
                 }
                 $line++;
             }
-            //debug($listradusers); 
+
             foreach ($listradusers as $raduser) {
                 $usersaved = false;
                 $user = new Raduser();
@@ -390,6 +390,16 @@ class RadusersController extends AppController {
                             $results[] = __('<li><b><span class="text-success">SUCCESS</span></b> Cleartext-Password</li>');
                         } else {
                             $results[] = __('<li><b><span class="text-danger">ERROR</span></b> Cleartext-Password');
+                        }
+                        $check = new Radcheck();
+                        $check->set('username', $raduser['username']);
+                        $check->set('attribute', 'EAP-Type');
+                        $check->set('op', ':=');
+                        $check->set('value', 'MD5-CHALLENGE');
+                        if ($check->save()) {
+                            $results[] = __('<li><b><span class="text-success">SUCCESS</span></b> MD5-CHALLENGE</li>');
+                        } else {
+                            $results[] = __('<li><b><span class="text-danger">ERROR</span></b> MD5-CHALLENGE');
                         }
                     } else {
                         $check->set('username', $raduser['username']);
@@ -438,7 +448,7 @@ class RadusersController extends AppController {
                         }
                     }
 
-                    if (isset($raduser['cisco_user'])) {
+                    if ($raduser['cisco_user'] == "1") {
                         $reply = new Radreply();
                         $reply->set('username', $raduser['username']);
                         $reply->set('attribute', 'Cisco-AVPair');
@@ -651,7 +661,25 @@ class RadusersController extends AppController {
     }
 
     /**
-     * View a user with login/password.
+     * View a user with windows ad.
+     * @param  $id - user id
+     */
+    public function view_windowsad($id = null) {
+        $this->set(
+                'showedAttr', array(
+            'Authentication type',
+            'Username',
+            'Comment',
+            'Expiration',
+            'Simultaneous-Use',
+            'Groups',
+                )
+        );
+        $this->view($id, array('Authentication type' => 'MAC address'));
+    }
+
+    /**
+     * View a phone
      * @param  $id - user id
      */
     public function view_phone($id = null) {
@@ -1142,6 +1170,42 @@ class RadusersController extends AppController {
                         $e->getMessage(), 'flash_error'
                 );
                 Utils::userlog(__('error while editing loginpass user %s', $this->Raduser->id), 'error');
+                $success = false;
+            }
+        }
+
+        $this->edit($success);
+    }
+
+    public function edit_windowsad($id = null) {
+        $this->url = $this->referer();
+        $this->Raduser->id = $id;
+        $success = false;
+
+        if ($this->request->is('get')) {
+            $this->request->data = $this->Raduser->read();
+            
+            //$this->request->data['Raduser']['ttls'] = $ttls;
+        } else {
+            try {
+                $this->request->data['Raduser']['is_windowsad'] = 1;
+
+                if (!$this->Raduser->save($this->request->data)) {
+                    throw new EditException(
+                    'Raduser', $id, $this->Raduser->field('username')
+                    );
+                }
+
+                $this->updateGroups($this->Raduser->id, $this->request);
+                $this->Checks->updateRadcheckFields($id, $this->request);
+                $this->Checks->updateRadreplyFields($id, $this->request);
+
+                $success = true;
+            } catch (UserGroupException $e) {
+                $this->Session->setFlash(
+                        $e->getMessage(), 'flash_error'
+                );
+                Utils::userlog(__('error while editing MAC user %s', $this->Raduser->id), 'error');
                 $success = false;
             }
         }
