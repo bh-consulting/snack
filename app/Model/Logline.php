@@ -68,6 +68,16 @@ class Logline extends AppModel {
         return $nas;
     }
 
+    public function findVoiceLogs($page=-1, $options=array()) {
+        
+        if (isset($options['string'])) {
+            $options['type'] = "voipsearch";
+        }
+        //debug($options);
+        $arr = $this->findLogs($page, $options);
+        return $arr;
+    }
+
     public function findLogs($page=-1, $options=array()) {
         $offset=CakeTime::serverOffset();
         $tz = sprintf( "%02d:%02d", $offset / 3600, $offset / 60 % 60);
@@ -113,11 +123,24 @@ class Logline extends AppModel {
                                                          "query" => "*CALL_HISTORY")
                 );
             }
+            elseif ($options['type'] == "voipsearch") {
+                $arrmust[] = array("query_string" => array("default_field" => "fluentd.message",
+                                                         "query" => "*VOIP_FEAT*")
+                );
+                if (isset($options['string'])) {
+                    $arrmust[] = array("prefix" => array("fluentd.message" => $options['string']));
+                }
+            }
+            else {
+                if (isset($options['string'])) {
+                    $arrmust[] = array("match_phrase_prefix" => array("fluentd.message" => $options['string']));
+                }
+            }
         }
 
-        if (isset($options['string'])) {
+        /*if (isset($options['string'])) {
             $arrmust[] = array("match_phrase_prefix" => array("fluentd.message" => $options['string']));
-        }
+        }*/
         if (isset($options['datefrom']) && isset($options['dateto'])) {
             $arrmust[] = array("range" => array(
                 "fluentd.@timestamp" => array(

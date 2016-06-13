@@ -168,6 +168,19 @@ if (!empty($loglines)) {
             }
             $listcalls[$fcid]['text'] = $logline['Logline']['msg'];
         }
+        if (preg_match('/%VOIPAAA-5-VOIP_FEAT_HISTORY: FEAT_VSA=fn:TWC,ft:([0-9]{2}\/[0-9]{2}\/[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2})\.\d+,cgn:(\d+),cdn:(\d+).*fcid:(\w+),/', $logline['Logline']['msg'], $matches)) {
+            //debug($matches[1]);
+            $fcid = $matches[4];
+            $datetime1 = DateTime::createFromFormat('m/d/Y H:i:s', $matches[1]);
+            $listcalls[$fcid]['date'] = $datetime1->format('Y-m-d');
+            $listcalls[$fcid]['time'] = $datetime1->format('H:i:s');
+            $listcalls[$fcid]['cgn'] = $matches[2];
+            $listcalls[$fcid]['cdn'] = $matches[3];
+            $listcalls[$fcid]['duration'] = "";
+            $listcalls[$fcid]['text'] = "";
+            $listcalls[$fcid]['statusmsg'] = "";
+            $listcalls[$fcid]['statusnum'] = "16";
+        }
     }
     unset($datetime1);
     unset($datetime2);

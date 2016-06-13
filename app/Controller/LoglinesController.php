@@ -106,13 +106,53 @@ class LoglinesController extends AppController {
         $arr = $this->init();
         $pageSize =  Configure::read('Parameters.paginationCount')*2;
         $constraints=array('facility' => 'local7', 'type' => 'voip', 'pageSize' => $pageSize);
-        $count = $this->defaultValues($arr['page'], $constraints);
+        $count = $this->voiceValues($arr['page'], $constraints);
         //$this->set('file', $arr['file']);
         $total_time = $this->stop_time($start);
         $this->set('total_time', $total_time);
         $totalPages = floor($count/$pageSize)+1;
         //$this->set('nbResults', $count);
         $this->set('totalPages', $totalPages);
+    }
+
+        private function voiceValues($page, $constraints){
+        $pageSize =  Configure::read('Parameters.paginationCount');
+        $this->Filters->addSliderConstraint(array(
+            'fields' => 'level', 
+            'input' => 'level',
+            'default' => 'info',
+            'items' => $this->Logline->levels,
+        ));
+        if (isset($this->params['url']['text'])) {
+            if ($this->params['url']['text'] != '') {
+                $constraints['string'] = $this->params['url']['text'];
+            }
+        }
+        if (isset($this->params['url']['datefrom'])) {
+            if ($this->params['url']['datefrom'] != '') {
+                $date = new DateTime($this->params['url']['datefrom']);
+                $constraints['datefrom'] = $date->format('Y-m-d').'T'.$date->format('H:i:s');
+            }
+        }
+        if (isset($this->params['url']['dateto'])) {
+            if ($this->params['url']['dateto'] != '') {
+                $date = new DateTime($this->params['url']['dateto']);
+                $constraints['dateto'] = $date->format('Y-m-d').'T'.$date->format('H:i:s');
+            }
+        }
+        $arr = $this->Logline->findVoiceLogs($page, $constraints);
+        //debug($loglines);
+        $count = $arr['count'];
+        $loglines = $arr['loglines'];
+        $this->set('page', $page);
+        //$count = $this->Logline->getLineCount($file, $constraints);
+        
+        $totalPages = floor($count/$pageSize)+1;
+        $this->set('nbResults', $count);
+        $this->set('totalPages', $totalPages);
+        //$this->set('file', $file);
+        $this->set('loglines', $loglines);
+        return $count;
     }
 
     private function defaultValues($page, $constraints){
@@ -261,7 +301,7 @@ class LoglinesController extends AppController {
         $pageSize =  Configure::read('Parameters.paginationCount')*2;
         $constraints=array('facility' => 'local7', 'type' => 'voip', 'pageSize' => $pageSize);
         
-        $this->defaultValues($arr['page'], $constraints);
+        $this->voiceValues($arr['page'], $constraints);
         
         $total_time = $this->stop_time($start);
         $this->set('total_time', $total_time);
