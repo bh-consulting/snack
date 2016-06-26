@@ -368,11 +368,12 @@ class SystemDetail extends AppModel {
         $nasModel = new Nas();
         $backupModel = new Backup();
         $str .= "<h3>Backups NAS</h3>";
-        $nas = $nasModel->query('select nasname,secret,backup from nas;');
+        $nas = $nasModel->query('select nasname,shortname,secret,backup from nas;');
         $datetime1 = new DateTime();
         //echo $datetime1->format('Y-m-d H:i:s');
         foreach ($nas as $n) {
             $nasname=$n['nas']['nasname'];
+            $shortname=$n['nas']['shortname'];
             /*$return = shell_exec("export NAS_IP_ADDRESS=".$nasname." ;
                                   export USER_NAME=AUTO ;
                                   export ACCT_STATUS_TYPE=Write ;
@@ -381,7 +382,7 @@ class SystemDetail extends AppModel {
             if ($nasname != "127.0.0.1") { 
                 if ($n['nas']['backup']) {
                     $backup = $backupModel->query("select * from backups where nas='".$nasname."' order by id desc limit 1;");
-                    $str .= $nasname." ";
+                    $str .= $shortname." ".$nasname." ";
                     if (count($backup) > 0) {
                         $datetime2 = new DateTime($backup[0]['backups']['datetime']);
                         $diff=$datetime2->diff($datetime1);
@@ -529,6 +530,26 @@ class SystemDetail extends AppModel {
         else {
             $subject = "[".$this->domain."][INFO] SNACK - Reports";
         }
+
+        /* Get Errors */
+        $str .= "<h3>Errors for this day</h3>";
+        $arr = $loglineModel->get_errors_from_NAS("Daily");
+        $err = $arr['err'];
+        $str .=  "<table border='1'>";
+        $str .=  "<th>" . __('Host') . "</th>";
+        $str .=  "<th>" . __('Type') . "</th>";
+        $str .=  "<th>" . __('Msg') . "</th>";
+        foreach ($err as $host => $value) {
+            foreach ($value as $errtype => $value2) {
+                //$str .=  "test2<br>".$errtype."<br>";
+                $str .= "<tr><td>".$host."</td><td>".$errtype."</td><td></td></tr>";
+                foreach ($value2 as $msg => $nb) {
+                    $str .= "<tr><td></td><td></td><td>".htmlspecialchars($msg, ENT_QUOTES)."</td></tr>";
+                }
+            }
+        }
+
+        $str .=  "</table>";
         //debug($str);
         $this->sendMail($subject , $str);
     }
