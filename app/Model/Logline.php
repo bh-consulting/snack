@@ -52,7 +52,8 @@ class Logline extends AppModel {
             "size" => 250,
         )));
         $data_string = json_encode($data, TRUE);
-        $url = 'http://localhost:9200/_search?search_type=count';
+        //debug($data_string);
+        $url = 'http://localhost:9200/_search';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);                                                                   
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);  
@@ -62,6 +63,7 @@ class Logline extends AppModel {
         $data = curl_exec($ch);
         curl_close($ch);
         $data_decode = json_decode($data, true);
+        //var_dump($data_decode);
         foreach ($data_decode["aggregations"]["hosts"]["buckets"] as $data) {
             $nas[] = $data['key'];
         }
@@ -100,40 +102,40 @@ class Logline extends AppModel {
         $arrmust = array();
         //debug($options);
         if (isset($options['facility'])) {
-            $arrmust[] = array("wildcard" => array("fluentd.facility" => $options['facility']));
+            $arrmust[] = array("wildcard" => array("facility" => $options['facility']));
         }
         if (isset($options['ident'])) {
-            $arrmust[] = array("wildcard" => array("fluentd.ident" => $options['ident']));
+            $arrmust[] = array("wildcard" => array("ident" => $options['ident']));
         }
         if (isset($options['priority'])) {
             foreach($levels as $level) {
                 if ($level == $options['priority']) {
                     break;
                 }
-                $arrmustnot[] = array("wildcard" => array("fluentd.severity" => $level));
+                $arrmustnot[] = array("wildcard" => array("severity" => $level));
                 //debug($level);
             }
         }
         if (isset($options['host'])) {
-            $arrmust[] = array("wildcard" => array("fluentd.host" => $options['host']));
+            $arrmust[] = array("wildcard" => array("host" => $options['host']));
         }
         if (isset($options['type'])) {
             if ($options['type'] == "voip") {
-                $arrmust[] = array("query_string" => array("default_field" => "fluentd.message",
+                $arrmust[] = array("query_string" => array("default_field" => "message",
                                                          "query" => "*CALL_HISTORY")
                 );
             }
             elseif ($options['type'] == "voipsearch") {
-                $arrmust[] = array("query_string" => array("default_field" => "fluentd.message",
+                $arrmust[] = array("query_string" => array("default_field" => "message",
                                                          "query" => "*VOIP_FEAT*")
                 );
                 if (isset($options['string'])) {
-                    $arrmust[] = array("prefix" => array("fluentd.message" => $options['string']));
+                    $arrmust[] = array("prefix" => array("message" => $options['string']));
                 }
             }
             else {
                 if (isset($options['string'])) {
-                    $arrmust[] = array("match_phrase_prefix" => array("fluentd.message" => $options['string']));
+                    $arrmust[] = array("match_phrase_prefix" => array("message" => $options['string']));
                 }
             }
         }
@@ -143,10 +145,10 @@ class Logline extends AppModel {
         }*/
         if (isset($options['datefrom']) && isset($options['dateto'])) {
             $arrmust[] = array("range" => array(
-                "fluentd.@timestamp" => array(
+                "@timestamp" => array(
                     "gte" => $options['datefrom'], 
-                    "lte" => $options['dateto'],
-                    "time_zone" => $tz
+                    "lte" => $options['dateto']
+                    //"time_zone" => $tz
             )));
         }
         
@@ -157,7 +159,7 @@ class Logline extends AppModel {
         $data["from"] = $from;
         $data["size"] = $pageSize;
         $data["sort"] = array(array("@timestamp" => array("order" => "desc")));
-        $data["facets"] = new \stdClass();
+        //$data["facets"] = new \stdClass();
 
         //debug($data);
         $data_string = json_encode($data, TRUE);
@@ -195,7 +197,7 @@ class Logline extends AppModel {
     
     public function get_AuthReq() {
         $listNas = array();
-        $constraints=array('facility' => 'local2', 'string' => 'Login', 'pageSize' => '100000');
+        $constraints=array('facility' => 'local2', 'string' => 'Login', 'pageSize' => '10000');
         $page=1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];
@@ -226,9 +228,9 @@ class Logline extends AppModel {
         }
         
         if ($date == "All") {
-            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
+            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '10000');
         } else {
-            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000', 'datefrom' => $start, 'dateto' => $end);
+            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '10000', 'datefrom' => $start, 'dateto' => $end);
         }
         //$constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
         
@@ -320,14 +322,14 @@ class Logline extends AppModel {
         }
         
         if ($date == "All") {
-            $constraints=array('priority' => 'err', 'pageSize' => '100000');
+            $constraints=array('priority' => 'err', 'pageSize' => '10000');
         } else {
-            $constraints=array('priority' => 'err', 'pageSize' => '100000', 'datefrom' => $start, 'dateto' => $end);
+            $constraints=array('priority' => 'err', 'pageSize' => '10000', 'datefrom' => $start, 'dateto' => $end);
         }
         $page = 1;
         $arr = $this->findLogs($page, $constraints);
         $logs = $arr['loglines'];
-        //debug($logs);
+        debug($logs);
         $err = array();
         $lasts = array();
         foreach ($logs as $log) {
@@ -391,9 +393,9 @@ class Logline extends AppModel {
         }
         
         if ($date == "All") {
-            $constraints=array('priority' => 'warn', 'pageSize' => '100000');
+            $constraints=array('priority' => 'warn', 'pageSize' => '10000');
         } else {
-            $constraints=array('priority' => 'warn', 'pageSize' => '100000', 'datefrom' => $start, 'dateto' => $end);
+            $constraints=array('priority' => 'warn', 'pageSize' => '10000', 'datefrom' => $start, 'dateto' => $end);
         }
 
         $page = 1;
@@ -467,7 +469,7 @@ class Logline extends AppModel {
             $stopdate = $strdate."T23:59:59";
             
             if(isset($constraints['directorynumber'])) {
-                $constraints2 = array('type' => 'voip', 'string' => 'PeerAddress '.$constraints['directorynumber'], 'datefrom' => $startdate, 'dateto' => $stopdate,'pageSize' => '100000');
+                $constraints2 = array('type' => 'voip', 'string' => 'PeerAddress '.$constraints['directorynumber'], 'datefrom' => $startdate, 'dateto' => $stopdate,'pageSize' => '10000');
                 $arr = $this->findLogs($page, $constraints2);
                 $logs = $arr['loglines'];
                 //debug($logs);

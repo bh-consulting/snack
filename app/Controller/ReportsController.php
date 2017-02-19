@@ -132,9 +132,9 @@ class ReportsController extends AppController {
         }
         
         if ($date == "All") {
-            $constraints=array('facility' => 'local4', 'string' => 'logged in', 'pageSize' => '100000');
+            $constraints=array('facility' => 'local4', 'string' => 'logged in', 'pageSize' => '10000');
         } else {
-            $constraints=array('facility' => 'local4', 'string' => 'logged in', 'pageSize' => '100000', 'datefrom' => $start, 'dateto' => $end);
+            $constraints=array('facility' => 'local4', 'string' => 'logged in', 'pageSize' => '10000', 'datefrom' => $start, 'dateto' => $end);
         }
         $page=1;
         $arr = $this->Logline->findLogs($page, $constraints);
@@ -171,9 +171,9 @@ class ReportsController extends AppController {
         }
         
         if ($date == "All") {
-            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000');
+            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '10000');
         } else {
-            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '100000', 'datefrom' => $start, 'dateto' => $end);
+            $constraints=array('facility' => 'local2', 'string' => 'Login incorrect', 'pageSize' => '10000', 'datefrom' => $start, 'dateto' => $end);
         }
 
         $page=1;
