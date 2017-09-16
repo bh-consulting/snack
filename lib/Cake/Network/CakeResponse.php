@@ -68,6 +68,7 @@ class CakeResponse {
 		415 => 'Unsupported Media Type',
 		416 => 'Requested range not satisfiable',
 		417 => 'Expectation Failed',
+		429 => 'Too Many Requests',
 		500 => 'Internal Server Error',
 		501 => 'Not Implemented',
 		502 => 'Bad Gateway',
@@ -95,7 +96,7 @@ class CakeResponse {
 		'cpio' => 'application/x-cpio',
 		'cpt' => 'application/mac-compactpro',
 		'csh' => 'application/x-csh',
-		'csv' => array('text/csv', 'application/vnd.ms-excel', 'text/plain'),
+		'csv' => array('text/csv', 'application/vnd.ms-excel'),
 		'dcr' => 'application/x-director',
 		'dir' => 'application/x-director',
 		'dms' => 'application/octet-stream',
@@ -121,6 +122,7 @@ class CakeResponse {
 		'ips' => 'application/x-ipscript',
 		'ipx' => 'application/x-ipix',
 		'js' => 'application/javascript',
+		'jsonapi' => 'application/vnd.api+json',
 		'latex' => 'application/x-latex',
 		'lha' => 'application/octet-stream',
 		'lsp' => 'application/x-lisp',
@@ -263,6 +265,14 @@ class CakeResponse {
 		'xbm' => 'image/x-xbitmap',
 		'xpm' => 'image/x-xpixmap',
 		'xwd' => 'image/x-xwindowdump',
+		'psd' => array(
+			'application/photoshop',
+			'application/psd',
+			'image/psd',
+			'image/x-photoshop',
+			'image/photoshop',
+			'zz-application/zz-winassoc-psd'
+		),
 		'ice' => 'x-conference/x-cooltalk',
 		'iges' => 'model/iges',
 		'igs' => 'model/iges',
@@ -299,7 +309,8 @@ class CakeResponse {
 		'vcf' => 'text/x-vcard',
 		'vtt' => 'text/vtt',
 		'mkv' => 'video/x-matroska',
-		'pkpass' => 'application/vnd.apple.pkpass'
+		'pkpass' => 'application/vnd.apple.pkpass',
+		'ajax' => 'text/html'
 	);
 
 /**
@@ -451,7 +462,7 @@ class CakeResponse {
 
 /**
  * Formats the Content-Type header based on the configured contentType and charset
- * the charset will only be set in the header if the response is of type text/*
+ * the charset will only be set in the header if the response is of type text
  *
  * @return void
  */
@@ -576,7 +587,7 @@ class CakeResponse {
 			if (is_numeric($header)) {
 				list($header, $value) = array($value, null);
 			}
-			if ($value === null) {
+			if ($value === null && strpos($header, ':') !== false) {
 				list($header, $value) = explode(':', $header, 2);
 			}
 			$this->_headers[$header] = is_array($value) ? array_map('trim', $value) : trim($value);
@@ -795,8 +806,8 @@ class CakeResponse {
 /**
  * Sets the correct headers to instruct the client to cache the response.
  *
- * @param string $since a valid time since the response text has not been modified
- * @param string $time a valid time for cache expiry
+ * @param string|int $since a valid time since the response text has not been modified
+ * @param string|int $time a valid time for cache expiry
  * @return void
  */
 	public function cache($since, $time = '+1 day') {
@@ -831,7 +842,7 @@ class CakeResponse {
 			if (!$public && !$private && !$noCache) {
 				return null;
 			}
-			$sharable = $public || ! ($private || $noCache);
+			$sharable = $public || !($private || $noCache);
 			return $sharable;
 		}
 		if ($public) {
@@ -1056,7 +1067,7 @@ class CakeResponse {
  * Returns a DateTime object initialized at the $time param and using UTC
  * as timezone
  *
- * @param string|DateTime $time Valid time string or unix timestamp or DateTime object.
+ * @param DateTime|int|string $time Valid time string or unix timestamp or DateTime object.
  * @return DateTime
  */
 	protected function _getUTCDate($time = null) {
@@ -1138,7 +1149,7 @@ class CakeResponse {
 /**
  * Checks whether a response has not been modified according to the 'If-None-Match'
  * (Etags) and 'If-Modified-Since' (last modification date) request
- * headers headers. If the response is detected to be not modified, it
+ * headers. If the response is detected to be not modified, it
  * is marked as so accordingly so the client can be informed of that.
  *
  * In order to mark a response as not modified, you need to set at least
@@ -1190,9 +1201,6 @@ class CakeResponse {
  * If the method is called with an array as argument, it will set the cookie
  * configuration to the cookie container.
  *
- * @param array $options Either null to get all cookies, string for a specific cookie
- *  or array to set cookie.
- *
  * ### Options (when setting a configuration)
  *  - name: The Cookie name
  *  - value: Value of the cookie
@@ -1216,6 +1224,8 @@ class CakeResponse {
  *
  * `$this->cookie((array) $options)`
  *
+ * @param array $options Either null to get all cookies, string for a specific cookie
+ *  or array to set cookie.
  * @return mixed
  */
 	public function cookie($options = null) {
@@ -1336,7 +1346,7 @@ class CakeResponse {
 			'download' => null
 		);
 
-		if (strpos($path, '..') !== false) {
+		if (strpos($path, '../') !== false || strpos($path, '..\\') !== false) {
 			throw new NotFoundException(__d(
 				'cake_dev',
 				'The requested file contains `..` and will not be read.'
@@ -1406,11 +1416,16 @@ class CakeResponse {
  * @return void
  */
 	protected function _fileRange($file, $httpRange) {
-		list(, $range) = explode('=', $httpRange);
-		list($start, $end) = explode('-', $range);
-
 		$fileSize = $file->size();
 		$lastByte = $fileSize - 1;
+		$start = 0;
+		$end = $lastByte;
+
+		preg_match('/^bytes\s*=\s*(\d+)?\s*-\s*(\d+)?$/', $httpRange, $matches);
+		if ($matches) {
+			$start = $matches[1];
+			$end = isset($matches[2]) ? $matches[2] : '';
+		}
 
 		if ($start === '') {
 			$start = $fileSize - $end;
@@ -1495,9 +1510,10 @@ class CakeResponse {
  * @return bool
  */
 	protected function _clearBuffer() {
-		//@codingStandardsIgnoreStart
-		return @ob_end_clean();
-		//@codingStandardsIgnoreEnd
+		if (ob_get_length()) {
+			return ob_end_clean();
+		}
+		return true;
 	}
 
 /**

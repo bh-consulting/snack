@@ -226,7 +226,8 @@ class ModelIntegrationTest extends BaseModelTest {
 			'scope' => '1 = 1',
 			'type' => 'nested',
 			'__parentChange' => false,
-			'recursive' => -1
+			'recursive' => -1,
+			'level' => null
 		);
 		$this->assertEquals($expected, $TestModel->Behaviors->Tree->settings['Apple']);
 
@@ -1333,7 +1334,7 @@ class ModelIntegrationTest extends BaseModelTest {
 		$Article->useTable = false;
 		$Article->id = 1;
 		$result = $Article->exists();
-		$this->assertTrue($result);
+		$this->assertFalse($result);
 	}
 
 /**
@@ -1616,10 +1617,12 @@ class ModelIntegrationTest extends BaseModelTest {
 	public function testAutoConstructPluginAssociations() {
 		$Comment = ClassRegistry::init('TestPluginComment');
 
-		$this->assertEquals(2, count($Comment->belongsTo), 'Too many associations');
+		$this->assertEquals(3, count($Comment->belongsTo), 'Too many associations');
 		$this->assertFalse(isset($Comment->belongsTo['TestPlugin.User']));
+		$this->assertFalse(isset($Comment->belongsTo['TestPlugin.Source']));
 		$this->assertTrue(isset($Comment->belongsTo['User']), 'Missing association');
 		$this->assertTrue(isset($Comment->belongsTo['TestPluginArticle']), 'Missing association');
+		$this->assertTrue(isset($Comment->belongsTo['Source']), 'Missing association');
 	}
 
 /**
@@ -1993,7 +1996,7 @@ class ModelIntegrationTest extends BaseModelTest {
 					'afterFind' => 'Successfully added by AfterFind'
 				)
 			));
-		$this->assertEquals(self::date(), $result['Something']['updated']);
+		$this->assertEquals(static::date(), $result['Something']['updated']);
 		unset($result['Something']['updated']);
 		$this->assertEquals($expected, $result);
 	}
@@ -2496,5 +2499,18 @@ class ModelIntegrationTest extends BaseModelTest {
 		$model->useTable = false;
 		$model->expects($this->never())->method('getDataSource');
 		$this->assertEmpty($model->schema());
+	}
+
+/**
+ * Tests that calling getColumnType() on a model that is not supposed to use a table
+ * does not trigger any calls on any datasource
+ *
+ * @return void
+ */
+	public function testGetColumnTypeNoDB() {
+		$model = $this->getMock('Example', array('getDataSource'));
+		$model->expects($this->never())->method('getDataSource');
+		$result = $model->getColumnType('filefield');
+		$this->assertEquals('string', $result);
 	}
 }

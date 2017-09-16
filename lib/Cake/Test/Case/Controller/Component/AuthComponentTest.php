@@ -86,7 +86,7 @@ class TestAuthComponent extends AuthComponent {
  * Helper method to add/set an authenticate object instance
  *
  * @param int $index The index at which to add/set the object
- * @param object $object The object to add/set
+ * @param CakeObject $object The object to add/set
  * @return void
  */
 	public function setAuthenticateObject($index, $object) {
@@ -97,7 +97,7 @@ class TestAuthComponent extends AuthComponent {
  * Helper method to get an authenticate object instance
  *
  * @param int $index The index at which to get the object
- * @return object $object
+ * @return CakeObject $object
  */
 	public function getAuthenticateObject($index) {
 		$this->constructAuthenticate();
@@ -108,7 +108,7 @@ class TestAuthComponent extends AuthComponent {
  * Helper method to add/set an authorize object instance
  *
  * @param int $index The index at which to add/set the object
- * @param Object $object The object to add/set
+ * @param CakeObject $object The object to add/set
  * @return void
  */
 	public function setAuthorizeObject($index, $object) {
@@ -118,6 +118,7 @@ class TestAuthComponent extends AuthComponent {
 /**
  * stop method
  *
+ * @param int $status
  * @return void
  */
 	protected function _stop($status = 0) {
@@ -125,7 +126,7 @@ class TestAuthComponent extends AuthComponent {
 	}
 
 	public static function clearUser() {
-		self::$_user = array();
+		static::$_user = array();
 	}
 
 }
@@ -165,7 +166,7 @@ class AuthTestController extends Controller {
  *
  * @var array
  */
-	public $components = array('Session', 'Auth');
+	public $components = array('Session', 'Flash', 'Auth');
 
 /**
  * testUrl property
@@ -176,7 +177,6 @@ class AuthTestController extends Controller {
 
 /**
  * construct method
- *
  */
 	public function __construct($request, $response) {
 		$request->addParams(Router::parse('/auth_test'));
@@ -1093,9 +1093,9 @@ class AuthComponentTest extends CakeTestCase {
 			array('on', 'redirect'),
 			array($CakeRequest, $CakeResponse)
 		);
-		$this->Auth->Session = $this->getMock(
-			'SessionComponent',
-			array('setFlash'),
+		$this->Auth->Flash = $this->getMock(
+			'FlashComponent',
+			array('set'),
 			array($Controller->Components)
 		);
 
@@ -1105,8 +1105,8 @@ class AuthComponentTest extends CakeTestCase {
 		$Controller->expects($this->once())
 			->method('redirect')
 			->with($this->equalTo($expected));
-		$this->Auth->Session->expects($this->once())
-			->method('setFlash');
+		$this->Auth->Flash->expects($this->once())
+			->method('set');
 		$this->Auth->startup($Controller);
 	}
 
@@ -1132,9 +1132,9 @@ class AuthComponentTest extends CakeTestCase {
 			array('on', 'redirect'),
 			array($CakeRequest, $CakeResponse)
 		);
-		$this->Auth->Session = $this->getMock(
-			'SessionComponent',
-			array('setFlash'),
+		$this->Auth->Flash = $this->getMock(
+			'FlashComponent',
+			array('set'),
 			array($Controller->Components)
 		);
 
@@ -1144,8 +1144,8 @@ class AuthComponentTest extends CakeTestCase {
 		$Controller->expects($this->once())
 			->method('redirect')
 			->with($this->equalTo($expected));
-		$this->Auth->Session->expects($this->never())
-			->method('setFlash');
+		$this->Auth->Flash->expects($this->never())
+			->method('set');
 		$this->Auth->startup($Controller);
 	}
 
@@ -1282,14 +1282,47 @@ class AuthComponentTest extends CakeTestCase {
 
 		$this->Controller->response = $this->getMock('CakeResponse', array('_sendHeader'));
 		$this->Controller->response->expects($this->at(0))
-		->method('_sendHeader')
-		->with('HTTP/1.1 403 Forbidden', null);
+			->method('_sendHeader')
+			->with('HTTP/1.1 403 Forbidden', null);
 		$this->Auth->initialize($this->Controller);
 
+		ob_start();
 		$result = $this->Auth->startup($this->Controller);
+		ob_end_clean();
 
 		$this->assertFalse($result);
 		$this->assertEquals('this is the test element', $this->Controller->response->body());
+		$this->assertArrayNotHasKey('Location', $this->Controller->response->header());
+		$this->assertNull($this->Controller->testUrl, 'redirect() not called');
+		unset($_SERVER['HTTP_X_REQUESTED_WITH']);
+	}
+
+/**
+ * test ajax login with no element
+ *
+ * @return void
+ */
+	public function testAjaxLoginResponseCodeNoElement() {
+		$_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
+
+		$url = '/ajax_auth/add';
+		$this->Auth->request->addParams(Router::parse($url));
+		$this->Auth->request->query['url'] = ltrim($url, '/');
+		$this->Auth->request->base = '';
+		$this->Auth->ajaxLogin = false;
+
+		Router::setRequestInfo($this->Auth->request);
+
+		$this->Controller->response = $this->getMock('CakeResponse', array('_sendHeader'));
+		$this->Controller->response->expects($this->at(0))
+			->method('_sendHeader')
+			->with('HTTP/1.1 403 Forbidden', null);
+		$this->Auth->initialize($this->Controller);
+
+		$this->Auth->startup($this->Controller);
+
+		$this->assertArrayNotHasKey('Location', $this->Controller->response->header());
+		$this->assertNull($this->Controller->testUrl, 'redirect() not called');
 		unset($_SERVER['HTTP_X_REQUESTED_WITH']);
 	}
 
@@ -1393,6 +1426,23 @@ class AuthComponentTest extends CakeTestCase {
 		$this->assertEquals('/', $result);
 		$this->assertNull($this->Auth->Session->read('Auth.AuthUser'));
 		$this->assertNull($this->Auth->Session->read('Auth.redirect'));
+	}
+
+/**
+ * test that logout removes the active user data as well for stateless auth
+ *
+ * @return void
+ */
+	public function testLogoutRemoveUser() {
+		$oldKey = AuthComponent::$sessionKey;
+		AuthComponent::$sessionKey = false;
+		$this->Auth->login(array('id' => 1, 'username' => 'mariano'));
+		$this->assertSame('mariano', $this->Auth->user('username'));
+
+		$this->Auth->logout();
+		AuthComponent::$sessionKey = $oldKey;
+
+		$this->assertNull($this->Auth->user('username'));
 	}
 
 /**
@@ -1514,10 +1564,10 @@ class AuthComponentTest extends CakeTestCase {
  * @return void
  */
 	public function testFlashSettings() {
-		$this->Auth->Session = $this->getMock('SessionComponent', array(), array(), '', false);
-		$this->Auth->Session->expects($this->once())
-			->method('setFlash')
-			->with('Auth failure', 'custom', array(1), 'auth-key');
+		$this->Auth->Flash = $this->getMock('FlashComponent', array(), array(), '', false);
+		$this->Auth->Flash->expects($this->once())
+			->method('set')
+			->with('Auth failure', array('element' => 'custom', 'params' => array(1), 'key' => 'auth-key'));
 
 		$this->Auth->flash = array(
 			'element' => 'custom',
@@ -1589,8 +1639,6 @@ class AuthComponentTest extends CakeTestCase {
 /**
  * test that the returned URL doesn't contain the base URL.
  *
- * @see https://cakephp.lighthouseapp.com/projects/42648/tickets/3922-authcomponentredirecturl-prepends-appbaseurl
- *
  * @return void This test method doesn't return anything.
  */
 	public function testRedirectUrlWithBaseSet() {
@@ -1619,6 +1667,20 @@ class AuthComponentTest extends CakeTestCase {
 
 		Configure::write('App', $App);
 		Router::reload();
+	}
+
+/**
+ * Test that redirectUrl() returns '/' if loginRedirect is empty
+ * and Auth.redirect is the login page.
+ *
+ * @return void
+ */
+	public function testRedirectUrlWithoutLoginRedirect() {
+		$this->Auth->loginRedirect = null;
+		$this->Auth->Session->write('Auth.redirect', '/users/login');
+		$this->Auth->request->addParams(Router::parse('/users/login'));
+		$result = $this->Auth->redirectUrl();
+		$this->assertEquals('/', $result);
 	}
 
 /**
@@ -1689,6 +1751,27 @@ class AuthComponentTest extends CakeTestCase {
 		$this->Controller->request['action'] = 'admin_add';
 
 		$this->Auth->startup($this->Controller);
+	}
+
+/**
+ * testStatelessLoginSetUserNoSessionStart method
+ *
+ * @return void
+ */
+	public function testStatelessLoginSetUserNoSessionStart() {
+		$user = array(
+			'id' => 1,
+			'username' => 'mark'
+		);
+
+		AuthComponent::$sessionKey = false;
+		$result = $this->Auth->login($user);
+		$this->assertTrue($result);
+
+		$this->assertTrue($this->Auth->loggedIn());
+		$this->assertEquals($user, $this->Auth->user());
+
+		$this->assertFalse($this->Auth->Session->started());
 	}
 
 /**

@@ -17,7 +17,7 @@
  */
 
 /**
- * Class TestPluginAuthors
+ * TestPluginAuthors
  *
  * @package       Cake.Test.TestApp.Plugin.TestPlugin.Model
  */
@@ -29,8 +29,8 @@ class TestPluginAuthors extends TestPluginAppModel {
 
 	public $validate = array(
 		'field' => array(
-			'notEmpty' => array(
-				'rule' => 'notEmpty',
+			'notBlank' => array(
+				'rule' => 'notBlank',
 				'message' => 'I can haz plugin model validation message',
 			),
 		),

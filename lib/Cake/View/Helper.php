@@ -24,7 +24,7 @@ App::uses('Inflector', 'Utility');
  *
  * @package       Cake.View
  */
-class Helper extends Object {
+class Helper extends CakeObject {
 
 /**
  * Settings for this helper.
@@ -145,9 +145,48 @@ class Helper extends Object {
  * @var array
  */
 	protected $_minimizedAttributes = array(
-		'compact', 'checked', 'declare', 'readonly', 'disabled', 'selected',
-		'defer', 'ismap', 'nohref', 'noshade', 'nowrap', 'multiple', 'noresize',
-		'autoplay', 'controls', 'loop', 'muted', 'required', 'novalidate', 'formnovalidate'
+		'allowfullscreen',
+		'async',
+		'autofocus',
+		'autoplay',
+		'checked',
+		'compact',
+		'controls',
+		'declare',
+		'default',
+		'defaultchecked',
+		'defaultmuted',
+		'defaultselected',
+		'defer',
+		'disabled',
+		'enabled',
+		'formnovalidate',
+		'hidden',
+		'indeterminate',
+		'inert',
+		'ismap',
+		'itemscope',
+		'loop',
+		'multiple',
+		'muted',
+		'nohref',
+		'noresize',
+		'noshade',
+		'novalidate',
+		'nowrap',
+		'open',
+		'pauseonexit',
+		'readonly',
+		'required',
+		'reversed',
+		'scoped',
+		'seamless',
+		'selected',
+		'sortable',
+		'spellcheck',
+		'truespeed',
+		'typemustmatch',
+		'visible'
 	);
 
 /**
@@ -507,7 +546,7 @@ class Helper extends Object {
  *
  * @param string $message Message to be displayed
  * @param string $okCode Code to be executed after user chose 'OK'
- * @param string $cancelCode Code to be executed after user chose 'Cancel'
+ * @param string $cancelCode Code to be executed after user chose 'Cancel', also executed when okCode doesn't return
  * @param array $options Array of options
  * @return string onclick JS code
  */

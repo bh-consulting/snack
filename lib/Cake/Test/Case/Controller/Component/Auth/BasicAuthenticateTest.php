@@ -15,8 +15,6 @@
  * @since         CakePHP(tm) v 2.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-
-App::uses('AuthComponent', 'Controller/Component');
 App::uses('BasicAuthenticate', 'Controller/Component/Auth');
 App::uses('AppModel', 'Model');
 App::uses('CakeRequest', 'Network');
@@ -198,6 +196,28 @@ class BasicAuthenticateTest extends CakeTestCase {
 	}
 
 /**
+ * test authenticate success with header values
+ *
+ * @return void
+ */
+	public function testAuthenticateSuccessFromHeaders() {
+		$_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode('mariano:password');
+		unset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+
+		$request = new CakeRequest('posts/index', false);
+		$request->addParams(array('pass' => array(), 'named' => array()));
+
+		$result = $this->auth->authenticate($request, $this->response);
+		$expected = array(
+			'id' => 1,
+			'user' => 'mariano',
+			'created' => '2007-03-17 01:16:23',
+			'updated' => '2007-03-17 01:18:31'
+		);
+		$this->assertEquals($expected, $result);
+	}
+
+/**
  * test contain success
  *
  * @return void
@@ -254,7 +274,11 @@ class BasicAuthenticateTest extends CakeTestCase {
  */
 	public function testAuthenticateUserFieldsRelatedModelsSuccess() {
 		$User = ClassRegistry::init('User');
-		$User->bindModel(array('hasOne' => array('Article')));
+		$User->bindModel(array('hasOne' => array(
+			'Article' => array(
+				'order' => 'Article.id ASC'
+			)
+		)));
 		$this->auth->settings['recursive'] = 0;
 		$this->auth->settings['userFields'] = array('Article.id', 'Article.title');
 		$request = new CakeRequest('posts/index', false);
