@@ -6,7 +6,7 @@ $this->assign('param_active', 'active');
 echo '<h1>' . __('Edit server parameters') . '</h1>';
 $mainLabelOptions = array('class' => 'col-sm-4 control-label');
 echo $this->Form->create('Parameter', array(
-    'action' => 'edit',
+    'url' => 'edit',
     'novalidate' => true, 
     'autocomplete' => 'off',
     'class' => 'form-horizontal',

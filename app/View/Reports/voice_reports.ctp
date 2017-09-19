@@ -30,7 +30,7 @@ if (isset($directorynumber)) {
 
 
 <br>
-<h2><? echo __('Total Number calls');  
+<h2><?php echo __('Total Number calls');  
     if (isset($directorynumber)) {
         echo " for ".$directorynumber;
     }
@@ -92,7 +92,7 @@ echo $graph;
     echo "</table>";*/
 ?>
 
-<h3><? //echo __('Top calling'); ?></h3>
+<h3><?php //echo __('Top calling'); ?></h3>
 
 <?php
    /* echo "<table class='table table-striped table-condensed'>";

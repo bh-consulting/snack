@@ -4,7 +4,7 @@ $this->assign('param_cluster_active', 'active');
 
 $mainLabelOptions = array('class' => 'col-sm-4 control-label');
 echo $this->Form->create('Parameter', array(
-    'action' => 'edit_cluster',
+    'url' => 'edit_cluster',
     'novalidate' => true, 
     'autocomplete' => 'off',
     'class' => 'form-horizontal',

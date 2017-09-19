@@ -9,7 +9,7 @@
                 <?php echo $this->Session->flash('auth'); ?>
                 <?php //$mainLabelOptions = array('class' => 'col-sm-4 control-label');
                 echo $this->Form->create('Snackuser', array(
-                    'action' => 'login',
+                    'url' => 'login',
                     'novalidate' => true, 
                     'autocomplete' => 'off',
                     'inputDefaults' => array(
@@ -24,7 +24,7 @@
                 <fieldset>
                     <legend>
                     </legend>
-                    <?
+                    <?php
                     echo $this->Form->input(
                         'username',
                         array(
@@ -49,7 +49,7 @@
                     ?>
                 </fieldset>
                 <button class="btn btn-lg btn-primary btn-block" type="submit"><?php echo __('Sign in'); ?></button>
-                <? echo $this->Form->end(); ?>
+                <?php echo $this->Form->end(); ?>
             </div>
         </div>
     </div>

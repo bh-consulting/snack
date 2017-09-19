@@ -205,24 +205,6 @@ $this->assign('systemdetails_general_active', 'active');
                         }
                         ?>
                     </dd>
-                    <dt><?php echo __('Nagios'); ?></dt>
-                    <dd>
-                        <?php
-                        echo $nagiosstate;
-                        if (AuthComponent::user('role') == 'root') {
-                            echo $this->Html->link(
-                                    '<i class="glyphicon glyphicon-refresh glyphicon-white"></i> ' . __('Restart Nagios'), array(
-                                'action' => 'restart',
-                                'nagios',
-                                    ), array(
-                                'class' => 'btn btn-xs btn-danger',
-                                'style' => 'margin-left:30px',
-                                'escape' => false
-                                    )
-                            );
-                        }
-                        ?>
-                    </dd>
                     <dt><?php echo __('Elasticsearch'); ?></dt>
                     <dd>
                         <?php

@@ -53,7 +53,7 @@ class LoglinesController extends AppController {
         $start = $this->start_time();
         
         $arr = $this->init();
-        $constraints=array('ident' => 'freeradius');
+        $constraints=array('ident' => 'radiusd');
         $this->defaultValues($arr['page'], $constraints);
         
         $total_time = $this->stop_time($start);
@@ -257,7 +257,7 @@ class LoglinesController extends AppController {
         $arr = $this->init();
         if (isset($type)) {
             if ($type == "index") { 
-                $constraints=array('ident' => 'freeradius');
+                $constraints=array('ident' => 'radiusd');
             }
             if ($type == "snack_logs") { 
                 $constraints=array('ident' => 'snack');

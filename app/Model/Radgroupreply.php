@@ -10,7 +10,7 @@ class Radgroupreply extends AppModel
     public $validationDomain = 'validation';
     public $validate = array(
         'groupname' => array(
-            'rule' => 'notEmpty',
+            'rule' => 'notBlank',
             'message' => 'Groupname cannot be empty',
             'allowEmpty' => false
         )

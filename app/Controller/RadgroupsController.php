@@ -30,7 +30,7 @@ class RadgroupsController extends AppController {
     }
 
     public function beforeValidateForFilters() {
-        unset($this->Radgroup->validate['groupname']['notEmpty']['required']);
+        unset($this->Radgroup->validate['groupname']['notBlank']['required']);
     }
     
     public function getRegexExpiration($args = array()) {
@@ -464,7 +464,7 @@ class RadgroupsController extends AppController {
 		throw new MethodNotAllowedException();
 	    }
 
-	    $id = is_null($id) ? $this->request->data['Radgroup']['id'] : $id;
+	    $id = is_null($id) ? $this->request->data['RadgroupDelete']['id'] : $id;
 
 	    $this->Checks->delete($this->request, $id);
 

@@ -7,7 +7,7 @@ echo '<h1>' . __('Edit NAS') . ' ' . $this->data['Nas']['nasname'] . '</h1>';
 
 $mainLabelOptions = array('class' => 'col-sm-4 control-label');
 echo $this->Form->create('Nas', array(
-    'action' => 'edit',
+    'url' => 'edit',
     'novalidate' => true, 
     'autocomplete' => 'off',
     'class' => 'form-horizontal',

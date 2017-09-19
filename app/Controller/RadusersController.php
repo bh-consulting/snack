@@ -50,7 +50,7 @@ class RadusersController extends AppController {
     }
 
     public function beforeValidateForFilters() {
-        unset($this->Raduser->validate['username']['notEmpty']['required']);
+        unset($this->Raduser->validate['username']['notBlank']['required']);
     }
 
     public function getRegexExpiration($args = array()) {
@@ -416,12 +416,23 @@ class RadusersController extends AppController {
                     $check = new Radcheck();
                     $check->set('username', $raduser['username']);
                     $check->set('attribute', 'NAS-Port-Type');
-                    $check->set('op', '=~');
-                    $check->set('value', 'Ethernet|Wireless-802.11');
+                    $check->set('op', '+=');
+                    $check->set('value', 'Ethernet');
                     if ($check->save()) {
-                        $results[] = __('<li><b><span class="text-success">SUCCESS</span></b> NAS-Port-Type Ethernet|Wireless-802.11</li>');
+                        $results[] = __('<li><b><span class="text-success">SUCCESS</span></b> NAS-Port-Type Ethernet</li>');
                     } else {
-                        $results[] = __('<li><b><span class="text-danger">ERROR</span></b> NAS-Port-Type Ethernet|Wireless-802.11</li>');
+                        $results[] = __('<li><b><span class="text-danger">ERROR</span></b> NAS-Port-Type Ethernet</li>');
+                    }
+
+                    $check = new Radcheck();
+                    $check->set('username', $raduser['username']);
+                    $check->set('attribute', 'NAS-Port-Type');
+                    $check->set('op', '+=');
+                    $check->set('value', 'Wireless-802.11');
+                    if ($check->save()) {
+                        $results[] = __('<li><b><span class="text-success">SUCCESS</span></b> NAS-Port-Type Wireless-802.11</li>');
+                    } else {
+                        $results[] = __('<li><b><span class="text-danger">ERROR</span></b> NAS-Port-Type Wireless-802.11</li>');
                     }
 
                     if (isset($raduser['vlan'])) {
@@ -794,17 +805,61 @@ class RadusersController extends AppController {
             $nasPortType = $this->request->data['Raduser']['nas-port-type'];
 
             if ($nasPortType == 'both') {
-                $nasPortTypeRegexp = 'Async|Virtual|Ethernet|Wireless-802.11';
+                $checks[$nasPortTypeIndex] = array(
+                    array(
+                        $username,
+                        'NAS-Port-Type',
+                        '+=',
+                        'Async',
+                    ),
+                    array(
+                        $username,
+                        'NAS-Port-Type',
+                        '+=',
+                        'Virtual',
+                    ),
+                    array(
+                        $username,
+                        'NAS-Port-Type',
+                        '+=',
+                        'Ethernet',
+                    ),
+                    array(
+                        $username,
+                        'NAS-Port-Type',
+                        '+=',
+                        'Wireless-802.11',
+                    )
+                );
             } else {
-                $nasPortTypeRegexp = $nasPortType . '|Ethernet|Wireless-802.11';
+                $checks[$nasPortTypeIndex] = array(
+                    array(
+                        $username,
+                        'NAS-Port-Type',
+                        '+=',
+                        $nasPortType,
+                    ),
+                    array(
+                        $username,
+                        'NAS-Port-Type',
+                        '+=',
+                        'Ethernet',
+                    ),
+                    array(
+                        $username,
+                        'NAS-Port-Type',
+                        '+=',
+                        'Wireless-802.11',
+                    )
+                );
             }
 
-            $checks[$nasPortTypeIndex] = array(
+            /*$checks[$nasPortTypeIndex] = array(
                 $username,
                 'NAS-Port-Type',
-                '=~',
+                '+=',
                 $nasPortTypeRegexp,
-            );
+            );*/
 
             if (isset($this->request->data['Raduser']['is_mac']) || isset($this->request->data['Raduser']['is_cert'])) {
                 $checks[] = array(
@@ -815,7 +870,7 @@ class RadusersController extends AppController {
                 );
             }
         } else {
-            $checks[$nasPortTypeIndex] = array($username, 'NAS-Port-Type', '=~', 'Ethernet|Wireless-802.11');
+            //$checks[$nasPortTypeIndex] = array($username, 'NAS-Port-Type', '=~', 'Ethernet|Wireless-802.11');
             $this->request->data['Raduser']['is_cisco'] = 0;
         }
 
@@ -877,8 +932,14 @@ class RadusersController extends AppController {
                 $rads[] = array(
                     $username,
                     'NAS-Port-Type',
-                    '=~',
-                    'Ethernet|Wireless-802.11',
+                    '+=',
+                    'Ethernet',
+                );
+                $rads[] = array(
+                    $username,
+                    'NAS-Port-Type',
+                    '+=',
+                    'Wireless-802.11',
                 );
 
                 $this->setCommonCiscoMacFields($rads);
@@ -919,8 +980,14 @@ class RadusersController extends AppController {
                     array(
                         $username,
                         'NAS-Port-Type',
-                        '=~',
-                        'Ethernet|Wireless-802.11',
+                        '+=',
+                        'Ethernet',
+                    ),
+                    array(
+                        $username,
+                        'NAS-Port-Type',
+                        '+=',
+                        'Wireless-802.11',
                     ),
                     array(
                         $username,
@@ -974,8 +1041,14 @@ class RadusersController extends AppController {
                     array(
                         $username,
                         'NAS-Port-Type',
-                        '=~',
-                        'Ethernet|Wireless-802.11',
+                        '+=',
+                        'Ethernet',
+                    ),
+                    array(
+                        $username,
+                        'NAS-Port-Type',
+                        '+=',
+                        'Wireless-802.11',
                     ),
                     array(
                         $username,
@@ -1015,8 +1088,14 @@ class RadusersController extends AppController {
                     array(
                         $username,
                         'NAS-Port-Type',
-                        '=~',
-                        'Ethernet|Wireless-802.11',
+                        '+=',
+                        'Ethernet',
+                    ),
+                    array(
+                        $username,
+                        'NAS-Port-Type',
+                        '+=',
+                        'Wireless-802.11',
                     ),
                     array(
                         $username,
@@ -1368,8 +1447,7 @@ class RadusersController extends AppController {
             if ($this->request->is('get')) {
                 throw new MethodNotAllowedException();
             }
-
-            $id = is_null($id) ? $this->request->data['Raduser']['id'] : $id;
+            $id = is_null($id) ? $this->request->data['RaduserDelete']['id'] : $id;
             $this->Raduser->id = $id;
 
             // Revoke and remove certificate for user

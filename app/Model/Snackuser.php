@@ -13,8 +13,8 @@ class Snackuser extends AppModel {
                 'rule' => array('isUniqueValue', 'username', 'user'),
                 'message' => 'Username already used',
             ),
-            'notEmpty' => array(
-                'rule' => 'notEmpty',
+            'notBlank' => array(
+                'rule' => 'notBlank',
                 'message' => 'Username cannot be empty',
                 'allowEmpty' => false,
                 'required' => true,
@@ -23,7 +23,7 @@ class Snackuser extends AppModel {
         ),
         'password' => array(
             'required' => array(
-                'rule' => array('notEmpty'),
+                'rule' => array('notBlank'),
                 'message' => 'You have to type a password'
             )
         ),

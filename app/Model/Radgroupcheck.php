@@ -12,7 +12,7 @@ class Radgroupcheck extends AppModel
 
     public $validate = array(
         'groupname' => array(
-            'rule' => 'notEmpty',
+            'rule' => 'notBlank',
             'message' => 'Group name cannot be empty',
             'allowEmpty' => false
         )

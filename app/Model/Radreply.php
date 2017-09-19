@@ -10,7 +10,7 @@ class Radreply extends AppModel
     public $validationDomain = 'validation';
     public $validate = array(
         'username' => array(
-            'rule' => 'notEmpty',
+            'rule' => 'notBlank',
             'message' => 'Username cannot be empty',
             'allowEmpty' => false
         )

@@ -9,7 +9,7 @@ $this->assign('systemdetails_tests_active', 'active');
     <?php
         $mainLabelOptions = array('class' => 'col-sm-4 control-label');
         echo $this->Form->create('SystemDetails', array(
-            'action' => '',
+            'url' => '',
             'novalidate' => true, 
             'autocomplete' => 'off',
             'class' => 'form-horizontal',

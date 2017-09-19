@@ -210,7 +210,7 @@ class RadacctsController extends AppController {
             throw new MethodNotAllowedException();
         }
 
-        $id = is_null($id) ? $this->request->data['Radacct']['id'] : $id;
+        $id = is_null($id) ? $this->request->data['RadacctDelete']['id'] : $id;
 
         $uniqueId = $this->Radacct->field(
             'acctuniqueid',

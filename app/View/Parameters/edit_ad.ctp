@@ -4,7 +4,7 @@ $this->assign('param_ad_active', 'active');
 
 $mainLabelOptions = array('class' => 'col-sm-4 control-label');
 echo $this->Form->create('Parameter', array(
-    'action' => 'edit_ad',
+    'url' => 'edit_ad',
     'novalidate' => true, 
     'autocomplete' => 'off',
     'class' => 'form-horizontal',

@@ -5,7 +5,7 @@ $this->assign('radius_active', 'active');
 $this->assign('nas_active', 'active');
 ?>
 
-<h1><? echo __('Search in all configurations'); ?></h1>
+<h1><?php echo __('Search in all configurations'); ?></h1>
 
 <?php
 $mainLabelOptions = array('class' => 'col-sm-4 control-label');

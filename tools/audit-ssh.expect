@@ -8,7 +8,7 @@ set enablepasswd [lindex $argv 3]
 set passwd [lindex $argv 2]
 set login [lindex $argv 1]
 set hostname [lindex $argv 0]
-spawn ssh -o ConnectTimeout=$timeout -o StrictHostKeyChecking=no $login@$hostname
+spawn ssh -o KexAlgorithms=+diffie-hellman-group1-sha1 -o ConnectTimeout=$timeout -o StrictHostKeyChecking=no $login@$hostname
 set try 0
 
 expect {

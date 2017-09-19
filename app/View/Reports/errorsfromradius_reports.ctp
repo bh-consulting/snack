@@ -34,7 +34,7 @@ echo $this->Form->end($options);
 
 ?>
 
-<h2><? echo __('Users connected on SNACK'); ?></h2>
+<h2><?php echo __('Users connected on SNACK'); ?></h2>
 <?php
     $nb = count($snack_users);
     echo "<h4>$nb connections<br></h4>";
@@ -56,7 +56,7 @@ echo $this->Form->end($options);
     }
 ?>
 
-<h2><? echo __('Failure connections'); ?></h2>
+<h2><?php echo __('Failure connections'); ?></h2>
 <?php
     $nb = count($failures);
     echo "<h4>$nb failures of connections order by users<br></h4>";

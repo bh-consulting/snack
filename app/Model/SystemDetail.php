@@ -243,7 +243,7 @@ class SystemDetail extends AppModel {
             $file->write("\tkey_mgmt=IEEE8021X\n");
             $file->write("\tidentity=\"" . $username . "\"\n");
             $file->write("\tpassword=\"" . $password . "\"\n");
-            $file->write("\tphase2=\"auth=MSCHAPv2\"\n");
+            $file->write("\tphase2=\"MSCHAPv2\"\n");
             $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
             $file->write("}");
             $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
@@ -270,7 +270,7 @@ class SystemDetail extends AppModel {
             $file->write("\tidentity=\"" . $username . "\"\n");
             $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
             $file->write("\tpassword=\"" . $password . "\"\n");
-            $file->write("\tphase2=\"auth=MSCHAPv2\"\n");
+            $file->write("\tphase2=\"MSCHAPv2\"\n");
             $file->write("}");
             $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
             $return = shell_exec($request);

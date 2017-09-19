@@ -23,7 +23,7 @@ class NasController extends AppController {
 
     public function beforeFilter() {
         parent::beforeFilter();
-        $this->Security->unlockedActions = array('addunconfigurednas');
+        $this->Security->unlockedActions = array('addunconfigurednas', 'index', 'delete');
     }
 
     public function isAuthorized($user) {
@@ -38,10 +38,10 @@ class NasController extends AppController {
     }
 
     public function beforeValidateForFilters() {
-        unset($this->Nas->validate['nasname']['notEmpty']['required']);
-        unset($this->Nas->validate['shortname']['notEmpty']['required']);
-        unset($this->Nas->validate['secret']['notEmpty']['required']);
-        unset($this->Nas->validate['backup']['notEmpty']['required']);
+        unset($this->Nas->validate['nasname']['notBlank']['required']);
+        unset($this->Nas->validate['shortname']['notBlank']['required']);
+        unset($this->Nas->validate['secret']['notBlank']['required']);
+        unset($this->Nas->validate['backup']['notBlank']['required']);
     }
 
     public function getRegexSynchronisation($args = array()) {
@@ -309,7 +309,7 @@ class NasController extends AppController {
             throw new MethodNotAllowedException();
         }
 
-        $id = is_null($id) ? $this->request->data['Nas']['id'] : $id;
+        $id = is_null($id) ? $this->request->data['NasDelete']['id'] : $id;
 
         if($this->Nas->delete($id)){
             $this->Session->setFlash(
@@ -607,8 +607,8 @@ class NasController extends AppController {
             $this->set('conf', $results['conf']);
         }
         $this->set('results', $results['results']);
-        //debug($results['results']);
-        $this->exportpdf();        
+        debug($results['results']);
+        //$this->exportpdf();        
     }
 
     public function exportpdf() {

@@ -229,7 +229,7 @@ if (Configure::read('Parameters.role')=="slave") {
     <br/>
     <div class="muninbody">
 
-    <? echo $this->fetch('content'); ?>
+    <?php echo $this->fetch('content'); ?>
 
     <hr/>
  

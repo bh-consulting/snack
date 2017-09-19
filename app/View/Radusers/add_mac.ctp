@@ -1,9 +1,9 @@
-<? 
+<?php 
 $this->extend('/Common/radius_sidebar');
 $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
 ?>
-<h1> <? echo __('Add a passive user with MAC address'); ?></h1>
+<h1> <?php echo __('Add a passive user with MAC address'); ?></h1>
 <?php
 $mainLabelOptions = array('class' => 'col-sm-4 control-label');
 echo $this->Form->create('Raduser', array(

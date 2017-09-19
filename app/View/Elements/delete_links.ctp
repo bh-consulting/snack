@@ -1,7 +1,8 @@
 <?php
 switch ($action) {
     case 'form':
-	echo $this->Form->create($model, array('action' => 'delete'))
+    echo $model;
+	echo $this->Form->create($model."Delete", array('url' => 'delete'))
 	    . $this->Form->hidden('id')
 	    . $this->Form->end();
 
@@ -22,8 +23,8 @@ switch ($action) {
 			    '<i class="glyphicon glyphicon-remove glyphicon-white"></i> ' . __('Delete'),
 			    '#',
 			    array(
-				'onclick' => "$('#{$model}DeleteForm input').val('$id');"
-				    . "$('#{$model}DeleteForm').submit()",
+				'onclick' => "$('#{$model}DeleteId').val('$id');"
+				    . "$('#{$model}DeleteIndexForm').submit()",
 				'escape' => false,
 				'class' => 'btn btn-primary btn-danger'
 			    )

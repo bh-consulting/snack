@@ -56,14 +56,6 @@ $this->assign('param_active', 'active');
                 );
                 ?>
             </li>
-            <li class="<?php echo $this->fetch('param_nagios_active'); ?>">
-                <?php
-                echo $this->Html->link(
-                    __('Nagios'),
-                    array('controller' => 'parameters', 'action' => 'nagios')
-                );
-                ?>
-            </li>
             <li class="<?php echo $this->fetch('param_logs_active'); ?>">
                 <?php
                 echo $this->Html->link(

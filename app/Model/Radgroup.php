@@ -1,4 +1,4 @@
-<?
+<?php
 App::uses('Utils', 'Lib');
 App::import('Model', 'Radusergroup');
 
@@ -17,8 +17,8 @@ class Radgroup extends AppModel {
                 'rule' => array('isUnique', 'groupname'),
                 'message' => 'Groupname already used'
             ),
-            'notEmpty' => array(
-                'rule' => 'notEmpty',
+            'notBlank' => array(
+                'rule' => 'notBlank',
                 'message' => 'Groupname cannot be empty',
                 'allowEmpty' => false,
                 'required' => true,

@@ -15,8 +15,8 @@ class Nas extends AppModel {
 
 	public $validate = array(
 		'nasname' => array(
-			'notEmpty' => array(
-				'rule' => 'notEmpty',
+			'notBlank' => array(
+				'rule' => 'notBlank',
 				'message' => 'You have to type the NAS IP.',
 				'allowEmpty' => false,
                 'required' => true,
@@ -31,24 +31,24 @@ class Nas extends AppModel {
 			),
 		),
         'shortname' => array(
-            'notEmpty' => array(
-                'rule' => 'notempty',
+            'notBlank' => array(
+                'rule' => 'notBlank',
                 'message' => 'You have to type the NAS short name.',
                 'allowEmpty' => false,
                 'required' => true,
             ),
         ),
 		'secret' => array(
-			'notEmpty' => array(
-				'rule' => 'notEmpty',
+			'notBlank' => array(
+				'rule' => 'notBlank',
 				'message' => 'You have to type the NAS secret.',
 				'allowEmpty' => false,
                 'required' => true,
 			),
 		),
         'backup' => array(
-            'notEmpty' => array(
-                'rule' => 'notEmpty',
+            'notBlank' => array(
+                'rule' => 'notBlank',
                 'message' => 'You have to enter if the nas must be backuped or not',
                 'required' => true,
             ),
@@ -1256,7 +1256,7 @@ class Nas extends AppModel {
             $results['conf'][$nasname] = $this->parseConf($infos[$nasname]);
         }
         $results['results'] = $resultsconn;
-        //debug($results['env']);
+        //debug($results);
         return $results;
     }
 

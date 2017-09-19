@@ -35,7 +35,7 @@ echo $this->Form->end($options);
 ?>
 
 
-<h2><? echo __('Errors from NAS'); ?></h2>
+<h2><?php echo __('Errors from NAS'); ?></h2>
 <?php
 
 
@@ -62,7 +62,7 @@ echo $this->Form->end($options);
     echo "</table>";
 ?>
 
-<h2><? echo __('Warnings from NAS'); ?></h2>
+<h2><?php echo __('Warnings from NAS'); ?></h2>
 <?php
     echo "<table class='table table-striped table-condensed'>";
     echo "<th></th>";

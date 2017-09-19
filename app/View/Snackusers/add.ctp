@@ -5,7 +5,7 @@ $this->assign('snackusers_active', 'active');
 ?>
 
 <h1><?php echo __('Add a SNACK User'); ?></h1>
-<?
+<?php
 $mainLabelOptions = array('class' => 'col-sm-4 control-label');
 echo $this->Form->create('Snackuser', array(
     'novalidate' => true, 

@@ -80,7 +80,13 @@ class FiltersComponent extends Component {
                     && !is_array($params[0])
                     && isset($params[1])
                 ) {
-                    $this->constraints[] = $this->controller->$params[0]($params[1]);
+                    if (is_array($params[0])) {
+                        $str = implode(",", $params[0]);
+                    }
+                    else {
+                        $str = $params[0];
+                    }
+                    $this->constraints[] = $this->controller->$str($params[1]);
                 }
                 break;
             }

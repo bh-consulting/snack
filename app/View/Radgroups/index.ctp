@@ -41,7 +41,7 @@ if(!in_array(AuthComponent::user('role'), array('root', 'admin'))){
 }
 ?>
 
-<h1><? echo __('Groups'); ?></h1>
+<h1><?php echo __('Groups'); ?></h1>
 <?php
 echo $this->Html->link(
     '<i class="glyphicon glyphicon-list glyphicon glyphicon-white"></i> ' . __('Add a group'),

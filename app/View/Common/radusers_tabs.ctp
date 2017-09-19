@@ -4,7 +4,7 @@ $this->assign('radius_active', 'active');
 $this->assign('users_active', 'active');
 ?>
 
-<h1><? echo __('Radusers'); ?></h1>
+<h1><?php echo __('Radusers'); ?></h1>
 <div class="tabbable">
     <ul class="nav nav-tabs">
             <li class="<?php echo $this->fetch('radusers_users_active'); ?>">

@@ -4,7 +4,7 @@ $this->assign('sessionsreports_active', 'active');
 ?>
 
 
-<h2><? echo __('Sessions Reports'); ?></h2>
+<h2><?php echo __('Sessions Reports'); ?></h2>
 <?php
     echo "<br/><table class='table table-striped table-condensed'>";
     echo "<th>".__('Start')."</th>";

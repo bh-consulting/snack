@@ -20,8 +20,8 @@ class Raduser extends AppModel {
                 'rule' => array('isUniqueValue', 'username', 'user'),
                 'message' => 'Username already used',
             ),
-            'notEmpty' => array(
-                'rule' => 'notEmpty',
+            'notBlank' => array(
+                'rule' => 'notBlank',
                 'message' => 'Username cannot be empty',
                 'allowEmpty' => false,
                 'required' => true,
@@ -42,8 +42,8 @@ class Raduser extends AppModel {
                 'rule' => 'isMACFormat',
                 'message' => 'This is not a MAC address format.',
             ),
-            'notEmpty' => array(
-                'rule' => 'notEmpty',
+            'notBlank' => array(
+                'rule' => 'notBlank',
                 'message' => 'You have to type a MAC address',
                 'allowEmpty' => false,
             ),
@@ -53,29 +53,29 @@ class Raduser extends AppModel {
             ),
         ),
         'country' => array(
-            'notEmpty' => array(
-                'rule' => 'notEmpty',
+            'notBlank' => array(
+                'rule' => 'notBlank',
                 'message' => 'You have to specify a country.',
                 'allowEmpty' => false,
             ),
     	),
         'province' => array(
-            'notEmpty' => array(
-                'rule' => 'notEmpty',
+            'notBlank' => array(
+                'rule' => 'notBlank',
                 'message' => 'You have to specify a state or province.',
                 'allowEmpty' => false,
             ),
     	),
         'locality' => array(
-            'notEmpty' => array(
-                'rule' => 'notEmpty',
+            'notBlank' => array(
+                'rule' => 'notBlank',
                 'message' => 'You have to specify a locality.',
                 'allowEmpty' => false,
             ),
     	),
         'organization' => array(
-            'notEmpty' => array(
-                'rule' => 'notEmpty',
+            'notBlank' => array(
+                'rule' => 'notBlank',
                 'message' => 'You have to specify an organization.',
                 'allowEmpty' => false,
             ),

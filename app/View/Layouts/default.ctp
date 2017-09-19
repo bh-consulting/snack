@@ -99,15 +99,6 @@ $cakeDescription = __('SNACK');
                             ),
                             array()
                         ) . '</li>';    
-                    echo '<li class="' . $this->fetch('nagios_active') . '">' .
-                        $this->Html->link(
-                            __('Nagios'),
-                            array(
-                                'controller' => 'nagios',
-                                'action' => 'index',
-                            ),
-                            array()
-                        ) . '</li>';
                     echo '<li class="' . $this->fetch('munin_active') . '">' .
                         $this->Html->link(
                             __('Munin'),
@@ -242,14 +233,14 @@ if (Configure::read('Parameters.role')=="slave") {
 </div>
 <!--<div class="container">-->
     <div class="bhbody">
-    <? echo $this->fetch('content'); ?>
+    <?php echo $this->fetch('content'); ?>
     <hr/>
     </div>
     
     <div class="col-sm-offset-1 col-sm-11">
     <span class="flags">
-    <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-fr', 'alt' => __('French'))), array('controller' => 'app', 'action' => 'changeLang', 'fra'), array('escape' => false)); ?>
-    <? echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-us', 'alt' => __('English'))), array('controller' => 'app', 'action' => 'changeLang', 'eng'), array('escape' => false)); ?>
+    <?php echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-fr', 'alt' => __('French'))), array('controller' => 'app', 'action' => 'changeLang', 'fra'), array('escape' => false)); ?>
+    <?php echo $this->Html->link($this->Html->image('blank.gif', array('class' => 'flag flag-us', 'alt' => __('English'))), array('controller' => 'app', 'action' => 'changeLang', 'eng'), array('escape' => false)); ?>
     </span>
     <br/>
 <?php

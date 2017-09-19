@@ -4,7 +4,7 @@ $this->assign('radius_active', 'active');
 $this->assign('logs_active', 'active');
 ?>
 
-<h1><? echo __('Logs'); ?></h1>
+<h1><?php echo __('Logs'); ?></h1>
 <?php
 
 echo $this->Form->create();

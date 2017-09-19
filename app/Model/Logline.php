@@ -52,7 +52,7 @@ class Logline extends AppModel {
             "size" => 250,
         )));
         $data_string = json_encode($data, TRUE);
-        //debug($data_string);
+        debug($data_string);
         $url = 'http://localhost:9200/_search';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);                                                                   
@@ -63,10 +63,11 @@ class Logline extends AppModel {
         $data = curl_exec($ch);
         curl_close($ch);
         $data_decode = json_decode($data, true);
-        //var_dump($data_decode);
+        var_dump($data_decode);
         foreach ($data_decode["aggregations"]["hosts"]["buckets"] as $data) {
             $nas[] = $data['key'];
         }
+        debug($nas);
         return $nas;
     }
 
@@ -133,11 +134,9 @@ class Logline extends AppModel {
                     $arrmust[] = array("prefix" => array("message" => $options['string']));
                 }
             }
-            else {
-                if (isset($options['string'])) {
-                    $arrmust[] = array("match_phrase_prefix" => array("message" => $options['string']));
-                }
-            }
+        }
+        if (isset($options['string'])) {
+            $arrmust[] = array("match_phrase_prefix" => array("message" => $options['string']));
         }
 
         /*if (isset($options['string'])) {
@@ -160,7 +159,7 @@ class Logline extends AppModel {
         $data["size"] = $pageSize;
         $data["sort"] = array(array("@timestamp" => array("order" => "desc")));
         //$data["facets"] = new \stdClass();
-
+        //debug($arrmust);
         //debug($data);
         $data_string = json_encode($data, TRUE);
         //debug($data_string);

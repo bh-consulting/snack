@@ -23,7 +23,7 @@ if (count($listnas)>1) {
     }
 
     echo $this->Form->create('Loglines', array(
-        'action' => $action,
+        'url' => $action,
         'novalidate' => true, 
         'autocomplete' => 'off',
         'class' => 'form-inline',
