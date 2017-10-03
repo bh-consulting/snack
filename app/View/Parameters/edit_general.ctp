@@ -4,7 +4,7 @@ $this->assign('param_active', 'active');
 
 $mainLabelOptions = array('class' => 'col-sm-4 control-label');
 echo $this->Form->create('Parameter', array(
-    'action' => 'edit',
+    'url' => 'edit_general',
     'novalidate' => true, 
     'autocomplete' => 'off',
     'class' => 'form-horizontal',
@@ -52,6 +52,16 @@ $myLabelOptions = array('text' => __('Locality'));
 echo $this->Form->input('localityName', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
 $myLabelOptions = array('text' => __('Organization'));
 echo $this->Form->input('organizationName', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
+echo $this->Form->input('cleartext', array(
+    'type' => 'checkbox',
+    'between' => '',
+    'after'   => '',
+    'class' => '', 
+    'before' => '<label class="col-sm-4 control-label">'.__('Regenerate CA (Warning : all certificates will be deleted)').'</label><div class="col-sm-1">',
+    'between' => '',
+    'after'   => '</div>',
+    'label' => false,
+));
 ?>
 </dl>
 

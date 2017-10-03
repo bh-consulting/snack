@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ ! $# -eq 2 ]
+then
+	echo "Usage: revocationCheck CertsDirectory Username"
+	exit 1
+else
+	CERTSPATH=$1
+        USERNAME=$2
+fi
+
+# Check if certificate is revoked.
+openssl verify  -CApath $CERTSPATH/certs -crl_check ${CERTSPATH}/users/${USERNAME}_cert.pem
+
+if [ ! $? -eq 0 ]
+then
+	echo "Certificate is revoked!"
+	exit 1
+fi
+
+exit 0

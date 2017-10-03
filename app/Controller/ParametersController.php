@@ -62,39 +62,6 @@ class ParametersController extends AppController {
         //}
     }
     
-    public function edit() {
-        $params = $this->Parameter->read();
-        if ($this->request->is('post')) {
-            Utils::cleanPath($this->request->data['Parameter']['scriptsPath']);
-            Utils::cleanPath($this->request->data['Parameter']['certsPath']);
-            if ($this->request->data['Parameter']['smtp_password'] == '') {
-                $this->request->data['Parameter']['smtp_password'] = $params['smtp_password'];
-            }
-            /* if ($this->request->data['Parameter']['proxy_password'] == '') {
-                $this->request->data['Parameter']['proxy_password'] = $params['proxy_password'];
-            } */
-            $this->Parameter->set($this->request->data);
-
-            if ($this->Parameter->save()) {
-                $this->Session->setFlash(
-                    __('Parameters have been updated.'),
-                    'flash_success'
-                );
-                Utils::userlog(__('Parameters have been updated.'));
-                
-                $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash(
-                    __('Unable to update parameters.'),
-                    'flash_error'
-                );
-                Utils::userlog(__('Unable to update parameters.'), 'error');
-            }
-        } else {
-            $this->request->data = $this->Parameter->read();
-        }
-    }
-    
     public function edit_general() {
         $params = $this->Parameter->read();
         if ($this->request->is('post')) {

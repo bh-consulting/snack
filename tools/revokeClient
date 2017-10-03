@@ -1,0 +1,33 @@
+#!/bin/sh
+
+if [ ! $# -eq 2 ]
+then
+	echo "Usage: revokeClient CertsDirectory Username"
+	exit 1
+else
+	CERTSPATH=$1
+        USERNAME=$2
+fi
+
+
+USERCERT=${USERNAME}_cert.pem
+
+# Revoke certificate.
+openssl ca -config /etc/ssl/openssl.cnf -revoke ${CERTSPATH}/users/${USERCERT}
+
+if [ ! $? -eq 0 ]
+then
+	echo "Certificate revocation failed!"
+	exit 5
+fi
+
+# Certificate revocation list update.
+openssl ca -config /etc/ssl/openssl.cnf -gencrl -out ${CERTSPATH}/crl/crl.pem
+
+if [ ! $? -eq 0 ]
+then
+	echo "Revocation list update failed!"
+	exit 4
+fi
+
+exit 0

@@ -1054,7 +1054,7 @@ class RadusersController extends AppController {
                         $username,
                         'EAP-Type',
                         ':=',
-                        'EAP-TLS'
+                        'TLS'
                     )
                 );
                 $this->setCommonCiscoMacFields($rads);
@@ -1559,6 +1559,7 @@ class RadusersController extends AppController {
 
         // Create new certificate
         $result = Utils::shell($command);
+        Utils::userlog($command);
         Utils::userlog(__('created certificate for user %s', $userID));
 
         switch ($result['code']) {

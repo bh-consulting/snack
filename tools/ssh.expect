@@ -1,0 +1,51 @@
+#!/usr/bin/expect
+
+#Usage ssh.expect <host> <ssh user> <ssh password>
+
+set timeout 15
+set cmd [lindex $argv 4]
+set enablepasswd [lindex $argv 3]
+set passwd [lindex $argv 2]
+set login [lindex $argv 1]
+set hostname [lindex $argv 0]
+spawn ssh -o KexAlgorithms=+diffie-hellman-group1-sha1 -o StrictHostKeyChecking=no $login@$hostname
+
+expect {
+    "*?assword" {
+    	send "$passwd\n"
+    }
+    "*#" {
+        send "terminal length 0\n"
+        expect "*#"
+        send "$cmd\n"
+        expect "*#"
+        send "exit\n"
+    }
+}
+
+expect {
+    "*>" {
+    	send "enable\n"
+    	expect "*?assword"
+	send "$enablepasswd\n"
+    }
+    "*#" {
+        send "terminal length 0\n"
+        expect "*#"
+        send "$cmd\n"
+        expect "*#"
+        send "exit\n"
+    }
+}
+
+expect {
+    "*#" {
+	send "terminal length 0\n"
+	expect "*#"
+	send "$cmd\n"
+	expect "*#"
+	send "exit\n"
+    }
+}
+
+

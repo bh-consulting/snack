@@ -42,15 +42,8 @@ echo $this->Html->link(
     array('controller' => 'snackusers', 'action' => 'add'),
     array('escape' => false, 'class' => 'btn btn-primary')
 );
-
-if(AuthComponent::user('role') == 'root'){
-    echo $this->element(
-        'delete_links',
-        array('action' => 'form', 'model' => 'Snackuser')
-    );
-}
 ?>
-<br />
+<br /><br />
 <div col="col-sm-6">
 <table class="table table-hover table-bordered">
     <thead>

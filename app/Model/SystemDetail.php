@@ -165,7 +165,7 @@ class SystemDetail extends AppModel {
 
     /* Get name */
     function getName() {
-        $values = preg_grep("/Issuer: C=FR, ST=France, O=B.H. Consulting, CN=/", file(Utils::getServerCertPath()));
+        $values = preg_grep("/Issuer: .* CN=/", file(Utils::getServerCertPath()));
         foreach ( $values as $val ) {
             if( preg_match('/\Issuer:.*CN=(.*)/', $val, $matches)) {
                 continue;
@@ -233,7 +233,7 @@ class SystemDetail extends AppModel {
             $file->write("\tphase2=\"auth=PAP\"\n");
             $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
             $file->write("}");
-            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
+            $request = Configure::read('Parameters.scriptsPath'). "/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
             $return = shell_exec($request);
         } elseif ($authtype == "EAP-TTLS-MSCHAPV2") {
             $file = new File(APP . 'tmp/eap.conf', true, 0644);
@@ -246,7 +246,7 @@ class SystemDetail extends AppModel {
             $file->write("\tphase2=\"MSCHAPv2\"\n");
             $file->write("\tca_cert=\"" . Utils::getServerCertPath() . "\"\n");
             $file->write("}");
-            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
+            $request = Configure::read('Parameters.scriptsPath'). "/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
             $return = shell_exec($request);
         } elseif ($authtype == "EAP-TLS") {
             $file = new File(APP . 'tmp/eap.conf', true, 0644);
@@ -259,7 +259,7 @@ class SystemDetail extends AppModel {
             $file->write("\tclient_cert=\"" . Utils::getUserCertsPemPath($username) . "\"\n");
             $file->write("\tprivate_key=\"" . Utils::getUserKeyPemPath($username) . "\"\n");
             $file->write("}");
-            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
+            $request = Configure::read('Parameters.scriptsPath'). "/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
             $return = shell_exec($request);
         } elseif ($authtype == "EAP-PEAP-MSCHAPV2") {
             $file = new File(APP . 'tmp/eap.conf', true, 0644);
@@ -272,7 +272,7 @@ class SystemDetail extends AppModel {
             $file->write("\tpassword=\"" . $password . "\"\n");
             $file->write("\tphase2=\"MSCHAPv2\"\n");
             $file->write("}");
-            $request = "/home/snack/interface/tools/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
+            $request = Configure::read('Parameters.scriptsPath'). "/" . $this->eapol . " -c /home/snack/interface/app/tmp/eap.conf -a".$nasname." -p1812 -s".$nassecret;
             $return = shell_exec($request);
         } else {
             $results[$username]['res'] = "NA";
@@ -374,11 +374,6 @@ class SystemDetail extends AppModel {
         foreach ($nas as $n) {
             $nasname=$n['nas']['nasname'];
             $shortname=$n['nas']['shortname'];
-            /*$return = shell_exec("export NAS_IP_ADDRESS=".$nasname." ;
-                                  export USER_NAME=AUTO ;
-                                  export ACCT_STATUS_TYPE=Write ;
-                                   /home/snack/scripts/backup_create.sh");*/
-            //echo "RETURN : ".$return;
             if ($nasname != "127.0.0.1") { 
                 if ($n['nas']['backup']) {
                     $backup = $backupModel->query("select * from backups where nas='".$nasname."' order by id desc limit 1;");

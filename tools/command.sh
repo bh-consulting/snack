@@ -1,7 +1,7 @@
 #!/bin/bash
 # Maintainer Guillaume Roche groche@guigeek.org
 #
-SCRPATH=/home/snack/scripts
+SCRPATH=/home/snack/interface/tools
 
 usage() {
     echo -en "Usage:\t$1 host info login password enablepassword\nContact: <groche@guigeek.org>\n"

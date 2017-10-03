@@ -1,0 +1,127 @@
+#!/bin/bash
+# Maintainer Guillaume Roche groche@guigeek.org
+# ./regenerateCA LU Luxembourg Luxembourg STM
+
+DEST_PATH=/home/snack/cert
+CA_KEY=cakey.pem
+CA_REQ=careq.pem
+CA_CERT=cacert.pem
+CA_CERT_CER=cacert.cer
+RADIUS_KEY=radius_key.pem
+RADIUS_REQ=radius_req.pem
+RADIUS_CERT=radius_cert.pem
+CERT_VALIDITY=3650
+
+OUT=/tmp/regenerateCA.log
+LOG=/tmp/regenerateCA.err
+
+#countryName="FR"
+#stateOrProvinceName="France"
+#localityName="Nancy"
+#organizationName="B.H. Consulting"
+countryName=$1
+stateOrProvinceName=$2
+localityName=$3
+organizationName=$4
+commonName="snack"
+
+usage() {
+	echo -en "Usage:\t$0 countryName stateOrProvinceName localityName organizationName\nContact: <groche@guigeek.org>\n"
+}
+
+if [[ "$#" -ne 4 ]]; then
+	echo "Illegal number of parameters"
+	usage
+	exit
+fi
+
+# Erase all certificates
+rm -rf $DEST_PATH 
+update-ca-certificates
+# Create new squeleton for directory
+mkdir $DEST_PATH $DEST_PATH/users $DEST_PATH/certs $DEST_PATH/crl $DEST_PATH/newcerts $DEST_PATH/private
+chmod 700 $DEST_PATH/private
+touch $DEST_PATH/index.txt
+touch $DEST_PATH/index.txt.attr
+echo "1000" > $DEST_PATH/serial
+echo "01" > $DEST_PATH/crlnumber
+
+# Creation of the Authority Certificate (CA)
+# Création du certificat d'autorité (CA)
+echo "Generates certificates ... Could take a long time."
+echo "Generate $DEST_PATH/private/$CA_KEY"
+openssl genrsa -out $DEST_PATH/private/$CA_KEY 4096 >> $OUT 2>>$LOG
+
+echo "Generate $DEST_PATH/private/$CA_REQ"
+openssl req \
+		-new \
+		-key $DEST_PATH/private/$CA_KEY \
+		-subj /countryName="$countryName"/stateOrProvinceName="$stateOrProvinceName"/localityName="$localityName"/organizationName="$organizationName"/commonName="$commonName"/ \
+		-out $DEST_PATH/private/$CA_REQ >> $OUT 2>>$LOG
+
+echo "Generate $DEST_PATH/private/$CA_CERT"
+openssl ca \
+		-config /etc/ssl/openssl.cnf \
+		-create_serial \
+		-days $CERT_VALIDITY \
+		-batch \
+		-out $DEST_PATH/private/$CA_CERT \
+		-keyfile $DEST_PATH/private/$CA_KEY \
+		-selfsign \
+		-extensions v3_ca \
+		-infiles $DEST_PATH/private/$CA_REQ >> $OUT 2>>$LOG
+		
+echo "Generate $DEST_PATH/apache.key"
+openssl req -new -x509 -days $CERT_VALIDITY -nodes \
+		-subj /countryName="$countryName"/stateOrProvinceName="$stateOrProvinceName"/localityName="$localityName"/organizationName="$organizationName"/commonName="$commonName"/ \
+		-out $DEST_PATH/apache.pem \
+		-keyout $DEST_PATH/apache.key >> $OUT 2>>$LOG
+
+echo "Generate $DEST_PATH/private/$CA_CERT_CER"
+openssl x509 \
+		-outform der \
+		-in $DEST_PATH/private/$CA_CERT \
+		-out $DEST_PATH/private/$CA_CERT_CER >> $OUT 2>>$LOG
+
+
+# Creation of the radius certificate
+# Création du certificat authentifiant le server radius
+echo "Generate freeradius certificate ... Could take a long time."
+echo "Generate $DEST_PATH/private/$RADIUS_KEY"
+openssl genrsa -out $DEST_PATH/private/$RADIUS_KEY 4096 >> $OUT 2>>$LOG
+
+echo "Generate $DEST_PATH/private/$RADIUS_REQ"
+openssl req \
+		-config /etc/ssl/openssl.cnf -new -key $DEST_PATH/private/$RADIUS_KEY \
+		-subj /countryName="$countryName"/stateOrProvinceName="$stateOrProvinceName"/localityName="$localityName"/organizationName="$organizationName"/commonName=$(hostname)/ \
+		-out $DEST_PATH/private/$RADIUS_REQ \
+		-days $CERT_VALIDITY >> $OUT 2>>$LOG
+
+echo "Generate $DEST_PATH/private/$RADIUS_REQ"
+openssl ca \
+		-config /etc/ssl/openssl.cnf \
+		-policy policy_anything \
+		-out $DEST_PATH/private/$RADIUS_CERT \
+		-days $CERT_VALIDITY \
+		-batch \
+		-extensions xpserver_ext \
+		-infiles $DEST_PATH/private/$RADIUS_REQ >> $OUT 2>>$LOG
+
+# First CRL Generation + link to permit revocation verifications
+# Première génération de la CRL + permission de révocation
+echo "Generates certificates revocation list... Could take a long time."
+openssl ca \
+		-config /etc/ssl/openssl.cnf \
+		-gencrl \
+		-out $DEST_PATH/crl/crl.pem >> $OUT 2>>$LOG
+
+HASH=`openssl x509 -noout -hash -in $DEST_PATH/private/$CA_CERT`
+ln -s $DEST_PATH/private/$CA_CERT $DEST_PATH/certs/$HASH.0 || true
+ln -s $DEST_PATH/crl/crl.pem $DEST_PATH/certs/$HASH.r0 || true
+
+dd if=/dev/urandom of=$DEST_PATH/random count=2 >> $OUT 2>>$LOG
+openssl dhparam -out $DEST_PATH/dh -check -text -5 1024 >> $OUT 2>>$LOG
+
+ln -s $DEST_PATH/private/$CA_CERT $DEST_PATH/$CA_CERT || true
+ln -s $DEST_PATH/private/$CA_CERT_CER $DEST_PATH/$CA_CERT_CER || true
+/home/snack/interface/tools/fixperms.sh
