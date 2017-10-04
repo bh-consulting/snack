@@ -52,7 +52,7 @@ $myLabelOptions = array('text' => __('Locality'));
 echo $this->Form->input('localityName', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
 $myLabelOptions = array('text' => __('Organization'));
 echo $this->Form->input('organizationName', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
-echo $this->Form->input('cleartext', array(
+echo $this->Form->input('resetCA', array(
     'type' => 'checkbox',
     'between' => '',
     'after'   => '',

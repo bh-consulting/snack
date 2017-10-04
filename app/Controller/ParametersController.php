@@ -66,14 +66,28 @@ class ParametersController extends AppController {
         $params = $this->Parameter->read();
         if ($this->request->is('post')) {
             $this->Parameter->set($this->request->data);
+            
             if ($this->Parameter->save()) {
                 $this->Session->setFlash(
                     __('Parameters have been updated.'),
                     'flash_success'
                 );
                 Utils::userlog(__('Parameters have been updated.'));
-                
-                $this->redirect(array('action' => 'index'));
+                if ($this->request->data['Parameter']['resetCA'] == "1") {
+                    $command = 'sudo '.Configure::read('Parameters.scriptsPath')
+                    . '/regenerateCA '
+                    . '"' . $this->request->data['Parameter']['countryName'] . '" '
+                    . '"' . $this->request->data['Parameter']['stateOrProvinceName'] . '" '
+                    . '"' . $this->request->data['Parameter']['localityName'] . '" '
+                    . '"' . $this->request->data['Parameter']['organizationName'] . '"';
+                    shell_exec($command);
+                    $this->Session->setFlash(
+                        __('CA has been regenerated.'),
+                        'flash_success'
+                    );
+                    Utils::userlog(__('CA has been regenerated.'));
+                }
+                //$this->redirect(array('action' => 'index'));
             } else {
                 $this->Session->setFlash(
                     __('Unable to update parameters.'),
