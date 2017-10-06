@@ -125,3 +125,7 @@ openssl dhparam -out $DEST_PATH/dh -check -text -5 1024 >> $OUT 2>>$LOG
 ln -s $DEST_PATH/private/$CA_CERT $DEST_PATH/$CA_CERT || true
 ln -s $DEST_PATH/private/$CA_CERT_CER $DEST_PATH/$CA_CERT_CER || true
 /home/snack/interface/tools/fixperms.sh
+
+# Restart services
+service freeradius restart
+service apache2 restart
