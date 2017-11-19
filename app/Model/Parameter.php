@@ -28,13 +28,13 @@ class Parameter extends AppModel {
         'scriptsPath' => array(
             'type' => 'string',
             'null' => false,
-            'default' => '',
+            'default' => '/home/snack/interface/tools',
             'length' => '255',
         ),
         'certsPath' => array(
             'type' => 'string',
             'null' => false,
-            'default' => '',
+            'default' => '/home/snack/cert',
             'length' => '255',
         ),
         'countryName' => array(

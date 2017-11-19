@@ -440,6 +440,47 @@ class ParametersController extends AppController {
         $this->set('delete_dates', $delete_dates);
         $this->set('delete_date', $delete_date);
     }
+
+    public function install() {
+        $this->Parameter->read();
+        $this->layout = 'install';
+        if ($this->request->is('post')) {
+            $this->Parameter->set($this->request->data);
+            
+            if ($this->Parameter->save()) {
+                $this->Session->setFlash(
+                    __('Parameters have been updated.'),
+                    'flash_success'
+                );
+                Utils::userlog(__('Parameters have been updated.'));
+                $command = 'sudo '.Configure::read('Parameters.scriptsPath')
+                . '/regenerateCA '
+                . '"' . $this->request->data['Parameter']['countryName'] . '" '
+                . '"' . $this->request->data['Parameter']['stateOrProvinceName'] . '" '
+                . '"' . $this->request->data['Parameter']['localityName'] . '" '
+                . '"' . $this->request->data['Parameter']['organizationName'] . '"';
+                shell_exec($command);
+                $this->Session->setFlash(
+                    __('CA has been regenerated.'),
+                    'flash_success'
+                );
+                Utils::userlog(__('CA has been regenerated.'));
+                $this->Session->setFlash(
+                    __('This page will be redirected in 10s.'),
+                    'flash_success'
+                );
+                $this->redirect(array('controller' => 'radusers', 'action' => 'index'));
+            } else {
+                $this->Session->setFlash(
+                    __('Unable to update parameters.'),
+                    'flash_error'
+                );
+                Utils::userlog(__('Unable to update parameters.'), 'error');
+            }
+        } else {
+            $this->request->data = $this->Parameter->read();
+        }
+    }
 }
 
 ?>

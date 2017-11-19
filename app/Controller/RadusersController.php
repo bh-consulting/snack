@@ -164,6 +164,11 @@ class RadusersController extends AppController {
                         break;
                 }
             }
+        } else {
+            $path = Configure::read('Parameters.certsPath')."/cacert.cer";
+            if (!file_exists($path)) {
+                $this->redirect(array('controller' => 'Parameters', 'action' => 'install'));
+            }
         }
 
         // Filters

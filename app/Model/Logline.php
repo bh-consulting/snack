@@ -52,7 +52,7 @@ class Logline extends AppModel {
             "size" => 250,
         )));
         $data_string = json_encode($data, TRUE);
-        debug($data_string);
+        #debug($data_string);
         $url = 'http://localhost:9200/_search';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);                                                                   
@@ -63,11 +63,11 @@ class Logline extends AppModel {
         $data = curl_exec($ch);
         curl_close($ch);
         $data_decode = json_decode($data, true);
-        var_dump($data_decode);
+        #var_dump($data_decode);
         foreach ($data_decode["aggregations"]["hosts"]["buckets"] as $data) {
             $nas[] = $data['key'];
         }
-        debug($nas);
+        #debug($nas);
         return $nas;
     }
 

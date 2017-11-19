@@ -54,7 +54,11 @@ if (!empty($loglines)) {
 
             switch ($field) {
             case 'datetime':
-                $date = new DateTime($logline['Logline'][$field]);
+                if (preg_match("/(.*)\.(\d{4})\d{5}(.*)/", $logline['Logline'][$field], $matches)) {
+                    $date = new DateTime($matches[1].".".$matches[2].$matches[3]);
+                } else {
+                    $date = new DateTime($logline['Logline'][$field]);
+                }
                 echo $this->Html->link(
                     $date->format('Y-m-d H:i:s')    
                     ,

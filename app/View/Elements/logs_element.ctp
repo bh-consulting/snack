@@ -91,7 +91,6 @@ if (!empty($loglines)) {
             switch ($field) {
             case 'datetime':
                 if (preg_match("/(.*)\.(\d{4})\d{5}(.*)/", $logline['Logline'][$field], $matches)) {
-                    //echo $logline['Logline'][$field];
                     $date = new DateTime($matches[1].".".$matches[2].$matches[3]);
                 } else {
                     $date = new DateTime($logline['Logline'][$field]);
