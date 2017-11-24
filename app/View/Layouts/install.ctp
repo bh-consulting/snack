@@ -123,6 +123,7 @@ echo $this->Html->script('backups');
 echo $this->Html->script('checkboxRangeSelection');
 echo $this->Html->script('jquery.bootstrap.wizard');
 echo $this->Html->script('snack');
+echo $this->Html->script('snack-ca-regenerate');
 echo $this->fetch('script');
 ?>
 </body>

@@ -1,7 +1,7 @@
 <?php
 $mainLabelOptions = array('class' => 'col-sm-4 control-label');
 echo $this->Form->create('Parameter', array(
-    'url' => 'install',
+    //'url' => 'install',
     'novalidate' => true, 
     'autocomplete' => 'off',
     'class' => 'form-horizontal',
@@ -19,8 +19,10 @@ echo $this->Form->create('Parameter', array(
 
 <h4><?php echo __('Certificates configuration:'); ?></h4>
 <dl class="well dl-horizontal">
+<div id="alert-ca">
+    
+</div>
 <?php
-
 $myLabelOptions = array('text' => __('Country'));
 echo $this->Form->input('countryName', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
 $myLabelOptions = array('text' => __('State or province'));
@@ -31,16 +33,10 @@ $myLabelOptions = array('text' => __('Organization'));
 echo $this->Form->input('organizationName', array('label' => array_merge($mainLabelOptions, $myLabelOptions)));
 ?>
 </dl>
-
-<?php
-$options = array(
-    'label' => __('Generate Certificates'),
-    'div' => array(
-        'class' => 'form-group',
-    ),
-    'class' => 'btn btn-primary',
-    'before' => '<div class="col-sm-offset-4 col-sm-4">',
-    'after' => '</div>'
-);
-echo $this->Form->end($options);
-?>
+<div class="col-sm-offset-3 col-sm-6" id="loadingmsg">
+</div>
+<div class="col-sm-offset-5 col-sm-4" id="loadingicon">
+</div>
+<div class="col-sm-offset-4 col-sm-4">
+    <a class="btn btn-primary" href="#" onClick="generateCA();" role="button">Generate Certificates</a>
+</div>

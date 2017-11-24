@@ -481,6 +481,34 @@ class ParametersController extends AppController {
             $this->request->data = $this->Parameter->read();
         }
     }
+
+    public function regenerateCA() {
+        $this->Parameter->read();
+        $this->layout = 'ajax';
+        if ($this->request->is('post')) {
+            $this->request->data['Parameter'] = $this->request->data;
+            $this->Parameter->set($this->request->data);
+            if ($this->Parameter->save()) {
+                Utils::userlog(__('Parameters have been updated.'));
+                //echo Configure::read('Parameters.scriptsPath');
+                $command = 'sudo '.Configure::read('Parameters.scriptsPath')
+                . '/regenerateCA '
+                . '"' . $this->request->data['Parameter']['countryName'] . '" '
+                . '"' . $this->request->data['Parameter']['stateOrProvinceName'] . '" '
+                . '"' . $this->request->data['Parameter']['localityName'] . '" '
+                . '"' . $this->request->data['Parameter']['organizationName'] . '"';
+                echo "OK";
+                //echo $command;
+                shell_exec($command);
+                Utils::userlog(__('CA has been regenerated.'));
+            } else {
+                echo "NOK";
+                Utils::userlog(__('Unable to update parameters.'), 'error');
+            }
+        } else {
+            $this->request->data = $this->Parameter->read();
+        }
+    }
 }
 
 ?>
