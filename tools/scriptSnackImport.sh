@@ -81,3 +81,5 @@ if [ $force == 1 ]; then
     $PATHLOCAL/migrateRadcheckforFreeradius3-x.sh
 fi
 rm -rf $TEMP/$DIR
+service apache2 restart
+service freeradius restart
