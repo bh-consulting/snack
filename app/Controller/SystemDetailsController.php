@@ -225,11 +225,14 @@ class SystemDetailsController extends AppController {
                     //debug("test");
                     //$cmd = "sudo /home/snack/interface/tools/scriptSnackImport.sh ".APP."webroot/conf/".$path;
                     //exec($cmd , $ouput, $err);
+                    $cmd = "sudo /home/snack/interface/tools/scriptSnackImport.sh --file ".$uploadfile;
                     if ($this->request->data['importConf']['force'] == "1") {
-                        $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackImport.sh --file ".$uploadfile." --force");
-                    } else {
-                        $return = shell_exec("sudo /home/snack/interface/tools/scriptSnackImport.sh --file ".$uploadfile);
+                        $cmd = $cmd." --force";     
                     }
+                    if ($this->request->data['importConf']['migration'] == "1") {
+                        $cmd = $cmd." --migration";     
+                    }
+                    $return = shell_exec($cmd);
                     debug($return);
                     $file = new File('/tmp/log-import', false, 0644);
                     $tmp="";

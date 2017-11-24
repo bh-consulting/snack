@@ -1,15 +1,18 @@
 #!/bin/bash
 #Author Guillaume Roche <groche@guigeek.org>
 #
+
+PATHLOCAL=$(dirname $0)
 HOME_SNACK=/home/snack
 DATABASEFILE=$HOME_SNACK/interface/app/Config/database.php
 DB="radius"
 TEMP=/tmp
 LOG=/tmp/log-import
 force=0
+migration=0
 usage()
 {
-    echo -en "Usage:\t$1 [-d|--decrypt key] [--force] FILE\n\nContact: <groche@guigeek.org>\n"
+    echo -en "Usage:\t$1 [-d|--decrypt key] [--force] [--migration] FILE\n\nContact: <groche@guigeek.org>\n"
 }
 
 restore()
@@ -25,7 +28,7 @@ restore()
     PASS=`grep password $DATABASEFILE | head -n 1 | cut -d'>' -f2 | cut -d"'" -f2`
     VER1=$(cat /home/snack/interface/app/VERSION.txt)
     VER2=$(cat $TEMP/$DIR/VERSION.txt)
-    if [ $force == 0 ]; then
+    if [[ $force == 0 && $migration == 0 ]]; then
         if [ "$VER1" == "$VER2" ]; then
             rsync --stats -avr --exclude="radius.sql" $TEMP/$DIR/snack /home >> $LOG
             echo "RSYNC RES :$?" >> $LOG 
@@ -48,7 +51,7 @@ restore()
     fi
 }
 
-options=$(getopt -o hd: -l help,force,file:,decrypt: -- "$@")
+options=$(getopt -o hd: -l help,force,migration,file:,decrypt: -- "$@")
 if [ $? -ne 0 ]; then
     usage $(basename $0)
     exit 1
@@ -62,6 +65,7 @@ do
         -d|--decrypt)   key=$2; shift 2;;
         --file)         FILE=$2; shift 2;;
         --force)        force=1; shift 2;;
+        --migration)    migration=1; shift 2;;
         --)             shift; break ;;
         -*)             echo "$0: error - unrecognized option $1" 1>&2; exit 1;;
         *)              usage $0 && exit 0;;
@@ -73,5 +77,7 @@ if [ -z $FILE ]; then
     exit
 fi
 restore
-
+if [ $force == 1 ]; then
+    $PATHLOCAL/migrateRadcheckforFreeradius3-x.sh
+fi
 rm -rf $TEMP/$DIR

@@ -44,6 +44,17 @@ $title = isset($title) ? $title : __('Import');
                         'after'   => '</div>',
                         'label' => false,
                     ));
+                    echo $this->Form->input('migration', array(
+                        'type' => 'checkbox',
+                        'between' => '',
+                        'after'   => '',
+                        'class' => '', 
+                        //'label' => array_merge($mainLabelOptions, $myLabelOptions),
+                        'before' => '<label class="col-sm-4 control-label">'.__('Migration from freeradius 2').'</label><div class="col-sm-1">',
+                        'between' => '',
+                        'after'   => '</div>',
+                        'label' => false,
+                    ));
                     ?>
                 </p>
             </div>
