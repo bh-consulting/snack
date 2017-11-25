@@ -14,16 +14,14 @@ function generateCA() {
 	$("#loadingicon").html("<i class='fa fa-circle-o-notch fa-spin fa-2x'></i><br><br>");
 	$.post( url, { countryName: countryName,stateOrProvinceName: stateOrProvinceName, localityName: localityName, organizationName: organizationName })
         .done(function( data ) {
-        console.log(data);
        	console.log("DONE");
     }).fail(function() {
-        $("#alert-ca").html('<div class="alert alert-danger" role="alert">Erreur</div>');
         console.log("ERR");
     });
     
-    /*console.log("DONE");
-    	setTimeout(function(){ 
+    console.log("DONE");
+    	setTimeout(function(){
     	console.log('Redirect');
     	window.location.href = "/radusers";
-    }, 15000);  */
+    }, 15000);
 }
