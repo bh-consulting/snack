@@ -1,7 +1,7 @@
 #!/bin/bash
 # Maintainer Guillaume Roche groche@guigeek.org
 #
-SCRPATH=/home/snack/scripts
+SCRPATH=/home/snack/interface/tools
 GITPATH=/home/snack/backups.git
 
 
